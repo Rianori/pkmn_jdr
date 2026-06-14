@@ -1444,18 +1444,18 @@
       <!-- Fiche complète du partenaire (cachée, utilisée pour le slot équipe) -->
       <div id="partner-pk-card" style="display:none"><div class="pk-card">
     <div class="pk-card-header">
-      <div class="pk-owner">Partenaire de · Posse #2 · Le Pistolero</div>
-      <div class="pk-name">Arcanin</div>
-      <div class="pk-species">Arcanin — Loyauté sans condition, puissance sans retenue</div>
+      <div class="pk-owner">Partenaire de · XXX</div>
+      <div class="pk-name">Pokémon</div>
+      <div class="pk-species">Nom pokémon - phrase description</div>
       <div class="pk-meta-row">
-        <span class="tag tag-psi" style="background:#1a0808;color:#d06040;">Feu</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Grand (+1)</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° 59</span>
+        <span class="tag tag-psi" style="background:#1a0808;color:#d06040;">TYPE</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">TAILLE</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° Pokédex</span>
         <span class="tag tag-edge">Extra spécial · 2 Blessures</span>
       </div>
     </div>
     <div class="pk-body">
-      <div class="pk-lore">Le Pistolero a recueilli Arcanin blessé sur le bord d'une route, trois semaines après sa démission. Arcanin n'a pas fui quand l'homme s'est approché. Depuis, ils ne se quittent plus. Arcanin ne comprend pas les nuances morales de son dresseur — mais il comprend à qui il fait confiance. Et il protège cette personne comme si sa vie en dépendait. Elle en dépend souvent.</div>
+      <div class="pk-lore">Background Pokémon</div>
 
       <div class="pk-section-lbl">Attributs & Stats</div>
       <div class="pk-stats-row">
@@ -1504,7 +1504,6 @@
         <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check"></span></div>
       </div>
 
-      <div class="pk-note"><strong>Rôle scénario :</strong> Ch. 7 — repère l'embuscade par le flair avant que la Posse entre dans la zone (Perception d8 diff. 4). Ch. 9 — peut porter Fil hors du réacteur pendant que le Pistolero couvre la retraite. Sa chaleur aide Fil à ne pas perdre conscience pendant le transport.</div>
     </div>
   </div></div>
 
@@ -1578,7 +1577,7 @@
     <!-- ── ONGLET ÉQUIPE ── -->
     <div class="player-tab" id="tab-team">
       <div class="page-title">Équipe Pokémon</div>
-      <div class="page-tagline">6 slots · Partenaire fixe en #0</div>
+      <div class="page-tagline">Au delà, les pokémons vont dans votre boîte.📦</div>
 
       <!-- Grille 6 slots -->
       <div class="team-grid" id="team-grid"></div>
@@ -1589,27 +1588,22 @@
         <input type="hidden" id="add-slot-hidden" value="">
         <div class="form-row">
           <div>
-            <label>Nom</label>
+            <label>Escpèce</label>
             <input type="text" id="pk-add-name" placeholder="Ex : Racaillou">
           </div>
           <div>
-            <label>Type(s)</label>
-            <input type="text" id="pk-add-type" placeholder="Ex : Roche/Sol">
+            <label>Prénom</label>
+            <input type="text" id="pk-add-type" placeholder="Prénom">
           </div>
         </div>
         <label>Notes de session</label>
-        <textarea id="pk-add-notes" placeholder="PV actuels, capacités utilisées, statut…"></textarea>
+        <textarea id="pk-add-notes" placeholder="PV actuels, capacités utilisées, talent ... "></textarea>
         <div style="display:flex;gap:8px">
           <button class="btn-primary" onclick="addPokemon()">Ajouter</button>
           <button class="btn-ghost" onclick="closeAddForm()">Annuler</button>
         </div>
       </div>
 
-      <!-- Panneau Pokémon actif -->
-      <div class="team-panel" id="team-panel">
-        <div class="team-empty-state">Sélectionne un slot.</div>
-      </div>
-    </div>
 
     <!-- ── ONGLET NOTES ── -->
     <div class="player-tab" id="tab-notes">
