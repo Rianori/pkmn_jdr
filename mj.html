@@ -1036,7 +1036,7 @@
   <button class="active" onclick="showTab('scenarios',this)">Scénarios</button>
   <button onclick="showTab('groupe',this)">Le Groupe</button>
   <button onclick="showTab('pnj',this)">PNJ</button>
-  <button onclick="window.open('bestiaire.html','_blank')">Bestiaire</button>
+  <button onclick="showTab('bestiaire',this)">Bestiaire</button>
   <button onclick="showTab('notes',this)">Notes</button>
 </nav>
 
@@ -2121,7 +2121,1261 @@
     </div>
 
 
-    <div class="section" id="tab-bestiaire"><div style="padding:40px;text-align:center;color:var(--muted)">Bestiaire disponible dans <a href="bestiaire.html" target="_blank" style="color:var(--amber)">bestiaire.html</a></div></div>
+    <div class="section" id="tab-bestiaire">
+  <div class="page-title">Bestiaire</div>
+  <div class="page-tagline">65 entrées · Pokémon Kanto</div>
+
+
+
+  <div class="beast-cat-group" id="bgroup-sauvage">
+    <div class="beast-cat-title">Pokémon sauvages <span class="beast-count">32 entrées</span></div>
+    <div class="bestiary-grid"><div class="beast-card cat-sauvage" data-cat="sauvage" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Osselait (Cubone)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Sol · Petit (−1) · Extra</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Errent seuls dans les ruelles de Lavanville. Leur tristesse est le premier signe que quelque chose a brisé le lien dresseur / Pokémon.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>6"</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Lancer d'Os</td><td class="atk-dmg">2d4</td><td>12"/24"</td><td>−2 Parade si Relance</td></tr>
+              <tr><td class="atk-name">Coup d'Os</td><td class="atk-dmg">Str+d4</td><td>Mêlée</td><td>—</td></tr>
+              <tr><td class="atk-name">Cri plaintif</td><td class="atk-dmg">Trempe d6</td><td>Zone 3"</td><td>Échec : Secoué (moral)</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Deuil latent</span> : +1 Trempe si dresseur à portée 3". Ne fuit jamais si dresseur à terre.</li></ul>
+            <div class="tactique-block">N'attaque jamais en premier. Réagit si menacé. En groupe de 3+, lancer d'Os coordonné peut Secouer un PJ non armé.</div>
+          </div>
+        </div>
+<div class="beast-card cat-sauvage" data-cat="sauvage" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Fantominus (Gastly)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Poison/Spectre · Extra</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Pullulent dans la Tour Pokémon depuis que le réacteur fonctionne. Plus agités, plus nombreux qu'à l'ordinaire — attirés par l'énergie aspirée.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">RUS <span>d6</span></div><div class="stat-pill">VIG <span>d4</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>8" vol</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Hypnose</td><td class="atk-dmg">Trempe d6 opp.</td><td>Zone 2"</td><td>Échec : dort 1d4 rounds</td></tr>
+              <tr><td class="atk-name">Lèche-Songe</td><td class="atk-dmg">d6 directs</td><td>Mêlée</td><td>Cible endormie seul., ignore Robustesse</td></tr>
+              <tr><td class="atk-name">Brume Toxique</td><td class="atk-dmg">Vigor d6 opp.</td><td>Zone 2"</td><td>Échec : Fatigué −1 (3 rounds)</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Forme gazeuse</span> : immunisé aux attaques physiques. Seuls Spectre/Psy/Feu causent des dégâts.</li><li><span class="capa-name">Vol furtif</span> : Discrétion d10. −2 Perception dans l'obscurité.</li></ul>
+            <div class="tactique-block">Harcèle à distance. Endort une cible isolée puis la draine. Fuit en lumière directe (−2 à tous ses jets).</div>
+          </div>
+        </div>
+<div class="beast-card cat-sauvage" data-cat="sauvage" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Ronflex (Snorlax)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Normal · Grand (+1) · Extra allié potentiel</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Bloque le passage vers la zone Est. Son dresseur a été neutralisé par les agents d'Ashford. Il attend son retour et refuse de bouger.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">FOR <span>d12+2</span></div><div class="stat-pill">VIG <span>d12</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>11</span></div><div class="stat-pill">Allure <span>4"</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Tranche</td><td class="atk-dmg">Str+d8</td><td>Mêlée</td><td>Tout ce qui est à portée</td></tr>
+              <tr><td class="atk-name">Charge</td><td class="atk-dmg">Str+d8</td><td>Charge</td><td>Renversé si Robustesse non atteinte</td></tr>
+            </table>
+            <ul class="capa-list">
+              <li><span class="capa-name">Ronflement</span> : zone 2" autour de lui pendant le sommeil — Vigueur d6 diff. 4 ou Fatigué (cumulatif/round).</li>
+              <li><span class="capa-name">Immunité PSI-B</span> : ne peut pas être contrôlé par le réacteur. Allié précieux si apprivoisé.</li>
+              <li><span class="capa-name">Apprivoiser</span> : Dressage diff. 4 avec nourriture. Coopère temporairement.</li>
+            </ul>
+            <div class="tactique-block">Passif par défaut. Si réveillé brutalement : attaque au hasard 1d4 rounds puis s'effondre.</div>
+          </div>
+        </div>
+<div class="beast-card cat-sauvage" data-cat="sauvage" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Racaillou (Geodude)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Roche/Sol · Petit (−1) · Extra</div></div>
+          <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Communs dans toutes les zones rocheuses de Kanto — Mont Sélénite, grottes de Bourg-Palette, galeries secondaires de la région de Lavanville. Quasi indiscernables d'un rocher ordinaire jusqu'à ce qu'on marche dessus. Leur présence dans les galeries du réacteur est antérieure au projet Holt : ils y vivaient bien avant que quiconque ne décide de creuser.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">FOR <span>d8</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>8 (Arm 2)</span></div><div class="stat-pill">Allure <span>4"</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Charge Roche</td><td class="atk-dmg">Str+d6</td><td>Mêlée</td><td>Renversé si Relance</td></tr>
+              <tr><td class="atk-name">Jet de pierre</td><td class="atk-dmg">d6</td><td>8"/16"/32"</td><td>Secoué si Relance</td></tr>
+              <tr><td class="atk-name">Explosion (KO)</td><td class="atk-dmg">2d6</td><td>Zone 2"</td><td>Unique — à sa mise KO seulement</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Carapace rocheuse</span> : Armure naturelle +2. Dégâts tranchants/perforants réduits de 2.</li></ul>
+            <div class="tactique-block">Roule vers la source lumineuse. Si ignoré, ne poursuit pas. En groupe : encerclement.</div>
+          </div>
+        </div>
+<div class="beast-card cat-sauvage" data-cat="sauvage" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Miaouss (Meowth)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Normal · Petit (−1) · Informateur possible</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">L'un d'eux — collier rouge — a observé les allées et venues autour de la mine. Dressage diff. 4 pour l'utiliser comme source d'indices.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">RUS <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>8"</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Griffe</td><td class="atk-dmg">Str+d4</td><td>Mêlée</td><td>−1 Parade jusqu'au prochain round</td></tr>
+              <tr><td class="atk-name">Jackpot</td><td class="atk-dmg">2d4</td><td>Mêlée</td><td>Relance : Secoué + perte 1d4×10¥</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Collecteur</span> : sur Dressage réussi, peut indiquer un itinéraire secret ou un garde endormi (1 fois par Acte).</li></ul>
+          </div>
+        </div>
+<div class="beast-card cat-sauvage" data-cat="sauvage" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Papilusion (Butterfree)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Insecte/Vol · Extra</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Certains sont devenus agressifs — signe que le PSI-B affecte aussi les sauvages à proximité du réacteur. Indice narratif si le Groupe y prête attention.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>8" vol</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Poudre Toxique</td><td class="atk-dmg">Vigueur d6 opp.</td><td>Zone 2"</td><td>Échec : Fatigué −1 (1d6 rounds)</td></tr>
+              <tr><td class="atk-name">Poudre Dodo</td><td class="atk-dmg">Trempe d6 opp.</td><td>Zone 2"</td><td>Échec : dort 1d4 rounds</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Comportement PSI-B</span> : yeux vitreux. Perception diff. 6 pour remarquer l'anomalie.</li></ul>
+          </div>
+        </div>
+<div class="beast-card cat-sauvage" data-cat="sauvage" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Ponyta</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Feu · Extra (allié potentiel Fin B)</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Erre seul depuis des semaines, crinière moins lumineuse. Pokémon d'un dresseur apathique. Allié potentiel si les PJ retrouvent son dresseur (Fin B).</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d8</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>10"</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Ruée Flamboyante</td><td class="atk-dmg">Str+d6 (feu)</td><td>Mêlée</td><td>Armure ordinaire ignorée</td></tr>
+              <tr><td class="atk-name">Flammèche</td><td class="atk-dmg">2d6</td><td>12"/24"</td><td>En Feu si Relance (d6/round)</td></tr>
+              <tr><td class="atk-name">Charge</td><td class="atk-dmg">Str+d8</td><td>Charge 4"+</td><td>Renversé si Robustesse non atteinte</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Crinière ardente</span> : attaquant en mêlée sans protection = d4 dégâts feu réflexifs.</li></ul>
+          </div>
+        </div>
+<div class="beast-card cat-sauvage" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Évoli sauvage</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Normal · Petit (−1) · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Communs dans les zones semi-urbaines et forestières de tout Kanto. Leur réputation de Pokémon d'évolution les rend convoités — beaucoup finissent abandonnés quand l'évolution n'arrive pas. Méfiants, organisés en petits groupes, ils apprennent vite à éviter les humains. Celui qu'on croise à Lavanville traîne depuis des mois et a perdu confiance en tout le monde.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">RUS <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>8"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Vive-Attaque</td><td class="atk-dmg">d6</td><td>Mêlée</td><td>Priorité — agit toujours en premier</td></tr>
+      <tr><td class="atk-name">Rugissement</td><td class="atk-dmg">Trempe d6 opp.</td><td>Zone 2"</td><td>Échec : −1 Force ce round</td></tr>
+    </table>
+    <ul class="capa-list"><li><span class="capa-name">Meute</span> : si 3+ Évolis présents, chacun gagne +1 Parade.</li></ul>
+    <div class="tactique-block">Fuit si menacé seul. En meute de 3+, harcèle une cible isolée par rotation.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Caninos (Growlithe)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Feu · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Répartis dans tout Kanto, souvent proches des implantations humaines qu'ils considèrent comme leur territoire d'adoption. Celui-ci erre sur la Route 8 depuis qu'un incendie a détruit la caserne où vivait son dresseur. Il en garde les ruines par habitude — ou par espoir.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>8"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Morsure</td><td class="atk-dmg">Str+d6</td><td>Mêlée</td><td>Normale</td></tr>
+      <tr><td class="atk-name">Flammèche</td><td class="atk-dmg">2d4</td><td>8"/16"</td><td>En Feu si Relance (d4/round)</td></tr>
+      <tr><td class="atk-name">Rugissement</td><td class="atk-dmg">Trempe d6 opp.</td><td>Zone 3"</td><td>Échec : Secoué</td></tr>
+    </table>
+    <ul class="capa-list"><li><span class="capa-name">Gardien territorial</span> : +2 à tous ses jets dans un rayon de 6" de son "repaire". En dehors, −1.</li></ul>
+    <div class="tactique-block">Aboie d'abord (Rugissement), charge si la cible ne recule pas. Protège son territoire jusqu'à 2 Blessures.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Abra sauvage</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Psy · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Présent dans des zones isolées de tout Kanto — Routes 24 et 25, abords de Carmin-sur-Mer, lisières des grandes forêts. Presque impossible à attraper : se téléporte à la moindre menace. Leur comportement erratique dans la région de Lavanville est un indice fiable que quelque chose perturbe le spectre psychique local.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">RUS <span>d8</span></div><div class="stat-pill">VIG <span>d4</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>6"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Téléport</td><td class="atk-dmg">—</td><td>—</td><td>Action gratuite : se repositionne à 10" n'importe où en ligne de vue</td></tr>
+      <tr><td class="atk-name">Choc Mental</td><td class="atk-dmg">d6</td><td>8"/16"</td><td>Secoué si Relance</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Somnambule</span> : dort toujours debout. Ne peut pas être surpris — se téléporte dès qu'une menace entre dans sa zone (6").</li>
+      <li><span class="capa-name">Signal psychique</span> : en perturbation PSI-B, son Téléport devient erratique (−4"). Indicateur narratif du réacteur.</li>
+    </ul>
+    <div class="tactique-block">Ne combat jamais. Fuite immédiate par Téléport. Valeur narrative uniquement — son comportement anormal est un indice sur l'étendue du PSI-B.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Smogo (Koffing)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Poison · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Habitent naturellement les zones industrielles et souterraines de Kanto — Carmin-sur-Mer, entrepôts de Gris-Mer, caves polluées. Pas agressifs par nature, mais leur seule présence rend l'air irrespirable. Ceux qu'on trouve à Lavanville ont remonté les canalisations industrielles en cherchant chaleur et déchets chimiques.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d4</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>3</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>4" (vol)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Brume Toxique</td><td class="atk-dmg">Vigueur d8 opp.</td><td>Zone 3" autour</td><td>Échec : Fatigué (−1) 1d4 rounds. Cumulatif à chaque round de contact</td></tr>
+      <tr><td class="atk-name">Explosion (désespoir)</td><td class="atk-dmg">4d6</td><td>Zone 2"</td><td>Usage unique à la mise KO. Smogo détruit</td></tr>
+    </table>
+    <ul class="capa-list"><li><span class="capa-name">Nuage permanent</span> : zone de 2" autour de lui toujours toxique. Les personnages sans protection respiratoire doivent réussir Vigueur diff. 4 chaque round passé dans la zone.</li></ul>
+    <div class="tactique-block">Passif — flotte lentement vers les sources de chaleur. Éviter ou contourner plutôt que combattre. Masque ou foulard réhumidifié annule le malus.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Kangourex (Kangaskhan)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Normal · Grand (+1) · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Les Kangourex femelles établissent des sanctuaires dans des zones tranquilles de tout Kanto — Savane des îles du Sud, clairières du Mont Sélénite, zones tampons des réserves naturelles. Celle-ci a établi son territoire au nord de Lavanville bien avant les disparitions. Son calme relatif au milieu du chaos ambiant en fait un repère involontaire pour les habitants errant dans l'apathie.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>9</span></div><div class="stat-pill">Allure <span>6"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Coup Direct</td><td class="atk-dmg">Str+d8</td><td>Mêlée</td><td>Renversé si Robustesse non atteinte</td></tr>
+      <tr><td class="atk-name">Mégapoing</td><td class="atk-dmg">Str+d10</td><td>Mêlée</td><td>Perce Armure 2. Une fois par combat</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Protection maternelle</span> : tant que son bébé n'est pas menacé, ne charge jamais en premier. Si le bébé est touché : passe en mode agressif, +2 à tous ses jets jusqu'à fin combat.</li>
+      <li><span class="capa-name">Sanctuaire</span> : les dresseurs qui s'approchent calmement (Dressage diff. 4) peuvent se reposer 1h dans sa zone sans être dérangés.</li>
+    </ul>
+    <div class="tactique-block">Allié potentiel si le Groupe respecte son territoire. Obstacle violent si elle ne le fait pas.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Rattata (essaim)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Normal · Petit (−1) · Extra ×6</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Omniprésents dans toutes les villes et infrastructures souterraines de Kanto, des caves de Bourg-Palette aux entrepôts de Céladopole. Ils colonisent partout où les humains abandonnent un espace. Ceux qui peuplent les galeries de Lavanville ont développé des comportements collectifs qui les rendent précieux comme détecteurs de danger — ils fuient avant même que les capteurs humains ne réagissent.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">VIG <span>d4</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>3</span></div><div class="stat-pill">Allure <span>8"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Morsure (essaim)</td><td class="atk-dmg">d6 (×3 cibles)</td><td>Zone 1"</td><td>Un essaim attaque toutes créatures dans sa zone</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Fuite prophétique</span> : si les Rattatas fuient soudainement d'une direction, quelque chose les a effrayés dans cette direction. Perception diff. 4 pour l'interpréter correctement.</li>
+      <li><span class="capa-name">Essaim</span> : traités comme une seule entité. KO si 3+ membres éliminés.</li>
+    </ul>
+    <div class="tactique-block">Jamais dangereux seuls. Utile comme indice narratif. Un essaim paniqué dans la mine peut signaler l'approche d'un garde PSI-B ou d'un Electrode.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Leveinard (Chansey)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Normal · Extra (neutre / allié potentiel)</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Les Leveinards sont des Pokémon de soin naturellement attirés vers les zones de souffrance — Centres Pokémon, hôpitaux de Kanto, campements après sinistres. Celui-ci erre depuis des semaines, sans dresseur connu. Son instinct le guide vers les personnes en détresse, qu'elles soient humaines ou Pokémon. À Lavanville, il y a du travail.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">VIG <span>d12</span></div><div class="stat-pill">TRE <span>d10</span></div><div class="stat-pill">Parade <span>3</span></div><div class="stat-pill">Robustesse <span>12</span></div><div class="stat-pill">Allure <span>6"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Oeuf-soin</td><td class="atk-dmg">Soin 2d6</td><td>Contact</td><td>Soigne un allié à portée — retire 1 Blessure sur jet de Vigueur diff. 4</td></tr>
+      <tr><td class="atk-name">Écrase</td><td class="atk-dmg">Str+d4</td><td>Mêlée</td><td>Attaque défensive uniquement</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Réservoir de vie</span> : Robustesse 12 — pratiquement impossible à mettre KO sans effort concerté.</li>
+      <li><span class="capa-name">Soins naturels</span> : peut tenter Oeuf-soin une fois par round sur n'importe qui, sans ciblage hostile. Dressage diff. 4 pour l'engager comme soigneur de campagne.</li>
+    </ul>
+    <div class="tactique-block">Ne combat jamais agressivement. Reste auprès des blessés. Si Fil est sorti du réacteur en état critique, Leveinard peut fournir un soin d'urgence (décision narrative du Marshal).</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Voltorbe sauvage</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Électrique · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Présents dans tout Kanto là où l'électricité est stockée ou produite — centrales, dépôts de matériel, câblages de la Route Cycliste. Leur camouflage en Pokéball est dangereux partout où du matériel est entreposé. Ceux de la mine de Lavanville y ont migré en suivant le flux électromagnétique du réacteur.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>3</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>6" (roule)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Charge</td><td class="atk-dmg">Str+d4 + élec</td><td>Charge 3"+</td><td>Cible Secouée si Robustesse non atteinte</td></tr>
+      <tr><td class="atk-name">Autodestruction</td><td class="atk-dmg">4d6</td><td>Zone 2"</td><td>Usage unique à KO — ou si délibérément activé</td></tr>
+    </table>
+    <ul class="capa-list"><li><span class="capa-name">Camouflage Pokéball</span> : Perception diff. 6 pour le distinguer d'une vraie Pokéball dans la pénombre.</li></ul>
+    <div class="tactique-block">Obstacle inattendu. Le Marshal peut en placer 1 ou 2 parmi du matériel récupérable pour créer une tension lors d'une fouille.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Dracolosse vieillissant (Dragonite)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Dragon/Vol · Grand (+1) · Extra (présence distante)</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Les vieux Dracolosses parcourent tout Kanto en solitaires — leur territoire couvre des centaines de kilomètres et leur mémoire des lieux et des personnes est infaillible. Celui-ci tourne au-dessus de la région depuis des semaines, à haute altitude. Les habitants de Lavanville le connaissent de vue. Il cherche quelqu'un. Personne ne sait qui. Telera pense que ce quelqu'un est dans la mine.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d12</span></div><div class="stat-pill">VIG <span>d12</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>11</span></div><div class="stat-pill">Allure <span>12" (vol)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Dracocharge</td><td class="atk-dmg">Str+d12</td><td>Charge</td><td>Renversé automatique si Robustesse non atteinte</td></tr>
+      <tr><td class="atk-name">Ultralaser</td><td class="atk-dmg">4d8</td><td>24"/48"</td><td>Ligne — toutes créatures dans la ligne affectées. Secoué le round suivant (surcharge)</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Présence symbolique</span> : tant qu'il vole au-dessus de Lavanville, les habitants tirent un réconfort passif. Les jets de Trempe pour résister à la peur ou à l'apathie se font à diff. −1.</li>
+      <li><span class="capa-name">Il ne descend pas</span> : ne participe pas aux combats à moins que son dresseur — introuvable — soit retrouvé. Outil narratif de l'Acte IV.</li>
+    </ul>
+    <div class="tactique-block">Jamais combat tant que son dresseur n'est pas retrouvé. Si le Groupe retrouve le dresseur (objectif optionnel Fin B), il peut devenir le transport aérien le plus rapide de Kanto.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Charkos (Charmeleon)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Feu · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Un Charkos solitaire et agressif rôde dans les entrepôts du port d'Argentport. Il a été abandonné par son dresseur — sa flamme caudale est instable, signe de détresse émotionnelle profonde.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d8</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>8"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Coupure</td><td class="atk-dmg">Str+d6</td><td>Mêlée</td><td>Critique sur Relance (+d6 dommages)</td></tr>
+      <tr><td class="atk-name">Lance-Flamme</td><td class="atk-dmg">2d6</td><td>8"/16"</td><td>En Feu si Relance</td></tr>
+      <tr><td class="atk-name">Griffe</td><td class="atk-dmg">Str+d4</td><td>Mêlée</td><td>×2 attaques à −2 chacune</td></tr>
+    </table>
+    <ul class="capa-list"><li><span class="capa-name">Flamme instable</span> : quand il est à 1 Blessure, ses attaques de feu gagnent +d4 dommages — mais il subit lui-même d4 dommages par round.</li></ul>
+    <div class="tactique-block">Hostile par défaut. Un jet de Dressage diff. 8 (ou diff. 4 avec Telera) peut le calmer. S'il est apaisé, il peut devenir un allié temporaire de campagne.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Nosferapti</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Vol/Poison · Petit (−1) · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Communs dans tout Kanto — Grottes Zénith, Mont Sélénite, clochers abandonnés des villes. Nocturnes par nature, leurs essaims au crépuscule sont un spectacle ordinaire. Leur présence en plein jour, elle, est un signal — quelque chose dans leurs abris souterrains les a perturbés. À Lavanville, ce quelque chose se trouve à trente mètres sous la Tour Pokémon.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">RUS <span>d4</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>10" (vol)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Ultrason</td><td class="atk-dmg">Trempe d6 opp.</td><td>Zone 4"</td><td>Échec : Confus (−2 à tous les jets) jusqu'à fin round</td></tr>
+      <tr><td class="atk-name">Vampigraine</td><td class="atk-dmg">d4 directs</td><td>Mêlée</td><td>Récupère l'équivalent en PV. Ignore Armure</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Écholocation</span> : immunisé aux pénalités d'obscurité. Ne peut pas être surpris dans le noir.</li>
+      <li><span class="capa-name">Essaim (×6+)</span> : si 6 Nosferapti ou plus attaquent la même cible ce round, +2 aux dommages cumulatifs.</li>
+    </ul>
+    <div class="tactique-block">Harcèle à distance par Ultrason. Plonge en mêlée si cible désorientée. Fuit immédiatement si une lumière directe les touche (−4 à tous leurs jets).</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Ptéra (fossile)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Roche/Vol · Grand (+1) · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Les Ptéras réanimés sont rares et dispersés dans tout Kanto — quelques laboratoires de restauration fossile à Carmin-sur-Mer, Parmanie, et Bourg-Palette en produisent chaque année. Certains fuguent quand leur dresseur disparaît ou perd intérêt. Celui qui patrouille les toits de Lavanville s'est échappé il y a plusieurs semaines. Il crie. Les habitants ont appris à l'éviter.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>8</span></div><div class="stat-pill">Allure <span>12" (vol)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Morsure ancienne</td><td class="atk-dmg">Str+d8</td><td>Mêlée</td><td>Perce Armure 2. Relance : membre mordu entravé (−2 Agilité)</td></tr>
+      <tr><td class="atk-name">Vent arrière</td><td class="atk-dmg">For d8 opp.</td><td>Zone 6" devant</td><td>Échec : repoussé de 3" et Secoué</td></tr>
+      <tr><td class="atk-name">Picodon</td><td class="atk-dmg">2d4</td><td>8"/16"</td><td>Caillou projeté. Zone si Relance (touche adjacents)</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Instinct primitif</span> : immunisé à l'Intimidation et aux effets de peur. Ne recule jamais volontairement.</li>
+      <li><span class="capa-name">Vol de combat</span> : en altitude, +1 Parade. Toute attaque de mêlée contre lui à portée standard subit −2.</li>
+    </ul>
+    <div class="tactique-block">Plonge sur une cible isolée, mord, reprend de l'altitude. Si blessé, Vent arrière pour dégager puis fuite en altitude. Dressage diff. 10 pour l'apaiser — diff. 6 avec Telera.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Taupiqueur</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Sol · Petit (−1) · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Présents dans toutes les zones souterraines de Kanto — grottes de la Route 9, tunnels abandonnés du Mont Sélénite, galeries de prospection minière désaffectées. Ils creusent leurs propres réseaux en parallèle des structures humaines, souvent plus stables et moins surveillés. Telera sait lire leurs galeries comme des cartes — n'importe où il les trouve, il peut trouver une sortie. Agressif si dérangé dans son terrier.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d8</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>6" (fouisseur 4")</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Tranche-Sol</td><td class="atk-dmg">Str+d6</td><td>Mêlée</td><td>Ignore Armure légère (−2 Armure max)</td></tr>
+      <tr><td class="atk-name">Tunnel</td><td class="atk-dmg">—</td><td>—</td><td>Disparaît sous terre (action complète). Réapparaît à 6" et attaque en surprise</td></tr>
+      <tr><td class="atk-name">Séisme local</td><td class="atk-dmg">d6</td><td>Zone 2"</td><td>Agil. d6 diff. 4 ou Renversé. Uniquement sous terre</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Fouisseur</span> : se déplace sous terre sans jet. Attaques depuis sous terre bénéficient d'un bonus de surprise (+2, cible sans Parade).</li>
+      <li><span class="capa-name">Réseau de galeries</span> : avec Survie diff. 4, Telera peut utiliser ses tunnels comme raccourcis (−2h de déplacement dans la mine).</li>
+    </ul>
+    <div class="tactique-block">Tunnel → attaque en surprise → retour sous terre. Répète jusqu'à ce que la cible soit à terre. Si Telera l'apaise (Dressage diff. 6), révèle des accès secrets du réacteur.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Tadmorv (colonie)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Poison · Petit (−1) · Extra ×4</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Présents dans les zones humides polluées de tout Kanto — marais de la Route 14, égouts de Gris-Mer, effluents industriels du port de Vermillon. Leur prolifération est toujours un indicateur de contamination prolongée. Ceux qu'on trouve à Lavanville ont remonté les drainages souterrains depuis les zones polluées en amont — leur densité anormale permet d'estimer depuis combien de temps les rejets durent.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>3</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>4" (nage 8")</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Éclaboussure toxique</td><td class="atk-dmg">Vigueur d6 opp.</td><td>Zone 2"</td><td>Échec : Fatigué −1 (cumulatif par round)</td></tr>
+      <tr><td class="atk-name">Hypnose</td><td class="atk-dmg">Trempe d6 opp.</td><td>Zone 2"</td><td>Échec : dort 1d4 rounds</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Contamination</span> : toute source d'eau à proximité de leur colonie pendant 24h+ devient toxique (Vigueur diff. 4 ou Fatigué pour 4h).</li>
+    </ul>
+    <div class="tactique-block">Hypnose sur une cible, les autres convergent en mêlée. En eau : pratiquement inarrêtables (Allure 8"). Indice narratif : leur présence dans la mine indique les infiltrations d'eau.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Grotadmorv</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Poison · Grand (+1) · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Les Grotadmorphs se forment là où des déchets chimiques se concentrent sur le long terme — marais industriels de Gris-Mer, dépotoirs clandestins de la Route 17, canaux souterrains des zones portuaires. Ils ne choisissent pas un endroit : ils y sont formés par lui. Celui de Lavanville est le résultat de mois de rejets clandestins. Sa seule présence est une preuve de la durée de fonctionnement de ce que personne ne devrait trouver.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>9 (Arm 2)</span></div><div class="stat-pill">Allure <span>3"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Écrasement toxique</td><td class="atk-dmg">Str+d6 (poison)</td><td>Mêlée</td><td>Armure réduite de 1 par touche (cumulatif)</td></tr>
+      <tr><td class="atk-name">Nuage acide</td><td class="atk-dmg">Vigueur d8 opp.</td><td>Zone 3" autour</td><td>Permanent : zone toujours toxique. Vigueur diff. 4/round</td></tr>
+      <tr><td class="atk-name">Explosion finale (KO)</td><td class="atk-dmg">3d6 (acide)</td><td>Zone 3"</td><td>À sa mise KO. Armure ignorée</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Indestructible</span> : régénère d4 points de Robustesse par round. Seules les attaques Feu ou Psy causent des dégâts normaux.</li>
+      <li><span class="capa-name">Indice chimique</span> : sa présence indique la durée de contamination — Sciences diff. 4 pour estimer depuis combien de temps le réacteur tourne.</li>
+    </ul>
+    <div class="tactique-block">Avance, écrase, régénère. Ne se bat pas — il existe. Contourner est la seule option viable à court terme. Le feu l'arrête temporairement.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Piafabec</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Normal/Vol · Petit (−1) · Extra (nuisance commune)</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Le Pokémon le plus commun de Kanto. Présent dans chaque ville, chaque route, chaque jardin. Normalement inoffensif et facile à ignorer. Leur vraie valeur est comportementale : leur agitation soudaine et collective précède presque toujours l'arrivée d'une menace — un prédateur, une perturbation, un groupe d'agents. Dans n'importe quelle ville de Kanto, apprendre à lire les Piafabecs vaut autant qu'un radar.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">VIG <span>d4</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>3</span></div><div class="stat-pill">Allure <span>8" (vol)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Picpic</td><td class="atk-dmg">d4</td><td>Mêlée</td><td>×2 attaques. Distraction (+2 à la prochaine attaque d'un allié sur la cible)</td></tr>
+      <tr><td class="atk-name">Harcèlement</td><td class="atk-dmg">—</td><td>Zone 2"</td><td>Vol en nuée : cible Distraite (−1 à ses jets) jusqu'au round suivant</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Alarme vivante</span> : s'envolent en masse si une menace approche à 20". Perception diff. 4 pour interpréter la direction d'où vient la menace.</li>
+    </ul>
+    <div class="tactique-block">Nuisance pure. Un Piafabec seul = 1 Robustesse. En nuée de 10+, force des jets de Distraction chaque round. Utile comme alarme précoce si la Posse les observe.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Doduo</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Normal/Vol · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Répandus dans les plaines ouvertes de tout Kanto, surtout sur les Routes 12, 13 et 16. Rapides, capricieux, et perpétuellement en désaccord avec eux-mêmes. Leur vitesse en fait des obstacles sérieux sur toute route dégagée. Celui qu'on rencontre n'a pas choisi Lavanville — il a juste couru dans une direction et n'a pas changé.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>10"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Double Bec</td><td class="atk-dmg">Str+d4 (×2)</td><td>Mêlée</td><td>2 attaques simultanées à −2 chacune</td></tr>
+      <tr><td class="atk-name">Course folle</td><td class="atk-dmg">Str+d6</td><td>Charge 6"+</td><td>Renversé si Robustesse non atteinte. Se déplace en ligne droite quelle que soit la direction</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Deux cervelles</span> : ne peut jamais être surpris (l'une des deux têtes reste en alerte). En contrepartie : 10% de chance par round d'agir de façon aléatoire (jet d6 : 1 = attaque un allié PSI-B ou un allié).</li>
+    </ul>
+    <div class="tactique-block">Charge en ligne droite, s'arrête, recharge. Difficile à encercler grâce à sa vitesse. Facilement détourné avec de la nourriture (Dressage diff. 2).</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Stari</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Eau · Petit (−1) · Allié potentiel</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Présents dans toutes les eaux claires et peu profondes de Kanto — rivières du Plateau Indigo, sources de la Route 25, lacs côtiers. Passifs, lumineux, pacifiques. Leur présence dans une étendue d'eau est un indicateur fiable de sa pureté. Ceux qu'on trouve dans les galeries souterraines de Lavanville ont suivi les nappes phréatiques jusqu'ici — et indiquent qu'une source naturelle non contaminée existe encore.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">VIG <span>d4</span></div><div class="stat-pill">Parade <span>3</span></div><div class="stat-pill">Robustesse <span>3</span></div><div class="stat-pill">Allure <span>6" (nage uniquement)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Pistolet à O</td><td class="atk-dmg">d4</td><td>6"</td><td>Défensif uniquement. Stari ne combat jamais en premier</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Bioluminescence</span> : émet une lumière douce à 3". Peut être apprivoisé (Dressage diff. 2) pour servir de lampe vivante dans les galeries.</li>
+      <li><span class="capa-name">Détecteur d'eau</span> : leur présence indique une source d'eau potable à portée. Sciences diff. 4 pour les utiliser comme guide.</li>
+    </ul>
+    <div class="tactique-block">N'attaque jamais. Fuit si menacé. Précieux comme source de lumière discrète et comme indicateur de voies d'eau dans la mine.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Akwakwak</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Eau · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Répandus dans les rivières et lacs de tout Kanto, pacifiques tant que leur habitat est préservé. Agressifs quand il est contaminé ou empiété. Le lac à l'est de Lavanville concentre une colonie plus dense que d'habitude — les rejets industriels ont détruit leurs zones de reproduction habituelles plus à l'ouest, les forçant à se replier ici.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>8" (nage 10")</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Pistolet à O</td><td class="atk-dmg">2d4</td><td>12"/24"</td><td>Normale</td></tr>
+      <tr><td class="atk-name">Cascade</td><td class="atk-dmg">2d6</td><td>Charge</td><td>Renversé si Robustesse non atteinte. Uniquement depuis l'eau</td></tr>
+      <tr><td class="atk-name">Repli rapide</td><td class="atk-dmg">—</td><td>—</td><td>Nage à 10" en réaction. Action gratuite si touché</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Avantage aquatique</span> : en eau, +1 Parade et Allure 10". Hors eau, −1 Parade.</li>
+    </ul>
+    <div class="tactique-block">Attaque depuis l'eau avec Cascade, Repli rapide si contre-attaqué. En groupe de 3+, harcèle en rotation. Ne poursuit jamais hors de l'eau.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Magnéti (sauvage)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Électrique/Acier · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Présents naturellement dans les zones à fort champ magnétique de Kanto — Centrale électrique, Tour Foudroyante, sommets du Mont Sélénite. Ils migrent vers toute source d'énergie électromagnétique intense. Ceux de Lavanville ont simplement suivi le signal le plus fort de la région, sans se douter qu'il venait d'une installation clandestine. La différenciation avec leurs homologues PSI-B reste le vrai enjeu.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">RUS <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>6" (vol)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Tonnerre</td><td class="atk-dmg">2d4</td><td>8"/16"</td><td>Normale</td></tr>
+      <tr><td class="atk-name">Champ magnétique</td><td class="atk-dmg">—</td><td>Zone 3"</td><td>Équipement métallique ne fonctionne plus (1 round). Armes métalliques : −2 aux jets</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Différenciation PSI-B</span> : Perception diff. 6 pour distinguer un Magnéti sauvage d'un Magnéton PSI-B. Erreur = attaque l'ennemi désigné qui pourrait être un allié.</li>
+      <li><span class="capa-name">Absorption électrique</span> : toute attaque électrique le soigne au lieu de le blesser.</li>
+    </ul>
+    <div class="tactique-block">Flotte passivement. Attaque si perturbé. La différenciation avec les PSI-B est l'enjeu tactique principal — les attaquer sans vérification peut déclencher une alarme si c'est un PSI-B dressé.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Sabelette</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Sol/Roche · Petit (−1) · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Présente dans toutes les zones calcaires et arides de Kanto — Routes 8, 11 et 12, plaines sèches du secteur de Parmanie, abords désertiques des Îles Écailles. Se confond parfaitement avec le sol en restant immobile. Un piège naturel sur n'importe quelle route poussiéreuse — et la Route 8 qui mène à Lavanville en compte plusieurs.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>6"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Griffe</td><td class="atk-dmg">Str+d4</td><td>Mêlée</td><td>Normale</td></tr>
+      <tr><td class="atk-name">Jet de sable</td><td class="atk-dmg">—</td><td>Zone 2"</td><td>Aveuglé jusqu'à action complète pour se nettoyer les yeux. −4 à tous les jets visuels</td></tr>
+      <tr><td class="atk-name">Embuscade</td><td class="atk-dmg">Str+d6</td><td>Mêlée</td><td>Utilisable uniquement depuis camouflage. Surprise automatique si non détectée</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Camouflage parfait</span> : enterrée, Perception diff. 8 pour la repérer. Survie diff. 4 dans son environnement naturel pour éviter de marcher dessus.</li>
+    </ul>
+    <div class="tactique-block">Camouflage → Embuscade au passage → Jet de sable si contre-attaquée → fuite en fouissant. Particulièrement dangereuse de nuit (Perception diff. 10 pour la voir).</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Tétarte (sauvage)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Feu · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Natifs des zones volcaniques de Kanto — Mont Ignéo, cratères de la Route 18, failles géothermiques sous les Îles de Vermillon. Migrent vers les sources de chaleur intense. Leur présence sur la Route 8, loin de leur habitat naturel, indique que quelque chose a perturbé leurs cycles migratoires. Un indice de plus que le réacteur affecte bien au-delà de Lavanville. Ils cherchent une source de chaleur stable.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>8"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Flammèche</td><td class="atk-dmg">2d4</td><td>8"</td><td>En Feu si Relance (d4/round)</td></tr>
+      <tr><td class="atk-name">Morsure ardente</td><td class="atk-dmg">Str+d6 (feu)</td><td>Mêlée</td><td>Normale</td></tr>
+      <tr><td class="atk-name">Corps ardent</td><td class="atk-dmg">d4</td><td>Contact</td><td>Réflexif : tout attaquant en mêlée sans protection subit ces dégâts</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Apprivoisable</span> : Dressage diff. 6 (diff. 4 avec Telera + nourriture). Apprivoisé, il peut servir de source de chaleur hors combat ou d'éclairage discret.</li>
+    </ul>
+    <div class="tactique-block">Attaque d'instinct si approché trop vite. Flammèche à distance, mêlée si acculé. Dressage réussi = allié potentiel de campagne très utile dans les galeries froides du niveau −3.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Lippoutou (banc)</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Eau · Petit (−1) · Extra ×8</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Présents dans tous les cours d'eau de Kanto, des rivières de Bourg-Palette aux canaux de Céladopole. Normalement sédentaires, ils migrent seulement si leur eau est contaminée ou leur territoire violé. Des bancs entiers ont quitté leurs rivières habituelles pour remonter les nappes souterraines — un signe supplémentaire que la contamination du réacteur s'étend plus loin qu'Ashford ne veut l'admettre.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">VIG <span>d4</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>3</span></div><div class="stat-pill">Allure <span>6" (nage 12")</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Charge en banc</td><td class="atk-dmg">d6 (×8)</td><td>Charge en eau</td><td>Traités comme une seule entité. +1 dommages par 2 Lippoutous supplémentaires</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Obstacle naturel</span> : un banc dense dans un conduit étroit = obstacle (Athlétisme diff. 4 pour traverser sans perdre une action).</li>
+      <li><span class="capa-name">Navigation instinctive</span> : suivre un banc de Lippoutous mène toujours vers une sortie aquatique (utile pour fuir le réacteur).</li>
+    </ul>
+    <div class="tactique-block">Fuit si attaqué individuellement. En banc : charge toute source de bruit ou de chaleur. Naviguer dans leur sillage peut guider hors du réacteur (Survie diff. 4 pour l'interpréter).</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Rhinocorne</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Sol/Roche · Grand (+1) · Extra</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Communs dans les plaines et zones ouvertes de tout Kanto — Safari Zone, Routes 9 et 10, zones industrielles abandonnées. Territoriaux, bornés, et dotés d'un odorat exceptionnel qui compense leur vue médiocre. Celui de Lavanville a établi son territoire dans des ruines abandonnées bien avant les événements du scénario. Il ne sait pas ce qui se passe à deux kilomètres de lui. Il s'en fiche.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>9 (Arm 2)</span></div><div class="stat-pill">Allure <span>8"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Korne</td><td class="atk-dmg">Str+d8</td><td>Charge 4"+</td><td>Perce Armure 4. Renversé automatique</td></tr>
+      <tr><td class="atk-name">Piétinement</td><td class="atk-dmg">Str+d6</td><td>Zone 1"</td><td>Cible Renversée = vulnérable. Frappe toutes cibles adjacentes</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Vue faible</span> : −2 Perception visuelle. En contrepartie : flair ×10. Détecte toute créature à 30" par l'odeur.</li>
+      <li><span class="capa-name">Charge imparable</span> : sur une charge de 8"+, Robustesse de la cible ne compte pas pour le Renversement.</li>
+    </ul>
+    <div class="tactique-block">Détecte par l'odorat, charge en ligne droite. Contourner son territoire = −30 minutes. Affronter = risque élevé. Couvrir son odeur (Survie diff. 6) permet de passer sans déclencher la charge.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage2" data-cat="sauvage2" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Minidraco</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Dragon · Petit (−1) · Extra (rare)</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Présent uniquement dans quelques zones isolées de Kanto — Route 45, Grotte Inconnue, lacs profonds des Îles Écailles. Leur rareté rend leur présence à Lavanville proprement inexplicable. Soit quelqu'un l'a amené — soit il a suivi quelque chose d'invisible. Telera pense que le réacteur émet un signal que seuls les Minidraco peuvent percevoir. Si c'est vrai, sa présence ici indique quelque chose que personne n'a encore compris.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">RUS <span>d8</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>8" (nage 10")</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Charge foudre</td><td class="atk-dmg">Str+d6 (élec)</td><td>Charge 4"+</td><td>Secoué si Robustesse non atteinte</td></tr>
+      <tr><td class="atk-name">Hurlement du Dragon</td><td class="atk-dmg">Trempe d8 opp.</td><td>Zone 6"</td><td>Échec : Secoué. 1 fois/combat</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Présence mystérieuse</span> : Investigation diff. 8 pour comprendre pourquoi il est à Lavanville. Succès = indice narratif sur un second réseau de trafic lié au réacteur.</li>
+      <li><span class="capa-name">Apprivoisement légendaire</span> : Dressage diff. 10. Apprivoisé = allié de campagne long terme pour la prochaine histoire.</li>
+    </ul>
+    <div class="tactique-block">Combat uniquement si acculé. Sa présence est un indice, pas un combat. Le Marshal peut l'utiliser comme fil rouge vers un mystère secondaire.</div>
+  </div>
+</div>
+</div>
+  </div>
+
+  <div class="beast-cat-group" id="bgroup-psi">
+    <div class="beast-cat-title">Sous contrôle PSI-B <span class="beast-count">7 entrées</span></div>
+    <div class="bestiary-grid"><div class="beast-card cat-psi" data-cat="psi" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Flagadoss PSI-B (Slowpoke)</div><div class="beast-meta"><span class="tag tag-psi">PSI-B</span> Eau/Psy · Extra</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Normalement lents et inoffensifs, désormais animés d'une précision mécanique terrifiante. Yeux vitreux. Harnais PSI-B visible sur le dos.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">FOR <span>d8</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>4"</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Morsure</td><td class="atk-dmg">Str+d6</td><td>Mêlée</td><td>Entrave (−2 Agilité) si Relance</td></tr>
+              <tr><td class="atk-name">Pistolet à O</td><td class="atk-dmg">2d4</td><td>8"/16"</td><td>—</td></tr>
+            </table>
+            <ul class="capa-list">
+              <li><span class="capa-name">Contrôle PSI-B</span> : immunisé Intimidation/Peur. Obéit à des ordres simples.</li>
+              <li><span class="capa-name">Libération harnais</span> : si harnais détruit (Robustesse 4, sur le dos) → fuit immédiatement. N'attaque plus.</li>
+            </ul>
+          </div>
+        </div>
+<div class="beast-card cat-psi" data-cat="psi" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Arcanin PSI-B</div><div class="beast-meta"><span class="tag tag-psi">PSI-B</span> Feu · Grand (+1) · Extra</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Devrait être fier, impétueux — marche au pas, tête basse, yeux vides. Sa puissance n'a pas diminué. Sa volonté, si.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>9</span></div><div class="stat-pill">Allure <span>10"</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Morsure ardente</td><td class="atk-dmg">Str+d8 (feu)</td><td>Mêlée</td><td>En Feu si Relance (d6/round)</td></tr>
+              <tr><td class="atk-name">Lance-Flamme</td><td class="atk-dmg">3d6</td><td>12"/24"</td><td>Zone cône ou ligne</td></tr>
+              <tr><td class="atk-name">Charge</td><td class="atk-dmg">Str+d10</td><td>Charge</td><td>Renversé automatique</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Libération</span> : harnais (collier) détruit avec Relance → fuit à 10"/round. Personne ne peut le rattraper.</li></ul>
+          </div>
+        </div>
+<div class="beast-card cat-psi" data-cat="psi" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Electrode PSI-B</div><div class="beast-meta"><span class="tag tag-psi">PSI-B</span> Électrique · Extra</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">N'a plus le réflexe de fuite qui le protégerait normalement de l'Autodestruction. Peut exploser sur ordre. Le piège le plus dangereux du niveau −3.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>8"</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Tonnerre</td><td class="atk-dmg">2d8</td><td>12"/24"</td><td>Secoué si Relance</td></tr>
+              <tr><td class="atk-name">Cage Éclair</td><td class="atk-dmg">d6</td><td>8"/16"</td><td>Ralenti (Allure ÷2)</td></tr>
+              <tr><td class="atk-name">Autodestruction ⚠</td><td class="atk-dmg">6d6</td><td>Zone 3"</td><td>UNIQUE — Electrode détruit</td></tr>
+            </table>
+            <ul class="capa-list">
+              <li><span class="capa-name">Détonateur contrôlé</span> : ordre à distance (30") si PSI-B actif. Harnais mal désarmé = Autodestruction d4 rounds plus tard.</li>
+              <li><span class="capa-name">Désarmage sécurisé</span> : Électronique diff. 8 en 1 round. Succès = s'endort. Échec = minuterie 2 rounds.</li>
+            </ul>
+          </div>
+        </div>
+<div class="beast-card cat-psi" data-cat="psi" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Magnéton PSI-B</div><div class="beast-meta"><span class="tag tag-psi">PSI-B</span> Électrique/Acier · Extra</div></div>
+          <div class="beast-body">
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>6" vol</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Tonnerre</td><td class="atk-dmg">2d6</td><td>12"/24"/48"</td><td>—</td></tr>
+              <tr><td class="atk-name">Cage Éclair</td><td class="atk-dmg">d6</td><td>8"/16"</td><td>Ralenti (Allure ÷2)</td></tr>
+              <tr><td class="atk-name">Attraction</td><td class="atk-dmg">Force d8 opp.</td><td>Zone 4"</td><td>Échec : tiré 2" vers Magnéton</td></tr>
+            </table>
+            <ul class="capa-list">
+              <li><span class="capa-name">Interférence EM</span> : équipement électronique à portée 4" = −2. Pokédex et radio nécessitent Électronique diff. 4.</li>
+              <li><span class="capa-name">Point faible</span> : détectable par le Magnéton de Natsuki à 50" — elle peut localiser chaque unité PSI-B avant d'entrer.</li>
+            </ul>
+          </div>
+        </div>
+<div class="beast-card cat-psi" data-cat="psi" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Dodrio PSI-B</div><div class="beast-meta"><span class="tag tag-psi">PSI-B</span> Normal/Vol · Grand (+1) · Monture</div></div>
+          <div class="beast-body">
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d8</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>7</span></div><div class="stat-pill">Allure <span>10"</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Triple Bec</td><td class="atk-dmg">Str+d6 (×3)</td><td>Mêlée</td><td>3 têtes = 3 attaques à −2</td></tr>
+              <tr><td class="atk-name">Cri</td><td class="atk-dmg">Trempe d6 opp.</td><td>Zone 3"</td><td>Échec : Distrait −2 (1 round)</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Cavalier intégré</span> : agent en selle attaque sans malus. Si Dodrio Secoué : Athlétisme diff. 4 ou chute (Secousse + 1d6).</li></ul>
+          </div>
+        </div>
+<div class="beast-card cat-psi" data-cat="psi" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Tentacruel PSI-B</div><div class="beast-meta"><span class="tag tag-psi">PSI-B</span> Eau/Poison · Grand (+1) · Gardien zone</div></div>
+          <div class="beast-body">
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>9</span></div><div class="stat-pill">Allure <span>6" nage</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Fouet Lianes</td><td class="atk-dmg">Str+d6</td><td>Mêlée 3"</td><td>Entrave −2 Agilité si Relance</td></tr>
+              <tr><td class="atk-name">Acide</td><td class="atk-dmg">2d6</td><td>8"/16"</td><td>Armure réduite de 2 pts</td></tr>
+              <tr><td class="atk-name">Tentacule</td><td class="atk-dmg">Str+d8</td><td>Mêlée</td><td>Saisie — Str d10 opp. pour se dégager</td></tr>
+            </table>
+            <ul class="capa-list">
+              <li><span class="capa-name">Zone de contrôle 4"</span> : toute créature dans la zone est à portée mêlée.</li>
+              <li><span class="capa-name">Bouclier humain</span> : cible saisie = 50% chance que les attaques la touchent au lieu de Tentacruel.</li>
+            </ul>
+          </div>
+        </div>
+<div class="beast-card cat-psi" data-cat="psi" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Hypnomade PSI-B (Hypno) ★</div><div class="beast-meta"><span class="tag tag-psi">PSI-B</span> Psy · Extra UNIQUE — objectif prioritaire</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Le seul Hypnomade du réacteur. Amplifie le signal PSI-B dans tout le sous-sol. Si neutralisé, toutes les créatures PSI-B du niveau −3 perdent leur coordination pendant 1d6 rounds.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">RUS <span>d8</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>6"</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Hypnose</td><td class="atk-dmg">Trempe d8 opp.</td><td>Zone 3"</td><td>Dort 1d6 rounds — pas de réveil naturel</td></tr>
+              <tr><td class="atk-name">Psyko</td><td class="atk-dmg">2d8</td><td>12"/24"</td><td>Secoué + −2 Ruse jusqu'au prochain round</td></tr>
+              <tr><td class="atk-name">Pendule (1×/combat)</td><td class="atk-dmg">Ruse d6 opp.</td><td>Ligne de vue</td><td>Échec : Soumis (obéit à un ordre simple)</td></tr>
+            </table>
+            <ul class="capa-list">
+              <li><span class="capa-name">Amplificateur PSI-B</span> : toutes créatures PSI-B à rayon 20" ont +1 à tous leurs jets. Neutralisé = erratiques 1d6 rounds.</li>
+              <li><span class="capa-name">Détection d'intrusion</span> : perçoit toute créature éveillée à 10". Impossible de le surprendre directement. Seul Fil (Discrétion d12, diff. 8) peut passer sous son seuil.</li>
+            </ul>
+            <div class="tactique-block">OBJECTIF PRIORITAIRE. Prévient Holt dès que les PJ atteignent le niveau −3. Ne fuit pas — le harnais l'en empêche.</div>
+          </div>
+        </div></div>
+  </div>
+
+  <div class="beast-cat-group" id="bgroup-allies">
+    <div class="beast-cat-title">Alliés &amp; objectifs narratifs <span class="beast-count">8 entrées</span></div>
+    <div class="bestiary-grid"><div class="beast-card cat-gardien" data-cat="gardien" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Marill — objectif de sauvetage</div><div class="beast-meta"><span class="tag tag-gardien">Allié</span> Eau/Fée · Petit (−1) · Captif</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">L'un des premiers Pokémon disparus. Le retrouver dans le réacteur donne un visage humain à l'enquête. Ramené à sa dresseure → elle sort de l'apathie immédiatement. Le Groupe gagne 1 Fate Chip chacun.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>4</span></div>
+            </div>
+            <ul class="capa-list"><li><span class="capa-name">État d'épuisement</span> : à sa libération, 1 Blessure automatique. Trempe d4. Récupère en 24h de repos.</li></ul>
+          </div>
+        </div>
+<div class="beast-card cat-gardien" data-cat="gardien" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Abra de Torkel — souvenir</div><div class="beast-meta"><span class="tag tag-gardien">Allié</span> Psy · Outil narratif uniquement</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">L'Abra de Torkel est mort dans le réacteur. Sa Pokéball vide est dans la poche du garde. Un PJ qui la remarque et pose la question déclenche la coopération de Torkel.</p>
+            <ul class="capa-list"><li><span class="capa-name">Fantôme du lien</span> : la Pokéball vide réagit faiblement (halo bleu) à proximité des Pokémon encore captifs. Outil de détection passive.</li></ul>
+            <div class="tactique-block">Aucune stat en jeu. Outil narratif uniquement. Son rôle est de déclencher l'humanisation de Torkel.</div>
+          </div>
+        </div>
+<div class="beast-card cat-gardien" data-cat="gardien" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Tauros (Pokémon de Yael Ors)</div><div class="beast-meta"><span class="tag tag-gardien">Allié</span> Normal · Grand (+1) · Transport</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Utilisé pour les déplacements de Yael. En Acte IV, peut transporter le Groupe vers Céladopole pour la publication — 4h en carriole (option logistique Fin B).</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">FOR <span>d12</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>9</span></div><div class="stat-pill">Allure <span>8"</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Charge</td><td class="atk-dmg">Str+d8</td><td>Charge 4"+</td><td>Renversé si Robustesse non atteinte</td></tr>
+              <tr><td class="atk-name">Séisme</td><td class="atk-dmg">2d6</td><td>Zone 3"</td><td>Agilité d6 diff. 4 ou Renversé</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Bête de somme</span> : charge 200kg sans malus. Transport inter-cité en 4h.</li></ul>
+          </div>
+        </div>
+<div class="beast-card cat-gardien" data-cat="gardien" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Canarticho (informateur)</div><div class="beast-meta"><span class="tag tag-gardien">Allié</span> Normal/Vol · Messager local de Lavanville</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Rares dans tout Kanto, les Canartichos dressés font partie du réseau postal de longue date — leur sens de l'orientation est légendaire. Celui-ci appartient au facteur de Lavanville, entré dans l'apathie depuis les premières disparitions. Il continue ses rondes par habitude — même dresseur en veille, même trajet, même précision. La Posse peut tomber sur lui n'importe où en ville. Déclencher sa coopération : Dressage diff. 4 (diff. 2 avec Telera).</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">RUS <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>8" (vol)</span></div>
+    </div>
+    <ul class="capa-list">
+      <li><span class="capa-name">Cartographe urbain</span> : connaît tous les passages, entrées de service et accès alternatifs de Lavanville. Peut guider vers n'importe quel bâtiment sans être vu (Discrétion +2 pour la Posse).</li>
+      <li><span class="capa-name">Messager fiable</span> : peut transporter un message de 50 mots jusqu'à 10km. Délai : 1h. Interception difficile (Perception diff. 8 pour les agents d'Ashford).</li>
+      <li><span class="capa-name">Témoin silencieux</span> : a observé les agents d'Ashford pendant des semaines. Investigation diff. 4 pour lui "faire raconter" ce qu'il a vu (mimiques + trajectoires).</li>
+    </ul>
+    <div class="tactique-block">Ne combat jamais. Sa valeur est purement narrative et logistique. Il peut devenir le meilleur atout de la Posse pour la surveillance discrète et les communications avec Yael Ors.</div>
+  </div>
+</div>
+<div class="beast-card cat-gardien" data-cat="gardien" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Pikachu abandonné</div><div class="beast-meta"><span class="tag tag-gardien">Allié</span> Électrique · Partenaire potentiel longue durée</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Les Pikachus dressés existent partout à Kanto, souvent donnés comme premiers partenaires. Quand leur dresseur disparaît — voyage, accident, apathie — ils attendent. Celui-ci attend devant un appartement de Lavanville chaque matin depuis trois semaines. Son dresseur, un enfant de 12 ans, est entré dans l'apathie profonde peu après les premières disparitions. Les charges statiques de ses joues ont doublé. Le stress s'accumule sous sa fourrure.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">FOR <span>d4</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>8"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Éclair</td><td class="atk-dmg">2d6</td><td>12"/24"</td><td>Secoué si Relance</td></tr>
+      <tr><td class="atk-name">Tonnerre (stress)</td><td class="atk-dmg">3d6</td><td>Zone 4"</td><td>Déclenche involontairement sous forte émotion. Affecte amis et ennemis</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Décharge de stress</span> : si Telera ou Rizen Dao l'apaise (Dressage diff. 4), il se calme et peut être apprivoisé temporairement. Son Éclair devient contrôlé.</li>
+      <li><span class="capa-name">Signal émotionnel</span> : réagit aux PSI-B à 10" en hérissant ses joues. Détecteur passif gratuit.</li>
+      <li><span class="capa-name">Retrouvailles</span> : si la Posse retrouve son dresseur (guéri par résolution du réacteur), leur retrouvaille est un moment fort de l'Acte IV. Récompense narrative +1 Fate Chip.</li>
+    </ul>
+    <div class="tactique-block">Allié instable jusqu'à apaisement. Une fois apprivoisé, devient l'un des meilleurs détecteurs PSI-B de la Posse et peut recharger des équipements électroniques (utile pour Fil).</div>
+  </div>
+</div>
+<div class="beast-card cat-gardien" data-cat="gardien" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Germignon égaré</div><div class="beast-meta"><span class="tag tag-gardien">Allié</span> Normal · Jeune Pokémon, protection nécessaire</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Les Germignons jeunes sont des Pokémon dépendants — trop inexpérimentés pour survivre seuls. On en trouve dans tout Kanto, souvent abandonnés par des dresseurs trop pressés d'obtenir une évolution. Celui de Lavanville suit quiconque lui montre de la bienveillance depuis que sa dresseuse est hospitalisée. Ce n'est pas de la confiance — c'est du désespoir de contact. Sa queue-oeuf contient un soin d'urgence naturel unique. Telera en a la responsabilité morale dès qu'il le rencontre.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>3</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>6"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Coup de queue</td><td class="atk-dmg">d4</td><td>Mêlée</td><td>Uniquement défensif. −1 Parade à la cible</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Oeuf guérisseur (1× unique)</span> : l'oeuf dans sa queue contient un soin naturel. Action complète pour l'extraire : soigne 2d6 points de Robustesse sur une créature (Fil inclus).</li>
+      <li><span class="capa-name">Fardeau moral</span> : Telera ne peut pas laisser le Germignon en danger (Handicap Protecteur compulsif s'applique automatiquement). Mais il peut aussi le confier à la femme au Marill (objectif émotionnel de l'Acte IV).</li>
+    </ul>
+    <div class="tactique-block">Jamais un combattant. Son rôle est narratif : créer un dilemme moral pour Telera, fournir un soin d'urgence unique, et servir de pont émotionnel entre la Posse et les habitants de Lavanville.</div>
+  </div>
+</div>
+<div class="beast-card cat-gardien" data-cat="gardien" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Aspicot tisserand</div><div class="beast-meta"><span class="tag tag-gardien">Allié</span> Insecte/Poison · Outil technique passif</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Les Aspicots tissent leurs cocons dans les structures souterraines et humides de tout Kanto — caves, ruines, infrastructures abandonnées. Leur soie est d'une résistance remarquable, souvent négligée par les dresseurs en quête de puissance. Une famille s'est installée dans les câblages des galeries de Lavanville avant même la construction du réacteur. Telera est le seul à avoir remarqué que leur fil a exactement les mêmes propriétés conductrices que la structure filaire de Fil.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d4</span></div><div class="stat-pill">VIG <span>d4</span></div><div class="stat-pill">Parade <span>2</span></div><div class="stat-pill">Robustesse <span>3</span></div><div class="stat-pill">Allure <span>2"</span></div>
+    </div>
+    <ul class="capa-list">
+      <li><span class="capa-name">Fil de soie renforcé</span> : leurs fils peuvent supporter 50kg. Magdalena Hell peut les utiliser comme câbles de remplacement (Électronique diff. 4 = répare un équipement endommagé du réacteur).</li>
+      <li><span class="capa-name">Soin de Fil</span> : Telera peut utiliser leurs fils comme matériau de remplacement pour soigner Fil après le chapitre 9. Médecine Pokémon diff. 6 = réduit le temps de récupération de Fil de moitié.</li>
+      <li><span class="capa-name">Tisserand discret</span> : peuvent obstruer silencieusement une caméra ou un capteur en 10 minutes (Survie diff. 4 pour guider leur travail).</li>
+    </ul>
+    <div class="tactique-block">Outil, pas combattant. Leur vraie valeur : permettre des réparations de fortune dans le réacteur et potentiellement accélérer la récupération de Fil. À protéger si la Posse veut les utiliser.</div>
+  </div>
+</div>
+<div class="beast-card cat-gardien" data-cat="gardien" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Mélofée (sanctuaire)</div><div class="beast-meta"><span class="tag tag-gardien">Allié</span> Fée/Normal · Présence apaisante, non combattante</div></div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Les Mélofées s'installent dans des lieux qui ont une histoire de paix — anciens lieux de culte, jardins de villes paisibles, abords des Centres Pokémon. Sensibles aux souffrances émotionnelles dans un rayon large, ils migrent vers elles plutôt que de les fuir. Celui de Lavanville a quitté le jardin central de Céladopole il y a six semaines pour s'installer dans le vieux sanctuaire de la ville. Les habitants apathiques y viennent instinctivement sans savoir pourquoi.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">TRE <span>d10</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>3</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>4"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Berceuse</td><td class="atk-dmg">Trempe d8 opp.</td><td>Zone 6"</td><td>Défensif uniquement. Cible endormie 1d6 rounds (affecte ennemis ET alliés)</td></tr>
+      <tr><td class="atk-name">Éclair Lune</td><td class="atk-dmg">d6</td><td>8"</td><td>Attaque de lumière pure. Ignores les immunités PSI</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Aura de paix</span> : dans un rayon de 4", les jets de Trempe se font à diff. −1. Les effets de peur et de confusion sont réduits d'un rang.</li>
+      <li><span class="capa-name">Soins collectifs (Hors combat)</span> : après 1h dans son sanctuaire, toute la Posse récupère 1 Secousse et −1 Blessure sur jet de Vigueur diff. 4. Une fois par 24h.</li>
+      <li><span class="capa-name">Résistance PSI-B</span> : son aura crée une zone de 4" imperméable aux signaux PSI-B. Les Pokémon PSI-B dans cette zone subissent −2 à tous leurs jets.</li>
+    </ul>
+    <div class="tactique-block">Sanctuaire de repos entre les chapitres. Sa zone de résistance PSI-B peut être utilisée tactiquement si la Posse l'emmène dans le réacteur — mais elle refuse de quitter son sanctuaire sans jet de Trempe diff. 6 de Rizen Dao.</div>
+  </div>
+</div>
+</div>
+  </div>
+
+  <div class="beast-cat-group" id="bgroup-elites">
+    <div class="beast-cat-title">Pokémon élites <span class="beast-count">10 entrées</span></div>
+    <div class="bestiary-grid"><div class="beast-card cat-sauvage" data-cat="elite" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Alakazam ★ ÉLITE</div>
+    <div class="beast-meta"><span class="tag tag-psi">Élite</span> Psy · Joker · Coordinateur des PSI-B niveau −2</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Un Alakazam capturé puis modifié par Mira Holt avec une version avancée du harnais PSI-B. Contrairement aux autres, il conserve toute son intelligence — et l'utilise pour optimiser le contrôle des autres captifs. C'est le gardien cognitif du niveau −2.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">RUS <span>d12</span></div><div class="stat-pill">FOR <span>d4</span></div><div class="stat-pill">TRE <span>d4</span></div><div class="stat-pill">VIG <span>d6</span></div>
+      <div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Bennies <span>2</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Psyko</td><td class="atk-dmg">2d10</td><td>16"/32"</td><td>Secoué + −2 Ruse jusqu'à fin round</td></tr>
+      <tr><td class="atk-name">Soin (PSI interne)</td><td class="atk-dmg">Soin d6</td><td>Zone 4"</td><td>Soigne 1 autre Pokemon PSI-B dans la zone (retire Secoué)</td></tr>
+      <tr><td class="atk-name">Bouclier Psy</td><td class="atk-dmg">—</td><td>—</td><td>Jusqu'à 3 dégâts de toute attaque mentale absorbés ce round</td></tr>
+      <tr><td class="atk-name">Télékinésie</td><td class="atk-dmg">Force d10 opp.</td><td>12"</td><td>Échec : cible déplacée de 4" dans n'importe quelle direction</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Joker</span> : lance d6 Joker à chaque jet. Bennies 2.</li>
+      <li><span class="capa-name">Coordinateur PSI-B</span> : tant qu'il est actif, tous les Pokemon PSI-B dans un rayon 15" peuvent agir sur l'initiative d'Alakazam (ils partagent sa carte). Si mis KO, tous les PSI-B du niveau −2 agissent à −2 pendant 1d6 rounds.</li>
+      <li><span class="capa-name">Intelligence préservée</span> : contrairement aux autres PSI-B, il anticipe les tactiques. −2 aux jets de Surprise contre lui. Il alerte Hypnomade (niveau −3) si les PJ atteignent son niveau.</li>
+      <li><span class="capa-name">Harnais renforcé</span> : son harnais a Robustesse 8 (au lieu de 4). Requiert une Relance sur un jet d'attaque ciblé pour l'atteindre précisément.</li>
+    </ul>
+    <div class="tactique-block">OBJECTIF SECONDAIRE. Ouvre par Télékinésie pour disperser le Groupe, puis coordonne ses PSI-B. Cibler le harnais renforcé est la clé — mais sa Robustesse 8 le rend difficile. Magdalena Hell (Sciences d8) peut identifier le point faible du harnais avec un jet diff. 6.</div>
+  </div>
+</div>
+<div class="beast-card cat-sauvage" data-cat="elite" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Ectoplasma ★ ÉLITE</div>
+    <div class="beast-meta"><span class="tag tag-psi">Élite</span> Spectre/Poison · Joker · Gardien des archives du réacteur</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Ectoplasma n'est pas sous contrôle PSI-B — il est apprivoisé. Holt l'a dressé comme gardien de ses archives physiques au niveau −1. Il obéit librement, comprend des ordres complexes, et a une rancune particulière contre quiconque touche aux dossiers de Holt.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">RUS <span>d8</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">TRE <span>d8</span></div><div class="stat-pill">VIG <span>d6</span></div>
+      <div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Bennies <span>2</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Ombre Portée</td><td class="atk-dmg">2d6 (Spectre)</td><td>Mêlée</td><td>Ignore l'Armure physique. Secoué si Relance</td></tr>
+      <tr><td class="atk-name">Lèche-Songe</td><td class="atk-dmg">d8 directs</td><td>Mêlée</td><td>Cible endormie seulement. Ignore Robustesse</td></tr>
+      <tr><td class="atk-name">Hypnose</td><td class="atk-dmg">Trempe d8 opp.</td><td>Zone 3"</td><td>Échec : dort 1d6 rounds</td></tr>
+      <tr><td class="atk-name">Malédiction</td><td class="atk-dmg">d4/round</td><td>Contact</td><td>Dommages continus jusqu'à jet de Trempe d8 réussi (action complète)</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Joker</span> : lance d6 Joker. Bennies 2.</li>
+      <li><span class="capa-name">Forme immatérielle (Passif)</span> : immunisé aux attaques physiques normales. Seuls Spectre, Psy, Feu, ou Sinistre causent des dégâts. Peut traverser les murs (action de mouvement).</li>
+      <li><span class="capa-name">Gardien archiviste</span> : connaît le contenu de toutes les archives du niveau −1. Si neutralisé (pas nécessairement KO), les PJ peuvent tenter de récupérer des documents (Investigation diff. 4 ou Dressage diff. 6 pour le convaincre).</li>
+      <li><span class="capa-name">Présence glaciale</span> : zone de 3" autour de lui — toutes créatures vivantes subissent −1 à tous leurs jets (froid psychique). Cumulatif avec les rounds passés dans la zone.</li>
+    </ul>
+    <div class="tactique-block">Endort une cible en priorité, draine les endormis. Profite de sa traversée des murs pour attaquer des cibles isolées. La Présence glaciale force les PJ à l'éliminer rapidement ou à en souffrir sur la durée. Noctali (Sinistre) peut le blesser normalement.</div>
+  </div>
+</div>
+<div class="beast-card cat-elite" data-cat="elite" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Dracaufeu ★ ÉLITE</div>
+    <div class="beast-meta"><span class="tag tag-psi">Élite</span> Feu/Vol · Joker · Gardien des hauteurs — dressé par Ashford</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Dracaufeu personnel du Directeur Ashford — maintenu par un réseau de soins à distance. Sa présence à Lavanville est le signal qu'Ashford considère la situation comme critique. Il patrouille les toits la nuit et peut transporter un agent d'Ashford.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">FOR <span>d12</span></div><div class="stat-pill">VIG <span>d10</span></div>
+      <div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">Robustesse <span>10</span></div><div class="stat-pill">Bennies <span>2</span></div><div class="stat-pill">Allure <span>12" (vol)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Dracogriffe</td><td class="atk-dmg">Str+d10</td><td>Mêlée</td><td>Perce Armure 2. Relance : prise (immobilisé)</td></tr>
+      <tr><td class="atk-name">Explosion Feu</td><td class="atk-dmg">4d6</td><td>Zone 4"</td><td>Armure ordinaire ignorée. Tout dans la zone En Feu si Relance</td></tr>
+      <tr><td class="atk-name">Tranche-Aile</td><td class="atk-dmg">Str+d8</td><td>Mêlée</td><td>Portée 3" grâce aux ailes. Touche toutes cibles dans l'arc</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Joker</span> : d6 Joker à chaque jet. Bennies 2.</li>
+      <li><span class="capa-name">Aura de terreur</span> : toute créature de moins de 10 Robustesse entrant dans une zone de 4" doit réussir Trempe diff. 6 ou être Secouée (peur instinctive).</li>
+      <li><span class="capa-name">Signal d'Ashford</span> : sa présence en ville indique qu'Ashford a décidé de neutraliser la Posse directement. Le Marshal l'introduit quand les joueurs ont trop de succès en Acte III.</li>
+      <li><span class="capa-name">Loyal au seul Ashford</span> : si Ashford démissionne (Ch. 11), Dracaufeu cesse de combattre et repart. C'est la seule façon de le faire partir sans le vaincre.</li>
+    </ul>
+    <div class="tactique-block">Frappe depuis les airs, ne se pose jamais volontairement. Explosion Feu pour disperser, Dracogriffe pour isoler une cible. Sa seule faiblesse : les attaques Roche et Eau. Noctali (Sinistre) ne l'affecte pas directement.</div>
+  </div>
+</div>
+<div class="beast-card cat-elite" data-cat="elite" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Tortank ★ ÉLITE</div>
+    <div class="beast-meta"><span class="tag tag-psi">Élite</span> Eau · Joker · Mur vivant du niveau −2</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Placé par Holt comme gardien de la porte principale du niveau −2. Pas sous contrôle PSI-B — dressé depuis des années, loyal à Holt personnellement. Il n'attaque pas en premier. Il laisse entrer. Il ne laisse pas sortir.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">FOR <span>d12</span></div><div class="stat-pill">VIG <span>d12</span></div><div class="stat-pill">TRE <span>d8</span></div>
+      <div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">Robustesse <span>13 (Arm 4)</span></div><div class="stat-pill">Bennies <span>2</span></div><div class="stat-pill">Allure <span>5"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Hydrocanon</td><td class="atk-dmg">3d8</td><td>16"/32"</td><td>Perce Armure 4. Renversé si Robustesse non atteinte</td></tr>
+      <tr><td class="atk-name">Charge Bulldozer</td><td class="atk-dmg">Str+d10</td><td>Charge</td><td>Renversé automatique. Propulsé de 4". Détruit obstacles légers</td></tr>
+      <tr><td class="atk-name">Carapace défensive</td><td class="atk-dmg">—</td><td>—</td><td>Action : +4 Armure et immunité Secousse ce round. Ne peut pas attaquer</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Joker</span> : d6 Joker. Bennies 2.</li>
+      <li><span class="capa-name">Forteresse vivante</span> : Armure 4 naturelle. Robustesse 13. Seules les attaques Électrique ou Plante ignorent son Armure naturelle.</li>
+      <li><span class="capa-name">Gardien de la retraite</span> : sa position dans le couloir de sortie est le vrai danger — la Posse peut entrer facilement mais la sortie avec Fil est bloquée par lui. C'est pourquoi Torkel est essentiel.</li>
+    </ul>
+    <div class="tactique-block">N'attaque pas à l'entrée. Attend que la Posse soit chargée de Fil (Ch. 9) pour barrer la sortie. Hydrocanon à distance, Carapace défensive si bombardé. Sa résolution passe par Torkel ou une diversion.</div>
+  </div>
+</div>
+<div class="beast-card cat-elite" data-cat="elite" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Florizarre ★ ÉLITE</div>
+    <div class="beast-meta"><span class="tag tag-psi">Élite</span> Plante/Poison · Joker · Contrôle PSI-B avancé, niveau −1</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Sous harnais PSI-B renforcé, son système végétal a fusionné partiellement avec les câblages du niveau −1. Il ne peut plus se déplacer, mais ses lianes s'étendent sur 8m dans toutes les directions. La salle qu'il occupe est un piège organique.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">RUS <span>d8</span></div><div class="stat-pill">VIG <span>d10</span></div>
+      <div class="stat-pill">Parade <span>5 (immobile)</span></div><div class="stat-pill">Robustesse <span>9 (Arm 2)</span></div><div class="stat-pill">Bennies <span>2</span></div><div class="stat-pill">Allure <span>0 (fixe)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Lianes multiples</td><td class="atk-dmg">Str+d6</td><td>8" dans toutes directions</td><td>Attrape jusqu'à 4 cibles simultanément. For d10 opp. pour se dégager</td></tr>
+      <tr><td class="atk-name">Spores PSI-B</td><td class="atk-dmg">Trempe d8 opp.</td><td>Zone 6"</td><td>Échec : sous influence PSI-B partielle (−2 à tous les jets, 1d4 rounds)</td></tr>
+      <tr><td class="atk-name">Acide végétal</td><td class="atk-dmg">2d6 (acide)</td><td>Zone 3"</td><td>Armure réduite de 2 pts par touche</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Joker</span> : d6 Joker. Bennies 2.</li>
+      <li><span class="capa-name">Salle piège</span> : toute la salle qu'il occupe est sa zone de combat. Impossible de le contourner — il faut passer à travers ou trouver une ventilation.</li>
+      <li><span class="capa-name">Fusion végétale-machine</span> : l'endommager risque de déclencher une alarme dans tout le niveau (Électronique diff. 6 pour couper sa connexion sans alarme).</li>
+    </ul>
+    <div class="tactique-block">OBSTACLE IMMOBILE. Son danger est l'impossibilité de le contourner. Les lianes capturent, les spores affaiblissent, l'acide détruit les équipements. Solution : Électronique pour couper sa connexion, ou Feu pour ses lianes (mais risque d'incendie dans la mine).</div>
+  </div>
+</div>
+<div class="beast-card cat-elite" data-cat="elite" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Lokhlass ★ ÉLITE</div>
+    <div class="beast-meta"><span class="tag tag-psi">Élite</span> Eau/Glace · Joker · Gardien des accès aquatiques du réacteur</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Positionné dans le réseau hydraulique souterrain reliant le réacteur aux nappes phréatiques de Lavanville. Sa taille couvre entièrement les conduits principaux. Le seul accès alternatif au niveau −3 passe par lui — et par l'eau à 4°C.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">FOR <span>d12</span></div><div class="stat-pill">VIG <span>d12</span></div><div class="stat-pill">TRE <span>d6</span></div>
+      <div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>11</span></div><div class="stat-pill">Bennies <span>2</span></div><div class="stat-pill">Allure <span>4" (nage 12")</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Blizzard</td><td class="atk-dmg">2d8 (froid)</td><td>Zone 6" devant</td><td>Vigueur diff. 4 ou Fatigué (hypothermie cumulative)</td></tr>
+      <tr><td class="atk-name">Étreinte gelée</td><td class="atk-dmg">Str+d8 (froid)</td><td>Mêlée</td><td>Saisie + Allure ÷2 (gel partiel). For d12 opp. pour se dégager</td></tr>
+      <tr><td class="atk-name">Tsunami mineur</td><td class="atk-dmg">2d10</td><td>Zone 8" (en eau)</td><td>Renversé si Robustesse non atteinte. Uniquement dans les conduits aquatiques</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Joker</span> : d6 Joker. Bennies 2.</li>
+      <li><span class="capa-name">Hypothermie</span> : 3 rounds d'exposition au froid sans protection = −1 à tous les jets (cumulatif). Protection thermique (équipement ou Tétarte apprivoisé) annule.</li>
+      <li><span class="capa-name">Passage alternatif</span> : le vaincre ou le neutraliser ouvre l'accès aquatique au niveau −3 — court-circuit de la sécurité principale. Telera est le seul à connaître ce passage (Survie diff. 6).</li>
+    </ul>
+    <div class="tactique-block">Blizzard dès que quelqu'un entre dans son conduit. Étreinte gelée sur la cible la plus mobile. L'hypothermie est son vrai danger sur la durée. Un Tétarte apprivoisé contrecarre son froid et lui donne −2 à tous ses jets.</div>
+  </div>
+</div>
+<div class="beast-card cat-elite" data-cat="elite" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Gengar ★ ÉLITE</div>
+    <div class="beast-meta"><span class="tag tag-psi">Élite</span> Spectre/Poison · Joker · Espion de Holt dans les rues</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Holt utilise son Gengar comme réseau de surveillance en surface. Il s'infiltre dans les ombres, écoute les conversations, et rapporte. Invisible le jour, actif la nuit. La Posse a peut-être été surveillée depuis le Chapitre 2 sans le savoir.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d12</span></div><div class="stat-pill">RUS <span>d10</span></div><div class="stat-pill">VIG <span>d6</span></div>
+      <div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Bennies <span>2</span></div><div class="stat-pill">Allure <span>8" (vol)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Poing Fantôme</td><td class="atk-dmg">2d6 (spectre)</td><td>Mêlée</td><td>Ignore Armure physique</td></tr>
+      <tr><td class="atk-name">Ombre Portée</td><td class="atk-dmg">Ruse d10 opp.</td><td>Zone 4"</td><td>Échec : terreur (Secoué + fuit son tour)</td></tr>
+      <tr><td class="atk-name">Vol-Vie</td><td class="atk-dmg">d8 directs</td><td>Mêlée</td><td>Ignore Robustesse. Récupère les dommages en HP</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Joker</span> : d6 Joker. Bennies 2.</li>
+      <li><span class="capa-name">Immatériel</span> : immunisé aux attaques physiques. Seuls Spectre, Psy, Sinistre ou Lumière causent des dégâts. Traverse les murs librement.</li>
+      <li><span class="capa-name">Espion infiltré</span> : si la Posse a eu des conversations privées, Gengar peut avoir rapporté leur contenu à Holt. Investigation diff. 8 pour trouver des preuves de surveillance (ombres anormales, froid soudain).</li>
+      <li><span class="capa-name">Vulnérabilité lumière</span> : lumière directe intense (projecteur, flash) = Secoué automatique ce round.</li>
+    </ul>
+    <div class="tactique-block">PRIORITÉ : fuir si découvert plutôt que combattre. S'il est acculé, Ombre Portée pour panifier la Posse, Vol-Vie pour se soigner, fuite immatérielle. Noctali le détecte automatiquement à 6" (Détection d'intentions).</div>
+  </div>
+</div>
+<div class="beast-card cat-elite" data-cat="elite" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Rhinoféros ★ ÉLITE</div>
+    <div class="beast-meta"><span class="tag tag-psi">Élite</span> Sol/Roche · Joker · Tank des niveaux inférieurs</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Placé par Holt comme blindage mobile au niveau −2. Trop grand pour les couloirs standards, il a été introduit avant la fermeture des galeries d'accès principaux. Il ne peut plus sortir. Il le sait. Il est en colère permanente.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">FOR <span>d12+2</span></div><div class="stat-pill">VIG <span>d12</span></div>
+      <div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>12 (Arm 4)</span></div><div class="stat-pill">Bennies <span>2</span></div><div class="stat-pill">Allure <span>6"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Séisme</td><td class="atk-dmg">3d6</td><td>Zone 8"</td><td>Agil. d8 diff. 6 ou Renversé + 2d6. Effondrement possible (Marshal)</td></tr>
+      <tr><td class="atk-name">Korne</td><td class="atk-dmg">Str+d12</td><td>Charge 6"+</td><td>Perce Armure 6. Renversé automatique</td></tr>
+      <tr><td class="atk-name">Escalade roche</td><td class="atk-dmg">2d8</td><td>8"</td><td>Projette des éclats rocheux arrachés aux murs</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Joker</span> : d6 Joker. Bennies 2.</li>
+      <li><span class="capa-name">Blindé naturel</span> : Armure 4. Seules les attaques Eau, Plante ou Combat ignorent son Armure naturelle.</li>
+      <li><span class="capa-name">Prisonnier furieux</span> : ne peut pas sortir du niveau −2. Si la Posse lui ouvre une issue vers la surface (Électronique diff. 6), il charge vers la sortie — ce qui peut servir de diversion massive contre les agents d'Ashford.</li>
+    </ul>
+    <div class="tactique-block">Séisme d'ouverture pour déstabiliser tout le monde. Korne sur la cible la plus menaçante. Sa rage d'être piégé est exploitable : lui montrer une sortie le détourne totalement de la Posse.</div>
+  </div>
+</div>
+<div class="beast-card cat-elite" data-cat="elite" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Machopeur ★ ÉLITE</div>
+    <div class="beast-meta"><span class="tag tag-psi">Élite</span> Combat · Joker · Champion personnel d'un agent d'Ashford</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">L'agent d'élite envoyé par Ashford pour neutraliser la Posse physiquement a un Machopeur entraîné depuis 8 ans. Discipliné, précis, sans excès. Il combat comme son dresseur : méthodiquement, sans rage, sans pitié. Le plus redoutable des agents d'Ashford.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d12</span></div><div class="stat-pill">TRE <span>d8</span></div>
+      <div class="stat-pill">Parade <span>8</span></div><div class="stat-pill">Robustesse <span>8 (Arm 2)</span></div><div class="stat-pill">Bennies <span>2</span></div><div class="stat-pill">Allure <span>6"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Poing Karaté</td><td class="atk-dmg">Str+d8</td><td>Mêlée</td><td>Perce Armure 4. Critique sur Relance (+d8)</td></tr>
+      <tr><td class="atk-name">Soumission</td><td class="atk-dmg">Str+d6</td><td>Mêlée</td><td>Saisie automatique si touché. Force d12 opp. pour briser</td></tr>
+      <tr><td class="atk-name">Balayage</td><td class="atk-dmg">d6</td><td>Zone 2"</td><td>Toutes cibles en mêlée Renversées. Agil. d8 diff. 4 pour esquiver</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Joker</span> : d6 Joker. Bennies 2.</li>
+      <li><span class="capa-name">Combat éprouvé</span> : +2 Parade. Ne peut être Secoué par des attaques non ciblées (zone, éclaboussures). Ignore les malus de Distraction.</li>
+      <li><span class="capa-name">Ciblage tactique</span> : chaque round, désigne une cible prioritaire. +1 à tous les jets contre cette cible. Change de cible uniquement si la prioritaire est neutralisée.</li>
+    </ul>
+    <div class="tactique-block">Balayage d'ouverture, puis Soumission sur le PJ le plus dangereux. Maintient la saisie pendant que son dresseur agit. La clé : le séparer de son dresseur (Intimidation diff. 6 contre le dresseur pour qu'il recule).</div>
+  </div>
+</div>
+<div class="beast-card cat-elite" data-cat="elite" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Ronflex Gardien ★ ÉLITE</div>
+    <div class="beast-meta"><span class="tag tag-psi">Élite</span> Normal · Joker · Gardien dressé de l'entrepôt d'Ashford</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Contrairement au Ronflex Alpha sauvage, celui-ci est dressé et discipliné. Il garde l'entrepôt où Ashford stocke ses archives physiques à Lavanville. Éveillé 6h par jour selon un protocole précis. La fenêtre pour entrer sans l'affronter est connue de Rizen Dao (réseau d'informateurs).</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">FOR <span>d12+2</span></div><div class="stat-pill">VIG <span>d12</span></div><div class="stat-pill">TRE <span>d8</span></div>
+      <div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>12</span></div><div class="stat-pill">Bennies <span>2</span></div><div class="stat-pill">Allure <span>5"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Tranche</td><td class="atk-dmg">Str+d10</td><td>Mêlée zone 2"</td><td>Touche toutes cibles adjacentes</td></tr>
+      <tr><td class="atk-name">Charge du titan</td><td class="atk-dmg">Str+d12</td><td>Charge 4"+</td><td>Renversé automatique. Détruit murs légers</td></tr>
+      <tr><td class="atk-name">Ronflement tactique</td><td class="atk-dmg">Trempe d8 opp.</td><td>Zone 4"</td><td>Volontaire : Secoué si échec. Utilisable éveillé</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Joker</span> : d6 Joker. Bennies 2.</li>
+      <li><span class="capa-name">Fenêtre d'infiltration</span> : dort de minuit à 6h (Survie ou Réseau diff. 4 pour connaître l'horaire). Pendant son sommeil, Discrétion diff. 4 pour entrer sans le réveiller.</li>
+      <li><span class="capa-name">Archives d'Ashford</span> : l'entrepôt qu'il garde contient des preuves supplémentaires du financement du réacteur — utiles pour la Fin B (renforcement de la preuve médiatique).</li>
+    </ul>
+    <div class="tactique-block">L'affronter est la moins bonne option. La fenêtre de sommeil est la voie normale. Si réveillé prématurément, Ronflement tactique d'abord pour Secouer la menace, puis Charge. Arcanin peut le tenir en respect le temps d'une extraction rapide.</div>
+  </div>
+</div>
+</div>
+  </div>
+
+  <div class="beast-cat-group" id="bgroup-boss">
+    <div class="beast-cat-title">Boss <span class="beast-count">8 entrées</span></div>
+    <div class="bestiary-grid"><div class="beast-card cat-boss" data-cat="boss" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Absol (×2) — Pokémon de Holt</div><div class="beast-meta"><span class="tag tag-boss">Boss</span> Sinistre · Extra (Jokers si besoin)</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Loyaux par choix, pas par contrainte. Holt les traite avec soin — contraste cruel avec son traitement des Pokémon sauvages. C'est le cœur de sa contradiction.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d8</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>8"</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Tranche</td><td class="atk-dmg">Str+d8</td><td>Mêlée</td><td>+d6 si Relance (critique)</td></tr>
+              <tr><td class="atk-name">Coupvent</td><td class="atk-dmg">Str+d6</td><td>8"</td><td>Attaque tranchante à distance</td></tr>
+            </table>
+            <ul class="capa-list">
+              <li><span class="capa-name">Pressentiment</span> : ne peut pas être surpris. Agit toujours en premier si cible l'attaque.</li>
+              <li><span class="capa-name">Garde du corps</span> : peut recevoir les dégâts à la place de Holt (Agilité diff. 4).</li>
+              <li><span class="capa-name">Loyal par choix</span> : si Holt est arrêtée, cessent de combattre et s'assoient à ses côtés. Ne fuient pas.</li>
+            </ul>
+            <div class="tactique-block">Binôme. L'un flanque pendant que l'autre engage. Priorité absolue : protéger Holt. Ne s'éloignent jamais de plus de 4" d'elle.</div>
+          </div>
+        </div>
+<div class="beast-card cat-boss" data-cat="boss" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Tentacruel personnel de Holt</div><div class="beast-meta"><span class="tag tag-boss">Boss</span> Eau/Poison · Grand (+1) · Dernier rempart</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Distinct des versions PSI-B — dressé, libre, significativement plus puissant. Garde la sortie du bureau de Holt au niveau −1.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>9 (Arm 2)</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Fouet ×3</td><td class="atk-dmg">Str+d6</td><td>Mêlée 3"</td><td>3 cibles simultanées</td></tr>
+              <tr><td class="atk-name">Acide Nitrique</td><td class="atk-dmg">3d6</td><td>12"/24"</td><td>Armure réduite de 4 pts par touche</td></tr>
+              <tr><td class="atk-name">Tentacule</td><td class="atk-dmg">Str+d10</td><td>Mêlée</td><td>Saisie — Str d12 opp. pour se dégager</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Dernier rempart</span> : si Holt est neutralisée, tente d'évacuer son corps. Athlétisme PJ diff. 6 pour intercepter.</li></ul>
+          </div>
+        </div>
+<div class="beast-card cat-boss" data-cat="boss" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Nidoking — Agent Élite d'Ashford ★ JOKER</div><div class="beast-meta"><span class="tag tag-boss">Boss Joker</span> Poison/Sol · Grand (+1) — Ch. 7</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Le combat le plus difficile de l'Acte II. L'objectif n'est pas forcément de le vaincre — s'enfuir avec les preuves est une victoire. Fuir peut être la bonne décision.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d12</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>9 (Arm 2)</span></div><div class="stat-pill">Bennies <span>2</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Mégacorne</td><td class="atk-dmg">Str+d10</td><td>Mêlée</td><td>Perce Armure 4. Renversé si Robustesse non atteinte</td></tr>
+              <tr><td class="atk-name">Séisme</td><td class="atk-dmg">2d8</td><td>Zone 4"</td><td>Agilité d8 diff. 4 ou Renversé + 2d4</td></tr>
+              <tr><td class="atk-name">Jet de Poison</td><td class="atk-dmg">2d6+Poison</td><td>12"/24"</td><td>Fatigué −1 si Relance, cumul ×3</td></tr>
+              <tr><td class="atk-name">Charge</td><td class="atk-dmg">Str+d12</td><td>Charge</td><td>Renversé automatique</td></tr>
+            </table>
+            <ul class="capa-list">
+              <li><span class="capa-name">Joker</span> : lance un d6 Joker à chaque jet. Garde le meilleur résultat.</li>
+              <li><span class="capa-name">Épines vénimeuses</span> : attaquant en mêlée subit d4 dégâts poison réflexifs.</li>
+              <li><span class="capa-name">Bramotion</span> : 1 fois/combat, bonus gratuit — Trempe diff. 6 pour toutes créatures à 4". Échec : Secoué.</li>
+            </ul>
+            <div class="tactique-block">Ouvre par Séisme pour renverser le Groupe, puis charge le PJ le plus dangereux. Si le Groupe fuit, ne poursuit pas au-delà de 20" (ordre : sécuriser la zone, pas chasser).</div>
+          </div>
+        </div>
+<div class="beast-card cat-boss2" data-cat="boss2" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Dracolosse Vex ★★ BOSS (Histoire III)</div>
+    <div class="beast-meta"><span class="tag tag-boss">BOSS Joker</span> Dragon/Vol · Grand (+1) · Antagoniste principal Histoire III</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Vex est le Dracolosse de Viktor Haas, 30 ans de loyauté qui ont basculé en trahison dirigée. Il contrôle les lieutenants du réseau criminel par suggestion psychique depuis que son maître a abandonné le réseau. Ce n'est pas la puissance qui le rend dangereux — c'est l'intelligence.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">RUS <span>d10</span></div><div class="stat-pill">FOR <span>d12</span></div><div class="stat-pill">TRE <span>d8</span></div><div class="stat-pill">VIG <span>d12</span></div>
+      <div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">Robustesse <span>11</span></div><div class="stat-pill">Bennies <span>3</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Dracogriffe</td><td class="atk-dmg">Str+d10</td><td>Mêlée</td><td>Perce Armure 4. Relance : blesse un membre (−2 à Agilité ou Force)</td></tr>
+      <tr><td class="atk-name">Ultralaser</td><td class="atk-dmg">4d8</td><td>24"</td><td>Ligne droite. Vex Secoué le round suivant (surcharge)</td></tr>
+      <tr><td class="atk-name">Suggestion psychique</td><td class="atk-dmg">Ruse d10 opp.</td><td>Zone 8"</td><td>Échec : cible exécute un ordre simple ce round. Résistance +2 si dresseur loyal présent</td></tr>
+      <tr><td class="atk-name">Rugissement ancien</td><td class="atk-dmg">Trempe d10 opp.</td><td>Zone 6"</td><td>Échec : Secoué + Vulnérable. Une fois par combat</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Joker</span> : d6 Joker à chaque jet. Bennies 3.</li>
+      <li><span class="capa-name">Réseau de suggestion (Passif)</span> : contrôle jusqu'à 6 lieutenants humains simultanément à portée 100". Si Fil coupe le canal (Discrétion d12 + action complète), tous les lieutenants perdent le contrôle 1d6 rounds.</li>
+      <li><span class="capa-name">Vieux dragon</span> : 30 ans d'expérience. Ne peut pas être surpris. Chaque Blessure qu'il subit augmente ses dommages de +1 (jusqu'à +3). Souffrir ne le ralentit pas.</li>
+      <li><span class="capa-name">Loyauté inversée</span> : si Viktor ordonne le rappel forcé, Vex subit −2 à tous ses jets ce round (conflit interne). C'est la seule fenêtre fiable pour l'arrêter.</li>
+    </ul>
+    <div class="tactique-block">BOSS DE L'HISTOIRE III. Ouvre par Suggestion sur les PJ les plus forts pour les neutraliser. Utilise Rugissement ancien en ouverture pour créer l'avantage. Viktor doit prononcer le rappel forcé — le Groupe doit tenir le temps qu'il le fasse. Fil est essentiel pour couper le réseau de suggestion.</div>
+  </div>
+</div>
+<div class="beast-card cat-boss2" data-cat="boss2" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Ronflex Alpha ★★ BOSS</div>
+    <div class="beast-meta"><span class="tag tag-boss">BOSS Joker</span> Normal · Colossal (+2) · Gardien de la Route 7</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Plus grand que tout Ronflex normal, l'Alpha est une légende locale. Il bloque l'unique accès terrestre rapide entre Lavanville et le reste de Kanto depuis des mois. Même les agents d'Ashford l'évitent. Il ne peut pas être intimidé, dressé facilement, ou contourné sans perdre du temps précieux.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">FOR <span>d12+4</span></div><div class="stat-pill">VIG <span>d12+2</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>14</span></div><div class="stat-pill">Allure <span>4"</span></div><div class="stat-pill">Bennies <span>2</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Écrasement</td><td class="atk-dmg">Str+d10</td><td>Mêlée</td><td>Zone 2" — touche tout ce qui est adjacent. Renversé automatique si Robustesse non atteinte</td></tr>
+      <tr><td class="atk-name">Séisme</td><td class="atk-dmg">2d10</td><td>Zone 8"</td><td>Jet Agilité d8 diff. 4 ou Renversé + 2d6. Dommages réduits de 2 si la cible est en l'air</td></tr>
+      <tr><td class="atk-name">Charge du titan</td><td class="atk-dmg">Str+d12</td><td>Charge 4"+</td><td>Colossal : si Robustesse non atteinte, cible Renversée ET propulsée 3"</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Joker</span> : d6 Joker. Bennies 2.</li>
+      <li><span class="capa-name">Colossal (+2)</span> : Taille +2. +2 Robustesse, +2 à la Force pour déplacer. Les attaques contre lui bénéficient de +2 (grande cible).</li>
+      <li><span class="capa-name">Ronflement dévastateur</span> : zone 4" en sommeil. Vigueur d10 diff. 6 ou Fatigué (cumulatif). En plus : tous les Pokémon dans la zone subissent le Ronflement comme une attaque sonique (2d4, Secoué si Relance).</li>
+      <li><span class="capa-name">Immunité PSI-B absolue</span> : ne peut pas être contrôlé par quelque méthode que ce soit. Sa constitution défie toute technologie de contrôle connue.</li>
+      <li><span class="capa-name">Apprivoisement légendaire</span> : Dressage diff. 10 (ou diff. 6 avec Telera + nourriture rare). S'il est apprivoisé, il peut dégager la Route 7 et devient un obstacle pour les agents d'Ashford en Acte IV.</li>
+    </ul>
+    <div class="tactique-block">OBSTACLE MAJEUR optionnel. Le contourner prend 2h supplémentaires. L'affronter est suicidaire. L'apprivoiser est l'option narrative — et donne à le Groupe un avantage massif en Acte IV si réussi. Telera est la clé.</div>
+  </div>
+</div>
+<div class="beast-card cat-boss2" data-cat="boss2" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Sulfura ★★ BOSS LÉGENDAIRE</div>
+    <div class="beast-meta"><span class="tag tag-boss">BOSS Légendaire</span> Feu/Vol · Colossal (+2) · Acte IV seulement</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Le réacteur aspirait une infime partie de l'énergie de Sulfura à distance — l'oiseau légendaire avait été capturé temporairement lors de la mise en route du système. Il s'est libéré. Il revient maintenant au-dessus de Lavanville, et son état est imprévisible. Il ne cherche pas à blesser — mais ses actions inconscientes peuvent ravager la ville.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d12</span></div><div class="stat-pill">FOR <span>d12+4</span></div><div class="stat-pill">VIG <span>d12+2</span></div><div class="stat-pill">Parade <span>8</span></div><div class="stat-pill">Robustesse <span>14</span></div><div class="stat-pill">Allure <span>16" (vol)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Tempête de feu</td><td class="atk-dmg">4d8</td><td>Zone 6"</td><td>Tout ce qui est dans la zone. Jet d'Agilité d10 diff. 6 ou En Feu (d8/round)</td></tr>
+      <tr><td class="atk-name">Séismevent</td><td class="atk-dmg">2d10</td><td>Zone 8" au sol</td><td>Vol créant une onde de choc. Renversé si Robustesse non atteinte</td></tr>
+      <tr><td class="atk-name">Souffle sacré</td><td class="atk-dmg">3d10</td><td>Ligne 30"</td><td>Ligne droite. Ignore toute Armure. Une fois par combat</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Légendaire</span> : Joker, Bennies 4. Immunisé à tout contrôle, suggestion, ou dressage standard.</li>
+      <li><span class="capa-name">Aura de chaleur</span> : zone 4" autour de lui — 2d4 dégâts de feu par round pour toute créature non résistante au feu.</li>
+      <li><span class="capa-name">Épuisé par le PSI-B</span> : ses stats sont réduites de 20% de sa puissance normale (Robustesse 14 au lieu de ~18 pleine puissance). Il peut être apaisé — pas vaincu — si les conditions sont réunies.</li>
+      <li><span class="capa-name">Apaisement légendaire</span> : si le réacteur est éteint ET qu'un dresseur de rang Vétéran+ tente Dressage diff. 10 (ou diff. 8 avec Telera + Noctali en soutien), Sulfura peut être calmé. S'il l'est, il repart sans dommages supplémentaires et sa présence dans le ciel de Lavanville devient un symbole de guérison.</li>
+    </ul>
+    <div class="tactique-block">ÉVÉNEMENT OPTIONNEL DE FIN. N'apparaît que si le Marshal veut un climax spectaculaire en Acte IV. Son objectif n'est pas de tuer — c'est de brûler le réacteur. Le Groupe doit choisir : l'éviter, l'apaiser, ou le laisser démanteler le réacteur à sa façon (avec des dommages collatéraux). Fin narrative la plus mémorable si le Groupe l'apaise.</div>
+  </div>
+</div>
+<div class="beast-card cat-boss2" data-cat="boss2" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Artikodin ★★ BOSS LÉGENDAIRE</div>
+    <div class="beast-meta"><span class="tag tag-boss">BOSS Légendaire</span> Glace/Vol · Colossal (+2) · Gardien du nord de Kanto</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Le réacteur aspire de l'énergie vitale sur un rayon de 50km. Artikodin l'a ressenti depuis les montagnes enneigées du nord. Il descend vers Lavanville — non pas pour attaquer, mais pour retrouver ce qui lui a été pris. Sa venue annonce la fin. Il n'est pas un ennemi. Il est un jugement.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">FOR <span>d12+4</span></div><div class="stat-pill">VIG <span>d12+4</span></div>
+      <div class="stat-pill">Parade <span>8</span></div><div class="stat-pill">Robustesse <span>16</span></div><div class="stat-pill">Bennies <span>4</span></div><div class="stat-pill">Allure <span>14" (vol)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Blizzard légendaire</td><td class="atk-dmg">4d10</td><td>Zone 12"</td><td>Vigueur diff. 8 ou Hypothermie permanente (−2 cumulatif/round, mort à −6)</td></tr>
+      <tr><td class="atk-name">Tempête de grêle</td><td class="atk-dmg">2d8/round</td><td>Zone 20"</td><td>Active pendant 1d4 rounds. Toutes créatures dans la zone affectées</td></tr>
+      <tr><td class="atk-name">Aile Glacée</td><td class="atk-dmg">Str+d12 (glace)</td><td>Mêlée 4"</td><td>Gel partiel — Allure ÷2 pour 1d4 rounds si touché</td></tr>
+      <tr><td class="atk-name">Voix du nord</td><td class="atk-dmg">Trempe d10 opp.</td><td>Zone 8"</td><td>Échec : fuit d'instinct (terreur absolue). 1×/combat</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Légendaire</span> : Joker, Bennies 4. Immunisé à tout contrôle, suggestion ou dressage standard.</li>
+      <li><span class="capa-name">Colossal (+2)</span> : Taille +2. Robustesse 16. Les attaques bénéficient de +2 (cible massive).</li>
+      <li><span class="capa-name">Gel de l'atmosphère</span> : sa seule présence baisse la température de 15°C dans un rayon de 500m. Toute créature sans protection thermique subit −1 à tous les jets après 30 minutes.</li>
+      <li><span class="capa-name">Ne cherche pas à tuer</span> : il veut récupérer l'énergie vitale aspirée. Si le réacteur est éteint en sa présence, il s'arrête immédiatement. Sa venue est un compte à rebours, pas une attaque.</li>
+      <li><span class="capa-name">Apaisement légendaire</span> : si Telera ou la Posse éteint le réacteur ET réussit Dressage diff. 10, Artikodin repart sans détruire la ville. Son départ laisse derrière lui une gelée légère — une brume blanche qui durera 3 jours.</li>
+    </ul>
+    <div class="tactique-block">ÉVÉNEMENT DE FIN OPTIONNEL. Articodin n'attaque que si bloqué ou si le réacteur continue de fonctionner en sa présence. Son compte à rebours : 2 rounds après son arrivée à Lavanville si le réacteur tourne encore, il lance Tempête de grêle sur toute la ville. L'arrêter = éteindre le réacteur. Pas le combattre.</div>
+  </div>
+</div>
+<div class="beast-card cat-boss2" data-cat="boss2" onclick="toggleBeast(this)">
+  <div class="beast-header">
+    <div class="beast-name">Électhor ★★ BOSS LÉGENDAIRE</div>
+    <div class="beast-meta"><span class="tag tag-boss">BOSS Légendaire</span> Électrique/Vol · Colossal (+2) · Maître des tempêtes de Kanto</div>
+  </div>
+  <div class="beast-body">
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Le réacteur PSI-B émet des fréquences électromagnétiques qui interfèrent avec les migrations d'Électhor. Il a été détourné de sa route et tourne en cercles chaotiques au-dessus de la région depuis 3 semaines. Chaque orage à Lavanville est de lui. Il n'est pas hostile — il est perdu et désorienté. Et sa désorientation peut raser une ville.</p>
+    <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d12</span></div><div class="stat-pill">FOR <span>d12+2</span></div><div class="stat-pill">VIG <span>d12+2</span></div>
+      <div class="stat-pill">Parade <span>8</span></div><div class="stat-pill">Robustesse <span>14</span></div><div class="stat-pill">Bennies <span>4</span></div><div class="stat-pill">Allure <span>16" (vol)</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Tonnerre légendaire</td><td class="atk-dmg">5d8</td><td>Zone 8"</td><td>Ignore Armure conductrice. Secoué automatique même si dommages encaissés</td></tr>
+      <tr><td class="atk-name">Tempête électrique</td><td class="atk-dmg">3d6/round</td><td>Zone 30"</td><td>Dure 1d6 rounds. Tout équipement électronique dans la zone hors service</td></tr>
+      <tr><td class="atk-name">Éclair de précision</td><td class="atk-dmg">4d6</td><td>50" (ligne droite)</td><td>Ligne = toutes cibles dans la trajectoire. Ignore couverture légère</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Légendaire</span> : Joker, Bennies 4. Immunisé électricité, contrôle, dressage standard.</li>
+      <li><span class="capa-name">Colossal (+2)</span> : Robustesse 14. Seules Roche et Glace causent des dégâts normaux.</li>
+      <li><span class="capa-name">Brouillage EM total</span> : dans un rayon de 200m, tout équipement électronique fonctionne de façon aléatoire. Radio de Kaito, Pokédex, équipements du réacteur — tous perturbés. Alerte : le Magnéton PSI-B perd sa coordination (−2 à tous ses jets).</li>
+      <li><span class="capa-name">Désorientation</span> : ses attaques sont aléatoires (jet d6 : 1-2 = zone aléatoire). Il ne vise pas — il réagit aux interférences EM. Éteindre le réacteur = ses interférences disparaissent = il retrouve son cap.</li>
+      <li><span class="capa-name">Libération</span> : si le réacteur est éteint, Électhor reprend sa trajectoire migratoire après 1d6 rounds de transition. Son départ crée une dernière tempête spectaculaire — puis le ciel se nettoie. Moment visuel fort pour la Fin B.</li>
+    </ul>
+    <div class="tactique-block">ÉVÉNEMENT PARALLÈLE À ARTIKODIN ou alternatif selon le Marshal. Électhor n'attaque pas la Posse — il réagit aux champs EM. Sa présence rend tous les équipements électroniques aléatoires (ce qui inclut les harnais PSI-B : chaos dans le réacteur). Éteindre le réacteur = le résoudre sans combat. Tenter de le combattre = quasi suicidaire. Le génie est de comprendre qu'il est une solution, pas un ennemi.</div>
+  </div>
+</div>
+</div>
+  </div>
+
+</div>
 <div class="section" id="tab-notes">
       <div class="page-title">Notes</div>
       <div class="page-tagline">Prises de notes · Sauvegarde locale automatique</div>
@@ -2454,33 +3708,71 @@ async function loadJoueurNotes(slug) {
   }
 }
 
-async function loadAllPlayersNotes() {
-  const container = document.getElementById('mj-players-notes');
+async 
+function loadAllPlayersNotes() {
+  var container = document.getElementById('mj-players-notes');
   if (!container) return;
-  container.innerHTML = '<div style="color:var(--muted);font-style:italic;padding:8px">Chargement des notes joueurs…</div>';
-  let html = '';
-  for (const slug of JOUEURS) {
-    const data = await loadJoueurNotes(slug);
-    const name = JOUEUR_NAMES[slug];
-    if (!data || !data.notes || !data.notes.length) {
-      html += `<div style="margin-bottom:16px"><div class="section-title" style="margin-bottom:6px">${name}</div>
-        <div style="color:var(--muted);font-size:12px;font-style:italic">Aucune note synchronisée — le joueur doit ouvrir sa fiche au moins une fois.</div></div>`;
-      continue;
+  container.innerHTML = '<div style="color:var(--muted);font-style:italic;font-size:13px;padding:8px">Chargement...</div>';
+
+  /* Essayer de lire le registry pour avoir les bin_ids */
+  var regBinId = localStorage.getItem('jdr_registry_bin_id');
+
+  var renderNotes = function(binMap) {
+    var slugs = ['analyste','pistolero','causeuse','pisteur'];
+    var names = {analyste:'Magdalena Hell',pistolero:'Lidia Fireheart',causeuse:'Rizen Dao',pisteur:'Telera'};
+    var html = '';
+    var pending = slugs.length;
+
+    slugs.forEach(function(slug) {
+      var binId = binMap[slug] || localStorage.getItem('jdr_player_' + slug + '_bin_id');
+      if (!binId) {
+        html_add(slug, names[slug], null);
+        pending--;
+        if (pending === 0) container.innerHTML = html;
+        return;
+      }
+      fetch('https://api.jsonbin.io/v3/b/' + binId + '/latest', {
+        headers: { 'X-Master-Key': JSONBIN_KEY_MJ }
+      }).then(function(r) { return r.json(); })
+        .then(function(d) {
+          html_add(slug, names[slug], d.record);
+          pending--;
+          if (pending === 0) container.innerHTML = html;
+        }).catch(function() {
+          html_add(slug, names[slug], null);
+          pending--;
+          if (pending === 0) container.innerHTML = html;
+        });
+    });
+
+    function html_add(slug, name, data) {
+      var ts = data && data.updated ? new Date(data.updated).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : null;
+      html += '<div style="margin-bottom:20px"><div class="section-title" style="margin-bottom:8px">' + name + (ts ? ' <span style="font-size:10px;color:var(--muted);font-weight:normal">· Sync : ' + ts + '</span>' : '') + '</div>';
+      if (!data || !data.notes || !data.notes.length) {
+        html += '<div style="color:var(--muted);font-size:12px;font-style:italic">Pas encore synchronise - le joueur doit ouvrir sa fiche.</div></div>';
+        return;
+      }
+      data.notes.forEach(function(note) {
+        if (!note.content && !note.title) return;
+        html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:8px">'
+          + '<div style="font-family:var(--mono);font-size:12px;font-weight:600;color:var(--amber);margin-bottom:6px">' + (note.title||'Sans titre') + '</div>'
+          + '<div style="font-size:13px;color:var(--muted);white-space:pre-wrap;line-height:1.6">' + (note.content||'') + '</div></div>';
+      });
+      html += '</div>';
     }
-    const ts = data.updated ? new Date(data.updated).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—';
-    html += `<div style="margin-bottom:20px">
-      <div class="section-title" style="margin-bottom:8px">${name} <span style="font-size:10px;color:var(--muted);font-weight:normal">· Sync : ${ts}</span></div>`;
-    for (const note of data.notes) {
-      if (!note.content && !note.title) continue;
-      html += `<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:8px">
-        <div style="font-family:var(--mono);font-size:12px;font-weight:600;color:var(--amber);margin-bottom:6px">${note.title || 'Sans titre'}</div>
-        <div style="font-size:13px;color:var(--muted);white-space:pre-wrap;line-height:1.6">${note.content || ''}</div>
-      </div>`;
-    }
-    html += '</div>';
+  };
+
+  if (regBinId) {
+    fetch('https://api.jsonbin.io/v3/b/' + regBinId + '/latest', {
+      headers: { 'X-Master-Key': JSONBIN_KEY_MJ }
+    }).then(function(r) { return r.json(); })
+      .then(function(d) { renderNotes(d.record || {}); })
+      .catch(function() { renderNotes({}); });
+  } else {
+    renderNotes({});
   }
-  container.innerHTML = html || '<div style="color:var(--muted);font-style:italic">Aucune note disponible.</div>';
 }
+
 
 
 /* ---- CODE ACCES MJ ---- */
