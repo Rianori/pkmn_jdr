@@ -124,7 +124,7 @@ function renderList() {
     var date = sc.updated ? new Date(sc.updated).toLocaleDateString('fr-FR') : '';
     div.innerHTML = '<button class="sc-del-btn" onclick="event.stopPropagation();deleteScenario('' + sc.id + '')" title="Supprimer">x</button>'
       + '<div class="sc-item-title">' + escH(sc.title || 'Sans titre') + '</div>'
-      + '<div class="sc-item-meta">' + chapCount + ' chapitre' + (chapCount>1?'s':'') + (date ? ' · ' + date : '') + '</div>';
+      + '<div class="sc-item-meta">' + chapCount + ' chapitre' + (chapCount>1?'s':'') + (date ? ' ' ' + date : '') + '</div>';
     el.appendChild(div);
   });
 }
