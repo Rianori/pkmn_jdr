@@ -3751,30 +3751,7 @@ function loadAllPlayersNotes() {
 
 
 
-/* ---- CODE ACCES MJ ---- */
-/* Pour modifier le code: chercher 'var MJ_CODE' dans ce fichier */
-var MJ_CODE = '1102';
-var MJ_SESSION_KEY = 'mj_session_ok';
 
-function checkLogin() {
-  var val = document.getElementById('login-input').value;
-  if (val === MJ_CODE) {
-    localStorage.setItem(MJ_SESSION_KEY, '1');
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('login-error').classList.remove('visible');
-  } else {
-    document.getElementById('login-error').classList.add('visible');
-    document.getElementById('login-input').value = '';
-    document.getElementById('login-input').focus();
-  }
-}
-
-(function() {
-  if (localStorage.getItem(MJ_SESSION_KEY) === '1') {
-    var ls = document.getElementById('login-screen');
-    if (ls) ls.classList.add('hidden');
-  }
-})();
 
 /* ---- EQUIPE PK VISIBLE (lit depuis JSONBin) ---- */
 var JSONBIN_KEY_MJ2 = '$2a$10$WYyryseWygh/sqmPChGh8.8o5.D26YYtfK8ftu2OIZyiKjcW2pNty';
