@@ -3417,24 +3417,24 @@ function showTab(tab, btn) {
   btn.classList.add('active');
   // Switcher le contenu de l'aside
   document.querySelectorAll('.aside-tab-section').forEach(s => s.style.display = 'none');
-  const asideSection = document.getElementById('aside-' + tab);
+  var asideSection = document.getElementById('aside-' + tab);
   if (asideSection) asideSection.style.display = 'block';
 }
 
 // ?? Sidebar sc?nario : scroll et chapitres ???????????????????????????????
 function scrollToEl(id) {
   // Ouvrir la campagne dans la sidebar
-  const asc = document.getElementById('asc-1');
+  var asc = document.getElementById('asc-1');
   if (asc && asc.classList.contains('hidden')) {
     asc.classList.remove('hidden');
-    const chev = document.getElementById('asc-1-chev');
+    var chev = document.getElementById('asc-1-chev');
     if (chev) chev.classList.remove('closed');
   }
   // Ouvrir la campaign-card dans le contenu
-  const c = document.getElementById('camp-1');
+  var c = document.getElementById('camp-1');
   if (c && !c.classList.contains('open')) c.classList.add('open');
   setTimeout(() => {
-    const el = document.getElementById(id);
+    var el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 120);
   document.querySelectorAll('aside button').forEach(b => b.classList.remove('active'));
@@ -3443,17 +3443,17 @@ function scrollToEl(id) {
 
 function openChapter(id) {
   // Ouvrir le sous-menu sidebar
-  const asc = document.getElementById('asc-1');
+  var asc = document.getElementById('asc-1');
   if (asc && asc.classList.contains('hidden')) {
     asc.classList.remove('hidden');
-    const chev = document.getElementById('asc-1-chev');
+    var chev = document.getElementById('asc-1-chev');
     if (chev) chev.classList.remove('closed');
   }
   // Ouvrir la campaign-card dans le contenu
-  const c = document.getElementById('camp-1');
+  var c = document.getElementById('camp-1');
   if (c && !c.classList.contains('open')) c.classList.add('open');
   setTimeout(() => {
-    const ch = document.getElementById(id);
+    var ch = document.getElementById(id);
     if (!ch) return;
     if (!ch.classList.contains('open')) ch.classList.add('open');
     ch.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -3471,8 +3471,8 @@ function togglePjAcc(id)    { document.getElementById(id).classList.toggle('open
 
 // ?? Sidebar sous-menu campagne ???????????????????????????????????????????
 function toggleAsideCampaign(id) {
-  const body = document.getElementById(id);
-  const chev = document.getElementById(id + '-chev');
+  var body = document.getElementById(id);
+  var chev = document.getElementById(id + '-chev');
   if (!body) return;
   body.classList.toggle('hidden');
   if (chev) chev.classList.toggle('closed');
@@ -3489,25 +3489,25 @@ function filterBeast(cat, btn) {
 function filterBeast2(group, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const groups = {
+  var groups = {
     'sauvage': 'bgroup-sauvage',
     'psi':     'bgroup-psi',
     'allies':  'bgroup-allies',
     'elites':  'bgroup-elites',
     'boss':    'bgroup-boss',
   };
-  const showId = groups[group];
+  var showId = groups[group];
   document.querySelectorAll('.beast-cat-group').forEach(g => {
     g.style.display = (g.id === showId) ? '' : 'none';
   });
 }
 
 // ?? Syst?me de notes ?????????????????????????????????????????????????????
-const NK = 'jdr_notes_v2';
-let notes = [], aid = null, stimer = null;
+var NK = 'jdr_notes_v2';
+var notes = [], aid = null, stimer = null;
 
 function loadNotes() {
-  try { const r = localStorage.getItem(NK); notes = r ? JSON.parse(r) : []; } catch(e) { notes = []; }
+  try { var r = localStorage.getItem(NK); notes = r ? JSON.parse(r) : []; } catch(e) { notes = []; }
   if (!notes.length) {
     notes = [
       { id: 'n1', title: 'Session 1',      content: '', created: Date.now(), updated: Date.now() },
@@ -3560,7 +3560,7 @@ function openNote(id) {
 }
 
 function updTitle(v) {
-  const n = notes.find(x => x.id === aid);
+  var n = notes.find(x => x.id === aid);
   if (!n) return;
   n.title   = v;
   n.updated = Date.now();
@@ -3568,14 +3568,14 @@ function updTitle(v) {
 }
 
 function schedSave(content) {
-  const ind = document.getElementById('save-ind');
+  var ind = document.getElementById('save-ind');
   if (ind) { ind.className = 'save-indicator unsaved'; ind.textContent = '? Non sauvegard?'; }
   if (content !== undefined) {
-    const n = notes.find(x => x.id === aid);
+    var n = notes.find(x => x.id === aid);
     if (n) {
       n.content = content;
       n.updated = Date.now();
-      const w = document.getElementById('note-wc');
+      var w = document.getElementById('note-wc');
       if (w) w.textContent = wc(content) + ' mots';
     }
   }
@@ -3584,16 +3584,16 @@ function schedSave(content) {
     saveNotes();
     renderTabs();
     if (ind) { ind.className = 'save-indicator saved'; ind.textContent = '\u2713 Sauvegard?'; }
-    const m = document.getElementById('note-meta');
+    var m = document.getElementById('note-meta');
     if (m) {
-      const ts = new Date().toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      var ts = new Date().toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
       m.textContent = 'Derni?re modification : ' + ts;
     }
   }, 800);
 }
 
 function addNote() {
-  const n = { id: genId(), title: 'Nouveau carnet', content: '', created: Date.now(), updated: Date.now() };
+  var n = { id: genId(), title: 'Nouveau carnet', content: '', created: Date.now(), updated: Date.now() };
   notes.push(n);
   saveNotes();
   openNote(n.id);
@@ -3608,10 +3608,10 @@ function delNote(id) {
 }
 
 function exportNote() {
-  const n = notes.find(x => x.id === aid);
+  var n = notes.find(x => x.id === aid);
   if (!n) return;
-  const b = new Blob([n.title + '\n\n' + n.content], { type: 'text/plain;charset=utf-8' });
-  const a = document.createElement('a');
+  var b = new Blob([n.title + '\n\n' + n.content], { type: 'text/plain;charset=utf-8' });
+  var a = document.createElement('a');
   a.href = URL.createObjectURL(b);
   a.download = (n.title || 'carnet') + '.txt';
   a.click();
@@ -3622,13 +3622,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (notes.length) openNote(notes[0].id);
   // Afficher la sidebar de l'onglet actif au d?marrage (sc?narios par d?faut)
   document.querySelectorAll('.aside-tab-section').forEach(s => s.style.display = 'none');
-  const startAside = document.getElementById('aside-scenarios');
+  var startAside = document.getElementById('aside-scenarios');
   if (startAside) startAside.style.display = 'block';
 });
 
 // ?? Scroll + ouverture d'un accord?on ??????????????????????????????????
 function scrollAndOpen(id) {
-  const el = document.getElementById(id);
+  var el = document.getElementById(id);
   if (!el) return;
   if (!el.classList.contains('open')) el.classList.add('open');
   el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -3643,21 +3643,21 @@ function filterBeastAside(group) {
   if (group === 'all') {
     document.querySelectorAll('.beast-cat-group').forEach(g => g.style.display = '');
   } else {
-    const showId = 'bgroup-' + group;
+    var showId = 'bgroup-' + group;
     document.querySelectorAll('.beast-cat-group').forEach(g => {
       g.style.display = (g.id === showId) ? '' : 'none';
     });
-    const el = document.getElementById(showId);
+    var el = document.getElementById(showId);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
 
 
 // ?? JSONBin ? lecture des notes joueurs (MJ) ?????????????????????????????
-const _KEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
-const _URL = 'https://api.jsonbin.io/v3';
-const JOUEURS = ['analyste', 'pistolero', 'causeuse', 'pisteur'];
-const JOUEUR_NAMES = {
+var _KEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
+var _URL = 'https://api.jsonbin.io/v3';
+var JOUEURS = ['analyste', 'pistolero', 'causeuse', 'pisteur'];
+var JOUEUR_NAMES = {
   analyste: "Magdalena Hell",
   pistolero: "Lidia Fireheart",
   causeuse: "Rizen Dao",
