@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnostic JSONBin</title>
+<style>
+body{background:#0e0e0f;color:#d4cfc5;font-family:monospace;padding:20px;max-width:700px;margin:0 auto;}
+h2{color:#c8922a;font-size:14px;margin:16px 0 8px;}
+button{background:#7a5510;color:#c8922a;border:1px solid #7a5510;border-radius:4px;font-size:12px;padding:8px 16px;cursor:pointer;margin:4px;}
+button:hover{background:#c8922a;color:#1a1000;}
+textarea{width:100%;min-height:120px;background:#161618;border:1px solid #2a2a2e;border-radius:4px;color:#d4cfc5;font-size:11px;padding:8px;margin-top:6px;}
+.ok{color:#1e5c2e;} .err{color:#8b2020;} .warn{color:#c8922a;}
+#log{font-size:13px;margin:6px 0;}
+</style>
+</head>
+<body>
+<h2>Diagnostic canal JSONBin</h2>
+<div id="log"></div>
+
+<h2>1. Tester la cle</h2>
+<button onclick="testKey()">GET /v3/b (liste des bins)</button>
+<textarea id="r1" readonly></textarea>
+
+<h2>2. Lire le canal central actuel</h2>
+<button onclick="readCentral()">GET canal 6a2f352bf5f4af5e29f21a22</button>
+<textarea id="r2" readonly></textarea>
+
+<h2>3. Creer un nouveau canal</h2>
+<button onclick="createNew()">POST /v3/b (nouveau bin)</button>
+<textarea id="r3" readonly></textarea>
+<div id="new-id" style="margin-top:8px;font-size:13px;color:#c8922a;word-break:break-all;"></div>
+
+<script>
+var KEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
+var OLD = '6a2f352bf5f4af5e29f21a22';
+
+function log(m,c){var e=document.getElementById('log');e.textContent=m;e.className=c||'';}
+
+function testKey(){
+  log('Test...','warn');
+  fetch('https://api.jsonbin.io/v3/b',{headers:{'X-Master-Key':KEY}})
+  .then(function(r){log('HTTP '+r.status,r.ok?'ok':'err');return r.text();})
+  .then(function(t){document.getElementById('r1').value=t;})
+  .catch(function(e){log('Erreur: '+e,'err');document.getElementById('r1').value=e.toString();});
+}
+
+function readCentral(){
+  log('Lecture canal...','warn');
+  fetch('https://api.jsonbin.io/v3/b/'+OLD+'/latest',{headers:{'X-Master-Key':KEY}})
+  .then(function(r){log('HTTP '+r.status,r.ok?'ok':'err');return r.text();})
+  .then(function(t){document.getElementById('r2').value=t;})
+  .catch(function(e){log('Erreur: '+e,'err');document.getElementById('r2').value=e.toString();});
+}
+
+function createNew(){
+  log('Creation...','warn');
+  fetch('https://api.jsonbin.io/v3/b',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-Master-Key':KEY,'X-Bin-Name':'jdr-central-v2','X-Bin-Private':'false'},
+    body:JSON.stringify({registry:{},created:new Date().toISOString()})
+  }).then(function(r){log('HTTP '+r.status,r.ok?'ok':'err');return r.text();})
+  .then(function(t){
+    document.getElementById('r3').value=t;
+    try{
+      var d=JSON.parse(t);
+      var id=d.metadata&&d.metadata.id;
+      if(id){
+        localStorage.setItem('jdr_central_bin',id);
+        document.getElementById('new-id').textContent='Nouvel ID: '+id+' (copie et envoie-le a Claude)';
+      }
+    }catch(e){}
+  }).catch(function(e){log('Erreur: '+e,'err');document.getElementById('r3').value=e.toString();});
+}
+</script>
+</body>
+</html>
