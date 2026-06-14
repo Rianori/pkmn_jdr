@@ -949,6 +949,20 @@
   .aside-campaign-body.hidden { display: none; }
 
 
+  /* == LOGIN == */
+  .login-screen { position: fixed; top:0; left:0; right:0; bottom:0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px; }
+  .login-screen.hidden { display: none; }
+  .login-logo { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .login-title { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--amber); }
+  .login-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 40px; display: flex; flex-direction: column; align-items: center; gap: 14px; min-width: 280px; }
+  .login-label { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); align-self: flex-start; }
+  .login-input { font-family: var(--mono); font-size: 22px; letter-spacing: .3em; color: var(--amber); background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 10px 16px; width: 180px; text-align: center; }
+  .login-input:focus { outline: none; border-color: var(--amber-dim); }
+  .login-btn { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-dim); border-radius: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; padding: 10px 24px; cursor: pointer; width: 100%; transition: background .12s; }
+  .login-btn:hover { background: var(--amber); color: #1a1000; }
+  .login-error { font-size: 12px; color: var(--danger); display: none; }
+  .login-error.visible { display: block; }
+
   /* == EQUIPE PK VISIBLE MJ == */
   .pj-team-strip { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
   .pj-team-pk { position: relative; cursor: default; }
@@ -999,6 +1013,16 @@
 </style>
 </head>
 <body>
+<div class="login-screen" id="login-screen">
+  <div class="login-logo">Compagnon MJ</div>
+  <div class="login-title">La Ville Morte</div>
+  <div class="login-box">
+    <div class="login-label">Code d'acces MJ</div>
+    <input class="login-input" id="login-input" type="password" maxlength="6" placeholder="****" onkeydown="if(event.key==='Enter') checkLogin()">
+    <button class="login-btn" onclick="checkLogin()">Entrer</button>
+    <div class="login-error" id="login-error">Code incorrect</div>
+  </div>
+</div>
 
 
 <header>
@@ -1421,7 +1445,7 @@
             <li>Lampe frontale haute puissance</li>
             <li>Pokédex modifié (accès aux bases de données de recherche)</li>
             <li>Marteau d'alpiniste (arme improvisée, Str+d4)</li>
-            <li>500¥ en espèces</li>
+            <li>500 ₽ en espèces</li>
           </ul>
         </div>
     <div class="pokemon-section" style="margin-top:20px;">
@@ -1557,7 +1581,7 @@
             <li>Menottes ×2</li>
             <li>Radio cryptée</li>
             <li>Trousse de premiers secours (+1 à Vigueur pour stabiliser)</li>
-            <li>400¥</li>
+            <li>400 ₽</li>
           </ul>
         </div>
     <div class="pokemon-section" style="margin-top:20px;">
@@ -1682,7 +1706,7 @@
           </div>
           <div class="section-title">Handicaps</div>
           <div class="hindrance-block"><div class="block-name"><span class="tag tag-majeur">Majeur</span> Têtue</div><div class="block-desc">Ne peut renoncer à une piste une fois lancée. Jet de Trempe d8 diff. 4 pour accepter de battre en retraite.</div></div>
-          <div class="hindrance-block"><div class="block-name"><span class="tag tag-mineur">Mineur</span> Sans le sou</div><div class="block-desc">Commence avec la moitié des fonds standard (250¥). Vit de ses contacts.</div></div>
+          <div class="hindrance-block"><div class="block-name"><span class="tag tag-mineur">Mineur</span> Sans le sou</div><div class="block-desc">Commence avec la moitié des fonds standard (250 ₽). Vit de ses contacts.</div></div>
           <div class="section-title">Atouts</div>
           <div class="edge-block"><div class="block-name"><span class="tag tag-background">Background</span> Réseau d'informateurs</div><div class="block-desc">1 fois par session : obtenir une info sur un personnage, lieu ou organisation. Jet Persuasion d10 diff. 4. Succès = info utile. Relance = info critique + contact activable.</div></div>
           <div class="edge-block"><div class="block-name"><span class="tag tag-social">Social</span> Charismatique (Atout gratuit Humain)</div><div class="block-desc">+2 à tous les jets de Persuasion. Même les Varmints les plus méfiants finissent par parler.</div></div>
@@ -1693,7 +1717,7 @@
             <li>Carnet d'adresses (réseau d'informateurs Kanto)</li>
             <li>Faux badge de presse Ligue Environnement</li>
             <li>Couteau de poche (Str+d4)</li>
-            <li>250¥</li>
+            <li>250 ₽</li>
           </ul>
         </div>
     <div class="pokemon-section" style="margin-top:20px;">
@@ -1847,7 +1871,7 @@
             <li>Couteau de terrain polyvalent (Str+d4, outil autant qu'arme)</li>
             <li>Cartes manuscrites des galeries et sentiers de la région Lavanville</li>
             <li>Rations de 3 jours + nourriture Pokémon (utile pour Ronflex, Miaouss, Ponyta)</li>
-            <li>350¥</li>
+            <li>350 ₽</li>
           </ul>
 
           <div style="margin-top:16px;padding:10px 14px;background:var(--amber-glow);border-left:2px solid var(--amber-dim);border-radius:0 4px 4px 0;">
@@ -2186,7 +2210,7 @@
             <table class="atk-table">
               <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
               <tr><td class="atk-name">Griffe</td><td class="atk-dmg">Str+d4</td><td>Mêlée</td><td>−1 Parade jusqu'au prochain round</td></tr>
-              <tr><td class="atk-name">Jackpot</td><td class="atk-dmg">2d4</td><td>Mêlée</td><td>Relance : Secoué + perte 1d4×10¥</td></tr>
+              <tr><td class="atk-name">Jackpot</td><td class="atk-dmg">2d4</td><td>Mêlée</td><td>Relance : Secoué + perte 1d4×10 ₽</td></tr>
             </table>
             <ul class="capa-list"><li><span class="capa-name">Collecteur</span> : sur Dressage réussi, peut indiquer un itinéraire secret ou un garde endormi (1 fois par Acte).</li></ul>
           </div>
@@ -3751,7 +3775,30 @@ function loadAllPlayersNotes() {
 
 
 
+/* ---- CODE ACCES MJ ---- */
+/* Pour modifier le code: chercher 'var MJ_CODE' dans ce fichier */
+var MJ_CODE = '1102';
+var MJ_SESSION_KEY = 'mj_session_ok';
 
+function checkLogin() {
+  var val = document.getElementById('login-input').value;
+  if (val === MJ_CODE) {
+    localStorage.setItem(MJ_SESSION_KEY, '1');
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('login-error').classList.remove('visible');
+  } else {
+    document.getElementById('login-error').classList.add('visible');
+    document.getElementById('login-input').value = '';
+    document.getElementById('login-input').focus();
+  }
+}
+
+(function() {
+  if (localStorage.getItem(MJ_SESSION_KEY) === '1') {
+    var ls = document.getElementById('login-screen');
+    if (ls) ls.classList.add('hidden');
+  }
+})();
 
 /* ---- EQUIPE PK VISIBLE (lit depuis JSONBin) ---- */
 var JSONBIN_KEY_MJ2 = '$2a$10$WYyryseWygh/sqmPChGh8.8o5.D26YYtfK8ftu2OIZyiKjcW2pNty';
