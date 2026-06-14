@@ -483,29 +483,25 @@ a { color: inherit; }
 </head>
 <body>
 <div class="player-shell">
-
   <header class="player-header">
     <div>
       <div class="player-logo">La Ville Morte · SWADE Kanto</div>
       <div class="player-name-wrap">
-        <span class="player-name-display" id="pj-name-display" onclick="startEditName()">La Causeuse</span>
+        <span class="player-name-display" id="pj-name-display" data-default="La Causeuse" onclick="startEditName()">La Causeuse</span>
         <input class="player-name-input" id="pj-name-input" type="text" maxlength="40">
-        <button class="edit-name-btn" id="edit-name-btn" onclick="startEditName()" title="Modifier">✎</button>
+        <button class="edit-name-btn" id="edit-name-btn" onclick="startEditName()" title="Modifier">Edit</button>
       </div>
       <div class="player-role">Dresseur #3 · Journaliste d'investigation</div>
     </div>
-    <a href="index.html" class="player-back">← Portail</a>
+    <a href="index.html" class="player-back">Portail</a>
   </header>
-
   <nav class="player-nav">
-    <button class="active" onclick="showPlayerTab('perso', this)">Personnage</button>
-    <button onclick="showPlayerTab('partner', this)">★ Évoli</button>
-    <button onclick="showPlayerTab('team', this)">Équipe</button>
-    <button onclick="showPlayerTab('notes', this)">Notes</button>
+    <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
+    <button onclick="showPlayerTab('partner',this)">Évoli</button>
+    <button onclick="showPlayerTab('team',this)">Equipe</button>
+    <button onclick="showPlayerTab('notes',this)">Notes</button>
   </nav>
-
   <div class="player-content">
-
     <div class="player-tab active" id="tab-perso">
       <div class="page-title">La Causeuse</div>
       <div class="page-tagline">Journaliste d'investigation</div>
@@ -560,21 +556,14 @@ a { color: inherit; }
           </ul>
         </div>
     </div>
-
     <div class="player-tab" id="tab-partner">
-      <div class="page-title">Pokémon partenaire</div>
-      <div class="page-tagline">Évoli · Compagnon principal</div>
-      <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
-        <div class="page-tagline" style="width:100%;margin-bottom:4px">Blessures — session en cours</div>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer">
-          <input type="checkbox" id="b1" onchange="saveBlessures()"> Blessure 1 (−1)
-        </label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer">
-          <input type="checkbox" id="b2" onchange="saveBlessures()"> Blessure 2 (−2)
-        </label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--danger);cursor:pointer">
-          <input type="checkbox" id="bko" onchange="saveBlessures()"> Hors combat
-        </label>
+      <div class="page-title">Pokemon partenaire</div>
+      <div class="page-tagline">Évoli</div>
+      <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+        <span style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Blessures</span>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b1" onchange="saveBlessures()"> Blessure 1 (-1)</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b2" onchange="saveBlessures()"> Blessure 2 (-2)</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--danger);cursor:pointer"><input type="checkbox" id="bko" onchange="saveBlessures()"> Hors combat</label>
       </div>
       <div id="partner-pk-card" style="display:none"><div class="pk-card">
     <div class="pk-card-header">
@@ -707,122 +696,106 @@ a { color: inherit; }
     </div>
   </div>
     </div>
-
     <div class="player-tab" id="tab-team">
-      <div class="page-title">Équipe Pokémon</div>
-      <div class="page-tagline">6 slots · Partenaire fixe en #0</div>
+      <div class="page-title">Equipe Pokemon</div>
+      <div class="page-tagline">6 slots — partenaire fixe en slot 0</div>
       <div class="team-grid" id="team-grid"></div>
       <div class="pk-add-form" id="pk-add-form">
-        <div class="page-tagline">Ajouter — <span id="add-slot-num"></span></div>
+        <div class="section-title">Ajouter — <span id="add-slot-num"></span></div>
         <input type="hidden" id="add-slot-hidden">
         <div class="form-row">
           <div><label>Nom</label><input type="text" id="pk-add-name" placeholder="Ex : Racaillou"></div>
           <div><label>Type(s)</label><input type="text" id="pk-add-type" placeholder="Ex : Roche/Sol"></div>
         </div>
-        <label>Notes de session</label>
-        <textarea id="pk-add-notes" placeholder="PV actuels, statut…"></textarea>
+        <label>Notes</label>
+        <textarea id="pk-add-notes" placeholder="Statut, PV actuels..."></textarea>
         <div style="display:flex;gap:8px">
           <button class="btn-primary" onclick="addPokemon()">Ajouter</button>
           <button class="btn-ghost" onclick="closeAddForm()">Annuler</button>
         </div>
       </div>
-      <div class="team-panel" id="team-panel">
-        <div class="team-empty-state">Sélectionne un slot.</div>
-      </div>
+      <div class="team-panel" id="team-panel"><div class="team-empty-state">Selectionne un slot.</div></div>
     </div>
-
     <div class="player-tab" id="tab-notes">
       <div class="page-title">Notes</div>
       <div class="page-tagline">Sauvegarde automatique</div>
       <div class="notes-layout">
         <div class="notes-sidebar">
           <div id="note-list"></div>
-          <button class="note-add-btn" onclick="addNote()">+ Nouveau carnet</button>
+          <button class="note-add-btn" onclick="addNote()">+ Nouveau</button>
         </div>
         <div class="note-editor-wrap">
           <input class="note-title-input" id="note-title" placeholder="Titre" oninput="onNoteTitle(this.value)">
-          <textarea class="note-body-textarea" id="note-body" placeholder="Tes notes ici…" oninput="onNoteBody(this.value)"></textarea>
+          <textarea class="note-body-textarea" id="note-body" placeholder="Tes notes ici..." oninput="onNoteBody(this.value)"></textarea>
           <div class="note-meta-bar">
-            <span id="save-status" class="save-ok">✓ Sauvegardé</span>
+            <span id="save-status" class="save-ok">Sauvegarde</span>
             <span id="note-wc" style="margin-left:auto">0 mots</span>
-            <button class="btn-ghost" onclick="exportNote()">Exporter .txt</button>
+            <button class="btn-ghost" onclick="exportNote()">Exporter</button>
             <button class="btn-danger" onclick="deleteNote()">Supprimer</button>
           </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
 <script>
 
+var PLAYER_KEY = 'causeuse';
+var STORAGE_KEY = 'jdr_player_' + PLAYER_KEY;
+var PARTNER_NAME_ASCII = 'Evoli';
+var JSONBIN_KEY = '$2a$10$WYyryseWygh/sqmPChGh8.8o5.D26YYtfK8ftu2OIZyiKjcW2pNty';
+var JSONBIN_URL = 'https://api.jsonbin.io/v3';
+var BIN_ID_KEY = STORAGE_KEY + '_bin_id';
 
-const PLAYER_KEY = 'causeuse';
-const STORAGE_KEY = 'jdr_player_' + PLAYER_KEY;
-const PARTNER_NAME = 'Évoli';
-const PARTNER_SLOT = 0; // slot 0 = partenaire fixe
-
-// ── Navigation onglets ──────────────────────────────────────────────────────
 function showPlayerTab(tab, btn) {
-  document.querySelectorAll('.player-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.player-nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.player-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.player-nav button').forEach(function(b) { b.classList.remove('active'); });
   document.getElementById('tab-' + tab).classList.add('active');
   btn.classList.add('active');
 }
 
-// ── État global ─────────────────────────────────────────────────────────────
-let state = {
-  team: [ // 6 slots, slot 0 = partenaire fixe
-    { name: PARTNER_NAME, type: 'Partenaire', notes: '', partner: true },
+var state = {
+  team: [
+    { name: PARTNER_NAME_ASCII, type: 'Partenaire', notes: '', partner: true },
     null, null, null, null, null
   ],
   activeSlot: 0,
   notes: [],
-  activeNote: null,
+  activeNote: null
 };
 
 function loadState() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    var raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
-      const saved = JSON.parse(raw);
-      // Fusionner en gardant le slot 0 (partenaire) intact
-      if (saved.team) {
-        for (let i = 1; i < 6; i++) {
-          state.team[i] = saved.team[i] || null;
-        }
-      }
+      var saved = JSON.parse(raw);
+      if (saved.team) { for (var i=1;i<6;i++) state.team[i]=saved.team[i]||null; }
       if (saved.notes) state.notes = saved.notes;
+      if (saved.activeNote) state.activeNote = saved.activeNote;
     }
   } catch(e) {}
 }
 
 function saveState() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      team: state.team,
-      notes: state.notes,
-    }));
-  } catch(e) {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({team:state.team,notes:state.notes,activeNote:state.activeNote})); } catch(e) {}
 }
 
-// ── Équipe ──────────────────────────────────────────────────────────────────
 function renderTeam() {
-  const grid = document.getElementById('team-grid');
+  var grid = document.getElementById('team-grid');
   if (!grid) return;
   grid.innerHTML = '';
-  for (let i = 0; i < 6; i++) {
-    const slot = state.team[i];
-    const div = document.createElement('div');
-    div.className = 'team-slot' + (slot ? '' : ' empty') + (state.activeSlot === i ? ' active' : '');
-    div.onclick = () => selectSlot(i);
+  for (var i=0;i<6;i++) {
+    var slot = state.team[i];
+    var div = document.createElement('div');
+    div.className = 'team-slot' + (slot?'':' empty') + (state.activeSlot===i?' active':'');
+    div.onclick = (function(idx){ return function(){ selectSlot(idx); }; })(i);
     if (slot) {
-      div.innerHTML = `<span class="slot-num">${i === 0 ? '★' : '#' + i}</span>
-        <span class="slot-name">${slot.name}</span>
-        <span class="slot-type">${slot.type}</span>
-        ${slot.partner ? '<span class="slot-partner-badge">Partenaire</span>' : ''}`;
+      var badge = slot.partner ? '<span class="slot-partner-badge">Partenaire</span>' : '';
+      div.innerHTML = '<span class="slot-num">' + (i===0?'P':'#'+i) + '</span>'
+        + '<span class="slot-name">' + slot.name + '</span>'
+        + '<span class="slot-type">' + slot.type + '</span>' + badge;
     } else {
-      div.innerHTML = `<span class="slot-num">#${i}</span><span class="slot-add">+</span>`;
+      div.innerHTML = '<span class="slot-num">#'+i+'</span><span class="slot-add">+</span>';
     }
     grid.appendChild(div);
   }
@@ -832,20 +805,16 @@ function renderTeam() {
 function selectSlot(i) {
   state.activeSlot = i;
   renderTeam();
-  // Si slot vide (et pas slot 0) : ouvrir le formulaire
-  if (!state.team[i] && i > 0) {
-    openAddForm(i);
-  } else {
-    closeAddForm();
-  }
+  if (!state.team[i] && i>0) openAddForm(i); else closeAddForm();
 }
 
 function openAddForm(slot) {
   document.getElementById('pk-add-form').classList.add('open');
-  document.getElementById('add-slot-num').textContent = `Slot #${slot}`;
+  document.getElementById('add-slot-num').textContent = 'Slot #' + slot;
   document.getElementById('add-slot-hidden').value = slot;
   document.getElementById('pk-add-name').focus();
 }
+
 function closeAddForm() {
   document.getElementById('pk-add-form').classList.remove('open');
   document.getElementById('pk-add-name').value = '';
@@ -854,359 +823,209 @@ function closeAddForm() {
 }
 
 function addPokemon() {
-  const slot = parseInt(document.getElementById('add-slot-hidden').value);
-  const name = document.getElementById('pk-add-name').value.trim();
-  const type = document.getElementById('pk-add-type').value.trim();
-  const notes = document.getElementById('pk-add-notes').value.trim();
+  var slot = parseInt(document.getElementById('add-slot-hidden').value);
+  var name = document.getElementById('pk-add-name').value.trim();
+  var type = document.getElementById('pk-add-type').value.trim();
+  var notes = document.getElementById('pk-add-notes').value.trim();
   if (!name) { document.getElementById('pk-add-name').focus(); return; }
-  state.team[slot] = { name, type, notes, partner: false };
-  saveState();
-  closeAddForm();
-  renderTeam();
+  state.team[slot] = { name:name, type:type, notes:notes, partner:false };
+  saveState(); closeAddForm(); renderTeam();
 }
 
 function removePokemon(i) {
-  if (i === 0) return; // ne pas supprimer le partenaire
-  if (!confirm('Retirer ce Pokémon de l'équipe ?')) return;
-  state.team[i] = null;
-  state.activeSlot = 0;
-  saveState();
-  renderTeam();
+  if (i===0) return;
+  if (!confirm('Retirer ce Pokemon ?')) return;
+  state.team[i] = null; state.activeSlot = 0;
+  saveState(); renderTeam();
 }
 
 function renderPanel() {
-  const panel = document.getElementById('team-panel');
+  var panel = document.getElementById('team-panel');
   if (!panel) return;
-  const slot = state.team[state.activeSlot];
-  if (!slot) {
-    panel.innerHTML = '<div class="team-empty-state">Sélectionne un slot pour voir la fiche ou ajouter un Pokémon.</div>';
+  var slot = state.team[state.activeSlot];
+  if (!slot) { panel.innerHTML='<div class="team-empty-state">Selectionne un slot.</div>'; return; }
+  if (state.activeSlot===0) {
+    var pk = document.getElementById('partner-pk-card');
+    if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
     return;
   }
-  if (state.activeSlot === 0) {
-    // Slot partenaire = affiche la pk-card complète
-    const pkCard = document.getElementById('partner-pk-card');
-    if (pkCard) {
-      panel.innerHTML = '<div style="padding:16px">' + pkCard.innerHTML + '</div>';
-    }
-    return;
-  }
-  panel.innerHTML = `
-    <div class="team-panel-header">
-      <span class="team-panel-name">${slot.name}</span>
-      <span style="font-size:12px;color:var(--muted)">${slot.type}</span>
-      <button class="btn-danger" style="margin-left:auto" onclick="removePokemon(${state.activeSlot})">Retirer</button>
-    </div>
-    <div class="team-panel-body">
-      <div class="section-title" style="margin-bottom:8px">Notes de session</div>
-      <textarea style="width:100%;min-height:120px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:13px;padding:10px;resize:vertical"
-        oninput="updatePkNotes(this.value)">${slot.notes || ''}</textarea>
-    </div>`;
+  panel.innerHTML =
+    '<div class="team-panel-header">'
+    + '<span class="team-panel-name">'+slot.name+'</span>'
+    + '<span style="font-size:12px;color:var(--muted)">'+slot.type+'</span>'
+    + '<button class="btn-danger" style="margin-left:auto" onclick="removePokemon('+state.activeSlot+')">Retirer</button>'
+    + '</div><div class="team-panel-body">'
+    + '<div class="section-title" style="margin-bottom:8px">Notes de session</div>'
+    + '<textarea style="width:100%;min-height:120px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:13px;padding:10px;resize:vertical" oninput="updatePkNotes(this.value)">'+(slot.notes||'')+'</textarea>'
+    + '</div>';
 }
 
-function updatePkNotes(val) {
-  state.team[state.activeSlot].notes = val;
-  saveState();
-}
+function updatePkNotes(val) { state.team[state.activeSlot].notes=val; saveState(); }
 
-// ── Notes ───────────────────────────────────────────────────────────────────
-let noteTimer = null;
+var noteTimer = null;
 
 function initNotes() {
   if (!state.notes.length) {
     state.notes = [
-      { id: 'n1', title: 'Session 1', content: '', updated: Date.now() },
-      { id: 'n2', title: 'Indices & pistes', content: '', updated: Date.now() },
+      {id:'n1',title:'Session 1',content:'',updated:Date.now()},
+      {id:'n2',title:'Indices et pistes',content:'',updated:Date.now()}
     ];
     saveState();
   }
   renderNoteList();
-  if (state.activeNote) {
-    openNote(state.activeNote);
-  } else if (state.notes.length) {
-    openNote(state.notes[0].id);
-  }
-  // Charger depuis le cloud (remplace localStorage si plus récent)
+  var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
+  if (id) openNote(id);
   loadNotesFromCloud();
 }
 
 function renderNoteList() {
-  const list = document.getElementById('note-list');
+  var list = document.getElementById('note-list');
   if (!list) return;
   list.innerHTML = '';
-  state.notes.forEach(n => {
-    const div = document.createElement('div');
-    div.className = 'note-list-item' + (n.id === state.activeNote ? ' active' : '');
-    div.onclick = () => openNote(n.id);
-    div.innerHTML = `<span class="note-dot"></span>${n.title || 'Sans titre'}`;
+  state.notes.forEach(function(n) {
+    var div = document.createElement('div');
+    div.className = 'note-list-item' + (n.id===state.activeNote?' active':'');
+    div.innerHTML = '<span class="note-dot"></span>' + (n.title||'Sans titre');
+    div.onclick = (function(id){ return function(){ openNote(id); }; })(n.id);
     list.appendChild(div);
   });
 }
 
 function openNote(id) {
   state.activeNote = id;
-  const note = state.notes.find(n => n.id === id);
+  var note = state.notes.find(function(n){return n.id===id;});
   if (!note) return;
   renderNoteList();
-  document.getElementById('note-title').value = note.title || '';
-  document.getElementById('note-body').value = note.content || '';
-  document.getElementById('note-wc').textContent = wordCount(note.content) + ' mots';
+  document.getElementById('note-title').value = note.title||'';
+  document.getElementById('note-body').value = note.content||'';
+  document.getElementById('note-wc').textContent = wordCount(note.content)+' mots';
   setSaveStatus('saved');
 }
 
 function addNote() {
-  const id = 'n' + Date.now();
-  state.notes.push({ id, title: 'Nouveau carnet', content: '', updated: Date.now() });
-  saveState();
-  renderNoteList();
-  openNote(id);
-  setTimeout(() => document.getElementById('note-title').select(), 50);
+  var id = 'n'+Date.now();
+  state.notes.push({id:id,title:'Nouveau carnet',content:'',updated:Date.now()});
+  saveState(); renderNoteList(); openNote(id);
+  setTimeout(function(){ var t=document.getElementById('note-title'); if(t) t.select(); },50);
 }
 
 function deleteNote() {
-  if (!state.activeNote || !confirm('Supprimer ce carnet ?')) return;
-  state.notes = state.notes.filter(n => n.id !== state.activeNote);
+  if (!state.activeNote||!confirm('Supprimer ?')) return;
+  state.notes = state.notes.filter(function(n){return n.id!==state.activeNote;});
   saveState();
   state.activeNote = state.notes.length ? state.notes[0].id : null;
   renderNoteList();
   if (state.activeNote) openNote(state.activeNote);
-  else {
-    document.getElementById('note-title').value = '';
-    document.getElementById('note-body').value = '';
-  }
+  else { document.getElementById('note-title').value=''; document.getElementById('note-body').value=''; }
 }
 
 function onNoteTitle(val) {
-  const note = state.notes.find(n => n.id === state.activeNote);
-  if (!note) return;
-  note.title = val;
-  note.updated = Date.now();
-  schedSaveNote();
+  var note=state.notes.find(function(n){return n.id===state.activeNote;});
+  if (!note) return; note.title=val; note.updated=Date.now(); schedSaveNote();
 }
 
 function onNoteBody(val) {
-  const note = state.notes.find(n => n.id === state.activeNote);
-  if (!note) return;
-  note.content = val;
-  note.updated = Date.now();
-  document.getElementById('note-wc').textContent = wordCount(val) + ' mots';
+  var note=state.notes.find(function(n){return n.id===state.activeNote;});
+  if (!note) return; note.content=val; note.updated=Date.now();
+  document.getElementById('note-wc').textContent=wordCount(val)+' mots';
   schedSaveNote();
 }
 
 function schedSaveNote() {
-  setSaveStatus('pending');
-  clearTimeout(noteTimer);
-  noteTimer = setTimeout(async () => {
-    saveState();
-    renderNoteList();
-    await saveNotesToCloud();
-  }, 800);
+  setSaveStatus('pending'); clearTimeout(noteTimer);
+  noteTimer = setTimeout(function(){ saveState(); renderNoteList(); saveNotesToCloud(); setSaveStatus('saved'); },800);
 }
 
 function setSaveStatus(s) {
-  const el = document.getElementById('save-status');
+  var el=document.getElementById('save-status');
   if (!el) return;
-  if (s === 'saved') { el.className = 'save-ok'; el.textContent = '✓ Sauvegardé'; }
-  else { el.className = 'save-pending'; el.textContent = '● En cours…'; }
+  el.className = s==='saved'?'save-ok':'save-pending';
+  el.textContent = s==='saved'?'Sauvegarde':'En cours...';
 }
 
 function exportNote() {
-  const note = state.notes.find(n => n.id === state.activeNote);
+  var note=state.notes.find(function(n){return n.id===state.activeNote;});
   if (!note) return;
-  const blob = new Blob([note.title + '\n\n' + note.content], { type: 'text/plain;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = (note.title || 'carnet') + '.txt';
-  a.click();
+  var blob=new Blob([note.title+'\n\n'+note.content],{type:'text/plain;charset=utf-8'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=(note.title||'carnet')+'.txt'; a.click();
 }
 
-function wordCount(s) {
-  return (s || '').trim().split(/\s+/).filter(w => w).length;
+function wordCount(s) { return (s||'').trim().split(/\s+/).filter(function(w){return w;}).length; }
+
+function getOrCreateBin(cb) {
+  var saved=localStorage.getItem(BIN_ID_KEY);
+  if (saved){cb(saved);return;}
+  fetch(JSONBIN_URL+'/b',{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY,'X-Bin-Name':'jdr-notes-'+PLAYER_KEY,'X-Bin-Private':'true'},body:JSON.stringify({notes:state.notes,joueur:PLAYER_KEY})})
+  .then(function(r){return r.json();}).then(function(d){var id=d.metadata&&d.metadata.id;if(id){localStorage.setItem(BIN_ID_KEY,id);cb(id);}}).catch(function(){});
 }
 
-// ── Init ─────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  loadState();
-  renderTeam();
-  initNotes();
-  loadPlayerName();
-});
-
-
-// Blessures partenaire (sauvegardées localement)
-function saveBlessures() {
-  const b = {
-    b1: document.getElementById('b1').checked,
-    b2: document.getElementById('b2').checked,
-    bko: document.getElementById('bko').checked,
-  };
-  localStorage.setItem(STORAGE_KEY + '_blessures', JSON.stringify(b));
-}
-function loadBlessures() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY + '_blessures');
-    if (!raw) return;
-    const b = JSON.parse(raw);
-    document.getElementById('b1').checked = b.b1 || false;
-    document.getElementById('b2').checked = b.b2 || false;
-    document.getElementById('bko').checked = b.bko || false;
-  } catch(e) {}
-}
-document.addEventListener('DOMContentLoaded', loadBlessures);
-
-// ── Nom PJ éditable ────────────────────────────────────────────────────────
-const DEFAULT_NAME = 'La Causeuse';
-
-function loadPlayerName() {
-  const saved = localStorage.getItem(STORAGE_KEY + '_name');
-  const name  = saved || DEFAULT_NAME;
-  const disp  = document.getElementById('pj-name-display');
-  if (disp) disp.textContent = name;
+function saveNotesToCloud() {
+  getOrCreateBin(function(id){
+    fetch(JSONBIN_URL+'/b/'+id,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},body:JSON.stringify({notes:state.notes,joueur:PLAYER_KEY,updated:Date.now()})}).catch(function(){});
+  });
 }
 
-function startEditName() {
-  const disp  = document.getElementById('pj-name-display');
-  const input = document.getElementById('pj-name-input');
-  const btn   = document.getElementById('edit-name-btn');
-  if (!disp || !input) return;
-  input.value = disp.textContent;
-  disp.style.display  = 'none';
-  input.style.display = 'inline-block';
-  btn.textContent     = '✓';
-  btn.onclick         = confirmEditName;
-  input.focus();
-  input.select();
-  input.onkeydown = (e) => {
-    if (e.key === 'Enter') confirmEditName();
-    if (e.key === 'Escape') cancelEditName();
-  };
-}
-
-function confirmEditName() {
-  const disp  = document.getElementById('pj-name-display');
-  const input = document.getElementById('pj-name-input');
-  const btn   = document.getElementById('edit-name-btn');
-  const val   = input.value.trim();
-  const name  = val || DEFAULT_NAME;
-  disp.textContent    = name;
-  disp.style.display  = 'inline';
-  input.style.display = 'none';
-  btn.textContent     = '✎';
-  btn.onclick         = startEditName;
-  localStorage.setItem(STORAGE_KEY + '_name', name);
-}
-
-function cancelEditName() {
-  const disp  = document.getElementById('pj-name-display');
-  const input = document.getElementById('pj-name-input');
-  const btn   = document.getElementById('edit-name-btn');
-  disp.style.display  = 'inline';
-  input.style.display = 'none';
-  btn.textContent     = '✎';
-  btn.onclick         = startEditName;
-}
-
-
-// ── JSONBin — synchronisation cloud des notes ─────────────────────────────
-const JSONBIN_KEY = '$2a$10$WYyryseWygh/sqmPChGh8.8o5.D26YYtfK8ftu2OIZyiKjcW2pNty';
-const JSONBIN_URL = 'https://api.jsonbin.io/v3';
-const BIN_ID_KEY  = STORAGE_KEY + '_bin_id';
-
-let syncTimer = null;
-let isSyncing = false;
-
-// Obtenir ou créer le bin de ce joueur
-async function getOrCreateBin() {
-  const saved = localStorage.getItem(BIN_ID_KEY);
-  if (saved) return saved;
-  // Créer un nouveau bin
-  try {
-    const resp = await fetch(JSONBIN_URL + '/b', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': JSONBIN_KEY,
-        'X-Bin-Name': 'jdr-notes-' + PLAYER_KEY,
-        'X-Bin-Private': 'true',
-      },
-      body: JSON.stringify({ notes: state.notes, joueur: PLAYER_KEY, updated: Date.now() }),
-    });
-    if (!resp.ok) throw new Error('Création bin : ' + resp.status);
-    const data = await resp.json();
-    const binId = data.metadata.id;
-    localStorage.setItem(BIN_ID_KEY, binId);
-    console.log('[JSONBin] Bin créé :', binId);
-    return binId;
-  } catch(e) {
-    console.warn('[JSONBin] Impossible de créer le bin :', e);
-    return null;
-  }
-}
-
-// Charger les notes depuis JSONBin (priorité sur localStorage)
-async function loadNotesFromCloud() {
-  setSaveStatus('pending');
-  const binId = await getOrCreateBin();
-  if (!binId) { setSaveStatus('saved'); return; }
-  try {
-    const resp = await fetch(JSONBIN_URL + '/b/' + binId + '/latest', {
-      headers: { 'X-Master-Key': JSONBIN_KEY },
-    });
-    if (!resp.ok) throw new Error('Lecture bin : ' + resp.status);
-    const data = await resp.json();
-    const cloud = data.record;
-    if (cloud && cloud.notes && cloud.notes.length) {
-      state.notes = cloud.notes;
-      // Sync localStorage aussi
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ team: state.team, notes: state.notes }));
-      renderNoteList();
-      if (state.notes.length) openNote(state.notes[0].id);
+function loadNotesFromCloud() {
+  var id=localStorage.getItem(BIN_ID_KEY); if(!id)return;
+  fetch(JSONBIN_URL+'/b/'+id+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY}})
+  .then(function(r){return r.json();}).then(function(d){
+    if(d.record&&d.record.notes&&d.record.notes.length){
+      state.notes=d.record.notes;
+      localStorage.setItem(STORAGE_KEY,JSON.stringify({team:state.team,notes:state.notes}));
+      renderNoteList(); var nid=state.activeNote||state.notes[0].id; if(nid)openNote(nid);
     }
-    setSaveStatus('saved');
-  } catch(e) {
-    console.warn('[JSONBin] Chargement cloud échoué, localStorage utilisé :', e);
-    setSaveStatus('saved');
-  }
+  }).catch(function(){});
 }
-
-// Sauvegarder les notes dans JSONBin
-async function saveNotesToCloud() {
-  if (isSyncing) return;
-  isSyncing = true;
-  const binId = await getOrCreateBin();
-  if (!binId) { isSyncing = false; return; }
-  try {
-    const resp = await fetch(JSONBIN_URL + '/b/' + binId, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': JSONBIN_KEY,
-      },
-      body: JSON.stringify({ notes: state.notes, joueur: PLAYER_KEY, updated: Date.now() }),
-    });
-    if (!resp.ok) throw new Error('Écriture bin : ' + resp.status);
-    setSaveStatus('saved');
-  } catch(e) {
-    console.warn('[JSONBin] Sauvegarde cloud échouée :', e);
-    setSaveStatus('saved');
-  }
-  isSyncing = false;
-}
-
-
 
 function saveBlessures() {
-  const b = {b1:document.getElementById('b1').checked,b2:document.getElementById('b2').checked,bko:document.getElementById('bko').checked};
+  var b={b1:document.getElementById('b1').checked,b2:document.getElementById('b2').checked,bko:document.getElementById('bko').checked};
   localStorage.setItem(STORAGE_KEY+'_blessures',JSON.stringify(b));
 }
+
 function loadBlessures() {
-  try {
-    const b=JSON.parse(localStorage.getItem(STORAGE_KEY+'_blessures')||'{}');
+  try{var b=JSON.parse(localStorage.getItem(STORAGE_KEY+'_blessures')||'{}');
     document.getElementById('b1').checked=b.b1||false;
     document.getElementById('b2').checked=b.b2||false;
     document.getElementById('bko').checked=b.bko||false;
-  } catch(e){}
+  }catch(e){}
 }
-document.addEventListener('DOMContentLoaded',loadBlessures);
+
+var DEFAULT_NAME_JS = 'La Causeuse';
+
+function loadPlayerName() {
+  var saved=localStorage.getItem(STORAGE_KEY+'_name');
+  var el=document.getElementById('pj-name-display');
+  if (el) el.textContent=saved||document.getElementById('pj-name-display').getAttribute('data-default');
+}
+
+function startEditName() {
+  var disp=document.getElementById('pj-name-display'),input=document.getElementById('pj-name-input'),btn=document.getElementById('edit-name-btn');
+  if(!disp||!input)return;
+  input.value=disp.textContent; disp.style.display='none'; input.style.display='inline-block';
+  btn.textContent='OK'; btn.onclick=confirmEditName; input.focus(); input.select();
+  input.onkeydown=function(e){if(e.key==='Enter')confirmEditName();if(e.key==='Escape')cancelEditName();};
+}
+
+function confirmEditName() {
+  var disp=document.getElementById('pj-name-display'),input=document.getElementById('pj-name-input'),btn=document.getElementById('edit-name-btn');
+  var def=disp.getAttribute('data-default');
+  var val=input.value.trim()||def;
+  disp.textContent=val; disp.style.display='inline'; input.style.display='none';
+  btn.textContent='Edit'; btn.onclick=startEditName;
+  localStorage.setItem(STORAGE_KEY+'_name',val);
+}
+
+function cancelEditName() {
+  var disp=document.getElementById('pj-name-display'),input=document.getElementById('pj-name-input'),btn=document.getElementById('edit-name-btn');
+  disp.style.display='inline'; input.style.display='none';
+  btn.textContent='Edit'; btn.onclick=startEditName;
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  loadState(); renderTeam(); initNotes(); loadBlessures(); loadPlayerName();
+});
+
 </script>
 </body>
 </html>
