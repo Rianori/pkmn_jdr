@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setup — La Ville Morte</title>
+<style>
+:root { --bg:#0e0e0f; --surface:#161618; --card:#1c1c1f; --border:#2a2a2e;
+  --amber:#c8922a; --amber-dim:#7a5510; --text:#d4cfc5; --muted:#6b6660;
+  --safe:#1e5c2e; --danger:#8b2020; --mono:'JetBrains Mono',monospace; --sans:system-ui,sans-serif; }
+body { background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh;
+  display:flex; align-items:center; justify-content:center; padding:24px; }
+.box { background:var(--card); border:1px solid var(--border); border-radius:8px;
+  padding:32px 36px; max-width:500px; width:100%; }
+h1 { font-family:var(--mono); font-size:16px; color:var(--amber); margin-bottom:6px; }
+p { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:20px; }
+.step { background:var(--surface); border:1px solid var(--border); border-radius:6px;
+  padding:14px 16px; margin-bottom:12px; }
+.step-num { font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:6px; }
+.step-title { font-size:13px; font-weight:500; margin-bottom:4px; }
+.step-desc { font-size:12px; color:var(--muted); }
+.btn { background:var(--amber-dim); color:var(--amber); border:1px solid var(--amber-dim);
+  border-radius:4px; font-family:var(--mono); font-size:12px; padding:10px 20px;
+  cursor:pointer; width:100%; margin-top:8px; transition:background .12s; }
+.btn:hover { background:var(--amber); color:#1a1000; }
+.result-box { background:var(--surface); border:1px solid var(--amber-dim); border-radius:6px;
+  padding:16px; margin-top:16px; display:none; }
+.result-id { font-family:var(--mono); font-size:14px; color:var(--amber); 
+  word-break:break-all; margin-bottom:10px; }
+.result-msg { font-size:12px; color:var(--muted); line-height:1.6; }
+.status { font-size:12px; margin-top:8px; }
+.ok { color:var(--safe); }
+.err { color:var(--danger); }
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>Configuration initiale</h1>
+  <p>Cette page cree le canal de communication central entre le MJ et les joueurs. A faire une seule fois.</p>
+
+  <div class="step">
+    <div class="step-num">Etape 1</div>
+    <div class="step-title">Creer le canal central</div>
+    <div class="step-desc">Cliquez sur le bouton. Un espace de stockage commun sera cree sur JSONBin.</div>
+    <button class="btn" onclick="createRegistry()">Creer le canal</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="result-box" id="result-box">
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">ID du canal — a copier</div>
+    <div class="result-id" id="result-id"></div>
+    <div class="result-msg">
+      Copiez cet ID et envoyez-le a votre developpeur (Claude) pour qu'il le code dans tous les fichiers du site. 
+      Ce code est votre identifiant permanent — gardez-le precieusement.
+    </div>
+    <button class="btn" onclick="copyId()" style="margin-top:10px">Copier l'ID</button>
+  </div>
+</div>
+<script>
+var JSONBIN_KEY = '$2a$10$WYyryseWygh/sqmPChGh8.8o5.D26YYtfK8ftu2OIZyiKjcW2pNty';
+
+function createRegistry() {
+  var status = document.getElementById('status');
+  status.className = 'status';
+  status.textContent = 'Creation en cours...';
+
+  // Verifier si deja cree
+  var existing = localStorage.getItem('jdr_central_bin');
+  if (existing) {
+    showResult(existing);
+    status.className = 'status ok';
+    status.textContent = 'Canal existant recupere.';
+    return;
+  }
+
+  fetch('https://api.jsonbin.io/v3/b', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Master-Key': JSONBIN_KEY,
+      'X-Bin-Name': 'jdr-central-registry',
+      'X-Bin-Private': 'true'
+    },
+    body: JSON.stringify({ registry: {}, mj_notes: {}, created: new Date().toISOString() })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    var id = data.metadata && data.metadata.id;
+    if (!id) throw new Error('ID non recu');
+    localStorage.setItem('jdr_central_bin', id);
+    showResult(id);
+    status.className = 'status ok';
+    status.textContent = 'Canal cree avec succes !';
+  })
+  .catch(function(e) {
+    status.className = 'status err';
+    status.textContent = 'Erreur : ' + e.message;
+  });
+}
+
+function showResult(id) {
+  document.getElementById('result-id').textContent = id;
+  document.getElementById('result-box').style.display = 'block';
+}
+
+function copyId() {
+  var id = document.getElementById('result-id').textContent;
+  navigator.clipboard.writeText(id).then(function() {
+    var btn = event.target;
+    btn.textContent = 'Copie !';
+    setTimeout(function() { btn.textContent = "Copier l'ID"; }, 2000);
+  });
+}
+
+// Auto-charger si deja configure
+window.onload = function() {
+  var existing = localStorage.getItem('jdr_central_bin');
+  if (existing) showResult(existing);
+};
+</script>
+</body>
+</html>
