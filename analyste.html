@@ -527,7 +527,7 @@ a { color: inherit; }
 <div class="player-shell">
   <header class="player-header">
     <div>
-      <div class="player-logo">Dresseur</div>
+      <div class="player-logo">La Ville Morte · SWADE Kanto</div>
       <div class="player-name-wrap">
         <span class="player-name-display" id="pj-name-display" data-default="Magdalena Hell" onclick="startEditName()">Magdalena Hell</span>
         <input class="player-name-input" id="pj-name-input" type="text" maxlength="40">
@@ -665,7 +665,7 @@ a { color: inherit; }
         <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check" style="font-size:11px;color:var(--muted);font-style:italic"></span></div>
       </div>
 
-      <div class="pk-note"><strong>Rôle scénario :</strong> Ch. 6 — dissimulé sous forme de calculatrice chez Holt, observe le Tentacruel. Ch. 4 — peut se transformer en Magnéton PSI-B pour passer un checkpoint (Dressage d6 diff. 6). La clé tactique de l'infiltration.</div>
+      
     </div>
   </div></div>
       <div class="pk-card">
@@ -729,7 +729,7 @@ a { color: inherit; }
         <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check" style="font-size:11px;color:var(--muted);font-style:italic"></span></div>
       </div>
 
-      <div class="pk-note"><strong>Rôle scénario :</strong> Ch. 6 — dissimulé sous forme de calculatrice chez Holt, observe le Tentacruel. Ch. 4 — peut se transformer en Magnéton PSI-B pour passer un checkpoint (Dressage d6 diff. 6). La clé tactique de l'infiltration.</div>
+      
     </div>
   </div>
     </div>
@@ -1012,12 +1012,6 @@ function exportNote() {
 
 function wordCount(s) { return (s||'').trim().split(/\s+/).filter(function(w){return w;}).length; }
 
-
-
-
-
-
-
 function saveBlessures() {
   var b={b1:document.getElementById('b1').checked,b2:document.getElementById('b2').checked,bko:document.getElementById('bko').checked};
   localStorage.setItem(STORAGE_KEY+'_blessures',JSON.stringify(b));
@@ -1066,10 +1060,8 @@ document.addEventListener('DOMContentLoaded',function(){
   loadState(); state.activeSlot=0; renderTeam(); initNotes(); loadBlessures(); loadPlayerName(); initPlayerBin();
 });
 
-
-
 /* ---- EQUIPEMENT EDITABLE ---- */
-var DEFAULT_GEAR = ['Analyseur de CT portable (+2 aux jets de Sciences sur toute CT)', 'Carnet de terrain chiffre', 'Lampe frontale haute puissance', 'Pokedex modifie (acces aux bases de donnees de recherche)', 'Marteau d alpiniste (arme improvisee, Str+d4)', '500 \u20bd en especes'];
+var DEFAULT_GEAR = ["Analyseur de CT portable (+2 aux jets de Sciences sur toute CT)", "Carnet de terrain chiffre", "Lampe frontale haute puissance", "Pokedex modifie (acces aux bases de donnees de recherche)", "Marteau d alpiniste (arme improvisee, Str+d4)", "500  en especes"];
 
 function loadGear() {
   try {
@@ -1080,17 +1072,7 @@ function loadGear() {
 
 function saveGear(items) {
   localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(items));
-  syncGearCloud(items);
-}
-
-function syncGearCloud(items) {
-  var binId = localStorage.getItem(BIN_ID_KEY);
-  if (!binId) return;
-  fetch(JSONBIN_URL_EX + '/b/' + binId, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY_EX },
-    body: JSON.stringify({ notes: state.notes, joueur: PLAYER_KEY, updated: Date.now(), gear: items, team: state.team })
-  }).catch(function() {});
+  _syncCloud();
 }
 
 function renderGear() {
@@ -1283,111 +1265,107 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(checkMjNote, 2000);
 });
 
-
-
-
 /* ---- CANAL CENTRAL (bin fixe) ---- */
 var CENTRAL_BIN_ID = '6a2f352bf5f4af5e29f21a22';
 var JB_KEY  = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
 var JB_URL  = 'https://api.jsonbin.io/v3';
 
 /* Au premier chargement : creer son bin personnel et l'enregistrer dans le canal central */
-function initPlayerBin() {
-  var myBinId = localStorage.getItem(BIN_ID_KEY);
-  if (myBinId) {
-    /* Bin existant - s'assurer qu'il est dans le canal central */
-    registerInCentral(myBinId);
-    return;
-  }
-  /* Creer un nouveau bin pour ce joueur */
-  fetch(JB_URL + '/b', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Master-Key': JB_KEY,
-      'X-Bin-Name': 'jdr-' + PLAYER_KEY,
-      'X-Bin-Private': 'false'
-    },
-    body: JSON.stringify({ notes: [], joueur: PLAYER_KEY, gear: [], team: [], mj_note: '' })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(d) {
-    var id = d.metadata && d.metadata.id;
-    if (!id) return;
-    localStorage.setItem(BIN_ID_KEY, id);
-    registerInCentral(id);
-  })
-  .catch(function() {});
-}
 
 /* Ecrire son bin_id dans le canal central */
-function registerInCentral(myBinId) {
-  fetch(JB_URL + '/b/' + CENTRAL_BIN_ID + '/latest', {
-    headers: { 'X-Master-Key': JB_KEY }
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(d) {
-    var rec = d.record || {};
-    if (rec[PLAYER_KEY] === myBinId) return; /* Deja enregistre */
-    rec[PLAYER_KEY] = myBinId;
-    return fetch(JB_URL + '/b/' + CENTRAL_BIN_ID, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JB_KEY },
-      body: JSON.stringify(rec)
-    });
-  })
-  .catch(function() {});
+
+/* == CLOUD UNIFIE == */
+var _JBKEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
+var _JBURL = 'https://api.jsonbin.io/v3';
+var _CTRID = '6a2f352bf5f4af5e29f21a22';
+
+function _getOrCreateBin(cb) {
+  var saved = localStorage.getItem(BIN_ID_KEY);
+  if (saved) { cb(saved); return; }
+  fetch(_JBURL + '/b', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json',
+               'X-Master-Key': _JBKEY,
+               'X-Bin-Name': 'jdr-' + PLAYER_KEY,
+               'X-Bin-Private': 'false' },
+    body: JSON.stringify({ notes: [], joueur: PLAYER_KEY })
+  }).then(function(r) { return r.json(); })
+    .then(function(d) {
+      var id = d.metadata && d.metadata.id;
+      if (!id) return;
+      localStorage.setItem(BIN_ID_KEY, id);
+      _registerInCentral(id);
+      cb(id);
+    }).catch(function() {});
 }
 
-function saveNotesToCloud() {
-  var myBinId = localStorage.getItem(BIN_ID_KEY);
-  if (!myBinId) return;
-  var gear = loadGear();
-  fetch(JB_URL + '/b/' + myBinId + '/latest', {
-    headers: { 'X-Master-Key': JB_KEY }
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(d) {
-    var rec = d.record || {};
-    rec.notes   = state.notes;
-    rec.joueur  = PLAYER_KEY;
-    rec.updated = Date.now();
-    rec.gear    = gear;
-    rec.team    = state.team;
-    return fetch(JB_URL + '/b/' + myBinId, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': JB_KEY },
-      body: JSON.stringify(rec)
-    });
-  })
-  .catch(function() {});
+function _registerInCentral(myBinId) {
+  fetch(_JBURL + '/b/' + _CTRID + '/latest', {
+    headers: { 'X-Master-Key': _JBKEY }
+  }).then(function(r) { return r.json(); })
+    .then(function(d) {
+      var rec = d.record || {};
+      if (rec[PLAYER_KEY] === myBinId) return;
+      rec[PLAYER_KEY] = myBinId;
+      return fetch(_JBURL + '/b/' + _CTRID, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JBKEY },
+        body: JSON.stringify(rec)
+      });
+    }).catch(function() {});
 }
+
+function _syncCloud() {
+  var binId = localStorage.getItem(BIN_ID_KEY);
+  if (!binId) return;
+  var gear = loadGear();
+  fetch(_JBURL + '/b/' + binId + '/latest', {
+    headers: { 'X-Master-Key': _JBKEY }
+  }).then(function(r) { return r.json(); })
+    .then(function(d) {
+      var rec = d.record || {};
+      rec.notes   = state.notes;
+      rec.joueur  = PLAYER_KEY;
+      rec.updated = Date.now();
+      rec.gear    = gear;
+      rec.team    = state.team;
+      return fetch(_JBURL + '/b/' + binId, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JBKEY },
+        body: JSON.stringify(rec)
+      });
+    }).catch(function() {});
+}
+
+function saveNotesToCloud() { _syncCloud(); }
 
 function loadNotesFromCloud() {
-  var myBinId = localStorage.getItem(BIN_ID_KEY);
-  if (!myBinId) return;
-  fetch(JB_URL + '/b/' + myBinId + '/latest', {
-    headers: { 'X-Master-Key': JB_KEY }
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(d) {
-    if (!d.record) return;
-    var rec = d.record;
-    /* Notes */
-    if (rec.notes && rec.notes.length) {
-      state.notes = rec.notes;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ team: state.team, notes: state.notes }));
-      renderNoteList();
-      var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
-      if (id) openNote(id);
-    }
-    /* Note du MJ */
-    if (rec.mj_note) {
-      var read = localStorage.getItem(STORAGE_KEY + '_mj_note_read');
-      if (rec.mj_note !== read) showMjNotePopup(rec.mj_note);
-    }
-  })
-  .catch(function() {});
+  _getOrCreateBin(function(binId) {
+    fetch(_JBURL + '/b/' + binId + '/latest', {
+      headers: { 'X-Master-Key': _JBKEY }
+    }).then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (!d.record) return;
+        var rec = d.record;
+        if (rec.notes && rec.notes.length) {
+          state.notes = rec.notes;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ team: state.team, notes: state.notes }));
+          renderNoteList();
+          var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
+          if (id) openNote(id);
+        }
+        if (rec.mj_note) {
+          var read = localStorage.getItem(STORAGE_KEY + '_mj_note_read');
+          if (rec.mj_note !== read) showMjNotePopup(rec.mj_note);
+        }
+      }).catch(function() {});
+  });
+}
+
+function initPlayerBin() {
+  _getOrCreateBin(function(binId) {
+    loadNotesFromCloud();
+  });
 }
 </script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
