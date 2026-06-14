@@ -3,13 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Le Pistolero — La Ville Morte · SWADE Kanto</title>
+<title>Le Pistolero — La Ville Morte</title>
 <style>
-
-
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
-
-  :root {
+:root {
     --bg:        #0e0e0f;
     --surface:   #161618;
     --card:      #1c1c1f;
@@ -28,130 +24,140 @@
     --sans: 'IBM Plex Sans', sans-serif;
   }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── RESET MINIMAL ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+a { color: inherit; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 15px;
-    line-height: 1.6;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+/* ── LAYOUT FICHE JOUEUR ── */
+.player-shell { display: flex; flex-direction: column; min-height: 100vh; }
 
-  /* ── HEADER ── */
-  header {
-    border-bottom: 1px solid var(--border);
-    padding: 20px 32px 16px;
-    display: flex;
-    align-items: baseline;
-    gap: 20px;
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    z-index: 100;
-  }
-  header h1 {
-    font-family: var(--mono);
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--amber);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-  header .subtitle {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 0.05em;
-  }
+.player-header {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.player-logo { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.player-role { font-size: 12px; color: var(--muted); font-style: italic; }
+.player-back {
+  margin-left: auto; font-size: 12px; color: var(--muted);
+  text-decoration: none; border: 1px solid var(--border);
+  border-radius: 4px; padding: 4px 10px;
+  font-family: var(--mono); transition: color .15s, border-color .15s;
+}
+.player-back:hover { color: var(--amber); border-color: var(--amber-dim); }
 
-  /* ── NAV ── */
-  nav {
-    display: flex;
-    gap: 2px;
-    padding: 0 32px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-  }
-  nav button {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    padding: 13px 18px 11px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: color .15s, border-color .15s;
-  }
-  nav button:hover  { color: var(--text); }
-  nav button.active { color: var(--amber); border-bottom-color: var(--amber); }
+/* ── NOM ÉDITABLE ── */
+.player-name-wrap { display: flex; align-items: center; gap: 8px; }
+.player-name-display { font-family: var(--mono); font-size: 16px; font-weight: 600; color: var(--amber); cursor: pointer; }
+.player-name-display:hover { text-decoration: underline dotted var(--amber-dim); }
+.player-name-input {
+  font-family: var(--mono); font-size: 16px; font-weight: 600; color: var(--amber);
+  background: var(--surface); border: 1px solid var(--amber-dim); border-radius: 4px;
+  padding: 2px 8px; display: none; width: 200px;
+}
+.edit-name-btn { background: none; border: none; color: var(--muted); font-size: 11px; cursor: pointer; padding: 2px 4px; font-family: var(--mono); transition: color .12s; }
+.edit-name-btn:hover { color: var(--amber); }
 
-  /* ── LAYOUT ── */
-  main {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
+/* ── NAVIGATION ONGLETS ── */
+.player-nav {
+  display: flex; gap: 2px; padding: 0 24px;
+  background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto;
+}
+.player-nav button {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--muted); padding: 12px 16px 10px; cursor: pointer; white-space: nowrap;
+  transition: color .12s, border-color .12s;
+}
+.player-nav button.active { color: var(--amber); border-bottom-color: var(--amber); }
+.player-nav button:hover:not(.active) { color: var(--text); }
 
-  /* Sidebar (sections du scénario) */
-  aside {
-    width: 180px;
-    flex-shrink: 0;
-    border-right: 1px solid var(--border);
-    background: var(--surface);
-    overflow-y: auto;
-    padding: 16px 0;
-    display: block;
-  }
-  aside .aside-group { margin-bottom: 4px; }
-  aside .aside-label {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 10px 12px 4px;
-  }
-  aside button {
-    display: block;
-    width: 100%;
-    text-align: left;
-    background: none;
-    border: none;
-    font-family: var(--sans);
-    font-size: 13px;
-    color: var(--muted);
-    padding: 7px 12px;
-    cursor: pointer;
-    border-left: 2px solid transparent;
-    transition: all .12s;
-    line-height: 1.3;
-  }
-  aside button:hover  { color: var(--text); background: var(--card); }
-  aside button.active { color: var(--amber); border-left-color: var(--amber); background: var(--amber-glow); }
+/* ── ONGLETS CONTENU ── */
+.player-content { flex: 1; padding: 28px 24px; }
+.player-tab { display: none; }
+.player-tab.active { display: block; }
 
-  /* Content pane */
-  .content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 24px 24px 24px 16px;
-  }
+/* ── ÉQUIPE ── */
+.team-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 10px; margin-bottom: 24px; }
+.team-slot {
+  border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface);
+  padding: 12px 8px; text-align: center; cursor: pointer;
+  transition: border-color .12s, background .12s; min-height: 80px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; position: relative;
+}
+.team-slot:hover { border-color: var(--amber-dim); background: var(--card); }
+.team-slot.active { border-color: var(--amber); background: var(--card); }
+.team-slot.empty { border-style: dashed; }
+.team-slot.empty:hover { border-color: var(--amber-dim); }
+.slot-num { font-family: var(--mono); font-size: 9px; color: var(--muted); position: absolute; top: 6px; left: 8px; }
+.slot-name { font-family: var(--mono); font-size: 11px; color: var(--text); line-height: 1.3; }
+.slot-type { font-size: 10px; color: var(--muted); }
+.slot-add { font-size: 20px; color: var(--border); line-height: 1; }
+.team-slot.empty .slot-add { color: var(--muted); }
+.team-slot:hover .slot-add { color: var(--amber-dim); }
+.slot-partner-badge { font-size: 9px; background: var(--amber-glow); color: var(--amber); border-radius: 3px; padding: 1px 5px; font-family: var(--mono); }
+.team-panel { border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); overflow: hidden; }
+.team-panel-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+.team-panel-name { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--amber); }
+.team-panel-body { padding: 18px; }
+.team-empty-state { padding: 40px; text-align: center; color: var(--muted); font-style: italic; }
 
-  /* ── SECTION ── */
-  .section { display: none; }
-  .section.active { display: block; }
+/* ── FORMULAIRE AJOUT PK ── */
+.pk-add-form { display: none; flex-direction: column; gap: 12px; padding: 20px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; }
+.pk-add-form.open { display: flex; }
+.pk-add-form input, .pk-add-form select, .pk-add-form textarea { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--sans); font-size: 13px; padding: 8px 12px; }
+.pk-add-form textarea { min-height: 80px; resize: vertical; }
+.pk-add-form label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: -8px; }
+.form-row { display: flex; gap: 10px; }
+.form-row > * { flex: 1; }
+.btn-primary { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-dim); border-radius: 4px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 18px; cursor: pointer; transition: background .12s; }
+.btn-primary:hover { background: var(--amber); color: #1a1000; }
+.btn-ghost { background: none; color: var(--muted); border: 1px solid var(--border); border-radius: 4px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 18px; cursor: pointer; }
+.btn-ghost:hover { color: var(--text); border-color: var(--text); }
+.btn-danger { background: none; color: var(--danger); border: 1px solid var(--danger); border-radius: 4px; font-family: var(--mono); font-size: 10px; padding: 4px 10px; cursor: pointer; }
 
-  /* ── TYPOGRAPHY ── */
+/* ── NOTES ── */
+.notes-layout { display: flex; gap: 16px; height: calc(100vh - 180px); }
+.notes-sidebar { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; }
+.note-list-item { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 12px; transition: border-color .12s; display: flex; align-items: center; gap: 8px; }
+.note-list-item.active { border-color: var(--amber); color: var(--amber); }
+.note-list-item:hover:not(.active) { background: var(--card); }
+.note-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+.note-list-item.active .note-dot { background: var(--amber); }
+.note-editor-wrap { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.note-title-input { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--mono); font-size: 14px; font-weight: 600; padding: 10px 14px; width: 100%; }
+.note-body-textarea { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.7; padding: 14px; resize: none; width: 100%; }
+.note-meta-bar { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--muted); }
+.save-ok { color: var(--safe); }
+.save-pending { color: var(--amber-dim); }
+.note-add-btn { background: none; border: 1px dashed var(--border); border-radius: 4px; color: var(--muted); font-size: 12px; padding: 6px 12px; cursor: pointer; text-align: center; transition: color .12s, border-color .12s; }
+.note-add-btn:hover { color: var(--amber); border-color: var(--amber-dim); }
+.page-title { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--amber); margin-bottom: 4px; }
+.page-tagline { font-size: 13px; color: var(--muted); font-style: italic; margin-bottom: 24px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .team-grid { grid-template-columns: repeat(3,1fr); }
+  .player-content { padding: 16px; }
+  .notes-layout { flex-direction: column; height: auto; }
+  .notes-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; }
+}
+/* ── TYPOGRAPHY ── */
   .page-title {
     font-family: var(--mono);
     font-size: 22px;
@@ -160,14 +166,14 @@
     letter-spacing: 0.04em;
     margin-bottom: 4px;
   }
-  .page-tagline {
+.page-tagline {
     font-family: var(--mono);
     font-size: 12px;
     color: var(--muted);
     font-style: italic;
     margin-bottom: 24px;
   }
-  .section-title {
+.section-title {
     font-family: var(--mono);
     font-size: 10px;
     font-weight: 600;
@@ -178,152 +184,21 @@
     padding-bottom: 6px;
     border-bottom: 1px solid var(--border);
   }
-  h3 {
-    font-family: var(--sans);
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text);
-    margin: 20px 0 6px;
-  }
-  p { color: #a8a39a; margin-bottom: 10px; line-height: 1.7; }
-  strong { color: var(--text); font-weight: 600; }
-  em { color: var(--muted); font-style: italic; }
-
-  /* ── CHAPITRE ── */
-  .chapter {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 12px;
-    overflow: hidden;
-  }
-  .chapter-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 18px;
-    background: var(--card);
-    cursor: pointer;
-    user-select: none;
-    transition: background .12s;
-  }
-  .chapter-header:hover { background: #202024; }
-  .chapter-num {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--amber);
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    flex-shrink: 0;
-  }
-  .chapter-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text);
-    flex: 1;
-  }
-  .chapter-chevron {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--muted);
-    transition: transform .2s;
-  }
-  .chapter.open .chapter-chevron { transform: rotate(90deg); }
-  .chapter-body { display: none; padding: 0 18px 18px; }
-  .chapter.open .chapter-body { display: block; }
-
-  .sub-section { margin-top: 14px; }
-  .sub-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--amber-dim);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-  }
-  .enjeu {
-    margin-top: 14px;
-    padding: 10px 14px;
-    background: var(--amber-glow);
-    border-left: 2px solid var(--amber-dim);
-    border-radius: 0 var(--radius) var(--radius) 0;
-  }
-  .enjeu-label {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--amber);
-    margin-bottom: 4px;
-  }
-  .enjeu p { font-style: italic; font-size: 13px; color: #8a8278; margin: 0; }
-
-  /* ── ACTE ── */
-  .acte-block {
-    padding: 12px 16px;
-    border-left: 3px solid var(--amber-dim);
-    background: var(--card);
-    border-radius: 0 var(--radius) var(--radius) 0;
-    margin-bottom: 10px;
-  }
-  .acte-title { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--amber); margin-bottom: 4px; }
-  .acte-block p { font-size: 13px; margin: 0; }
-
-  /* ── FIN ── */
-  .fin-block {
-    padding: 12px 16px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 8px;
-  }
-  .fin-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-  .fin-block p { font-size: 13px; margin: 0; }
-
-  /* ── FICHE PJ ── */
-  .pj-card {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 32px;
-    overflow: hidden;
-  }
-  .pj-header {
-    background: var(--card);
-    padding: 18px 22px;
-    border-bottom: 1px solid var(--border);
-  }
-  .pj-num {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 4px;
-  }
-  .pj-name {
-    font-family: var(--mono);
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--amber);
-    margin-bottom: 2px;
-  }
-  .pj-concept { font-size: 13px; color: var(--muted); font-style: italic; }
-  .pj-body { padding: 22px; }
-
-  /* Stats grid */
+.pj-body { padding: 22px; }
+/* Stats grid */
   .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin-bottom: 20px;
   }
-  .stat-block {
+.stat-block {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 10px 14px;
   }
-  .stat-block-title {
+.stat-block-title {
     font-family: var(--mono);
     font-size: 9px;
     letter-spacing: 0.1em;
@@ -331,7 +206,7 @@
     color: var(--muted);
     margin-bottom: 8px;
   }
-  .stat-row {
+.stat-row {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -339,11 +214,10 @@
     border-bottom: 1px solid var(--border);
     font-size: 13px;
   }
-  .stat-row:last-child { border-bottom: none; }
-  .stat-name { color: var(--muted); }
-  .stat-val  { font-family: var(--mono); font-weight: 600; color: var(--amber); font-size: 13px; }
-
-  /* Tags */
+.stat-row:last-child { border-bottom: none; }
+.stat-name { color: var(--muted); }
+.stat-val  { font-family: var(--mono); font-weight: 600; color: var(--amber); font-size: 13px; }
+/* Tags */
   .tag {
     display: inline-block;
     font-family: var(--mono);
@@ -356,30 +230,28 @@
     margin-right: 4px;
     margin-bottom: 4px;
   }
-  .tag-majeur   { background: #3a1010; color: #e07070; }
-  .tag-mineur   { background: #1a2a10; color: #80b060; }
-  .tag-edge     { background: #102030; color: #5090c0; }
-  .tag-background { background: #2a1a00; color: #c08030; }
-  .tag-combat   { background: #200010; color: #c040a0; }
-  .tag-social   { background: #0a1a30; color: #4090e0; }
-  .tag-weird    { background: #1a0a30; color: #9060d0; }
-  .tag-psi      { background: #3a0505; color: #e05050; }
-  .tag-sauvage  { background: #05200a; color: #50c060; }
-  .tag-gardien  { background: #051530; color: #5080e0; }
-  .tag-boss     { background: #201000; color: #d08020; }
-
-  .hindrance-block, .edge-block {
+.tag-majeur   { background: #3a1010; color: #e07070; }
+.tag-mineur   { background: #1a2a10; color: #80b060; }
+.tag-edge     { background: #102030; color: #5090c0; }
+.tag-background { background: #2a1a00; color: #c08030; }
+.tag-combat   { background: #200010; color: #c040a0; }
+.tag-social   { background: #0a1a30; color: #4090e0; }
+.tag-weird    { background: #1a0a30; color: #9060d0; }
+.tag-psi      { background: #3a0505; color: #e05050; }
+.tag-sauvage  { background: #05200a; color: #50c060; }
+.tag-gardien  { background: #051530; color: #5080e0; }
+.tag-boss     { background: #201000; color: #d08020; }
+.hindrance-block, .edge-block {
     padding: 8px 12px;
     border-radius: var(--radius);
     margin-bottom: 6px;
   }
-  .hindrance-block { background: #1a0a0a; border-left: 2px solid #5a2020; }
-  .edge-block      { background: #0a1020; border-left: 2px solid #203050; }
-  .block-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-  .block-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
-
-  .gear-list { list-style: none; }
-  .gear-list li {
+.hindrance-block { background: #1a0a0a; border-left: 2px solid #5a2020; }
+.edge-block      { background: #0a1020; border-left: 2px solid #203050; }
+.block-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.block-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.gear-list { list-style: none; }
+.gear-list li {
     font-size: 13px;
     color: #a8a39a;
     padding: 4px 0;
@@ -388,46 +260,19 @@
     align-items: baseline;
     gap: 8px;
   }
-  .gear-list li::before {
+.gear-list li::before {
     content: '·';
     font-family: var(--mono);
     color: var(--amber-dim);
     flex-shrink: 0;
   }
-
-  /* ── PNJ ── */
-  .pnj-card {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 12px;
-    overflow: hidden;
-    width: 100%;
-  }
-  .pnj-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 13px 18px;
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    user-select: none;
-    transition: background .12s;
-  }
-  .pnj-header:hover { background: #202024; }
-  .pnj-name { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--text); }
-  .pnj-role { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 2px; }
-  .pnj-body { display: none; padding: 18px; }
-  .pnj-card.open .pnj-body { display: block; }
-  .pnj-card.open .chapter-chevron { transform: rotate(90deg); }
-
-  .stat-inline {
+.stat-inline {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
     margin-bottom: 12px;
   }
-  .stat-pill {
+.stat-pill {
     font-family: var(--mono);
     font-size: 11px;
     background: var(--surface);
@@ -436,48 +281,9 @@
     padding: 2px 8px;
     color: var(--text);
   }
-  .stat-pill span { color: var(--amber); font-weight: 600; }
-
-  /* ── BESTIAIRE ── */
-  .bestiary-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  @media (max-width: 700px) { .bestiary-grid { grid-template-columns: 1fr; } }
-
-  .beast-card {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--card);
-    overflow: hidden;
-    cursor: pointer;
-    transition: border-color .15s;
-  }
-  .beast-card:hover { border-color: var(--amber-dim); }
-  .beast-card.open  { border-color: var(--amber-dim); }
-
-  .beast-header {
-    padding: 12px 16px;
-    border-bottom: 1px solid transparent;
-    transition: border-color .15s;
-  }
-  .beast-card.open .beast-header { border-color: var(--border); }
-
-  .beast-name {
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 2px;
-  }
-  .beast-meta { font-size: 11px; color: var(--muted); }
-  .beast-body { display: none; padding: 14px 16px; }
-  .beast-card.open .beast-body { display: block; }
-
-  .atk-table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 12px; }
-  .atk-table th {
+.stat-pill span { color: var(--amber); font-weight: 600; }
+.atk-table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 12px; }
+.atk-table th {
     font-family: var(--mono);
     font-size: 9px;
     letter-spacing: 0.08em;
@@ -487,18 +293,15 @@
     padding: 4px 8px;
     border-bottom: 1px solid var(--border);
   }
-  .atk-table td {
+.atk-table td {
     padding: 5px 8px;
     border-bottom: 1px solid #1e1e22;
     color: #a8a39a;
     vertical-align: top;
   }
-  .atk-table tr:last-child td { border-bottom: none; }
-  .atk-name { color: var(--text); font-weight: 600; }
-  .atk-dmg  { font-family: var(--mono); color: var(--amber); white-space: nowrap; }
-
-  .capa-list { list-style: none; margin-top: 8px; }
-  .capa-list li {
+.atk-table tr:last-child td { border-bottom: none; }
+.capa-list { list-style: none; margin-top: 8px; }
+.capa-list li {
     font-size: 12px;
     color: #a8a39a;
     padding: 4px 0 4px 12px;
@@ -506,7 +309,7 @@
     position: relative;
     line-height: 1.5;
   }
-  .capa-list li::before {
+.capa-list li::before {
     content: '▸';
     position: absolute;
     left: 0;
@@ -514,113 +317,20 @@
     font-size: 10px;
     top: 5px;
   }
-  .capa-list li:last-child { border-bottom: none; }
-  .capa-name { color: var(--text); font-weight: 600; }
-  .tactique-block {
-    margin-top: 8px;
-    padding: 8px 10px;
-    background: var(--surface);
-    border-left: 2px solid var(--muted);
-    font-size: 11px;
-    color: var(--muted);
-    font-style: italic;
-    line-height: 1.5;
-    border-radius: 0 2px 2px 0;
-  }
-
-  /* Filtre bestiaire */
-  .filter-bar {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
-  .filter-btn {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 5px 12px;
-    cursor: pointer;
-    color: var(--muted);
-    transition: all .12s;
-  }
-  .filter-btn:hover { color: var(--text); border-color: var(--muted); }
-  .filter-btn.active { background: var(--amber-glow); border-color: var(--amber); color: var(--amber); }
-
-  /* catégorie bg */
-  .cat-sauvage  { border-top: 2px solid #3A7D44; }
-  .cat-psi      { border-top: 2px solid #8B1A1A; }
-  .cat-gardien  { border-top: 2px solid #1A3A8B; }
-  .cat-boss     { border-top: 2px solid #8B5000; }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-  /* Résumé */
-  .resume-box {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--amber);
-    padding: 18px 22px;
-    border-radius: 0 var(--radius) var(--radius) 0;
-    margin-bottom: 24px;
-  }
-  .resume-box p { font-size: 14px; color: #b0aba1; margin: 0; line-height: 1.75; }
-
-  .lieux-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 10px;
-    margin-bottom: 24px;
-  }
-  .lieu-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-  }
-  .lieu-name { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--amber); margin-bottom: 4px; }
-  .lieu-card p { font-size: 12px; color: var(--muted); margin: 0; line-height: 1.5; }
-
-  .perso-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 18px;
-    margin-bottom: 8px;
-  }
-  .perso-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-  .perso-card p { font-size: 13px; color: var(--muted); margin: 0; line-height: 1.55; }
-
-  .divider { height: 1px; background: var(--border); margin: 28px 0; }
-
-  /* ── FICHES POKÉMON ── */
-  .pk-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 12px;
-  }
-  @media (max-width: 750px) { .pk-grid { grid-template-columns: 1fr; } }
-
-  .pk-card {
+.capa-list li:last-child { border-bottom: none; }
+.capa-name { color: var(--text); font-weight: 600; }
+.divider { height: 1px; background: var(--border); margin: 28px 0; }
+.pk-card {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     overflow: hidden;
   }
-  .pk-card-header {
+.pk-card-header {
     padding: 14px 18px 10px;
     background: var(--card);
     border-bottom: 1px solid var(--border);
   }
-  .pk-owner {
+.pk-owner {
     font-family: var(--mono);
     font-size: 8px;
     letter-spacing: 0.12em;
@@ -628,28 +338,27 @@
     color: var(--muted);
     margin-bottom: 4px;
   }
-  .pk-name {
+.pk-name {
     font-family: var(--mono);
     font-size: 18px;
     font-weight: 600;
     color: var(--amber);
     margin-bottom: 1px;
   }
-  .pk-species {
+.pk-species {
     font-size: 11px;
     color: var(--muted);
     font-style: italic;
     margin-bottom: 6px;
   }
-  .pk-meta-row {
+.pk-meta-row {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
     margin-bottom: 2px;
   }
-  .pk-body { padding: 16px 18px; }
-
-  .pk-lore {
+.pk-body { padding: 16px 18px; }
+.pk-lore {
     font-size: 12px;
     font-style: italic;
     color: var(--muted);
@@ -658,15 +367,14 @@
     padding-bottom: 10px;
     border-bottom: 1px solid var(--border);
   }
-
-  /* Stats en ligne horizontale */
+/* Stats en ligne horizontale */
   .pk-stats-row {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
     margin-bottom: 12px;
   }
-  .pk-stat {
+.pk-stat {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 2px;
@@ -676,9 +384,8 @@
     color: var(--text);
     white-space: nowrap;
   }
-  .pk-stat .val { color: var(--amber); font-weight: 600; }
-
-  /* Sous-sections compactes */
+.pk-stat .val { color: var(--amber); font-weight: 600; }
+/* Sous-sections compactes */
   .pk-section-lbl {
     font-family: var(--mono);
     font-size: 8px;
@@ -689,10 +396,9 @@
     padding-bottom: 4px;
     border-bottom: 1px solid var(--border);
   }
-
-  /* Table attaques compacte */
+/* Table attaques compacte */
   .pk-atk-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 4px; }
-  .pk-atk-table th {
+.pk-atk-table th {
     font-family: var(--mono);
     font-size: 8px;
     letter-spacing: 0.06em;
@@ -702,39 +408,37 @@
     padding: 3px 6px;
     border-bottom: 1px solid var(--border);
   }
-  .pk-atk-table td {
+.pk-atk-table td {
     padding: 4px 6px;
     border-bottom: 1px solid #1e1e22;
     color: #a8a39a;
     vertical-align: top;
     line-height: 1.4;
   }
-  .pk-atk-table tr:last-child td { border-bottom: none; }
-  .pk-atk-name { color: var(--text); font-weight: 600; font-size: 11px; white-space: nowrap; }
-  .pk-atk-dmg  { font-family: var(--mono); color: var(--amber); font-size: 10px; white-space: nowrap; }
-
-  /* Capacités */
+.pk-atk-table tr:last-child td { border-bottom: none; }
+.pk-atk-name { color: var(--text); font-weight: 600; font-size: 11px; white-space: nowrap; }
+.pk-atk-dmg  { font-family: var(--mono); color: var(--amber); font-size: 10px; white-space: nowrap; }
+/* Capacités */
   .pk-capa { margin-bottom: 8px; }
-  .pk-capa-name {
+.pk-capa-name {
     font-size: 11px;
     font-weight: 600;
     color: var(--text);
     margin-bottom: 2px;
   }
-  .pk-capa-desc {
+.pk-capa-desc {
     font-size: 11px;
     color: var(--muted);
     line-height: 1.5;
     padding-left: 10px;
   }
-
-  /* Blessures Pokémon */
+/* Blessures Pokémon */
   .pk-wounds {
     display: flex;
     gap: 5px;
     margin: 10px 0 6px;
   }
-  .pk-wound-box {
+.pk-wound-box {
     flex: 1;
     border: 1px solid var(--border);
     border-radius: 2px;
@@ -743,11 +447,10 @@
     font-size: 10px;
     background: var(--surface);
   }
-  .pk-wound-box.ko { background: #1a0505; border-color: #5a2020; color: #e07070; }
-  .pk-wound-lbl { font-family: var(--mono); font-size: 8px; color: var(--muted); display: block; margin-bottom: 3px; }
-  .pk-wound-check { font-size: 16px; color: var(--muted); line-height: 1; }
-
-  /* Boite narrative */
+.pk-wound-box.ko { background: #1a0505; border-color: #5a2020; color: #e07070; }
+.pk-wound-lbl { font-family: var(--mono); font-size: 8px; color: var(--muted); display: block; margin-bottom: 3px; }
+.pk-wound-check { font-size: 16px; color: var(--muted); line-height: 1; }
+/* Boite narrative */
   .pk-note {
     background: var(--amber-glow);
     border-left: 2px solid var(--amber-dim);
@@ -759,611 +462,41 @@
     color: #8a8278;
     line-height: 1.5;
   }
-  .pk-note strong { color: var(--amber); font-style: normal; }
-
-
-  /* POSSE COLONNES */
-  .posse-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
-  @media(max-width:800px){.posse-grid{grid-template-columns:1fr;}}
-  .posse-col{display:flex;flex-direction:column;gap:12px;}
-  .pokemon-section-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:6px;padding:4px 0;border-bottom:1px solid var(--amber-dim);}
-  /* CAMPAGNES */
-  .campaign-list{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
-  .campaign-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
-  .campaign-header{display:flex;align-items:center;gap:14px;padding:13px 18px;background:var(--card);cursor:pointer;user-select:none;transition:background .12s;border-bottom:1px solid transparent;}
-  .campaign-header:hover{background:#202024;}
-  .campaign-card.open .campaign-header{border-bottom-color:var(--border);}
-  .campaign-num{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:2px 7px;flex-shrink:0;}
-  .campaign-name{font-size:14px;font-weight:600;color:var(--text);flex:1;}
-  .campaign-status{font-family:var(--mono);font-size:9px;font-weight:600;padding:2px 8px;border-radius:2px;flex-shrink:0;}
-  .status-active{background:#0a200a;color:#40a040;border:1px solid #205020;}
-  .status-empty{background:var(--surface);color:var(--muted);border:1px solid var(--border);}
-  .campaign-body{display:none;padding:20px;}
-  .campaign-card.open .campaign-body{display:block;}
-  .campaign-add-slot{border:2px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.05em;}
-  /* PNJ CATEGORIE */
-  .pnj-campaign-header{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);padding:10px 0 6px;border-bottom:1px solid var(--amber-dim);margin:20px 0 12px;display:flex;align-items:center;gap:10px;}
-  .pnj-campaign-badge{font-size:8px;background:var(--amber-glow);border:1px solid var(--amber-dim);border-radius:2px;padding:2px 6px;color:var(--amber);}
-  .pnj-add-slot{border:2px dashed var(--border);border-radius:var(--radius);padding:20px;text-align:center;color:var(--muted);font-family:var(--mono);font-size:11px;margin-top:16px;}
-  /* BESTIAIRE GROUPES */
-  .beast-cat-group{margin-bottom:28px;}
-  .beast-cat-title{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:8px 0 6px;border-bottom:1px solid var(--border);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-  .beast-count{font-size:8px;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:1px 6px;color:var(--muted);}
-  .cat-sauvage2{border-top:2px solid #2d6e35;}
-  .cat-elite{border-top:2px solid #6e2d8b;}
-  .cat-boss2{border-top:2px solid #8B3300;}
-  /* NOTES */
-  .note-editor-area{height:calc(100vh - 160px);}
-  .notes-sidebar{display:flex;flex-direction:column;gap:6px;}
-  .notes-sidebar-title{font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:4px;}
-  .note-tab-btn{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-family:var(--sans);font-size:12px;color:var(--muted);transition:all .12s;text-align:left;width:100%;}
-  .note-tab-btn:hover{color:var(--text);border-color:var(--muted);}
-  .note-tab-btn.active{color:var(--amber);border-color:var(--amber);background:var(--amber-glow);}
-  .note-tab-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;}
-  .note-tab-btn.active .note-tab-dot{background:var(--amber);}
-  .note-tab-btn.has-content .note-tab-dot{background:#50a050;}
-  .note-add-btn{padding:7px 10px;background:none;border:1px dashed var(--border);border-radius:var(--radius);cursor:pointer;font-family:var(--mono);font-size:10px;color:var(--muted);transition:all .12s;text-align:center;margin-top:4px;width:100%;}
-  .note-add-btn:hover{border-color:var(--amber);color:var(--amber);}
-  .note-editor-area{display:flex;flex-direction:column;gap:8px;}
-  .note-editor-header{display:flex;align-items:center;gap:10px;}
-  .note-title-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--mono);font-size:13px;font-weight:600;padding:8px 12px;outline:none;transition:border-color .15s;}
-  .note-title-input:focus{border-color:var(--amber);}
-  .note-actions{display:flex;gap:6px;}
-  .note-btn{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;background:var(--surface);border:1px solid var(--border);border-radius:2px;cursor:pointer;color:var(--muted);transition:all .12s;}
-  .note-btn:hover{color:var(--text);border-color:var(--muted);}
-  .note-btn.danger:hover{color:#e07070;border-color:#5a2020;background:#1a0505;}
-  .note-meta{font-family:var(--mono);font-size:9px;color:var(--muted);}
-  .note-textarea{flex:1;min-height:420px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.7;padding:16px 18px;resize:none;outline:none;transition:border-color .15s;}
-  .note-textarea:focus{border-color:var(--amber-dim);}
-  .note-textarea::placeholder{color:var(--muted);}
-  .note-empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);font-family:var(--mono);font-size:11px;gap:8px;border:1px dashed var(--border);border-radius:var(--radius);min-height:300px;}
-  .note-word-count{font-family:var(--mono);font-size:9px;color:var(--muted);text-align:right;}
-  .save-indicator{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:2px;transition:all .3s;}
-  .save-indicator.saved{color:#50a050;background:#0a1a0a;border:1px solid #205020;}
-  .save-indicator.unsaved{color:#a08030;background:#1a1500;border:1px solid #3a3000;}
-
-
-  /* ── PJ ACCORDÉON ── */
-  .pj-acc-list { display: flex; flex-direction: column; gap: 10px; }
-  .pj-acc-card {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .pj-acc-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 16px 18px;
-    background: var(--card);
-    cursor: pointer;
-    user-select: none;
-    transition: background .12s;
-    border-bottom: 1px solid transparent;
-  }
-  .pj-acc-header:hover { background: #202024; }
-  .pj-acc-card.open .pj-acc-header { border-bottom-color: var(--border); }
-  .pj-acc-meta {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    flex-shrink: 0;
-    min-width: 220px;
-  }
-  .pj-acc-num {
-    font-family: var(--mono);
-    font-size: 8px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    padding: 3px 7px;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .pj-acc-info { flex: 1; }
-  .pj-acc-name {
-    font-family: var(--mono);
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--amber);
-    margin-bottom: 2px;
-  }
-  .pj-acc-concept {
-    font-size: 11px;
-    color: var(--muted);
-    font-style: italic;
-    margin-bottom: 2px;
-    line-height: 1.4;
-  }
-  .pj-acc-role {
-    font-family: var(--mono);
-    font-size: 9px;
-    color: var(--amber-dim);
-    letter-spacing: 0.05em;
-  }
-  .pj-acc-stats {
-    flex: 1;
-  }
-  .pj-acc-stats .stats-grid {
+.pk-note strong { color: var(--amber); font-style: normal; }
+.pokemon-section-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:6px;padding:4px 0;border-bottom:1px solid var(--amber-dim);}
+.pj-acc-stats .stats-grid {
     gap: 8px;
     margin-bottom: 0;
   }
-  .pj-acc-stats .stat-block {
+.pj-acc-stats .stat-block {
     padding: 7px 10px;
   }
-  .pj-acc-stats .stat-block-title {
+.pj-acc-stats .stat-block-title {
     font-size: 7.5px;
     margin-bottom: 4px;
   }
-  .pj-acc-stats .stat-row {
+.pj-acc-stats .stat-row {
     padding: 2px 0;
     font-size: 12px;
-  }
-  .pj-chevron {
-    flex-shrink: 0;
-    margin-top: 4px;
-  }
-  .pj-acc-card.open .pj-chevron { transform: rotate(90deg); }
-  .pj-acc-body {
-    display: none;
-    padding: 20px;
-  }
-  .pj-acc-card.open .pj-acc-body { display: block; }
-
-
-  /* ── SIDEBAR SOUS-MENU CAMPAGNE ── */
-  .aside-campaign-block {
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 4px;
-  }
-  .aside-campaign-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 12px 8px;
-    cursor: pointer;
-    user-select: none;
-    transition: background .12s;
-  }
-  .aside-campaign-toggle:hover { background: var(--card); }
-  .aside-campaign-name {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--amber);
-  }
-  .aside-campaign-chevron {
-    font-size: 9px;
-    color: var(--amber-dim);
-    transition: transform .2s;
-  }
-  .aside-campaign-chevron.closed { transform: rotate(-90deg); }
-  .aside-campaign-body {
-    padding-left: 8px;
-  }
-  .aside-campaign-body.hidden { display: none; }
-
-
-
-  /* ── LAYOUT FICHE JOUEUR ── */
-  .player-shell {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 15px;
-    line-height: 1.6;
-  }
-  .player-header {
-    padding: 18px 24px 14px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .player-logo {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .player-name {
-    font-family: var(--mono);
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--amber);
-  }
-  .player-role {
-    font-size: 12px;
-    color: var(--muted);
-    font-style: italic;
-  }
-  .player-back {
-    margin-left: auto;
-    font-size: 12px;
-    color: var(--muted);
-    text-decoration: none;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 4px 10px;
-    font-family: var(--mono);
-    transition: color .15s, border-color .15s;
-  }
-  .player-back:hover { color: var(--amber); border-color: var(--amber-dim); }
-
-  /* ── ONGLETS ── */
-  .player-nav {
-    display: flex;
-    gap: 2px;
-    padding: 0 24px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-  }
-  .player-nav button {
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 12px 16px 10px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: color .12s, border-color .12s;
-  }
-  .player-nav button.active {
-    color: var(--amber);
-    border-bottom-color: var(--amber);
-  }
-  .player-nav button:hover:not(.active) { color: var(--text); }
-
-  /* ── CONTENU ── */
-  .player-content {
-    flex: 1;
-    padding: 28px 24px;
-    max-width: 900px;
-  }
-
-  /* ── SECTION POKÉMON ÉQUIPE ── */
-  .team-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
-    margin-bottom: 24px;
-  }
-  .team-slot {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-    padding: 12px 8px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color .12s, background .12s;
-    min-height: 80px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    position: relative;
-  }
-  .team-slot:hover { border-color: var(--amber-dim); background: var(--card); }
-  .team-slot.active {
-    border-color: var(--amber);
-    background: var(--card);
-  }
-  .team-slot.empty {
-    border-style: dashed;
-    border-color: var(--border);
-  }
-  .team-slot.empty:hover { border-color: var(--amber-dim); }
-  .slot-num {
-    font-family: var(--mono);
-    font-size: 9px;
-    color: var(--muted);
-    position: absolute;
-    top: 6px;
-    left: 8px;
-  }
-  .slot-name {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text);
-    line-height: 1.3;
-  }
-  .slot-type {
-    font-size: 10px;
-    color: var(--muted);
-  }
-  .slot-add {
-    font-size: 20px;
-    color: var(--border);
-    line-height: 1;
-  }
-  .team-slot.empty .slot-add { color: var(--muted); }
-  .team-slot:hover .slot-add { color: var(--amber-dim); }
-  .slot-partner-badge {
-    font-size: 9px;
-    background: var(--amber-glow);
-    color: var(--amber);
-    border-radius: 3px;
-    padding: 1px 5px;
-    font-family: var(--mono);
-  }
-
-  /* ── PANNEAU POKÉMON ACTIF ── */
-  .team-panel {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--card);
-    overflow: hidden;
-  }
-  .team-panel-header {
-    padding: 14px 18px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .team-panel-name {
-    font-family: var(--mono);
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--amber);
-  }
-  .team-panel-body { padding: 18px; }
-  .team-empty-state {
-    padding: 40px;
-    text-align: center;
-    color: var(--muted);
-    font-style: italic;
-  }
-
-  /* Formulaire ajout Pokémon */
-  .pk-add-form {
-    display: none;
-    flex-direction: column;
-    gap: 12px;
-    padding: 20px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 16px;
-  }
-  .pk-add-form.open { display: flex; }
-  .pk-add-form input, .pk-add-form select, .pk-add-form textarea {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 13px;
-    padding: 8px 12px;
-  }
-  .pk-add-form textarea { min-height: 80px; resize: vertical; }
-  .pk-add-form label {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: -8px;
-  }
-  .form-row { display: flex; gap: 10px; }
-  .form-row > * { flex: 1; }
-  .btn-primary {
-    background: var(--amber-dim);
-    color: var(--amber);
-    border: 1px solid var(--amber-dim);
-    border-radius: 4px;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 8px 18px;
-    cursor: pointer;
-    transition: background .12s;
-  }
-  .btn-primary:hover { background: var(--amber); color: #1a1000; }
-  .btn-ghost {
-    background: none;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 8px 18px;
-    cursor: pointer;
-  }
-  .btn-ghost:hover { color: var(--text); border-color: var(--text); }
-  .btn-danger {
-    background: none;
-    color: var(--danger);
-    border: 1px solid var(--danger);
-    border-radius: 4px;
-    font-family: var(--mono);
-    font-size: 10px;
-    padding: 4px 10px;
-    cursor: pointer;
-  }
-
-  /* ── NOTES JOUEUR ── */
-  .notes-layout { display: flex; gap: 16px; height: calc(100vh - 180px); }
-  .notes-sidebar {
-    width: 200px;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .note-list-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: border-color .12s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .note-list-item.active { border-color: var(--amber); color: var(--amber); }
-  .note-list-item:hover:not(.active) { border-color: var(--border); background: var(--card); }
-  .note-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--muted);
-    flex-shrink: 0;
-  }
-  .note-list-item.active .note-dot { background: var(--amber); }
-  .note-editor-wrap { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-  .note-title-input {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 14px;
-    font-weight: 600;
-    padding: 10px 14px;
-    width: 100%;
-  }
-  .note-body-textarea {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 14px;
-    line-height: 1.7;
-    padding: 14px;
-    resize: none;
-    width: 100%;
-  }
-  .note-meta-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 11px;
-    color: var(--muted);
-  }
-  .save-ok { color: var(--safe); }
-  .save-pending { color: var(--amber-dim); }
-  .notes-actions { display: flex; gap: 6px; }
-  .note-add-btn {
-    background: none;
-    border: 1px dashed var(--border);
-    border-radius: 4px;
-    color: var(--muted);
-    font-size: 12px;
-    padding: 6px 12px;
-    cursor: pointer;
-    text-align: center;
-    transition: color .12s, border-color .12s;
-  }
-  .note-add-btn:hover { color: var(--amber); border-color: var(--amber-dim); }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 700px) {
-    .team-grid { grid-template-columns: repeat(3, 1fr); }
-    .player-content { padding: 16px; }
-    .notes-layout { flex-direction: column; height: auto; }
-    .notes-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; }
-  }
-
-
-  /* ── NOM PJ ÉDITABLE ── */
-  .player-name-wrap {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .player-name-display {
-    font-family: var(--mono);
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--amber);
-    cursor: pointer;
-  }
-  .player-name-display:hover { text-decoration: underline dotted var(--amber-dim); }
-  .player-name-input {
-    font-family: var(--mono);
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--amber);
-    background: var(--surface);
-    border: 1px solid var(--amber-dim);
-    border-radius: 4px;
-    padding: 2px 8px;
-    display: none;
-    width: 200px;
-  }
-  .edit-name-btn {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 11px;
-    cursor: pointer;
-    padding: 2px 4px;
-    line-height: 1;
-    font-family: var(--mono);
-    transition: color .12s;
-  }
-  .edit-name-btn:hover { color: var(--amber); }
-
-
-  /* ── SURCHARGE CONFLITS CSS MJ ── */
-  .player-content {
-    display: block !important;
-    overflow: visible !important;
-    flex: none !important;
-  }
-  .player-tab {
-    display: none !important;
-  }
-  .player-tab.active {
-    display: block !important;
   }
 </style>
 </head>
 <body>
 <div class="player-shell">
 
-  <!-- ── EN-TÊTE ─────────────────────────────────────────────────────── -->
   <header class="player-header">
     <div>
       <div class="player-logo">La Ville Morte · SWADE Kanto</div>
       <div class="player-name-wrap">
         <span class="player-name-display" id="pj-name-display" onclick="startEditName()">Le Pistolero</span>
         <input class="player-name-input" id="pj-name-input" type="text" maxlength="40">
-        <button class="edit-name-btn" id="edit-name-btn" onclick="startEditName()" title="Modifier le nom">✎</button>
+        <button class="edit-name-btn" id="edit-name-btn" onclick="startEditName()" title="Modifier">✎</button>
       </div>
       <div class="player-role">Dresseur #2 · Ancien agent de terrain de la Ligue</div>
     </div>
     <a href="index.html" class="player-back">← Portail</a>
   </header>
 
-  <!-- ── NAVIGATION ──────────────────────────────────────────────────── -->
   <nav class="player-nav">
     <button class="active" onclick="showPlayerTab('perso', this)">Personnage</button>
     <button onclick="showPlayerTab('partner', this)">★ Arcanin</button>
@@ -1371,14 +504,11 @@
     <button onclick="showPlayerTab('notes', this)">Notes</button>
   </nav>
 
-  <!-- ── CONTENU ─────────────────────────────────────────────────────── -->
   <div class="player-content">
 
-    <!-- ── ONGLET PERSONNAGE ── -->
     <div class="player-tab active" id="tab-perso">
       <div class="page-title">Le Pistolero</div>
       <div class="page-tagline">Ancien agent de terrain de la Ligue</div>
-
       <div class="stats-grid">
             <div class="stat-block">
               <div class="stat-block-title">Attributs</div>
@@ -1397,7 +527,6 @@
               <div class="stat-row"><span class="stat-name">Fate Chips</span><span class="stat-val">3/session</span></div>
             </div>
           </div>
-
       <div class="pj-body">
           <p><em>Douze ans comme agent de terrain pour la Ligue. A démissionné après avoir exécuté un ordre qui n'aurait pas dû l'être. Protège les gens qui méritent d'être protégés — ce qui lui laisse une certaine marge d'appréciation.</em></p>
           
@@ -1433,14 +562,11 @@
         </div>
     </div>
 
-    <!-- ── ONGLET PARTENAIRE ── -->
     <div class="player-tab" id="tab-partner">
       <div class="page-title">Pokémon partenaire</div>
       <div class="page-tagline">Arcanin · Compagnon principal</div>
-
-      <!-- Cartes blessures interactives -->
       <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
-        <div class="section-title" style="width:100%;margin-bottom:4px">Blessures — session en cours</div>
+        <div class="page-tagline" style="width:100%;margin-bottom:4px">Blessures — session en cours</div>
         <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer">
           <input type="checkbox" id="b1" onchange="saveBlessures()"> Blessure 1 (−1)
         </label>
@@ -1451,8 +577,6 @@
           <input type="checkbox" id="bko" onchange="saveBlessures()"> Hors combat
         </label>
       </div>
-
-      <!-- Fiche complète du partenaire (cachée, utilisée pour le slot équipe) -->
       <div id="partner-pk-card" style="display:none"><div class="pk-card">
     <div class="pk-card-header">
       <div class="pk-owner">Partenaire de · Posse #2 · Le Pistolero</div>
@@ -1518,7 +642,6 @@
       <div class="pk-note"><strong>Rôle scénario :</strong> Ch. 7 — repère l'embuscade par le flair avant que la Posse entre dans la zone (Perception d8 diff. 4). Ch. 9 — peut porter Fil hors du réacteur pendant que le Pistolero couvre la retraite. Sa chaleur aide Fil à ne pas perdre conscience pendant le transport.</div>
     </div>
   </div></div>
-
       <div class="pk-card">
     <div class="pk-card-header">
       <div class="pk-owner">Partenaire de · Posse #2 · Le Pistolero</div>
@@ -1586,58 +709,40 @@
   </div>
     </div>
 
-    <!-- ── ONGLET ÉQUIPE ── -->
     <div class="player-tab" id="tab-team">
       <div class="page-title">Équipe Pokémon</div>
       <div class="page-tagline">6 slots · Partenaire fixe en #0</div>
-
-      <!-- Grille 6 slots -->
       <div class="team-grid" id="team-grid"></div>
-
-      <!-- Formulaire ajout -->
       <div class="pk-add-form" id="pk-add-form">
-        <div class="section-title">Ajouter un Pokémon — <span id="add-slot-num"></span></div>
-        <input type="hidden" id="add-slot-hidden" value="">
+        <div class="page-tagline">Ajouter — <span id="add-slot-num"></span></div>
+        <input type="hidden" id="add-slot-hidden">
         <div class="form-row">
-          <div>
-            <label>Nom</label>
-            <input type="text" id="pk-add-name" placeholder="Ex : Racaillou">
-          </div>
-          <div>
-            <label>Type(s)</label>
-            <input type="text" id="pk-add-type" placeholder="Ex : Roche/Sol">
-          </div>
+          <div><label>Nom</label><input type="text" id="pk-add-name" placeholder="Ex : Racaillou"></div>
+          <div><label>Type(s)</label><input type="text" id="pk-add-type" placeholder="Ex : Roche/Sol"></div>
         </div>
         <label>Notes de session</label>
-        <textarea id="pk-add-notes" placeholder="PV actuels, capacités utilisées, statut…"></textarea>
+        <textarea id="pk-add-notes" placeholder="PV actuels, statut…"></textarea>
         <div style="display:flex;gap:8px">
           <button class="btn-primary" onclick="addPokemon()">Ajouter</button>
           <button class="btn-ghost" onclick="closeAddForm()">Annuler</button>
         </div>
       </div>
-
-      <!-- Panneau Pokémon actif -->
       <div class="team-panel" id="team-panel">
         <div class="team-empty-state">Sélectionne un slot.</div>
       </div>
     </div>
 
-    <!-- ── ONGLET NOTES ── -->
     <div class="player-tab" id="tab-notes">
       <div class="page-title">Notes</div>
-      <div class="page-tagline">Sauvegarde locale automatique</div>
-
+      <div class="page-tagline">Sauvegarde automatique</div>
       <div class="notes-layout">
         <div class="notes-sidebar">
           <div id="note-list"></div>
           <button class="note-add-btn" onclick="addNote()">+ Nouveau carnet</button>
         </div>
         <div class="note-editor-wrap">
-          <input class="note-title-input" id="note-title" placeholder="Titre du carnet"
-            oninput="onNoteTitle(this.value)">
-          <textarea class="note-body-textarea" id="note-body"
-            placeholder="Tes notes ici — sauvegarde automatique toutes les 800ms…"
-            oninput="onNoteBody(this.value)"></textarea>
+          <input class="note-title-input" id="note-title" placeholder="Titre" oninput="onNoteTitle(this.value)">
+          <textarea class="note-body-textarea" id="note-body" placeholder="Tes notes ici…" oninput="onNoteBody(this.value)"></textarea>
           <div class="note-meta-bar">
             <span id="save-status" class="save-ok">✓ Sauvegardé</span>
             <span id="note-wc" style="margin-left:auto">0 mots</span>
@@ -1650,8 +755,8 @@
 
   </div>
 </div>
-
 <script>
+
 
 const PLAYER_KEY = 'pistolero';
 const STORAGE_KEY = 'jdr_player_' + PLAYER_KEY;
@@ -2088,6 +1193,21 @@ async function saveNotesToCloud() {
   isSyncing = false;
 }
 
+
+
+function saveBlessures() {
+  const b = {b1:document.getElementById('b1').checked,b2:document.getElementById('b2').checked,bko:document.getElementById('bko').checked};
+  localStorage.setItem(STORAGE_KEY+'_blessures',JSON.stringify(b));
+}
+function loadBlessures() {
+  try {
+    const b=JSON.parse(localStorage.getItem(STORAGE_KEY+'_blessures')||'{}');
+    document.getElementById('b1').checked=b.b1||false;
+    document.getElementById('b2').checked=b.b2||false;
+    document.getElementById('bko').checked=b.bko||false;
+  } catch(e){}
+}
+document.addEventListener('DOMContentLoaded',loadBlessures);
 </script>
 </body>
 </html>
