@@ -3,161 +3,107 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Setup — La Ville Morte</title>
+<title>Setup JSONBin</title>
 <style>
-:root { --bg:#0e0e0f; --surface:#161618; --card:#1c1c1f; --border:#2a2a2e;
-  --amber:#c8922a; --amber-dim:#7a5510; --text:#d4cfc5; --muted:#6b6660;
-  --safe:#1e5c2e; --danger:#8b2020; --mono:'JetBrains Mono',monospace; --sans:system-ui,sans-serif; }
-body { background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh;
-  display:flex; align-items:center; justify-content:center; padding:24px; }
-.box { background:var(--card); border:1px solid var(--border); border-radius:8px;
-  padding:28px 32px; max-width:540px; width:100%; }
-h1 { font-family:var(--mono); font-size:15px; color:var(--amber); margin-bottom:14px; }
-p { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:16px; }
-.btn { background:var(--amber-dim); color:var(--amber); border:1px solid var(--amber-dim);
-  border-radius:4px; font-family:var(--mono); font-size:12px; padding:10px 20px;
-  cursor:pointer; width:100%; transition:background .12s; margin-bottom:12px; }
-.btn:hover { background:var(--amber); color:#1a1000; }
-.btn-copy { background:none; color:var(--muted); border:1px solid var(--border);
-  border-radius:4px; font-family:var(--mono); font-size:11px; padding:7px 16px;
-  cursor:pointer; width:100%; transition:color .12s,border-color .12s; }
-.btn-copy:hover { color:var(--amber); border-color:var(--amber-dim); }
-.status { font-size:12px; margin:8px 0; min-height:18px; }
-.ok { color:var(--safe); }
-.err { color:var(--danger); }
-.warn { color:var(--amber); }
-.result-box { background:var(--surface); border:1px solid var(--amber-dim); border-radius:6px;
-  padding:16px; margin-top:12px; display:none; }
-.id-display { font-family:var(--mono); font-size:13px; color:var(--amber);
-  word-break:break-all; background:var(--bg); padding:10px 12px; border-radius:4px;
-  margin-bottom:10px; }
-.raw-box { background:var(--bg); border:1px solid var(--border); border-radius:4px;
-  padding:10px; font-family:var(--mono); font-size:11px; color:var(--muted);
-  word-break:break-all; white-space:pre-wrap; max-height:200px; overflow-y:auto;
-  margin-top:10px; display:none; }
-.label { font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase;
-  color:var(--muted); margin-bottom:5px; }
+body{background:#0e0e0f;color:#d4cfc5;font-family:system-ui,sans-serif;padding:24px;max-width:600px;margin:0 auto;}
+h1{color:#c8922a;font-size:16px;margin-bottom:12px;}
+p{color:#6b6660;font-size:13px;margin-bottom:16px;line-height:1.6;}
+button{background:#7a5510;color:#c8922a;border:1px solid #7a5510;border-radius:4px;font-size:13px;padding:10px 20px;cursor:pointer;width:100%;margin-bottom:8px;}
+button:hover{background:#c8922a;color:#1a1000;}
+textarea{width:100%;min-height:200px;background:#161618;border:1px solid #2a2a2e;border-radius:4px;color:#d4cfc5;font-family:monospace;font-size:12px;padding:10px;resize:vertical;margin-top:8px;}
+.ok{color:#1e5c2e;}
+.err{color:#8b2020;}
+.warn{color:#c8922a;}
+#log{font-size:13px;margin:8px 0;min-height:20px;}
+#id-box{background:#161618;border:1px solid #7a5510;border-radius:4px;padding:12px;font-family:monospace;font-size:14px;color:#c8922a;word-break:break-all;margin:10px 0;display:none;}
 </style>
 </head>
 <body>
-<div class="box">
-  <h1>Configuration du canal MJ/Joueurs</h1>
-  <p>Cliquez sur le bouton pour creer le canal de communication. A faire une seule fois depuis votre navigateur.</p>
+<h1>Setup canal JSONBin</h1>
+<p>Cliquez pour creer le canal. La reponse brute s'affichera pour diagnostic.</p>
 
-  <button class="btn" onclick="createRegistry()">Creer le canal JSONBin</button>
-  <div class="status" id="status"></div>
+<button onclick="testKey()">1. Tester la cle (GET /v3/b)</button>
+<button onclick="createBin()">2. Creer le bin (POST /v3/b)</button>
+<div id="log"></div>
+<div id="id-box"></div>
+<label style="font-size:12px;color:#6b6660">Reponse brute :</label>
+<textarea id="raw" readonly placeholder="La reponse apparaitra ici..."></textarea>
 
-  <div class="result-box" id="result-box">
-    <div class="label">ID du canal — copiez et envoyez a Claude</div>
-    <div class="id-display" id="result-id"></div>
-    <button class="btn-copy" onclick="copyId()">Copier l'ID</button>
-    <div style="margin-top:10px">
-      <div class="label" style="cursor:pointer" onclick="toggleRaw()">Reponse brute (debug) ▼</div>
-      <div class="raw-box" id="raw-box"></div>
-    </div>
-  </div>
-</div>
 <script>
 var KEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
 
-function setStatus(msg, cls) {
-  var el = document.getElementById('status');
+function log(msg, cls) {
+  var el = document.getElementById('log');
   el.textContent = msg;
-  el.className = 'status ' + (cls||'');
+  el.className = cls || '';
 }
 
-function createRegistry() {
-  setStatus('Connexion a JSONBin...', 'warn');
+function testKey() {
+  log('Test GET /v3/b en cours...', 'warn');
+  document.getElementById('raw').value = '';
+  fetch('https://api.jsonbin.io/v3/b', {
+    method: 'GET',
+    headers: { 'X-Master-Key': KEY }
+  })
+  .then(function(r) {
+    log('HTTP ' + r.status + ' ' + r.statusText, r.ok ? 'ok' : 'err');
+    return r.text();
+  })
+  .then(function(t) { document.getElementById('raw').value = t; })
+  .catch(function(e) { log('Erreur reseau: ' + e, 'err'); document.getElementById('raw').value = e.toString(); });
+}
 
-  var existing = localStorage.getItem('jdr_central_bin');
-  if (existing) {
-    showResult(existing, 'Recupere depuis la memoire locale');
-    setStatus('Canal existant trouve dans la memoire locale.', 'ok');
-    return;
-  }
+function createBin() {
+  log('POST /v3/b en cours...', 'warn');
+  document.getElementById('raw').value = '';
+  document.getElementById('id-box').style.display = 'none';
 
   fetch('https://api.jsonbin.io/v3/b', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'X-Master-Key': KEY,
-      'X-Bin-Name': 'jdr-central-registry',
-      'X-Bin-Private': 'true'
+      'X-Bin-Name': 'jdr-central',
+      'X-Bin-Private': 'false'
     },
-    body: JSON.stringify({
-      registry: {},
-      mj_notes: {},
-      created: new Date().toISOString()
-    })
+    body: JSON.stringify({ registry: {}, created: new Date().toISOString() })
   })
-  .then(function(resp) {
-    setStatus('Reponse recue (HTTP ' + resp.status + ')...', 'warn');
-    return resp.text().then(function(text) {
-      document.getElementById('raw-box').textContent = text;
-      document.getElementById('raw-box').style.display = 'block';
-      try {
-        var data = JSON.parse(text);
-        return data;
-      } catch(e) {
-        throw new Error('Reponse non-JSON: ' + text.substring(0, 100));
+  .then(function(r) {
+    log('HTTP ' + r.status + ' ' + r.statusText, r.ok ? 'ok' : 'err');
+    return r.text();
+  })
+  .then(function(t) {
+    document.getElementById('raw').value = t;
+    try {
+      var d = JSON.parse(t);
+      var id = (d.metadata && d.metadata.id) || d.id || d._id || null;
+      if (id) {
+        localStorage.setItem('jdr_central_bin', id);
+        var box = document.getElementById('id-box');
+        box.textContent = 'ID : ' + id;
+        box.style.display = 'block';
+        log('Succes ! ID recupere : ' + id, 'ok');
+      } else {
+        log('ID introuvable dans la reponse. Voir le JSON ci-dessous.', 'err');
       }
-    });
-  })
-  .then(function(data) {
-    var id = null;
-    /* JSONBin v3 */
-    if (data.metadata && data.metadata.id) id = data.metadata.id;
-    /* Fallback v2 */
-    else if (data.id) id = data.id;
-    /* Autre format */
-    else if (data._id) id = data._id;
-
-    if (!id) {
-      throw new Error('Structure inattendue. Voir reponse brute ci-dessous.');
+    } catch(e) {
+      log('Reponse non-JSON. Voir ci-dessous.', 'err');
     }
-
-    localStorage.setItem('jdr_central_bin', id);
-    showResult(id, 'Canal cree avec succes !');
-    setStatus('Canal cree avec succes !', 'ok');
   })
   .catch(function(e) {
-    setStatus('Erreur: ' + e.message, 'err');
+    log('Erreur fetch : ' + e, 'err');
+    document.getElementById('raw').value = e.toString();
   });
 }
 
-function showResult(id, msg) {
-  document.getElementById('result-id').textContent = id;
-  document.getElementById('result-box').style.display = 'block';
-}
-
-function copyId() {
-  var id = document.getElementById('result-id').textContent;
-  navigator.clipboard.writeText(id).then(function() {
-    var btn = event.target;
-    var orig = btn.textContent;
-    btn.textContent = 'Copie !';
-    setTimeout(function() { btn.textContent = orig; }, 2000);
-  }).catch(function() {
-    /* Fallback */
-    var el = document.getElementById('result-id');
-    var range = document.createRange();
-    range.selectNode(el);
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(range);
-    document.execCommand('copy');
-  });
-}
-
-function toggleRaw() {
-  var box = document.getElementById('raw-box');
-  box.style.display = box.style.display === 'none' ? 'block' : 'none';
-}
-
+// Auto-charger si deja configure
 window.onload = function() {
-  var existing = localStorage.getItem('jdr_central_bin');
-  if (existing) {
-    showResult(existing);
-    setStatus('Canal existant en memoire locale.', 'ok');
+  var ex = localStorage.getItem('jdr_central_bin');
+  if (ex) {
+    var box = document.getElementById('id-box');
+    box.textContent = 'ID existant : ' + ex;
+    box.style.display = 'block';
+    log('Canal deja configure en memoire locale.', 'ok');
   }
 };
 </script>
