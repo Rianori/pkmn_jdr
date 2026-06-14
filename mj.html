@@ -949,20 +949,6 @@
   .aside-campaign-body.hidden { display: none; }
 
 
-  /* == LOGIN == */
-  .login-screen { position: fixed; top:0; left:0; right:0; bottom:0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px; }
-  .login-screen.hidden { display: none; }
-  .login-logo { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-  .login-title { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--amber); }
-  .login-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 40px; display: flex; flex-direction: column; align-items: center; gap: 14px; min-width: 280px; }
-  .login-label { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); align-self: flex-start; }
-  .login-input { font-family: var(--mono); font-size: 22px; letter-spacing: .3em; color: var(--amber); background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 10px 16px; width: 180px; text-align: center; }
-  .login-input:focus { outline: none; border-color: var(--amber-dim); }
-  .login-btn { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-dim); border-radius: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; padding: 10px 24px; cursor: pointer; width: 100%; transition: background .12s; }
-  .login-btn:hover { background: var(--amber); color: #1a1000; }
-  .login-error { font-size: 12px; color: var(--danger); display: none; }
-  .login-error.visible { display: block; }
-
   /* == EQUIPE PK VISIBLE MJ == */
   .pj-team-strip { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
   .pj-team-pk { position: relative; cursor: default; }
@@ -1013,16 +999,6 @@
 </style>
 </head>
 <body>
-<div class="login-screen" id="login-screen">
-  <div class="login-logo">Compagnon MJ</div>
-  <div class="login-title">La Ville Morte</div>
-  <div class="login-box">
-    <div class="login-label">Code d'acces MJ</div>
-    <input class="login-input" id="login-input" type="password" maxlength="6" placeholder="****" onkeydown="if(event.key==='Enter') checkLogin()">
-    <button class="login-btn" onclick="checkLogin()">Entrer</button>
-    <div class="login-error" id="login-error">Code incorrect</div>
-  </div>
-</div>
 
 
 <header>
