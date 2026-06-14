@@ -3657,8 +3657,8 @@ function filterBeastAside(group) {
 
 
 // ?? JSONBin ? lecture des notes joueurs (MJ) ?????????????????????????????
-const JSONBIN_KEY_MJ = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
-const JSONBIN_URL_MJ = 'https://api.jsonbin.io/v3';
+const _KEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
+const _URL = 'https://api.jsonbin.io/v3';
 const JOUEURS = ['analyste', 'pistolero', 'causeuse', 'pisteur'];
 const JOUEUR_NAMES = {
   analyste: "Magdalena Hell",
@@ -3681,8 +3681,8 @@ async
 function fetchPlayerData(slug, cb) {
   var binId = getPlayerBinId(slug);
   if (!binId) { cb(null); return; }
-  fetch(JSONBIN_URL_MJ2 + '/b/' + binId + '/latest', {
-    headers: { 'X-Master-Key': JSONBIN_KEY_MJ2 }
+  fetch(_URL + '/b/' + binId + '/latest', {
+    headers: { 'X-Master-Key': _KEY }
   }).then(function(r) { return r.json(); })
     .then(function(d) { cb(d.record || null); })
     .catch(function() { cb(null); });
