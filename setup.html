@@ -11,66 +11,68 @@
 body { background:var(--bg); color:var(--text); font-family:var(--sans); min-height:100vh;
   display:flex; align-items:center; justify-content:center; padding:24px; }
 .box { background:var(--card); border:1px solid var(--border); border-radius:8px;
-  padding:32px 36px; max-width:500px; width:100%; }
-h1 { font-family:var(--mono); font-size:16px; color:var(--amber); margin-bottom:6px; }
-p { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:20px; }
-.step { background:var(--surface); border:1px solid var(--border); border-radius:6px;
-  padding:14px 16px; margin-bottom:12px; }
-.step-num { font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase;
-  color:var(--muted); margin-bottom:6px; }
-.step-title { font-size:13px; font-weight:500; margin-bottom:4px; }
-.step-desc { font-size:12px; color:var(--muted); }
+  padding:28px 32px; max-width:540px; width:100%; }
+h1 { font-family:var(--mono); font-size:15px; color:var(--amber); margin-bottom:14px; }
+p { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:16px; }
 .btn { background:var(--amber-dim); color:var(--amber); border:1px solid var(--amber-dim);
   border-radius:4px; font-family:var(--mono); font-size:12px; padding:10px 20px;
-  cursor:pointer; width:100%; margin-top:8px; transition:background .12s; }
+  cursor:pointer; width:100%; transition:background .12s; margin-bottom:12px; }
 .btn:hover { background:var(--amber); color:#1a1000; }
-.result-box { background:var(--surface); border:1px solid var(--amber-dim); border-radius:6px;
-  padding:16px; margin-top:16px; display:none; }
-.result-id { font-family:var(--mono); font-size:14px; color:var(--amber); 
-  word-break:break-all; margin-bottom:10px; }
-.result-msg { font-size:12px; color:var(--muted); line-height:1.6; }
-.status { font-size:12px; margin-top:8px; }
+.btn-copy { background:none; color:var(--muted); border:1px solid var(--border);
+  border-radius:4px; font-family:var(--mono); font-size:11px; padding:7px 16px;
+  cursor:pointer; width:100%; transition:color .12s,border-color .12s; }
+.btn-copy:hover { color:var(--amber); border-color:var(--amber-dim); }
+.status { font-size:12px; margin:8px 0; min-height:18px; }
 .ok { color:var(--safe); }
 .err { color:var(--danger); }
+.warn { color:var(--amber); }
+.result-box { background:var(--surface); border:1px solid var(--amber-dim); border-radius:6px;
+  padding:16px; margin-top:12px; display:none; }
+.id-display { font-family:var(--mono); font-size:13px; color:var(--amber);
+  word-break:break-all; background:var(--bg); padding:10px 12px; border-radius:4px;
+  margin-bottom:10px; }
+.raw-box { background:var(--bg); border:1px solid var(--border); border-radius:4px;
+  padding:10px; font-family:var(--mono); font-size:11px; color:var(--muted);
+  word-break:break-all; white-space:pre-wrap; max-height:200px; overflow-y:auto;
+  margin-top:10px; display:none; }
+.label { font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:5px; }
 </style>
 </head>
 <body>
 <div class="box">
-  <h1>Configuration initiale</h1>
-  <p>Cette page cree le canal de communication central entre le MJ et les joueurs. A faire une seule fois.</p>
+  <h1>Configuration du canal MJ/Joueurs</h1>
+  <p>Cliquez sur le bouton pour creer le canal de communication. A faire une seule fois depuis votre navigateur.</p>
 
-  <div class="step">
-    <div class="step-num">Etape 1</div>
-    <div class="step-title">Creer le canal central</div>
-    <div class="step-desc">Cliquez sur le bouton. Un espace de stockage commun sera cree sur JSONBin.</div>
-    <button class="btn" onclick="createRegistry()">Creer le canal</button>
-    <div class="status" id="status"></div>
-  </div>
+  <button class="btn" onclick="createRegistry()">Creer le canal JSONBin</button>
+  <div class="status" id="status"></div>
 
   <div class="result-box" id="result-box">
-    <div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">ID du canal — a copier</div>
-    <div class="result-id" id="result-id"></div>
-    <div class="result-msg">
-      Copiez cet ID et envoyez-le a votre developpeur (Claude) pour qu'il le code dans tous les fichiers du site. 
-      Ce code est votre identifiant permanent — gardez-le precieusement.
+    <div class="label">ID du canal — copiez et envoyez a Claude</div>
+    <div class="id-display" id="result-id"></div>
+    <button class="btn-copy" onclick="copyId()">Copier l'ID</button>
+    <div style="margin-top:10px">
+      <div class="label" style="cursor:pointer" onclick="toggleRaw()">Reponse brute (debug) ▼</div>
+      <div class="raw-box" id="raw-box"></div>
     </div>
-    <button class="btn" onclick="copyId()" style="margin-top:10px">Copier l'ID</button>
   </div>
 </div>
 <script>
-var JSONBIN_KEY = '$2a$10$WYyryseWygh/sqmPChGh8.8o5.D26YYtfK8ftu2OIZyiKjcW2pNty';
+var KEY = '$2a$10$WYyryseWygh/sqmPChGh8.8o5.D26YYtfK8ftu2OIZyiKjcW2pNty';
+
+function setStatus(msg, cls) {
+  var el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = 'status ' + (cls||'');
+}
 
 function createRegistry() {
-  var status = document.getElementById('status');
-  status.className = 'status';
-  status.textContent = 'Creation en cours...';
+  setStatus('Connexion a JSONBin...', 'warn');
 
-  // Verifier si deja cree
   var existing = localStorage.getItem('jdr_central_bin');
   if (existing) {
-    showResult(existing);
-    status.className = 'status ok';
-    status.textContent = 'Canal existant recupere.';
+    showResult(existing, 'Recupere depuis la memoire locale');
+    setStatus('Canal existant trouve dans la memoire locale.', 'ok');
     return;
   }
 
@@ -78,28 +80,52 @@ function createRegistry() {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Master-Key': JSONBIN_KEY,
+      'X-Master-Key': KEY,
       'X-Bin-Name': 'jdr-central-registry',
       'X-Bin-Private': 'true'
     },
-    body: JSON.stringify({ registry: {}, mj_notes: {}, created: new Date().toISOString() })
+    body: JSON.stringify({
+      registry: {},
+      mj_notes: {},
+      created: new Date().toISOString()
+    })
   })
-  .then(function(r) { return r.json(); })
+  .then(function(resp) {
+    setStatus('Reponse recue (HTTP ' + resp.status + ')...', 'warn');
+    return resp.text().then(function(text) {
+      document.getElementById('raw-box').textContent = text;
+      document.getElementById('raw-box').style.display = 'block';
+      try {
+        var data = JSON.parse(text);
+        return data;
+      } catch(e) {
+        throw new Error('Reponse non-JSON: ' + text.substring(0, 100));
+      }
+    });
+  })
   .then(function(data) {
-    var id = data.metadata && data.metadata.id;
-    if (!id) throw new Error('ID non recu');
+    var id = null;
+    /* JSONBin v3 */
+    if (data.metadata && data.metadata.id) id = data.metadata.id;
+    /* Fallback v2 */
+    else if (data.id) id = data.id;
+    /* Autre format */
+    else if (data._id) id = data._id;
+
+    if (!id) {
+      throw new Error('Structure inattendue. Voir reponse brute ci-dessous.');
+    }
+
     localStorage.setItem('jdr_central_bin', id);
-    showResult(id);
-    status.className = 'status ok';
-    status.textContent = 'Canal cree avec succes !';
+    showResult(id, 'Canal cree avec succes !');
+    setStatus('Canal cree avec succes !', 'ok');
   })
   .catch(function(e) {
-    status.className = 'status err';
-    status.textContent = 'Erreur : ' + e.message;
+    setStatus('Erreur: ' + e.message, 'err');
   });
 }
 
-function showResult(id) {
+function showResult(id, msg) {
   document.getElementById('result-id').textContent = id;
   document.getElementById('result-box').style.display = 'block';
 }
@@ -108,15 +134,31 @@ function copyId() {
   var id = document.getElementById('result-id').textContent;
   navigator.clipboard.writeText(id).then(function() {
     var btn = event.target;
+    var orig = btn.textContent;
     btn.textContent = 'Copie !';
-    setTimeout(function() { btn.textContent = "Copier l'ID"; }, 2000);
+    setTimeout(function() { btn.textContent = orig; }, 2000);
+  }).catch(function() {
+    /* Fallback */
+    var el = document.getElementById('result-id');
+    var range = document.createRange();
+    range.selectNode(el);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand('copy');
   });
 }
 
-// Auto-charger si deja configure
+function toggleRaw() {
+  var box = document.getElementById('raw-box');
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+}
+
 window.onload = function() {
   var existing = localStorage.getItem('jdr_central_bin');
-  if (existing) showResult(existing);
+  if (existing) {
+    showResult(existing);
+    setStatus('Canal existant en memoire locale.', 'ok');
+  }
 };
 </script>
 </body>
