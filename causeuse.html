@@ -1039,8 +1039,6 @@
     padding: 28px 24px;
     max-width: 900px;
   }
-  .player-tab { display: none; }
-  .player-tab.active { display: block; }
 
   /* ── SECTION POKÉMON ÉQUIPE ── */
   .team-grid {
@@ -1333,6 +1331,19 @@
   }
   .edit-name-btn:hover { color: var(--amber); }
 
+
+  /* ── SURCHARGE CONFLITS CSS MJ ── */
+  .player-content {
+    display: block !important;
+    overflow: visible !important;
+    flex: none !important;
+  }
+  .player-tab {
+    display: none !important;
+  }
+  .player-tab.active {
+    display: block !important;
+  }
 </style>
 </head>
 <body>
@@ -1361,7 +1372,7 @@
   </nav>
 
   <!-- ── CONTENU ─────────────────────────────────────────────────────── -->
-  <main class="player-content">
+  <div class="player-content">
 
     <!-- ── ONGLET PERSONNAGE ── -->
     <div class="player-tab active" id="tab-perso">
@@ -1636,7 +1647,7 @@
       </div>
     </div>
 
-  </main>
+  </div>
 </div>
 
 <script>
