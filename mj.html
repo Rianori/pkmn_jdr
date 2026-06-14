@@ -3412,7 +3412,7 @@
 </main>
 
 <script>
-// ── Navigation principale ────────────────────────────────────────────────
+// ?? Navigation principale ????????????????????????????????????????????????
 function showTab(tab, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('#main-nav button').forEach(b => b.classList.remove('active'));
@@ -3424,7 +3424,7 @@ function showTab(tab, btn) {
   if (asideSection) asideSection.style.display = 'block';
 }
 
-// ── Sidebar scénario : scroll et chapitres ───────────────────────────────
+// ?? Sidebar sc?nario : scroll et chapitres ???????????????????????????????
 function scrollToEl(id) {
   // Ouvrir la campagne dans la sidebar
   const asc = document.getElementById('asc-1');
@@ -3465,14 +3465,14 @@ function openChapter(id) {
   event.target.classList.add('active');
 }
 
-// ── Accordéons génériques ────────────────────────────────────────────────
+// ?? Accord?ons g?n?riques ????????????????????????????????????????????????
 function toggleChapter(id)  { document.getElementById(id).classList.toggle('open'); }
 function togglePnj(id)      { document.getElementById(id).classList.toggle('open'); }
 function toggleBeast(card)  { card.classList.toggle('open'); }
 function toggleCampaign(id) { document.getElementById(id).classList.toggle('open'); }
 function togglePjAcc(id)    { document.getElementById(id).classList.toggle('open'); }
 
-// ── Sidebar sous-menu campagne ───────────────────────────────────────────
+// ?? Sidebar sous-menu campagne ???????????????????????????????????????????
 function toggleAsideCampaign(id) {
   const body = document.getElementById(id);
   const chev = document.getElementById(id + '-chev');
@@ -3481,9 +3481,9 @@ function toggleAsideCampaign(id) {
   if (chev) chev.classList.toggle('closed');
 }
 
-// ── Bestiaire : filtres ──────────────────────────────────────────────────
+// ?? Bestiaire : filtres ??????????????????????????????????????????????????
 function filterBeast(cat, btn) {
-  // "Tous" — afficher tous les groupes
+  // "Tous" ? afficher tous les groupes
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.querySelectorAll('.beast-cat-group').forEach(g => g.style.display = '');
@@ -3505,7 +3505,7 @@ function filterBeast2(group, btn) {
   });
 }
 
-// ── Système de notes ─────────────────────────────────────────────────────
+// ?? Syst?me de notes ?????????????????????????????????????????????????????
 const NK = 'jdr_notes_v2';
 let notes = [], aid = null, stimer = null;
 
@@ -3514,7 +3514,7 @@ function loadNotes() {
   if (!notes.length) {
     notes = [
       { id: 'n1', title: 'Session 1',      content: '', created: Date.now(), updated: Date.now() },
-      { id: 'n2', title: 'PNJ rencontrés', content: '', created: Date.now(), updated: Date.now() },
+      { id: 'n2', title: 'PNJ rencontr?s', content: '', created: Date.now(), updated: Date.now() },
       { id: 'n3', title: 'Indices & pistes',content:'', created: Date.now(), updated: Date.now() },
     ];
     saveNotes();
@@ -3552,13 +3552,13 @@ function openNote(id) {
     '<div class="note-editor-header">' +
       '<input class="note-title-input" id="note-title" value="' + esc(note.title) + '" placeholder="Titre" oninput="updTitle(this.value)">' +
       '<div class="note-actions">' +
-        '<span class="save-indicator saved" id="save-ind">&#10003; Sauvegardé</span>' +
+        '<span class="save-indicator saved" id="save-ind">&#10003; Sauvegard?</span>' +
         '<button class="note-btn" onclick="exportNote()">Exporter</button>' +
         '<button class="note-btn danger" onclick="delNote(\'' + id + '\')">Supprimer</button>' +
       '</div>' +
     '</div>' +
-    '<div class="note-meta" id="note-meta">Dernière modification : ' + ts + '</div>' +
-    '<textarea class="note-textarea" id="note-content" placeholder="Écrire ici — sauvegarde automatique..." oninput="schedSave(this.value)">' + esc(note.content) + '</textarea>' +
+    '<div class="note-meta" id="note-meta">Derni?re modification : ' + ts + '</div>' +
+    '<textarea class="note-textarea" id="note-content" placeholder="?crire ici ? sauvegarde automatique..." oninput="schedSave(this.value)">' + esc(note.content) + '</textarea>' +
     '<div class="note-word-count" id="note-wc">' + wc(note.content) + ' mots</div>';
 }
 
@@ -3572,7 +3572,7 @@ function updTitle(v) {
 
 function schedSave(content) {
   const ind = document.getElementById('save-ind');
-  if (ind) { ind.className = 'save-indicator unsaved'; ind.textContent = '● Non sauvegardé'; }
+  if (ind) { ind.className = 'save-indicator unsaved'; ind.textContent = '? Non sauvegard?'; }
   if (content !== undefined) {
     const n = notes.find(x => x.id === aid);
     if (n) {
@@ -3586,11 +3586,11 @@ function schedSave(content) {
   stimer = setTimeout(() => {
     saveNotes();
     renderTabs();
-    if (ind) { ind.className = 'save-indicator saved'; ind.textContent = '\u2713 Sauvegardé'; }
+    if (ind) { ind.className = 'save-indicator saved'; ind.textContent = '\u2713 Sauvegard?'; }
     const m = document.getElementById('note-meta');
     if (m) {
       const ts = new Date().toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
-      m.textContent = 'Dernière modification : ' + ts;
+      m.textContent = 'Derni?re modification : ' + ts;
     }
   }, 800);
 }
@@ -3623,13 +3623,13 @@ function exportNote() {
 document.addEventListener('DOMContentLoaded', () => {
   loadNotes();
   if (notes.length) openNote(notes[0].id);
-  // Afficher la sidebar de l'onglet actif au démarrage (scénarios par défaut)
+  // Afficher la sidebar de l'onglet actif au d?marrage (sc?narios par d?faut)
   document.querySelectorAll('.aside-tab-section').forEach(s => s.style.display = 'none');
   const startAside = document.getElementById('aside-scenarios');
   if (startAside) startAside.style.display = 'block';
 });
 
-// ── Scroll + ouverture d'un accordéon ──────────────────────────────────
+// ?? Scroll + ouverture d'un accord?on ??????????????????????????????????
 function scrollAndOpen(id) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -3639,7 +3639,7 @@ function scrollAndOpen(id) {
   event.target.classList.add('active');
 }
 
-// ── Filtre bestiaire depuis l'aside ────────────────────────────────────
+// ?? Filtre bestiaire depuis l'aside ????????????????????????????????????
 function filterBeastAside(group) {
   document.querySelectorAll('aside button').forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
@@ -3656,7 +3656,7 @@ function filterBeastAside(group) {
 }
 
 
-// ── JSONBin — lecture des notes joueurs (MJ) ─────────────────────────────
+// ?? JSONBin ? lecture des notes joueurs (MJ) ?????????????????????????????
 const JSONBIN_KEY_MJ = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
 const JSONBIN_URL_MJ = 'https://api.jsonbin.io/v3';
 const JOUEURS = ['analyste', 'pistolero', 'causeuse', 'pisteur'];
@@ -3790,7 +3790,7 @@ function loadAllPlayersNotes() {
         : null;
       html += '<div style="margin-bottom:20px">';
       html += '<div class="section-title" style="margin-bottom:8px">' + name;
-      if (ts) html += ' <span style="font-size:10px;color:var(--muted);font-weight:normal">· ' + ts + '</span>';
+      if (ts) html += ' <span style="font-size:10px;color:var(--muted);font-weight:normal"> ' + ts + '</span>';
       html += '</div>';
       if (!data || !data.notes || !data.notes.length) {
         var binId = registry[slug];
