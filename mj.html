@@ -3667,98 +3667,16 @@ const JOUEUR_NAMES = {
   pisteur: "Telera",
 };
 
-async function loadJoueurNotes(slug) {
-  const binId = localStorage.getItem('jdr_player_' + slug + '_bin_id');
-  if (!binId) return null;
-  try {
-    const resp = await fetch(JSONBIN_URL_MJ + '/b/' + binId + '/latest', {
-      headers: { 'X-Master-Key': JSONBIN_KEY_MJ },
-    });
-    if (!resp.ok) return null;
-    const data = await resp.json();
-    return data.record;
-  } catch(e) {
-    return null;
-  }
-}
+async 
 
 async 
-function loadAllPlayersNotes() {
-  var container = document.getElementById('mj-players-notes');
-  if (!container) return;
-  container.innerHTML = '<div style="color:var(--muted);font-style:italic;font-size:13px;padding:8px">Chargement...</div>';
 
-  /* Essayer de lire le registry pour avoir les bin_ids */
-  var regBinId = localStorage.getItem('jdr_registry_bin_id');
-
-  var renderNotes = function(binMap) {
-    var slugs = ['analyste','pistolero','causeuse','pisteur'];
-    var names = {analyste:'Magdalena Hell',pistolero:'Lidia Fireheart',causeuse:'Rizen Dao',pisteur:'Telera'};
-    var html = '';
-    var pending = slugs.length;
-
-    slugs.forEach(function(slug) {
-      var binId = binMap[slug] || localStorage.getItem('jdr_player_' + slug + '_bin_id');
-      if (!binId) {
-        html_add(slug, names[slug], null);
-        pending--;
-        if (pending === 0) container.innerHTML = html;
-        return;
-      }
-      fetch('https://api.jsonbin.io/v3/b/' + binId + '/latest', {
-        headers: { 'X-Master-Key': JSONBIN_KEY_MJ }
-      }).then(function(r) { return r.json(); })
-        .then(function(d) {
-          html_add(slug, names[slug], d.record);
-          pending--;
-          if (pending === 0) container.innerHTML = html;
-        }).catch(function() {
-          html_add(slug, names[slug], null);
-          pending--;
-          if (pending === 0) container.innerHTML = html;
-        });
-    });
-
-    function html_add(slug, name, data) {
-      var ts = data && data.updated ? new Date(data.updated).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : null;
-      html += '<div style="margin-bottom:20px"><div class="section-title" style="margin-bottom:8px">' + name + (ts ? ' <span style="font-size:10px;color:var(--muted);font-weight:normal">· Sync : ' + ts + '</span>' : '') + '</div>';
-      if (!data || !data.notes || !data.notes.length) {
-        html += '<div style="color:var(--muted);font-size:12px;font-style:italic">Pas encore synchronise - le joueur doit ouvrir sa fiche.</div></div>';
-        return;
-      }
-      data.notes.forEach(function(note) {
-        if (!note.content && !note.title) return;
-        html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:8px">'
-          + '<div style="font-family:var(--mono);font-size:12px;font-weight:600;color:var(--amber);margin-bottom:6px">' + (note.title||'Sans titre') + '</div>'
-          + '<div style="font-size:13px;color:var(--muted);white-space:pre-wrap;line-height:1.6">' + (note.content||'') + '</div></div>';
-      });
-      html += '</div>';
-    }
-  };
-
-  if (regBinId) {
-    fetch('https://api.jsonbin.io/v3/b/' + regBinId + '/latest', {
-      headers: { 'X-Master-Key': JSONBIN_KEY_MJ }
-    }).then(function(r) { return r.json(); })
-      .then(function(d) { renderNotes(d.record || {}); })
-      .catch(function() { renderNotes({}); });
-  } else {
-    renderNotes({});
-  }
-}
 
 
 
 /* ---- EQUIPE PK VISIBLE (lit depuis JSONBin) ---- */
-var JSONBIN_KEY_MJ2 = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
-var JSONBIN_URL_MJ2 = 'https://api.jsonbin.io/v3';
-var SLUGS = ['analyste','pistolero','causeuse','pisteur'];
-var SLUG_NAMES = {analyste:'Magdalena Hell',pistolero:'Lidia Fireheart',causeuse:'Rizen Dao',pisteur:'Telera'};
-var SLOT_NAMES = {0:'Partenaire',1:'Slot 1',2:'Slot 2',3:'Slot 3',4:'Slot 4',5:'Slot 5'};
 
-function getPlayerBinId(slug) {
-  return localStorage.getItem('jdr_player_' + slug + '_bin_id');
-}
+
 
 function fetchPlayerData(slug, cb) {
   var binId = getPlayerBinId(slug);
@@ -3770,75 +3688,183 @@ function fetchPlayerData(slug, cb) {
     .catch(function() { cb(null); });
 }
 
-function buildTeamStrip(team) {
-  if (!team || !team.length) return '<span style="font-size:11px;color:var(--muted);font-style:italic">Equipe non synchronisee</span>';
-  var html = '';
-  team.forEach(function(slot, i) {
-    if (!slot) return;
-    var tooltip = '<div class="pj-pk-tt-name">' + escMj(slot.name) + (i===0?'<span class="pj-pk-partner-badge">Partenaire</span>':'') + '</div>';
-    if (slot.type) tooltip += '<div class="pj-pk-tt-type">' + escMj(slot.type) + '</div>';
-    if (slot.stats) {
-      var s = slot.stats;
-      [['FOR',s.for],['AGI',s.agi],['VIG',s.vig],['RUS',s.rus],['Parade',s.parade],['Robustesse',s.robustesse],['Allure',s.allure]].forEach(function(kv) {
-        if (kv[1]) tooltip += '<div class="pj-pk-tt-stat"><span>' + kv[0] + '</span><span>' + escMj(kv[1]) + '</span></div>';
-      });
-      if (s.attacks && s.attacks.length) {
-        s.attacks.forEach(function(a) {
-          tooltip += '<div style="font-size:10px;color:var(--muted);margin-top:2px">' + escMj(a.name) + (a.dmg?' - '+escMj(a.dmg):'') + '</div>';
+
+
+
+
+
+
+/* ---- NOTES MJ -> JOUEURS ---- */
+
+
+
+/* ======== MESSAGERIE MJ / JOUEURS ======== */
+var _KEY  = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
+var _URL  = 'https://api.jsonbin.io/v3';
+var _CTR  = '6a2f352bf5f4af5e29f21a22';
+var _SLUGS = ['analyste','pistolero','causeuse','pisteur'];
+var _NAMES = {analyste:'Magdalena Hell',pistolero:'Lidia Fireheart',causeuse:'Rizen Dao',pisteur:'Telera'};
+
+/* Lire le canal central */
+function _readCentral(cb) {
+  fetch(_URL + '/b/' + _CTR + '/latest', {
+    headers: { 'X-Master-Key': _KEY }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) { cb(null, d.record || {}); })
+  .catch(function(e) { cb(e, null); });
+}
+
+/* Ecrire dans le bin d'un joueur */
+function _writePlayerBin(binId, updater, cb) {
+  fetch(_URL + '/b/' + binId + '/latest', {
+    headers: { 'X-Master-Key': _KEY }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    var rec = updater(d.record || {});
+    return fetch(_URL + '/b/' + binId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': _KEY },
+      body: JSON.stringify(rec)
+    });
+  })
+  .then(function() { if (cb) cb(null); })
+  .catch(function(e) { if (cb) cb(e); });
+}
+
+/* Envoyer un message a un joueur */
+function sendNoteToPlayer(slug) {
+  var ta     = document.getElementById('mj-note-ta-'     + slug);
+  var status = document.getElementById('mj-note-status-' + slug);
+  if (!ta || !ta.value.trim()) return;
+  var msg = ta.value.trim();
+
+  _readCentral(function(err, registry) {
+    if (err) {
+      if (status) { status.textContent = 'Erreur canal central'; status.classList.add('visible'); }
+      return;
+    }
+    var binId = registry[slug];
+    if (!binId) {
+      if (status) { status.textContent = 'Joueur pas encore connecte - il doit ouvrir sa fiche'; status.classList.add('visible'); }
+      return;
+    }
+    _writePlayerBin(binId, function(rec) {
+      rec.mj_note = msg;
+      return rec;
+    }, function(err2) {
+      if (err2) {
+        if (status) { status.textContent = 'Erreur envoi: ' + err2.message; status.classList.add('visible'); }
+        return;
+      }
+      if (status) {
+        status.textContent = 'Envoye !';
+        status.classList.add('visible');
+        setTimeout(function() { status.classList.remove('visible'); }, 3000);
+      }
+      ta.value = '';
+    });
+  });
+}
+
+/* Charger les notes de tous les joueurs */
+function loadAllPlayersNotes() {
+  var container = document.getElementById('mj-players-notes');
+  if (!container) return;
+  container.innerHTML = '<div style="color:var(--muted);font-style:italic;font-size:13px;padding:8px">Chargement...</div>';
+
+  _readCentral(function(err, registry) {
+    if (err) {
+      container.innerHTML = '<div style="color:var(--danger);font-size:13px">Erreur canal central: ' + err.message + '</div>';
+      return;
+    }
+
+    var html = '';
+    var done = 0;
+    var total = _SLUGS.length;
+
+    function addBlock(slug, name, data) {
+      var ts = data && data.updated
+        ? new Date(data.updated).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})
+        : null;
+      html += '<div style="margin-bottom:20px">';
+      html += '<div class="section-title" style="margin-bottom:8px">' + name;
+      if (ts) html += ' <span style="font-size:10px;color:var(--muted);font-weight:normal">· ' + ts + '</span>';
+      html += '</div>';
+      if (!data || !data.notes || !data.notes.length) {
+        var binId = registry[slug];
+        html += '<div style="color:var(--muted);font-size:12px;font-style:italic">'
+          + (binId ? 'Aucune note.' : 'Joueur pas encore connecte.')
+          + '</div>';
+      } else {
+        data.notes.forEach(function(n) {
+          if (!n.content && !n.title) return;
+          html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:8px">'
+            + '<div style="font-family:var(--mono);font-size:12px;font-weight:600;color:var(--amber);margin-bottom:6px">' + (n.title || 'Sans titre') + '</div>'
+            + '<div style="font-size:13px;color:var(--muted);white-space:pre-wrap;line-height:1.6">' + (n.content || '') + '</div></div>';
         });
       }
+      html += '</div>';
+      done++;
+      if (done === total) container.innerHTML = html;
     }
-    if (!slot.stats || Object.keys(slot.stats).filter(function(k){return slot.stats[k]&&k!=='attacks';}).length===0) {
-      tooltip += '<div class="pj-pk-tt-empty">Stats non renseignees</div>';
+
+    _SLUGS.forEach(function(slug) {
+      var binId = registry[slug];
+      if (!binId) { addBlock(slug, _NAMES[slug], null); return; }
+      fetch(_URL + '/b/' + binId + '/latest', {
+        headers: { 'X-Master-Key': _KEY }
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(d) { addBlock(slug, _NAMES[slug], d.record); })
+      .catch(function() { addBlock(slug, _NAMES[slug], null); });
+    });
+  });
+}
+
+/* Charger les equipes Pokemon des joueurs */
+function loadAllTeams() {
+  _readCentral(function(err, registry) {
+    if (err) return;
+    ['analyste','pistolero','causeuse','pisteur'].forEach(function(slug) {
+      var strip = document.getElementById('team-strip-' + slug);
+      if (!strip) return;
+      var binId = registry[slug];
+      if (!binId) { strip.innerHTML = '<span style="font-size:11px;color:var(--muted);font-style:italic">Non connecte</span>'; return; }
+      fetch(_URL + '/b/' + binId + '/latest', {
+        headers: { 'X-Master-Key': _KEY }
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        var team = d.record && d.record.team;
+        strip.innerHTML = _buildTeamStrip(team);
+      })
+      .catch(function() { strip.innerHTML = '<span style="font-size:11px;color:var(--muted)">Erreur</span>'; });
+    });
+  });
+}
+
+function _buildTeamStrip(team) {
+  if (!team || !team.length) return '<span style="font-size:11px;color:var(--muted);font-style:italic">Equipe vide</span>';
+  var html = '';
+  team.forEach(function(slot) {
+    if (!slot) return;
+    var tt = '<div class="pj-pk-tt-name">' + _esc(slot.name) + (slot.partner ? '<span class="pj-pk-partner-badge">Partenaire</span>' : '') + '</div>';
+    if (slot.type) tt += '<div class="pj-pk-tt-type">' + _esc(slot.type) + '</div>';
+    if (slot.talent) tt += '<div class="pj-pk-tt-stat"><span>Talent</span><span>' + _esc(slot.talent) + '</span></div>';
+    if (slot.stats) {
+      var s = slot.stats;
+      [['FOR',s.for],['AGI',s.agi],['VIG',s.vig],['RUS',s.rus],['Parade',s.parade],['Rob.',s.robustesse],['Allure',s.allure]].forEach(function(kv) {
+        if (kv[1]) tt += '<div class="pj-pk-tt-stat"><span>' + kv[0] + '</span><span>' + _esc(kv[1]) + '</span></div>';
+      });
     }
-    html += '<div class="pj-team-pk"><span class="pj-pk-badge">' + escMj(slot.name) + '</span><div class="pj-pk-tooltip">' + tooltip + '</div></div>';
+    html += '<div class="pj-team-pk"><span class="pj-pk-badge">' + _esc(slot.name) + '</span><div class="pj-pk-tooltip">' + tt + '</div></div>';
   });
   return html || '<span style="font-size:11px;color:var(--muted);font-style:italic">Equipe vide</span>';
 }
 
-function escMj(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-function loadAllTeams() {
-  SLUGS.forEach(function(slug) {
-    var strip = document.getElementById('team-strip-' + slug);
-    if (!strip) return;
-    strip.innerHTML = '<span style="font-size:11px;color:var(--muted)">Chargement...</span>';
-    fetchPlayerData(slug, function(data) {
-      strip.innerHTML = data && data.team ? buildTeamStrip(data.team) : '<span style="font-size:11px;color:var(--muted);font-style:italic">Non synchronise</span>';
-    });
-  });
-}
-
-/* ---- NOTES MJ -> JOUEURS ---- */
-function sendNoteToPlayer(slug) {
-  var ta = document.getElementById('mj-note-ta-' + slug);
-  var btn = document.getElementById('mj-note-btn-' + slug);
-  var status = document.getElementById('mj-note-status-' + slug);
-  if (!ta || !ta.value.trim()) return;
-  var binId = getPlayerBinId(slug);
-  if (!binId) {
-    if (status) { status.textContent = 'Joueur non connecte'; status.classList.add('visible'); }
-    return;
-  }
-  fetch(JSONBIN_URL_MJ2 + '/b/' + binId + '/latest', {
-    headers: { 'X-Master-Key': JSONBIN_KEY_MJ2 }
-  }).then(function(r) { return r.json(); })
-    .then(function(d) {
-      var rec = d.record || {};
-      rec.mj_note = ta.value.trim();
-      return fetch(JSONBIN_URL_MJ2 + '/b/' + binId, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY_MJ2 },
-        body: JSON.stringify(rec)
-      });
-    }).then(function() {
-      if (status) { status.textContent = 'Envoye !'; status.classList.add('visible'); setTimeout(function(){status.classList.remove('visible');},3000); }
-      ta.value = '';
-    }).catch(function() {
-      if (status) { status.textContent = 'Erreur reseau'; status.classList.add('visible'); }
-    });
-}
-
+function _esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
 </html>
