@@ -539,7 +539,6 @@ a { color: inherit; }
   </header>
   <nav class="player-nav">
     <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
-    <button onclick="showPlayerTab('partner',this)">Noctali</button>
     
     <button onclick="showPlayerTab('team',this)">Equipe</button>
     <button onclick="showPlayerTab('notes',this)">Notes</button>
@@ -621,158 +620,11 @@ a { color: inherit; }
           </div>
         </div>
     </div>
-    <div class="player-tab" id="tab-partner">
-      <div class="page-title">Pokemon partenaire</div>
-      <div class="page-tagline">Noctali</div>
-      <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
-        <span style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Blessures</span>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b1" onchange="saveBlessures()"> Blessure 1 (-1)</label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b2" onchange="saveBlessures()"> Blessure 2 (-2)</label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--danger);cursor:pointer"><input type="checkbox" id="bko" onchange="saveBlessures()"> Hors combat</label>
-      </div>
-      <div id="partner-pk-card" style="display:none"><div class="pk-card">
-    <div class="pk-card-header">
-      <div class="pk-owner">Partenaire de · Dresseur #4 · Telera</div>
-      <div class="pk-name">Noctali</div>
-      <div class="pk-species">Umbreon — Évolution par lien de confiance nocturne</div>
-      <div class="pk-meta-row">
-        <span class="tag tag-boss" style="background:#1a0e00;color:#c08030;">Sinistre</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Moyen</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° 197</span>
-        <span class="tag tag-edge">Extra spécial · 2 Blessures</span>
-      </div>
-    </div>
-    <div class="pk-body">
-      <div class="pk-lore">Noctali est né d'une évolution tardive — il avait déjà trois ans quand le lien est devenu assez profond pour déclencher la transformation. Ce n'est pas un Pokémon de combat par nature. C'est un Pokémon de présence. Ses anneaux brillent faiblement dans l'obscurité — juste assez pour qu'on sache où il est, jamais assez pour attirer l'attention. Dans les galeries sous la Tour Pokémon, cette qualité vaut de l'or.</div>
-
-      <div class="pk-section-lbl">Attributs & Stats</div>
-      <div class="pk-stats-row">
-        <div class="pk-stat">Agilité <span class="val">d8</span></div>
-        <div class="pk-stat">Ruse <span class="val">d6</span></div>
-        <div class="pk-stat">Force <span class="val">d6</span></div>
-        <div class="pk-stat">Trempe <span class="val">d10</span></div>
-        <div class="pk-stat">Vigueur <span class="val">d8</span></div>
-        <div class="pk-stat">Parade <span class="val">5</span></div>
-        <div class="pk-stat">Robustesse <span class="val">6</span></div>
-        <div class="pk-stat">Allure <span class="val">6"</span></div>
-      </div>
-
-      <div class="pk-section-lbl">Attaques</div>
-      <table class="pk-atk-table">
-        <tr><th>Attaque</th><th>Domm.</th><th>Portée</th><th>Effet</th></tr>
-        <tr><td class="pk-atk-name">Dégradation</td><td class="pk-atk-dmg">2d4</td><td>8"/16"</td><td>Réduit l'Armure de la cible de 1 pt (cumulatif, max −3)</td></tr>
-        <tr><td class="pk-atk-name">Mordre</td><td class="pk-atk-dmg">Str+d6</td><td>Mêlée</td><td>+d4 domm. si cible déjà Affaiblie par Dégradation</td></tr>
-        <tr><td class="pk-atk-name">Rayon Lune</td><td class="pk-atk-dmg">Trempe d8 opp.</td><td>Zone 3"</td><td>Échec : Affaibli (−2 Force et Vigueur). Sur PSI-B : −2 à tous ses jets ce round</td></tr>
-        <tr><td class="pk-atk-name">Trempette</td><td class="pk-atk-dmg">Vigueur d8 opp.</td><td>Zone 2"</td><td>Allure ÷2 jusqu'à jet de Vigueur réussi (action complète)</td></tr>
-      </table>
-
-      <div class="pk-section-lbl">Capacités spéciales</div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Anneaux lumineux (Passif)</div>
-        <div class="pk-capa-desc">Dans l'obscurité, anneaux visibles à 10". Peut les éteindre (action gratuite) → Discrétion d12 dans le noir complet. Balisage silencieux des galeries sans lampe, ou embuscade totale.</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Détection d'intentions (Passif)</div>
-        <div class="pk-capa-desc">Perçoit peur, colère, mensonge actif et douleur cachée dans un rayon de 6". Communique par variations d'anneaux : pulse = danger, s'éteint = mensonge / intention hostile. Perception d10 opposée pour lui dissimuler délibérément une intention.</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Lien profond (1 fois / combat)</div>
-        <div class="pk-capa-desc">Transfère sa Trempe d10 au Pisteur pour ce round : le dresseur relance un jet de Trempe ou Vigueur raté et garde le meilleur. Si le dresseur est Secoué, le stabilise — mais Noctali subit une Secousse en retour (Trempe diff. 4 pour l'éviter).</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Empathie Négative — Contre PSI-B (Actif)</div>
-        <div class="pk-capa-desc">Ressent le contrôle PSI-B comme douleur physique à 4". Action complète + Trempe d10 diff. 6 : émet une interférence → cible à 2" subit −2 à tous ses jets pendant 1d4 rounds. Combinée à l'Empathie Pokémon du Pisteur : fenêtre tactique unique contre le réacteur.</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Cicatrisation nocturne (Hors combat)</div>
-        <div class="pk-capa-desc">Immobile dans l'obscurité 10 min → jet Vigueur d8 diff. 4. Succès : récupère 1 Blessure. Une fois par scène de repos. Lumière directe ou bruit intense interrompent le processus.</div>
-      </div>
-
-      <div class="pk-section-lbl">Blessures</div>
-      <div class="pk-wounds">
-        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 1</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Légère −1</div></div>
-        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 2</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Grave −2</div></div>
-        <div class="pk-wound-box ko"><span class="pk-wound-lbl">Hors combat</span><span class="pk-wound-check">○</span></div>
-        <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check"></span></div>
-      </div>
-
-      <div class="pk-note"><strong>Rôle scénario :</strong> Ch. 4 — dans les galeries, anneaux éteints + Discrétion d12 pour baliser le chemin. Ch. 9 — à portée 4" du réacteur, anneaux clignotent de façon erratique : premier signe que Fil est dans la salle avant que la Posse ne le voie. Ch. 10 — Cicatrisation nocturne près de Fil pendant la nuit de récupération.</div>
-    </div>
-  </div></div>
-      <div class="pk-card">
-    <div class="pk-card-header">
-      <div class="pk-owner">Partenaire de · Dresseur #4 · Telera</div>
-      <div class="pk-name">Noctali</div>
-      <div class="pk-species">Umbreon — Évolution par lien de confiance nocturne</div>
-      <div class="pk-meta-row">
-        <span class="tag tag-boss" style="background:#1a0e00;color:#c08030;">Sinistre</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Moyen</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° 197</span>
-        <span class="tag tag-edge">Extra spécial · 2 Blessures</span>
-      </div>
-    </div>
-    <div class="pk-body">
-      <div class="pk-lore">Noctali est né d'une évolution tardive — il avait déjà trois ans quand le lien est devenu assez profond pour déclencher la transformation. Ce n'est pas un Pokémon de combat par nature. C'est un Pokémon de présence. Ses anneaux brillent faiblement dans l'obscurité — juste assez pour qu'on sache où il est, jamais assez pour attirer l'attention. Dans les galeries sous la Tour Pokémon, cette qualité vaut de l'or.</div>
-
-      <div class="pk-section-lbl">Attributs & Stats</div>
-      <div class="pk-stats-row">
-        <div class="pk-stat">Agilité <span class="val">d8</span></div>
-        <div class="pk-stat">Ruse <span class="val">d6</span></div>
-        <div class="pk-stat">Force <span class="val">d6</span></div>
-        <div class="pk-stat">Trempe <span class="val">d10</span></div>
-        <div class="pk-stat">Vigueur <span class="val">d8</span></div>
-        <div class="pk-stat">Parade <span class="val">5</span></div>
-        <div class="pk-stat">Robustesse <span class="val">6</span></div>
-        <div class="pk-stat">Allure <span class="val">6"</span></div>
-      </div>
-
-      <div class="pk-section-lbl">Attaques</div>
-      <table class="pk-atk-table">
-        <tr><th>Attaque</th><th>Domm.</th><th>Portée</th><th>Effet</th></tr>
-        <tr><td class="pk-atk-name">Dégradation</td><td class="pk-atk-dmg">2d4</td><td>8"/16"</td><td>Réduit l'Armure de la cible de 1 pt (cumulatif, max −3)</td></tr>
-        <tr><td class="pk-atk-name">Mordre</td><td class="pk-atk-dmg">Str+d6</td><td>Mêlée</td><td>+d4 domm. si cible déjà Affaiblie par Dégradation</td></tr>
-        <tr><td class="pk-atk-name">Rayon Lune</td><td class="pk-atk-dmg">Trempe d8 opp.</td><td>Zone 3"</td><td>Échec : Affaibli (−2 Force et Vigueur). Sur PSI-B : −2 à tous ses jets ce round</td></tr>
-        <tr><td class="pk-atk-name">Trempette</td><td class="pk-atk-dmg">Vigueur d8 opp.</td><td>Zone 2"</td><td>Allure ÷2 jusqu'à jet de Vigueur réussi (action complète)</td></tr>
-      </table>
-
-      <div class="pk-section-lbl">Capacités spéciales</div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Anneaux lumineux (Passif)</div>
-        <div class="pk-capa-desc">Dans l'obscurité, anneaux visibles à 10". Peut les éteindre (action gratuite) → Discrétion d12 dans le noir complet. Balisage silencieux des galeries sans lampe, ou embuscade totale.</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Détection d'intentions (Passif)</div>
-        <div class="pk-capa-desc">Perçoit peur, colère, mensonge actif et douleur cachée dans un rayon de 6". Communique par variations d'anneaux : pulse = danger, s'éteint = mensonge / intention hostile. Perception d10 opposée pour lui dissimuler délibérément une intention.</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Lien profond (1 fois / combat)</div>
-        <div class="pk-capa-desc">Transfère sa Trempe d10 au Pisteur pour ce round : le dresseur relance un jet de Trempe ou Vigueur raté et garde le meilleur. Si le dresseur est Secoué, le stabilise — mais Noctali subit une Secousse en retour (Trempe diff. 4 pour l'éviter).</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Empathie Négative — Contre PSI-B (Actif)</div>
-        <div class="pk-capa-desc">Ressent le contrôle PSI-B comme douleur physique à 4". Action complète + Trempe d10 diff. 6 : émet une interférence → cible à 2" subit −2 à tous ses jets pendant 1d4 rounds. Combinée à l'Empathie Pokémon du Pisteur : fenêtre tactique unique contre le réacteur.</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Cicatrisation nocturne (Hors combat)</div>
-        <div class="pk-capa-desc">Immobile dans l'obscurité 10 min → jet Vigueur d8 diff. 4. Succès : récupère 1 Blessure. Une fois par scène de repos. Lumière directe ou bruit intense interrompent le processus.</div>
-      </div>
-
-      <div class="pk-section-lbl">Blessures</div>
-      <div class="pk-wounds">
-        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 1</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Légère −1</div></div>
-        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 2</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Grave −2</div></div>
-        <div class="pk-wound-box ko"><span class="pk-wound-lbl">Hors combat</span><span class="pk-wound-check">○</span></div>
-        <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check"></span></div>
-      </div>
-
-      <div class="pk-note"><strong>Rôle scénario :</strong> Ch. 4 — dans les galeries, anneaux éteints + Discrétion d12 pour baliser le chemin. Ch. 9 — à portée 4" du réacteur, anneaux clignotent de façon erratique : premier signe que Fil est dans la salle avant que la Posse ne le voie. Ch. 10 — Cicatrisation nocturne près de Fil pendant la nuit de récupération.</div>
-    </div>
-  </div>
-    </div>
     <div class="player-tab" id="tab-team">
       <div class="page-title">Equipe Pokemon</div>
       <div class="page-tagline">6 slots - partenaire fixe en slot 0</div>
-      <div class="team-grid" id="team-grid"></div>
+      <div id="partner-pk-card" style="display:none">Partenaire: Noctali</div>
+    <div class="team-grid" id="team-grid"></div>
       <div class="pk-add-form" id="pk-add-form">
         <div class="section-title">Ajouter - <span id="add-slot-num"></span></div>
         <input type="hidden" id="add-slot-hidden">
