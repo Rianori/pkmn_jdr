@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test analyste JS</title>
+<style>
+body { background: #0e0e0f; color: #d4cfc5; font-family: monospace; margin: 0; }
+nav { display: flex; gap: 4px; padding: 12px; background: #161618; }
+nav button { background: none; border: none; color: #6b6660; padding: 8px 16px; cursor: pointer; border-bottom: 2px solid transparent; }
+nav button.active { color: #c8922a; border-bottom-color: #c8922a; }
+.player-tab { display: none; padding: 24px; }
+.player-tab.active { display: block; }
+#result { padding: 12px; margin: 12px; background: #161618; border: 1px solid #2a2a2e; }
+</style>
+</head>
+<body>
+<div id="result">En attente du JS...</div>
+<nav class="player-nav">
+  <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
+  <button onclick="showPlayerTab('partner',this)">Metamorph</button>
+  <button onclick="showPlayerTab('team',this)">Equipe</button>
+  <button onclick="showPlayerTab('notes',this)">Notes</button>
+</nav>
+<div class="player-content">
+  <div class="player-tab active" id="tab-perso"><h2>Onglet Personnage OK</h2></div>
+  <div class="player-tab" id="tab-partner"><h2>Onglet Partenaire OK</h2></div>
+  <div class="player-tab" id="tab-team"><h2>Onglet Equipe OK</h2></div>
+  <div class="player-tab" id="tab-notes"><h2>Onglet Notes OK</h2></div>
+</div>
+<div id="team-grid"></div>
+<div id="team-panel"></div>
+<div id="pk-add-form" class="pk-add-form">
+  <span id="add-slot-num"></span>
+  <input type="hidden" id="add-slot-hidden">
+  <input type="text" id="pk-add-name">
+  <input type="text" id="pk-add-type">
+  <textarea id="pk-add-notes"></textarea>
+</div>
+<div id="note-list"></div>
+<input id="note-title" type="text">
+<textarea id="note-body"></textarea>
+<span id="save-status"></span>
+<span id="note-wc"></span>
+<input type="checkbox" id="b1">
+<input type="checkbox" id="b2">
+<input type="checkbox" id="bko">
+<span id="pj-name-display" data-default="L'Analyste">L'Analyste</span>
+<input id="pj-name-input" type="text">
+<button id="edit-name-btn">Edit</button>
+<div id="partner-pk-card">carte pk</div>
+<script>
+
+
+var PLAYER_KEY = 'analyste';
+var STORAGE_KEY = 'jdr_player_' + PLAYER_KEY;
+var PARTNER_NAME_ASCII = 'Metamorph';
+var JSONBIN_KEY = '$2a$10$WYyryseWygh/sqmPChGh8.8o5.D26YYtfK8ftu2OIZyiKjcW2pNty';
+var JSONBIN_URL = 'https://api.jsonbin.io/v3';
+var BIN_ID_KEY = STORAGE_KEY + '_bin_id';
+
+function showPlayerTab(tab, btn) {
+  document.querySelectorAll('.player-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.player-nav button').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+var state = {
+  team: [
+    { name: PARTNER_NAME_ASCII, type: 'Partenaire', notes: '', partner: true },
+    null, null, null, null, null
+  ],
+  activeSlot: 0,
+  notes: [],
+  activeNote: null
+};
+
+function loadState() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      var saved = JSON.parse(raw);
+      if (saved.team) { for (var i=1;i<6;i++) state.team[i]=saved.team[i]||null; }
+      if (saved.notes) state.notes = saved.notes;
+      if (saved.activeNote) state.activeNote = saved.activeNote;
+    }
+  } catch(e) {}
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({team:state.team,notes:state.notes,activeNote:state.activeNote})); } catch(e) {}
+}
+
+function renderTeam() {
+  var grid = document.getElementById('team-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  for (var i=0;i<6;i++) {
+    var slot = state.team[i];
+    var div = document.createElement('div');
+    div.className = 'team-slot' + (slot?'':' empty') + (state.activeSlot===i?' active':'');
+    div.onclick = (function(idx){ return function(){ selectSlot(idx); }; })(i);
+    if (slot) {
+      var badge = slot.partner ? '<span class="slot-partner-badge">Partenaire</span>' : '';
+      div.innerHTML = '<span class="slot-num">' + (i===0?'P':'#'+i) + '</span>'
+        + '<span class="slot-name">' + slot.name + '</span>'
+        + '<span class="slot-type">' + slot.type + '</span>' + badge;
+    } else {
+      div.innerHTML = '<span class="slot-num">#'+i+'</span><span class="slot-add">+</span>';
+    }
+    grid.appendChild(div);
+  }
+  renderPanel();
+}
+
+function selectSlot(i) {
+  state.activeSlot = i;
+  renderTeam();
+  if (!state.team[i] && i>0) openAddForm(i); else closeAddForm();
+}
+
+function openAddForm(slot) {
+  document.getElementById('pk-add-form').classList.add('open');
+  document.getElementById('add-slot-num').textContent = 'Slot #' + slot;
+  document.getElementById('add-slot-hidden').value = slot;
+  document.getElementById('pk-add-name').focus();
+}
+
+function closeAddForm() {
+  document.getElementById('pk-add-form').classList.remove('open');
+  document.getElementById('pk-add-name').value = '';
+  document.getElementById('pk-add-type').value = '';
+  document.getElementById('pk-add-notes').value = '';
+}
+
+function addPokemon() {
+  var slot = parseInt(document.getElementById('add-slot-hidden').value);
+  var name = document.getElementById('pk-add-name').value.trim();
+  var type = document.getElementById('pk-add-type').value.trim();
+  var notes = document.getElementById('pk-add-notes').value.trim();
+  if (!name) { document.getElementById('pk-add-name').focus(); return; }
+  state.team[slot] = { name:name, type:type, notes:notes, partner:false };
+  saveState(); closeAddForm(); renderTeam();
+}
+
+function removePokemon(i) {
+  if (i===0) return;
+  if (!confirm('Retirer ce Pokemon ?')) return;
+  state.team[i] = null; state.activeSlot = 0;
+  saveState(); renderTeam();
+}
+
+function renderPanel() {
+  var panel = document.getElementById('team-panel');
+  if (!panel) return;
+  var slot = state.team[state.activeSlot];
+  if (!slot) { panel.innerHTML='<div class="team-empty-state">Selectionne un slot.</div>'; return; }
+  if (state.activeSlot===0) {
+    var pk = document.getElementById('partner-pk-card');
+    if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
+    return;
+  }
+  panel.innerHTML =
+    '<div class="team-panel-header">'
+    + '<span class="team-panel-name">'+slot.name+'</span>'
+    + '<span style="font-size:12px;color:var(--muted)">'+slot.type+'</span>'
+    + '<button class="btn-danger" style="margin-left:auto" onclick="removePokemon('+state.activeSlot+')">Retirer</button>'
+    + '</div><div class="team-panel-body">'
+    + '<div class="section-title" style="margin-bottom:8px">Notes de session</div>'
+    + '<textarea style="width:100%;min-height:120px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:13px;padding:10px;resize:vertical" oninput="updatePkNotes(this.value)">'+(slot.notes||'')+'</textarea>'
+    + '</div>';
+}
+
+function updatePkNotes(val) { state.team[state.activeSlot].notes=val; saveState(); }
+
+var noteTimer = null;
+
+function initNotes() {
+  if (!state.notes.length) {
+    state.notes = [
+      {id:'n1',title:'Session 1',content:'',updated:Date.now()},
+      {id:'n2',title:'Indices et pistes',content:'',updated:Date.now()}
+    ];
+    saveState();
+  }
+  renderNoteList();
+  var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
+  if (id) openNote(id);
+  loadNotesFromCloud();
+}
+
+function renderNoteList() {
+  var list = document.getElementById('note-list');
+  if (!list) return;
+  list.innerHTML = '';
+  state.notes.forEach(function(n) {
+    var div = document.createElement('div');
+    div.className = 'note-list-item' + (n.id===state.activeNote?' active':'');
+    div.innerHTML = '<span class="note-dot"></span>' + (n.title||'Sans titre');
+    div.onclick = (function(id){ return function(){ openNote(id); }; })(n.id);
+    list.appendChild(div);
+  });
+}
+
+function openNote(id) {
+  state.activeNote = id;
+  var note = state.notes.find(function(n){return n.id===id;});
+  if (!note) return;
+  renderNoteList();
+  document.getElementById('note-title').value = note.title||'';
+  document.getElementById('note-body').value = note.content||'';
+  document.getElementById('note-wc').textContent = wordCount(note.content)+' mots';
+  setSaveStatus('saved');
+}
+
+function addNote() {
+  var id = 'n'+Date.now();
+  state.notes.push({id:id,title:'Nouveau carnet',content:'',updated:Date.now()});
+  saveState(); renderNoteList(); openNote(id);
+  setTimeout(function(){ var t=document.getElementById('note-title'); if(t) t.select(); },50);
+}
+
+function deleteNote() {
+  if (!state.activeNote||!confirm('Supprimer ?')) return;
+  state.notes = state.notes.filter(function(n){return n.id!==state.activeNote;});
+  saveState();
+  state.activeNote = state.notes.length ? state.notes[0].id : null;
+  renderNoteList();
+  if (state.activeNote) openNote(state.activeNote);
+  else { document.getElementById('note-title').value=''; document.getElementById('note-body').value=''; }
+}
+
+function onNoteTitle(val) {
+  var note=state.notes.find(function(n){return n.id===state.activeNote;});
+  if (!note) return; note.title=val; note.updated=Date.now(); schedSaveNote();
+}
+
+function onNoteBody(val) {
+  var note=state.notes.find(function(n){return n.id===state.activeNote;});
+  if (!note) return; note.content=val; note.updated=Date.now();
+  document.getElementById('note-wc').textContent=wordCount(val)+' mots';
+  schedSaveNote();
+}
+
+function schedSaveNote() {
+  setSaveStatus('pending'); clearTimeout(noteTimer);
+  noteTimer = setTimeout(function(){ saveState(); renderNoteList(); saveNotesToCloud(); setSaveStatus('saved'); },800);
+}
+
+function setSaveStatus(s) {
+  var el=document.getElementById('save-status');
+  if (!el) return;
+  el.className = s==='saved'?'save-ok':'save-pending';
+  el.textContent = s==='saved'?'Sauvegarde':'En cours...';
+}
+
+function exportNote() {
+  var note=state.notes.find(function(n){return n.id===state.activeNote;});
+  if (!note) return;
+  var blob=new Blob([note.title+'\n\n'+note.content],{type:'text/plain;charset=utf-8'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=(note.title||'carnet')+'.txt'; a.click();
+}
+
+function wordCount(s) { return (s||'').trim().split(/\s+/).filter(function(w){return w;}).length; }
+
+function getOrCreateBin(cb) {
+  var saved=localStorage.getItem(BIN_ID_KEY);
+  if (saved){cb(saved);return;}
+  fetch(JSONBIN_URL+'/b',{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY,'X-Bin-Name':'jdr-notes-'+PLAYER_KEY,'X-Bin-Private':'true'},body:JSON.stringify({notes:state.notes,joueur:PLAYER_KEY})})
+  .then(function(r){return r.json();}).then(function(d){var id=d.metadata&&d.metadata.id;if(id){localStorage.setItem(BIN_ID_KEY,id);cb(id);}}).catch(function(){});
+}
+
+function saveNotesToCloud() {
+  getOrCreateBin(function(id){
+    fetch(JSONBIN_URL+'/b/'+id,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},body:JSON.stringify({notes:state.notes,joueur:PLAYER_KEY,updated:Date.now()})}).catch(function(){});
+  });
+}
+
+function loadNotesFromCloud() {
+  var id=localStorage.getItem(BIN_ID_KEY); if(!id)return;
+  fetch(JSONBIN_URL+'/b/'+id+'/latest',{headers:{'X-Master-Key':JSONBIN_KEY}})
+  .then(function(r){return r.json();}).then(function(d){
+    if(d.record&&d.record.notes&&d.record.notes.length){
+      state.notes=d.record.notes;
+      localStorage.setItem(STORAGE_KEY,JSON.stringify({team:state.team,notes:state.notes}));
+      renderNoteList(); var nid=state.activeNote||state.notes[0].id; if(nid)openNote(nid);
+    }
+  }).catch(function(){});
+}
+
+function saveBlessures() {
+  var b={b1:document.getElementById('b1').checked,b2:document.getElementById('b2').checked,bko:document.getElementById('bko').checked};
+  localStorage.setItem(STORAGE_KEY+'_blessures',JSON.stringify(b));
+}
+
+function loadBlessures() {
+  try{var b=JSON.parse(localStorage.getItem(STORAGE_KEY+'_blessures')||'{}');
+    document.getElementById('b1').checked=b.b1||false;
+    document.getElementById('b2').checked=b.b2||false;
+    document.getElementById('bko').checked=b.bko||false;
+  }catch(e){}
+}
+
+var DEFAULT_NAME_JS = 'L'Analyste';
+
+function loadPlayerName() {
+  var saved=localStorage.getItem(STORAGE_KEY+'_name');
+  var el=document.getElementById('pj-name-display');
+  if (el) el.textContent=saved||document.getElementById('pj-name-display').getAttribute('data-default');
+}
+
+function startEditName() {
+  var disp=document.getElementById('pj-name-display'),input=document.getElementById('pj-name-input'),btn=document.getElementById('edit-name-btn');
+  if(!disp||!input)return;
+  input.value=disp.textContent; disp.style.display='none'; input.style.display='inline-block';
+  btn.textContent='OK'; btn.onclick=confirmEditName; input.focus(); input.select();
+  input.onkeydown=function(e){if(e.key==='Enter')confirmEditName();if(e.key==='Escape')cancelEditName();};
+}
+
+function confirmEditName() {
+  var disp=document.getElementById('pj-name-display'),input=document.getElementById('pj-name-input'),btn=document.getElementById('edit-name-btn');
+  var def=disp.getAttribute('data-default');
+  var val=input.value.trim()||def;
+  disp.textContent=val; disp.style.display='inline'; input.style.display='none';
+  btn.textContent='Edit'; btn.onclick=startEditName;
+  localStorage.setItem(STORAGE_KEY+'_name',val);
+}
+
+function cancelEditName() {
+  var disp=document.getElementById('pj-name-display'),input=document.getElementById('pj-name-input'),btn=document.getElementById('edit-name-btn');
+  disp.style.display='inline'; input.style.display='none';
+  btn.textContent='Edit'; btn.onclick=startEditName;
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  loadState(); renderTeam(); initNotes(); loadBlessures(); loadPlayerName();
+});
+
+
+document.getElementById('result').textContent = 'JS charge avec succes - showPlayerTab defini: ' + (typeof showPlayerTab);
+</script>
+</body>
+</html>
