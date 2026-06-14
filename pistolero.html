@@ -805,7 +805,7 @@ a { color: inherit; }
 var PLAYER_KEY = 'pistolero';
 var STORAGE_KEY = 'jdr_player_' + PLAYER_KEY;
 var PARTNER_NAME_ASCII = 'Arcanin';
-var JSONBIN_KEY = '$2a$10$WYyryseWygh/sqmPChGh8.8o5.D26YYtfK8ftu2OIZyiKjcW2pNty';
+var JSONBIN_KEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
 var JSONBIN_URL = 'https://api.jsonbin.io/v3';
 var BIN_ID_KEY = STORAGE_KEY + '_bin_id';
 
@@ -1089,7 +1089,7 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 
-var JSONBIN_KEY_EX = '$2a$10$WYyryseWygh/sqmPChGh8.8o5.D26YYtfK8ftu2OIZyiKjcW2pNty';
+var JSONBIN_KEY_EX = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
 var JSONBIN_URL_EX = 'https://api.jsonbin.io/v3';
 
 /* ---- EQUIPEMENT EDITABLE ---- */
@@ -1313,7 +1313,7 @@ function registerInRegistry(binId) {
   var regBinId = localStorage.getItem(regKey);
   var data = { [PLAYER_KEY]: binId, updated: Date.now() };
   if (regBinId) {
-    fetch('$2a$10$WYyryseWygh/sqmPChGh8.8o5.D26YYtfK8ftu2OIZyiKjcW2pNty'.replace(JSONBIN_KEY,''), binId); /* no-op placeholder */
+    fetch('$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C'.replace(JSONBIN_KEY,''), binId); /* no-op placeholder */
     fetch('https://api.jsonbin.io/v3/b/' + regBinId + '/latest', { headers: { 'X-Master-Key': JSONBIN_KEY } })
       .then(function(r) { return r.json(); })
       .then(function(d) {
