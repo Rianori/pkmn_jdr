@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Createur de scenario — La Ville Morte</title>
+<style>
+:root {
+    --bg:        #0e0e0f;
+    --surface:   #161618;
+    --card:      #1c1c1f;
+    --border:    #2a2a2e;
+    --amber:     #c8922a;
+    --amber-dim: #7a5510;
+    --amber-glow:#c8922a22;
+    --text:      #d4cfc5;
+    --muted:     #6b6660;
+    --danger:    #8b2020;
+    --safe:      #1e5c2e;
+    --blue:      #1e3a6b;
+    --boss:      #4a2800;
+    --radius:    4px;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans); font-size: 15px; min-height: 100vh;
+}
+header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 24px; background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 50;
+}
+.logo { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.header-title { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--amber); }
+.back-link {
+  margin-left: auto; font-family: var(--mono); font-size: 11px;
+  color: var(--muted); text-decoration: none;
+  border: 1px solid var(--border); border-radius: 4px; padding: 5px 12px;
+  transition: color .15s, border-color .15s;
+}
+.back-link:hover { color: var(--amber); border-color: var(--amber-dim); }
+.main { max-width: 860px; margin: 0 auto; padding: 32px 24px 80px; }
+.field-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 6px;
+}
+.session-title-input {
+  width: 100%; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--amber); font-family: var(--mono);
+  font-size: 20px; font-weight: 600; padding: 12px 16px; margin-bottom: 32px;
+  transition: border-color .15s;
+}
+.session-title-input:focus { outline: none; border-color: var(--amber-dim); }
+.chapters-list { display: flex; flex-direction: column; gap: 16px; }
+.chapter-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.chapter-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.chapter-num {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); flex-shrink: 0;
+}
+.chapter-title-input {
+  flex: 1; background: none; border: none; color: var(--text);
+  font-family: var(--mono); font-size: 14px; font-weight: 500; padding: 0;
+}
+.chapter-title-input:focus { outline: none; }
+.chapter-title-input::placeholder { color: var(--muted); }
+.chapter-del-btn {
+  background: none; border: none; color: var(--muted);
+  cursor: pointer; font-size: 16px; padding: 2px 6px;
+  transition: color .12s; flex-shrink: 0;
+}
+.chapter-del-btn:hover { color: var(--danger); }
+.chapter-body { padding: 14px 16px; }
+.chapter-textarea {
+  width: 100%; min-height: 120px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 4px;
+  color: var(--text); font-family: var(--sans); font-size: 14px;
+  line-height: 1.7; padding: 12px 14px; resize: vertical;
+  transition: border-color .15s;
+}
+.chapter-textarea:focus { outline: none; border-color: var(--amber-dim); }
+.add-chapter-btn {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  background: none; border: 1px dashed var(--border); border-radius: var(--radius);
+  color: var(--muted); font-family: var(--mono); font-size: 12px;
+  padding: 14px; cursor: pointer; transition: color .12s, border-color .12s;
+  margin-top: 16px;
+}
+.add-chapter-btn:hover { color: var(--amber); border-color: var(--amber-dim); }
+.toolbar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 12px 24px; display: flex; align-items: center; gap: 12px;
+  z-index: 50;
+}
+.save-status { font-family: var(--mono); font-size: 11px; color: var(--safe); }
+.save-pending { color: var(--amber-dim); }
+.btn-export {
+  background: none; color: var(--muted); border: 1px solid var(--border);
+  border-radius: 4px; font-family: var(--mono); font-size: 11px;
+  padding: 7px 16px; cursor: pointer; transition: color .12s, border-color .12s;
+}
+.btn-export:hover { color: var(--amber); border-color: var(--amber-dim); }
+.btn-new-session {
+  background: var(--amber-dim); color: var(--amber);
+  border: 1px solid var(--amber-dim); border-radius: 4px;
+  font-family: var(--mono); font-size: 11px; padding: 7px 16px;
+  cursor: pointer; margin-left: auto;
+}
+.btn-new-session:hover { background: var(--amber); color: #1a1000; }
+@media (max-width: 600px) {
+  .main { padding: 16px 16px 80px; }
+  .chapter-textarea { min-height: 80px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="logo">La Ville Morte</div>
+    <div class="header-title">Createur de scenario</div>
+  </div>
+  <a href="mj.html" class="back-link">Compagnon MJ</a>
+</header>
+<div class="main">
+  <label class="field-label">Nom de la partie</label>
+  <input class="session-title-input" id="session-title" type="text" placeholder="Ex : La Ville Morte — Session 4">
+  <div class="chapters-list" id="chapters-list"></div>
+  <button class="add-chapter-btn" onclick="addChapter()">+ Ajouter un chapitre</button>
+</div>
+<div class="toolbar">
+  <span class="save-status" id="save-status">Sauvegarde automatique</span>
+  <button class="btn-export" onclick="exportScenario()">Exporter .txt</button>
+  <button class="btn-export" onclick="exportJson()">Exporter .json</button>
+  <button class="btn-new-session" onclick="newScenario()">+ Nouveau scenario</button>
+</div>
+<script>
+var STORAGE_KEY = 'jdr_scenario';
+var saveTimer = null;
+var chapterCount = 0;
+
+function loadScenario() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    var data = JSON.parse(raw);
+    document.getElementById('session-title').value = data.title || '';
+    if (data.chapters && data.chapters.length) {
+      data.chapters.forEach(function(ch) {
+        addChapter(ch.title, ch.content);
+      });
+    }
+  } catch(e) {}
+  if (!chapterCount) addChapter();
+}
+
+function saveScenario() {
+  var title = document.getElementById('session-title').value;
+  var chapters = [];
+  document.querySelectorAll('.chapter-card').forEach(function(card) {
+    var t = card.querySelector('.chapter-title-input');
+    var c = card.querySelector('.chapter-textarea');
+    chapters.push({ title: t ? t.value : '', content: c ? c.value : '' });
+  });
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ title: title, chapters: chapters, updated: Date.now() }));
+  } catch(e) {}
+  var s = document.getElementById('save-status');
+  if (s) { s.textContent = 'Sauvegarde'; s.className = 'save-status'; }
+}
+
+function schedSave() {
+  var s = document.getElementById('save-status');
+  if (s) { s.textContent = 'En cours...'; s.className = 'save-status save-pending'; }
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveScenario, 700);
+}
+
+function addChapter(title, content) {
+  chapterCount++;
+  var n = chapterCount;
+  var list = document.getElementById('chapters-list');
+  var card = document.createElement('div');
+  card.className = 'chapter-card';
+  card.id = 'chapter-' + n;
+  card.innerHTML = '<div class="chapter-header">'
+    + '<span class="chapter-num">Chapitre ' + n + '</span>'
+    + '<input class="chapter-title-input" type="text" placeholder="Titre du chapitre (optionnel)" value="' + escHtml(title||'') + '" oninput="schedSave()">'
+    + '<button class="chapter-del-btn" onclick="deleteChapter(' + n + ')" title="Supprimer">x</button>'
+    + '</div><div class="chapter-body">'
+    + '<textarea class="chapter-textarea" placeholder="Contenu du chapitre..." oninput="schedSave()">' + escHtml(content||'') + '</textarea>'
+    + '</div>';
+  list.appendChild(card);
+  if (!title && !content) {
+    var ta = card.querySelector('.chapter-textarea');
+    if (ta) ta.focus();
+  }
+}
+
+function deleteChapter(n) {
+  var card = document.getElementById('chapter-' + n);
+  if (card) card.remove();
+  schedSave();
+}
+
+function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function newScenario() {
+  if (!confirm('Nouveau scenario ? Le scenario actuel sera supprime.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  document.getElementById('session-title').value = '';
+  document.getElementById('chapters-list').innerHTML = '';
+  chapterCount = 0;
+  addChapter();
+}
+
+function exportScenario() {
+  var title = document.getElementById('session-title').value || 'Scenario';
+  var lines = [title, '='.repeat(title.length), ''];
+  document.querySelectorAll('.chapter-card').forEach(function(card, i) {
+    var t = card.querySelector('.chapter-title-input').value || ('Chapitre ' + (i+1));
+    var c = card.querySelector('.chapter-textarea').value || '';
+    lines.push('--- ' + t + ' ---');
+    lines.push(c);
+    lines.push('');
+  });
+  var blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (title.replace(/[^a-z0-9]/gi,'_') || 'scenario') + '.txt';
+  a.click();
+}
+
+function exportJson() {
+  var title = document.getElementById('session-title').value || 'Scenario';
+  var chapters = [];
+  document.querySelectorAll('.chapter-card').forEach(function(card, i) {
+    chapters.push({
+      num: i + 1,
+      title: card.querySelector('.chapter-title-input').value || '',
+      content: card.querySelector('.chapter-textarea').value || ''
+    });
+  });
+  var data = { title: title, chapters: chapters, exported: new Date().toISOString() };
+  var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (title.replace(/[^a-z0-9]/gi,'_') || 'scenario') + '.json';
+  a.click();
+}
+
+document.getElementById('session-title').addEventListener('input', schedSave);
+document.addEventListener('DOMContentLoaded', loadScenario);
+</script>
+</body>
+</html>
