@@ -949,20 +949,6 @@
   .aside-campaign-body.hidden { display: none; }
 
 
-  /* == LOGIN == */
-  .login-screen { position: fixed; top:0; left:0; right:0; bottom:0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 20px; }
-  .login-screen.hidden { display: none; }
-  .login-logo { font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-  .login-title { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--amber); }
-  .login-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 40px; display: flex; flex-direction: column; align-items: center; gap: 14px; min-width: 280px; }
-  .login-label { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); align-self: flex-start; }
-  .login-input { font-family: var(--mono); font-size: 22px; letter-spacing: .3em; color: var(--amber); background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 10px 16px; width: 180px; text-align: center; }
-  .login-input:focus { outline: none; border-color: var(--amber-dim); }
-  .login-btn { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-dim); border-radius: 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; padding: 10px 24px; cursor: pointer; width: 100%; transition: background .12s; }
-  .login-btn:hover { background: var(--amber); color: #1a1000; }
-  .login-error { font-size: 12px; color: var(--danger); display: none; }
-  .login-error.visible { display: block; }
-
   /* == EQUIPE PK VISIBLE MJ == */
   .pj-team-strip { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
   .pj-team-pk { position: relative; cursor: default; }
@@ -1013,8 +999,6 @@
 </style>
 </head>
 <body>
-<div class="login-screen" id="login-screen">
-  <div class="login-logo">Compagnon MJ</div>
   <div class="login-title">La Ville Morte</div>
   <div class="login-box">
     <div class="login-label">Code d'acces MJ</div>
@@ -3693,39 +3677,93 @@ const JOUEUR_NAMES = {
   pisteur: "Telera",
 };
 
-async 
-
-async 
-
-
-
-
-/* ---- CODE ACCES MJ ---- */
-/* Pour modifier le code: chercher 'var MJ_CODE' dans ce fichier */
-var MJ_CODE = '1102';
-var MJ_SESSION_KEY = 'mj_session_ok';
-
-function checkLogin() {
-  var val = document.getElementById('login-input').value;
-  if (val === MJ_CODE) {
-    localStorage.setItem(MJ_SESSION_KEY, '1');
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('login-error').classList.remove('visible');
-  } else {
-    document.getElementById('login-error').classList.add('visible');
-    document.getElementById('login-input').value = '';
-    document.getElementById('login-input').focus();
+async function loadJoueurNotes(slug) {
+  const binId = localStorage.getItem('jdr_player_' + slug + '_bin_id');
+  if (!binId) return null;
+  try {
+    const resp = await fetch(JSONBIN_URL_MJ + '/b/' + binId + '/latest', {
+      headers: { 'X-Master-Key': JSONBIN_KEY_MJ },
+    });
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return data.record;
+  } catch(e) {
+    return null;
   }
 }
 
-(function() {
-  if (localStorage.getItem(MJ_SESSION_KEY) === '1') {
-    var ls = document.getElementById('login-screen');
-    if (ls) ls.classList.add('hidden');
+async 
+function loadAllPlayersNotes() {
+  var container = document.getElementById('mj-players-notes');
+  if (!container) return;
+  container.innerHTML = '<div style="color:var(--muted);font-style:italic;font-size:13px;padding:8px">Chargement...</div>';
+
+  /* Essayer de lire le registry pour avoir les bin_ids */
+  var regBinId = localStorage.getItem('jdr_registry_bin_id');
+
+  var renderNotes = function(binMap) {
+    var slugs = ['analyste','pistolero','causeuse','pisteur'];
+    var names = {analyste:'Magdalena Hell',pistolero:'Lidia Fireheart',causeuse:'Rizen Dao',pisteur:'Telera'};
+    var html = '';
+    var pending = slugs.length;
+
+    slugs.forEach(function(slug) {
+      var binId = binMap[slug] || localStorage.getItem('jdr_player_' + slug + '_bin_id');
+      if (!binId) {
+        html_add(slug, names[slug], null);
+        pending--;
+        if (pending === 0) container.innerHTML = html;
+        return;
+      }
+      fetch('https://api.jsonbin.io/v3/b/' + binId + '/latest', {
+        headers: { 'X-Master-Key': JSONBIN_KEY_MJ }
+      }).then(function(r) { return r.json(); })
+        .then(function(d) {
+          html_add(slug, names[slug], d.record);
+          pending--;
+          if (pending === 0) container.innerHTML = html;
+        }).catch(function() {
+          html_add(slug, names[slug], null);
+          pending--;
+          if (pending === 0) container.innerHTML = html;
+        });
+    });
+
+    function html_add(slug, name, data) {
+      var ts = data && data.updated ? new Date(data.updated).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : null;
+      html += '<div style="margin-bottom:20px"><div class="section-title" style="margin-bottom:8px">' + name + (ts ? ' <span style="font-size:10px;color:var(--muted);font-weight:normal">· Sync : ' + ts + '</span>' : '') + '</div>';
+      if (!data || !data.notes || !data.notes.length) {
+        html += '<div style="color:var(--muted);font-size:12px;font-style:italic">Pas encore synchronise - le joueur doit ouvrir sa fiche.</div></div>';
+        return;
+      }
+      data.notes.forEach(function(note) {
+        if (!note.content && !note.title) return;
+        html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:8px">'
+          + '<div style="font-family:var(--mono);font-size:12px;font-weight:600;color:var(--amber);margin-bottom:6px">' + (note.title||'Sans titre') + '</div>'
+          + '<div style="font-size:13px;color:var(--muted);white-space:pre-wrap;line-height:1.6">' + (note.content||'') + '</div></div>';
+      });
+      html += '</div>';
+    }
+  };
+
+  if (regBinId) {
+    fetch('https://api.jsonbin.io/v3/b/' + regBinId + '/latest', {
+      headers: { 'X-Master-Key': JSONBIN_KEY_MJ }
+    }).then(function(r) { return r.json(); })
+      .then(function(d) { renderNotes(d.record || {}); })
+      .catch(function() { renderNotes({}); });
+  } else {
+    renderNotes({});
   }
-})();
+}
+
+
 
 /* ---- EQUIPE PK VISIBLE (lit depuis JSONBin) ---- */
+var JSONBIN_KEY_MJ2 = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
+var JSONBIN_URL_MJ2 = 'https://api.jsonbin.io/v3';
+var SLUGS = ['analyste','pistolero','causeuse','pisteur'];
+var SLUG_NAMES = {analyste:'Magdalena Hell',pistolero:'Lidia Fireheart',causeuse:'Rizen Dao',pisteur:'Telera'};
 var SLOT_NAMES = {0:'Partenaire',1:'Slot 1',2:'Slot 2',3:'Slot 3',4:'Slot 4',5:'Slot 5'};
 
 function getPlayerBinId(slug) {
@@ -3782,113 +3820,35 @@ function loadAllTeams() {
 }
 
 /* ---- NOTES MJ -> JOUEURS ---- */
-
-
-
-/* ---- LECTURE NOTES JOUEURS (via canal central) ---- */
-var MJ_JB_KEY  = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
-var MJ_JB_URL  = 'https://api.jsonbin.io/v3';
-var MJ_CENTRAL = '6a2f352bf5f4af5e29f21a22';
-var MJ_SLUGS   = ['analyste','pistolero','causeuse','pisteur'];
-var MJ_NAMES   = {analyste:'Magdalena Hell',pistolero:'Lidia Fireheart',causeuse:'Rizen Dao',pisteur:'Telera'};
-
-function loadAllPlayersNotes() {
-  var container = document.getElementById('mj-players-notes');
-  if (!container) return;
-  container.innerHTML = '<div style="color:var(--muted);font-style:italic;font-size:13px;padding:8px">Chargement...</div>';
-
-  fetch(MJ_JB_URL + '/b/' + MJ_CENTRAL + '/latest', {
-    headers: { 'X-Master-Key': MJ_JB_KEY }
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(d) {
-    var registry = d.record || {};
-    var html = '';
-    var pending = MJ_SLUGS.length;
-
-    function append(slug, name, data) {
-      var ts = data && data.updated
-        ? new Date(data.updated).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})
-        : null;
-      html += '<div style="margin-bottom:20px">';
-      html += '<div class="section-title" style="margin-bottom:8px">' + name;
-      if (ts) html += ' <span style="font-size:10px;color:var(--muted);font-weight:normal">' ' + ts + '</span>';
-      html += '</div>';
-      if (!data || !data.notes || !data.notes.length) {
-        html += '<div style="color:var(--muted);font-size:12px;font-style:italic">Pas encore synchronise.</div>';
-      } else {
-        data.notes.forEach(function(n) {
-          if (!n.content && !n.title) return;
-          html += '<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:8px">'
-            + '<div style="font-family:var(--mono);font-size:12px;font-weight:600;color:var(--amber);margin-bottom:6px">' + (n.title||'Sans titre') + '</div>'
-            + '<div style="font-size:13px;color:var(--muted);white-space:pre-wrap;line-height:1.6">' + (n.content||'') + '</div></div>';
-        });
-      }
-      html += '</div>';
-      pending--;
-      if (pending === 0) container.innerHTML = html || '<div style="color:var(--muted)">Aucune donnee.</div>';
-    }
-
-    MJ_SLUGS.forEach(function(slug) {
-      var binId = registry[slug];
-      if (!binId) { append(slug, MJ_NAMES[slug], null); return; }
-      fetch(MJ_JB_URL + '/b/' + binId + '/latest', {
-        headers: { 'X-Master-Key': MJ_JB_KEY }
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(d) { append(slug, MJ_NAMES[slug], d.record); })
-      .catch(function() { append(slug, MJ_NAMES[slug], null); });
-    });
-  })
-  .catch(function() {
-    container.innerHTML = '<div style="color:var(--danger);font-size:13px">Erreur de connexion au canal central.</div>';
-  });
-}
-
-/* ---- ENVOI DE NOTES MJ VERS JOUEURS ---- */
 function sendNoteToPlayer(slug) {
-  var ta     = document.getElementById('mj-note-ta-' + slug);
+  var ta = document.getElementById('mj-note-ta-' + slug);
+  var btn = document.getElementById('mj-note-btn-' + slug);
   var status = document.getElementById('mj-note-status-' + slug);
   if (!ta || !ta.value.trim()) return;
-  var msg = ta.value.trim();
-
-  fetch(MJ_JB_URL + '/b/' + MJ_CENTRAL + '/latest', {
-    headers: { 'X-Master-Key': MJ_JB_KEY }
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(d) {
-    var registry = d.record || {};
-    var binId = registry[slug];
-    if (!binId) throw new Error('Joueur pas encore connecte');
-    return fetch(MJ_JB_URL + '/b/' + binId + '/latest', {
-      headers: { 'X-Master-Key': MJ_JB_KEY }
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(d2) {
-      var rec = d2.record || {};
-      rec.mj_note = msg;
-      return fetch(MJ_JB_URL + '/b/' + binId, {
+  var binId = getPlayerBinId(slug);
+  if (!binId) {
+    if (status) { status.textContent = 'Joueur non connecte'; status.classList.add('visible'); }
+    return;
+  }
+  fetch(JSONBIN_URL_MJ2 + '/b/' + binId + '/latest', {
+    headers: { 'X-Master-Key': JSONBIN_KEY_MJ2 }
+  }).then(function(r) { return r.json(); })
+    .then(function(d) {
+      var rec = d.record || {};
+      rec.mj_note = ta.value.trim();
+      return fetch(JSONBIN_URL_MJ2 + '/b/' + binId, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-Master-Key': MJ_JB_KEY },
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY_MJ2 },
         body: JSON.stringify(rec)
       });
+    }).then(function() {
+      if (status) { status.textContent = 'Envoye !'; status.classList.add('visible'); setTimeout(function(){status.classList.remove('visible');},3000); }
+      ta.value = '';
+    }).catch(function() {
+      if (status) { status.textContent = 'Erreur reseau'; status.classList.add('visible'); }
     });
-  })
-  .then(function() {
-    if (status) {
-      status.textContent = 'Envoye !';
-      status.classList.add('visible');
-      setTimeout(function() { status.classList.remove('visible'); }, 3000);
-    }
-    ta.value = '';
-  })
-  .catch(function(e) {
-    if (status) {
-      status.textContent = e.message || 'Erreur';
-      status.classList.add('visible');
-    }
-  });
 }
+
 </script>
 </body>
 </html>
