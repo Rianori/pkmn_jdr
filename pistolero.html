@@ -539,6 +539,7 @@ a { color: inherit; }
   </header>
   <nav class="player-nav">
     <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
+    <button onclick="showPlayerTab('partner',this)">Arcanin</button>
     
     <button onclick="showPlayerTab('team',this)">Equipe</button>
     <button onclick="showPlayerTab('notes',this)">Notes</button>
@@ -595,11 +596,150 @@ a { color: inherit; }
           </div>
         </div>
     </div>
+    <div class="player-tab" id="tab-partner">
+      <div class="page-title">Pokemon partenaire</div>
+      <div class="page-tagline">Arcanin</div>
+      <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+        <span style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Blessures</span>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b1" onchange="saveBlessures()"> Blessure 1 (-1)</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b2" onchange="saveBlessures()"> Blessure 2 (-2)</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--danger);cursor:pointer"><input type="checkbox" id="bko" onchange="saveBlessures()"> Hors combat</label>
+      </div>
+      <div id="partner-pk-card" style="display:none"><div class="pk-card">
+    <div class="pk-card-header">
+      <div class="pk-owner">Partenaire de · Dresseur #2 · Lidia Fireheart</div>
+      <div class="pk-name">Arcanin</div>
+      <div class="pk-species">Arcanin — Loyauté sans condition, puissance sans retenue</div>
+      <div class="pk-meta-row">
+        <span class="tag tag-psi" style="background:#1a0808;color:#d06040;">Feu</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Grand (+1)</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° 59</span>
+        <span class="tag tag-edge">Extra spécial · 2 Blessures</span>
+      </div>
+    </div>
+    <div class="pk-body">
+      <div class="pk-lore">Lidia Fireheart a recueilli Arcanin blessé sur le bord d'une route, trois semaines après sa démission. Arcanin n'a pas fui quand l'homme s'est approché. Depuis, ils ne se quittent plus. Arcanin ne comprend pas les nuances morales de son dresseur — mais il comprend à qui il fait confiance. Et il protège cette personne comme si sa vie en dépendait. Elle en dépend souvent.</div>
+
+      <div class="pk-section-lbl">Attributs & Stats</div>
+      <div class="pk-stats-row">
+        <div class="pk-stat">Agilité <span class="val">d10</span></div>
+        <div class="pk-stat">Ruse <span class="val">d4</span></div>
+        <div class="pk-stat">Force <span class="val">d10</span></div>
+        <div class="pk-stat">Trempe <span class="val">d8</span></div>
+        <div class="pk-stat">Vigueur <span class="val">d10</span></div>
+        <div class="pk-stat">Parade <span class="val">7</span></div>
+        <div class="pk-stat">Robustesse <span class="val">8</span></div>
+        <div class="pk-stat">Allure <span class="val">10"</span></div>
+      </div>
+
+      <div class="pk-section-lbl">Attaques</div>
+      <table class="pk-atk-table">
+        <tr><th>Attaque</th><th>Domm.</th><th>Portée</th><th>Effet</th></tr>
+        <tr><td class="pk-atk-name">Morsure ardente</td><td class="pk-atk-dmg">Str+d8 🔥</td><td>Mêlée</td><td>Armure ordinaire ignorée. En Feu si Relance (d6/round)</td></tr>
+        <tr><td class="pk-atk-name">Lance-Flamme</td><td class="pk-atk-dmg">3d6</td><td>12"/24"</td><td>Zone cône optionnelle. Barrage de feu possible au sol</td></tr>
+        <tr><td class="pk-atk-name">Charge éclair</td><td class="pk-atk-dmg">Str+d10</td><td>Charge 4"+</td><td>Renversé si Robustesse non atteinte. +2 domm. si charge 8"+</td></tr>
+        <tr><td class="pk-atk-name">Rugissement</td><td class="pk-atk-dmg">Trempe d8 opp.</td><td>Zone 4"</td><td>Échec : Secoué. Relance : Secoué + Vulnérable ce round</td></tr>
+      </table>
+
+      <div class="pk-section-lbl">Capacités spéciales</div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Flair de traqueur (Passif)</div>
+        <div class="pk-capa-desc">Piste une cible par odeur sur 2km si piste &lt; 24h. Perception d8 diff. 4. Relance : sait depuis combien de temps et si la cible était seule. En sous-sol : ventilation artificielle −2 au jet.</div>
+      </div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Loyauté absolue (Passif — miroir du Pistolero)</div>
+        <div class="pk-capa-desc">Quand Lidia Fireheart est Secoué ou Blessé, Arcanin peut s'interposer (action gratuite, sa Parade utilisée). S'il reçoit l'attaque à la place, Arcanin absorbe les dégâts. Une fois par round.</div>
+      </div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Crinière ardente (Passif)</div>
+        <div class="pk-capa-desc">Toute attaque en mêlée sans protection thermique inflige d4 dégâts de feu réflexifs à l'attaquant. Les agents d'Ashford en équipement standard ne sont pas protégés.</div>
+      </div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Sprint légendaire (1 fois / combat)</div>
+        <div class="pk-capa-desc">Se déplace de 20" en ligne droite, traversant obstacles mineurs. Peut enchaîner une Charge éclair en bonus à l'arrivée. Allure réduite à 6" le round suivant.</div>
+      </div>
+
+      <div class="pk-section-lbl">Blessures</div>
+      <div class="pk-wounds">
+        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 1</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Légère −1</div></div>
+        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 2</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Grave −2</div></div>
+        <div class="pk-wound-box ko"><span class="pk-wound-lbl">Hors combat</span><span class="pk-wound-check">○</span></div>
+        <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check"></span></div>
+      </div>
+
+      <div class="pk-note"><strong>Rôle scénario :</strong> Ch. 7 — repère l'embuscade par le flair avant que la Posse entre dans la zone (Perception d8 diff. 4). Ch. 9 — peut porter Fil hors du réacteur pendant que Lidia Fireheart couvre la retraite. Sa chaleur aide Fil à ne pas perdre conscience pendant le transport.</div>
+    </div>
+  </div></div>
+      <div class="pk-card">
+    <div class="pk-card-header">
+      <div class="pk-owner">Partenaire de · Dresseur #2 · Lidia Fireheart</div>
+      <div class="pk-name">Arcanin</div>
+      <div class="pk-species">Arcanin — Loyauté sans condition, puissance sans retenue</div>
+      <div class="pk-meta-row">
+        <span class="tag tag-psi" style="background:#1a0808;color:#d06040;">Feu</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Grand (+1)</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° 59</span>
+        <span class="tag tag-edge">Extra spécial · 2 Blessures</span>
+      </div>
+    </div>
+    <div class="pk-body">
+      <div class="pk-lore">Lidia Fireheart a recueilli Arcanin blessé sur le bord d'une route, trois semaines après sa démission. Arcanin n'a pas fui quand l'homme s'est approché. Depuis, ils ne se quittent plus. Arcanin ne comprend pas les nuances morales de son dresseur — mais il comprend à qui il fait confiance. Et il protège cette personne comme si sa vie en dépendait. Elle en dépend souvent.</div>
+
+      <div class="pk-section-lbl">Attributs & Stats</div>
+      <div class="pk-stats-row">
+        <div class="pk-stat">Agilité <span class="val">d10</span></div>
+        <div class="pk-stat">Ruse <span class="val">d4</span></div>
+        <div class="pk-stat">Force <span class="val">d10</span></div>
+        <div class="pk-stat">Trempe <span class="val">d8</span></div>
+        <div class="pk-stat">Vigueur <span class="val">d10</span></div>
+        <div class="pk-stat">Parade <span class="val">7</span></div>
+        <div class="pk-stat">Robustesse <span class="val">8</span></div>
+        <div class="pk-stat">Allure <span class="val">10"</span></div>
+      </div>
+
+      <div class="pk-section-lbl">Attaques</div>
+      <table class="pk-atk-table">
+        <tr><th>Attaque</th><th>Domm.</th><th>Portée</th><th>Effet</th></tr>
+        <tr><td class="pk-atk-name">Morsure ardente</td><td class="pk-atk-dmg">Str+d8 🔥</td><td>Mêlée</td><td>Armure ordinaire ignorée. En Feu si Relance (d6/round)</td></tr>
+        <tr><td class="pk-atk-name">Lance-Flamme</td><td class="pk-atk-dmg">3d6</td><td>12"/24"</td><td>Zone cône optionnelle. Barrage de feu possible au sol</td></tr>
+        <tr><td class="pk-atk-name">Charge éclair</td><td class="pk-atk-dmg">Str+d10</td><td>Charge 4"+</td><td>Renversé si Robustesse non atteinte. +2 domm. si charge 8"+</td></tr>
+        <tr><td class="pk-atk-name">Rugissement</td><td class="pk-atk-dmg">Trempe d8 opp.</td><td>Zone 4"</td><td>Échec : Secoué. Relance : Secoué + Vulnérable ce round</td></tr>
+      </table>
+
+      <div class="pk-section-lbl">Capacités spéciales</div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Flair de traqueur (Passif)</div>
+        <div class="pk-capa-desc">Piste une cible par odeur sur 2km si piste &lt; 24h. Perception d8 diff. 4. Relance : sait depuis combien de temps et si la cible était seule. En sous-sol : ventilation artificielle −2 au jet.</div>
+      </div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Loyauté absolue (Passif — miroir du Pistolero)</div>
+        <div class="pk-capa-desc">Quand Lidia Fireheart est Secoué ou Blessé, Arcanin peut s'interposer (action gratuite, sa Parade utilisée). S'il reçoit l'attaque à la place, Arcanin absorbe les dégâts. Une fois par round.</div>
+      </div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Crinière ardente (Passif)</div>
+        <div class="pk-capa-desc">Toute attaque en mêlée sans protection thermique inflige d4 dégâts de feu réflexifs à l'attaquant. Les agents d'Ashford en équipement standard ne sont pas protégés.</div>
+      </div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Sprint légendaire (1 fois / combat)</div>
+        <div class="pk-capa-desc">Se déplace de 20" en ligne droite, traversant obstacles mineurs. Peut enchaîner une Charge éclair en bonus à l'arrivée. Allure réduite à 6" le round suivant.</div>
+      </div>
+
+      <div class="pk-section-lbl">Blessures</div>
+      <div class="pk-wounds">
+        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 1</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Légère −1</div></div>
+        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 2</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Grave −2</div></div>
+        <div class="pk-wound-box ko"><span class="pk-wound-lbl">Hors combat</span><span class="pk-wound-check">○</span></div>
+        <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check"></span></div>
+      </div>
+
+      <div class="pk-note"><strong>Rôle scénario :</strong> Ch. 7 — repère l'embuscade par le flair avant que la Posse entre dans la zone (Perception d8 diff. 4). Ch. 9 — peut porter Fil hors du réacteur pendant que Lidia Fireheart couvre la retraite. Sa chaleur aide Fil à ne pas perdre conscience pendant le transport.</div>
+    </div>
+  </div>
+    </div>
     <div class="player-tab" id="tab-team">
       <div class="page-title">Equipe Pokemon</div>
       <div class="page-tagline">6 slots - partenaire fixe en slot 0</div>
-      <div id="partner-pk-card" style="display:none">Partenaire: Arcanin</div>
-    <div class="team-grid" id="team-grid"></div>
+      <div class="team-grid" id="team-grid"></div>
       <div class="pk-add-form" id="pk-add-form">
         <div class="section-title">Ajouter - <span id="add-slot-num"></span></div>
         <input type="hidden" id="add-slot-hidden">
@@ -953,7 +1093,7 @@ var JSONBIN_KEY_EX = '$2a$10$WYyryseWygh/sqmPChGh8.8o5.D26YYtfK8ftu2OIZyiKjcW2pN
 var JSONBIN_URL_EX = 'https://api.jsonbin.io/v3';
 
 /* ---- EQUIPEMENT EDITABLE ---- */
-var DEFAULT_GEAR = ['Revolver Magnum .44 (2d6+1, Portee 12/24/48)', 'Fusil a pompe scie (1-3d6, portee courte)', 'Gilet pare-balles leger (Armure +2)', '3 recharges standard', 'Menottes x2', '300 yen'];
+var DEFAULT_GEAR = ['Revolver Magnum .44 (2d6+1, Portee 12/24/48)', 'Fusil a pompe scie (1-3d6, portee courte)', 'Gilet pare-balles leger (Armure +2)', '3 recharges standard', 'Menottes x2', '300 ₽'];
 
 function loadGear() {
   try {
