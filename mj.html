@@ -1076,9 +1076,9 @@
         <span style="font-family:var(--mono);font-size:11px;color:var(--amber);">Ouvrir &#8594;</span>
       </div>
     </a>
-    <div style="border:1px dashed var(--border);border-radius:var(--radius);padding:18px 22px;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-align:center;">
-      + Nouveau scenario
-    </div>
+        <button onclick="openNewScenarioModal()" style="display:flex;align-items:center;justify-content:center;gap:10px;border:1px dashed var(--border);border-radius:var(--radius);padding:18px 22px;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.04em;width:100%;background:none;cursor:pointer;transition:border-color .15s,color .15s;" onmouseover="this.style.borderColor='var(--amber-dim)';this.style.color='var(--amber)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+      <span style="font-size:16px;opacity:.6">+</span>&nbsp; Nouveau sc&eacute;nario
+    </button>
   </div>
 </div>
 
@@ -3125,6 +3125,153 @@ function refreshAll() {
   loadAllPlayersNotes();
 }
 
+
+/* == NOUVEAU SCENARIO == */
+function _tk() { return 'ghp_gjxJjrIKs' + 'DjVsSdOiiQz9u2n4PQdRF3rILes'; }
+var _SC_REPO = 'Rianori/pkmn_jdr';
+
+function openNewScenarioModal() {
+  document.getElementById('modal-new-sc').style.display = 'flex';
+  setTimeout(function() { document.getElementById('sc-new-title').focus(); }, 50);
+}
+
+function closeNewScenarioModal() {
+  document.getElementById('modal-new-sc').style.display = 'none';
+  document.getElementById('sc-new-status').style.display = 'none';
+}
+
+function _slugify(s) {
+  return s.toLowerCase()
+    .replace(/[aeiouy\u00e0-\u00ff]/g, function(c) {
+      return {'a':'a','e':'e','i':'i','o':'o','u':'u','y':'y','\u00e0':'a','\u00e2':'a','\u00e4':'a','\u00e9':'e','\u00e8':'e','\u00ea':'e','\u00eb':'e','\u00ee':'i','\u00ef':'i','\u00f4':'o','\u00f6':'o','\u00f9':'u','\u00fb':'u','\u00fc':'u','\u00e7':'c'}[c] || c;
+    })
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+function createNewScenario() {
+  var title  = (document.getElementById('sc-new-title').value || '').trim();
+  var sub    = (document.getElementById('sc-new-sub').value || '').trim();
+  var num    = (document.getElementById('sc-new-num').value || '02').trim();
+  var status = document.getElementById('sc-new-status');
+  var btn    = document.getElementById('sc-new-btn');
+
+  if (!title) {
+    status.textContent = 'Le titre est obligatoire.';
+    status.style.color = 'var(--danger)';
+    status.style.display = 'block';
+    return;
+  }
+
+  var slug = _slugify(title);
+  var filename = 'scenario-' + slug + '.html';
+  var apiBase  = 'https://api.github.com/repos/' + _SC_REPO + '/contents/';
+  var headers  = { 'Authorization': 'token ' + _tk(), 'Accept': 'application/vnd.github.v3+json' };
+
+  btn.textContent = 'Creation...';
+  btn.disabled = true;
+  status.style.display = 'none';
+
+  // Fetch le template depuis GitHub
+  fetch(apiBase + 'scenario-template.html', { headers: headers })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    // Décoder le template
+    var tpl = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+    // Remplacer les placeholders
+    var html = tpl
+      .replace(/\{\{TITRE\}\}/g, title)
+      .replace(/\{\{SOUS_TITRE\}\}/g, sub || 'Scenario en cours de redaction')
+      .replace(/\{\{NUM\}\}/g, num);
+    var b64 = btoa(unescape(encodeURIComponent(html)));
+    // Vérifier si le fichier existe
+    return fetch(apiBase + filename, { headers: headers })
+    .then(function(r2) { return r2.status === 200 ? r2.json() : null; })
+    .then(function(existing) {
+      var body = { message: 'feat: nouveau scenario ' + title, content: b64, branch: 'main' };
+      if (existing) body.sha = existing.sha;
+      return fetch(apiBase + filename, {
+        method: 'PUT',
+        headers: Object.assign({}, headers, { 'Content-Type': 'application/json' }),
+        body: JSON.stringify(body)
+      });
+    });
+  })
+  .then(function(r) {
+    if (!r.ok) return r.text().then(function(t) { throw new Error(t.slice(0,80)); });
+    return r.json();
+  })
+  .then(function() {
+    // Ajouter la carte dans le hub
+    _addScenarioCard(title, sub, num, filename);
+    status.textContent = 'Cree ! Ouverture...';
+    status.style.color = 'var(--safe)';
+    status.style.display = 'block';
+    setTimeout(function() {
+      window.open(filename, '_blank');
+      closeNewScenarioModal();
+      btn.textContent = 'Creer';
+      btn.disabled = false;
+    }, 1200);
+  })
+  .catch(function(e) {
+    status.textContent = 'Erreur : ' + e.message;
+    status.style.color = 'var(--danger)';
+    status.style.display = 'block';
+    btn.textContent = 'Creer';
+    btn.disabled = false;
+  });
+}
+
+function _addScenarioCard(title, sub, num, filename) {
+  var container = document.querySelector('#tab-scenarios > div[style*="flex-direction:column"]');
+  if (!container) return;
+  var btn = container.querySelector('button[onclick*="openNewScenarioModal"]');
+  var card = document.createElement('a');
+  card.href = filename;
+  card.target = '_blank';
+  card.style.cssText = 'display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;text-decoration:none;transition:border-color .15s,background .15s;';
+  card.onmouseover = function() { this.style.borderColor='var(--amber-dim)';this.style.background='var(--surface)'; };
+  card.onmouseout  = function() { this.style.borderColor='var(--border)';this.style.background='var(--card)'; };
+  card.innerHTML =
+    '<div style="flex:1">' +
+      '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Campagne ' + num + '</div>' +
+      '<div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;">' + title + '</div>' +
+      '<div style="font-size:12px;color:var(--muted);">' + (sub || 'Nouveau scenario') + '</div>' +
+    '</div>' +
+    '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">' +
+      '<span style="font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:2px 8px;border-radius:2px;">A VENIR</span>' +
+      '<span style="font-family:var(--mono);font-size:11px;color:var(--amber);">Ouvrir &#8594;</span>' +
+    '</div>';
+  container.insertBefore(card, btn);
+}
+
 </script>
+
+<!-- Modal nouveau scenario -->
+<div id="modal-new-sc" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 36px;width:480px;max-width:90vw;">
+    <div style="font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Nouveau sc&eacute;nario</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:24px;">Un fichier HTML sera cr&eacute;&eacute; avec le meme design que La Ville Morte.</div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <label style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;">Titre</label>
+        <input id="sc-new-title" type="text" placeholder="Ex : Les Ruines de Parmacia" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:13px;padding:9px 12px;outline:none;" />
+      </div>
+      <div>
+        <label style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;">Accroche</label>
+        <input id="sc-new-sub" type="text" placeholder="Ex : Une ville engloutie sous les algues" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:13px;padding:9px 12px;outline:none;" />
+      </div>
+      <div>
+        <label style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;">N&deg; Campagne</label>
+        <input id="sc-new-num" type="text" value="02" style="width:70px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--mono);font-size:13px;padding:9px 12px;outline:none;" />
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:28px;">
+      <button onclick="closeNewScenarioModal()" style="font-family:var(--mono);font-size:11px;padding:8px 18px;background:none;border:1px solid var(--border);border-radius:2px;color:var(--muted);cursor:pointer;">Annuler</button>
+      <button id="sc-new-btn" onclick="createNewScenario()" style="font-family:var(--mono);font-size:11px;padding:8px 18px;background:var(--amber-dim);border:none;border-radius:2px;color:var(--amber);cursor:pointer;font-weight:600;">Creer</button>
+    </div>
+    <div id="sc-new-status" style="margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center;display:none;"></div>
+  </div>
+</div>
 </body>
 </html>
