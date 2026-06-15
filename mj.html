@@ -1040,11 +1040,12 @@
     </div>
     <div class="aside-tab-section" id="aside-groupe" style="display:none">
     <div class="aside-group"><div class="aside-label">Dresseurs</div>
-      
       <button onclick="scrollAndOpen('pj-acc-1')">L'Analyste</button>
       <button onclick="scrollAndOpen('pj-acc-2')">Le Pistolero</button>
       <button onclick="scrollAndOpen('pj-acc-3')">La Causeuse</button>
       <button onclick="scrollAndOpen('pj-acc-4')">Le Pisteur</button>
+      <button onclick="scrollAndOpen('pj-acc-5')">Le Tracker</button>
+      <button onclick="scrollAndOpen('pj-acc-6')">Le Dresseur</button>
     </div>
   </div>
 
@@ -1202,6 +1203,41 @@
           <div class="hindrance-block"><div class="block-name"><span class="tag tag-majeur">Majeur</span> Protecteur compulsif</div><div class="block-desc">Ne peut pas laisser un Pokémon blessé ou en danger sans intervenir, même si ça compromet la mission. Jet de Trempe d10 diff. 6 pour s'y refuser.</div></div><div class="hindrance-block"><div class="block-name"><span class="tag tag-mineur">Mineur</span> Peur des Pokéball</div><div class="block-desc">Ne capture jamais de Pokémon sauvage. Refuse d'utiliser une Pokéball contre sa volonté.</div></div>
           <div class="pj-team-strip" id="team-strip-pisteur"><span style="font-size:11px;color:var(--muted);font-style:italic">Cliquer Actualiser</span></div>
           <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ancien vétérinaire itinérant qui soignait les Pokémon sauvages. A perdu son agrément après avoir refusé d'euthanasier des Pokémon blessés sur ordre d'un consortium minier.</em></p>
+        </div>
+      </div>
+      <div class="pnj-card" id="pj-acc-5">
+        <div class="pnj-header" onclick="togglePjAcc('pj-acc-5')">
+          <div>
+            <div class="pnj-name">Elias Voss <span class="tag tag-edge">Joker PJ</span></div>
+            <div class="pnj-role">Chasseur de Ph&eacute;nom&egrave;nes Anomaux &middot; Partenaire&nbsp;: Kaiminus</div>
+          </div>
+          <span class="chapter-chevron">&#9654;</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline"><div class="stat-pill">Agilit&eacute; <span>d8</span></div><div class="stat-pill">Ruse <span>d8</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Trempe <span>d10</span></div><div class="stat-pill">Vigueur <span>d8</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>6&quot;</span></div><div class="stat-pill">D&eacute; Joker <span>d6</span></div><div class="stat-pill">Fate Chips <span>3/session</span></div></div>
+          <div class="stat-block" style="margin-bottom:12px"><div class="stat-row"><span class="stat-name">Athl&eacute;tisme</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Connaissances Communes</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Perception (Notice)</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Survie (Survival)</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Discr&eacute;tion (Sneak)</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Pistage Anomal</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Combat (Fightin')</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Intimidation (Overawe)</span><span class="stat-val">d6</span></div></div>
+          <div class="edge-block"><div class="block-name"><span class="tag tag-background">Background</span> Sens du Danger</div><div class="block-desc">Jamais pris par surprise. Peut agir normalement dans les rounds de surprise. S'&eacute;tend &agrave; Kaiminus si dans un rayon de 6&quot;.</div><div class="block-name"><span class="tag tag-background">Background</span> Pisteur Sp&eacute;cialis&eacute;</div><div class="block-desc">+2 &agrave; tous les jets de Perception et Survie impliquant des Pok&eacute;mon corrompus, mutants ou anomaux. Peut identifier l'&acirc;ge d'une piste jusqu'&agrave; 48h.</div><div class="block-name"><span class="tag tag-background">Pok&eacute;mon</span> Lien Profond &mdash; Kaiminus</div><div class="block-desc">Une fois par sc&egrave;ne : Elias peut demander au MJ si une menace non visible est pr&eacute;sente dans un rayon de 20&quot;. R&eacute;ponse : oui / non / type d'anomalie.</div></div>
+          <div class="hindrance-block"><div class="block-name"><span class="tag tag-majeur">Vengeance [Majeur]</span> Obsession des Origines</div><div class="block-desc">Ne peut pas laisser une installation d'exp&eacute;rimentation ill&eacute;gale sur les Pok&eacute;mon sans tenter de la documenter et la d&eacute;truire. Jet de Trempe d10 diff. 8 pour se retenir.</div></div><div class="hindrance-block"><div class="block-name"><span class="tag tag-mineur">R&eacute;putation [Mineur]</span> Le Chasseur de Fant&ocirc;mes</div><div class="block-desc">-2 &agrave; Persuasion avec les officiels qui le connaissent. +2 avec les t&eacute;moins de ph&eacute;nom&egrave;nes inexpliqu&eacute;s.</div></div><div class="hindrance-block"><div class="block-name"><span class="tag tag-mineur">Obsessionnel [Mineur]</span> Documentation Compulsive</div><div class="block-desc">Perd 1 round &agrave; documenter toute nouvelle anomalie avant de pouvoir agir (sauf jet Trempe d10 diff. 6).</div></div>
+          <div class="pj-team-strip" id="team-strip-tracker"><span style="font-size:11px;color:var(--muted);font-style:italic">Cliquer Actualiser</span></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne parle pas beaucoup. Observe tout. A d&eacute;velopp&eacute; un vocabulaire avec Kaiminus qui n'est pas verbal &mdash; regards, positions, silences. Les autres PJ le trouvent d&eacute;concertant jusqu'au moment o&ugrave; sa lecture de la situation leur sauve la vie.</em></p>
+        </div>
+      </div>
+
+      <div class="pnj-card" id="pj-acc-6">
+        <div class="pnj-header" onclick="togglePjAcc('pj-acc-6')">
+          <div>
+            <div class="pnj-name">Kael Oryn <span class="tag tag-edge">Joker PJ</span></div>
+            <div class="pnj-role">Dresseur de circuit libre &middot; Partenaire&nbsp;: Abra</div>
+          </div>
+          <span class="chapter-chevron">&#9654;</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline"><div class="stat-pill">Agilit&eacute; <span>d6</span></div><div class="stat-pill">Ruse <span>d10</span></div><div class="stat-pill">Force <span>d4</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>6&quot;</span></div><div class="stat-pill">D&eacute; Joker <span>d6</span></div><div class="stat-pill">Fate Chips <span>3/session</span></div></div>
+          <div class="stat-block" style="margin-bottom:12px"><div class="stat-row"><span class="stat-name">Athl&eacute;tisme</span><span class="stat-val">d4</span></div><div class="stat-row"><span class="stat-name">Connaissances Communes</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Perception (Notice)</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d12</span></div><div class="stat-row"><span class="stat-name">Conn. Pok&eacute;mon (Types/M&eacute;ta)</span><span class="stat-val">d12</span></div><div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Combat (Fightin')</span><span class="stat-val">d4</span></div><div class="stat-row"><span class="stat-name">Subter&shy;fuge</span><span class="stat-val">d6</span></div></div>
+          <div class="edge-block"><div class="block-name"><span class="tag tag-background">Background</span> Maestro</div><div class="block-desc">Peut donner des ordres &agrave; 2 Pok&eacute;mon simultan&eacute;ment sans malus de multi-action. Jet Dressage d12 diff. 6 : 3 Pok&eacute;mon simultan&eacute;ment.</div><div class="block-name"><span class="tag tag-background">Background</span> Lecteur de Combat</div><div class="block-desc">Au d&eacute;but de chaque combat : jet Conn. Pok&eacute;mon diff. 4. Succ&egrave;s : identifie les faiblesses de type de tous les adversaires Pok&eacute;mon. Relance : conna&icirc;t aussi leurs capacit&eacute;s probables.</div><div class="block-name"><span class="tag tag-background">Pok&eacute;mon</span> Lien &Eacute;mergent &mdash; Abra</div><div class="block-desc">Abra commence &agrave; faire confiance &agrave; Kael. Une fois par session : Abra agit en dehors de son tour pour interposer une barri&egrave;re psy entre Kael et une attaque (absorbe les d&eacute;g&acirc;ts &agrave; sa place, jet Vigueur d6 ensuite).</div></div>
+          <div class="hindrance-block"><div class="block-name"><span class="tag tag-majeur">Vengeance [Majeur]</span> Compte &agrave; R&eacute;gler</div><div class="block-desc">Cherche activement l'interm&eacute;diaire qui a fait tricher contre lui (li&eacute; au r&eacute;seau Drevin). Ne peut pas d&eacute;cliner une piste qui m&egrave;ne &agrave; lui. Jet Trempe diff. 6 pour ne pas la suivre imm&eacute;diatement.</div></div><div class="hindrance-block"><div class="block-name"><span class="tag tag-mineur">Arrogance [Mineur]</span> Combat sans Pok&eacute;mon</div><div class="block-desc">-2 &agrave; tout jet de Combat personnel. Ne demande jamais d'aide &agrave; quelqu'un qu'il n'a pas vu &agrave; l'&oelig;uvre.</div></div><div class="hindrance-block"><div class="block-name"><span class="tag tag-mineur">Sans le sou [Mineur]</span> Joueur Compulsif</div><div class="block-desc">Commence chaque sc&eacute;nario avec 100&#8377; de moins que la moyenne du groupe apr&egrave;s avoir &laquo;&nbsp;investi&nbsp;&raquo; sur un combat.</div></div>
+          <div class="pj-team-strip" id="team-strip-dresseur"><span style="font-size:11px;color:var(--muted);font-style:italic">Cliquer Actualiser</span></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Kael a perdu Voltali lors d'un combat truqu&eacute; &mdash; une &eacute;l&eacute;ctrocution forc&eacute;e, trop intense. Il a r&eacute;cup&eacute;r&eacute; Abra d'un dresseur qui ne pouvait pas le contr&ocirc;ler. Il apprend &agrave; jouer autrement. Ce n'est pas confortable.</em></p>
         </div>
       </div>
       
@@ -1366,6 +1402,37 @@
           <div class="edge-block"><div class="block-name">Empathie Négative — Contre PSI-B <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Actif)</span></div><div class="block-desc">Ressent le contrôle PSI-B comme douleur physique à 4". Action complète + Trempe d10 diff. 6 : émet une interférence → cible à 2" subit −2 à tous ses jets pendant 1d4 rounds. Combinée à l'Empathie Pokémon du Pisteur : fenêtre tactique unique contre le réacteur.</div></div>
           <div class="edge-block"><div class="block-name">Cicatrisation nocturne <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Hors combat)</span></div><div class="block-desc">Immobile dans l'obscurité 10 min → jet Vigueur d8 diff. 4. Succès : récupère 1 Blessure. Une fois par scène de repos. Lumière directe ou bruit intense interrompent le processus.</div></div>
           <p style="font-size:12px;color:var(--muted);margin-top:10px"><em>Ce n'est pas un Pokémon de combat par nature. C'est un Pokémon de présence. Dans les galeries sous la Tour Pokémon, cette qualité vaut de l'or.</em></p>
+        </div>
+      </div>
+      <div class="pnj-card" id="pk-acc-tracker">
+        <div class="pnj-header" onclick="togglePnj('pk-acc-tracker')">
+          <div>
+            <div class="pnj-name">Kaiminus <span class="tag tag-psi">Partenaire</span></div>
+            <div class="pnj-role">Totodile &middot; Eau &middot; Moyen &middot; N&deg;158 &middot; Extra sp&eacute;cial &middot; 2 Blessures</div>
+          </div>
+          <span class="chapter-chevron">&#9654;</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline"><div class="stat-pill">Agilit&eacute; <span>d8</span></div><div class="stat-pill">Ruse <span>d6</span></div><div class="stat-pill">Force <span>d8</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d10</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>8</span></div><div class="stat-pill">Allure <span>4 sol / 8 eau</span></div></div>
+          <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Morsure</td><td class="atk-dmg">FOR+d8</td><td>M&ecirc;l&eacute;e</td><td>Combat d8 &mdash; chance de Secousse</td></tr><tr><td class="atk-name">Jet d'Eau</td><td class="atk-dmg">2d6</td><td>8&quot;/16&quot;</td><td>Pousse la cible d'1 case</td></tr><tr><td class="atk-name">Charge</td><td class="atk-dmg">FOR+d6</td><td>M&ecirc;l&eacute;e</td><td>Initiative +2 si charge de 4&quot; ou plus</td></tr></table>
+          <ul class="capa-list"><li><span class="capa-name">Intimidation Naturelle</span> : Intimidation d8 gratuite en d&eacute;but de sc&egrave;ne combat &mdash; taille et gueule. Cibles de taille Petite ou Moyenne : -1 Parade ce round.</li><li><span class="capa-name">Gardien (Passif)</span> : Si Elias est Secouu&eacute;, Kaiminus s'interpose automatiquement. Sa Robustesse 8 absorbe le prochain coup. 1x/round.</li><li><span class="capa-name">Instinct de Traqueur (Passif)</span> : Peut pister une cible &agrave; l'odorat et aux traces jusqu'&agrave; 12h. +2 &agrave; Perception en milieu aquatique ou humide.</li></ul>
+          <p style="font-size:12px;color:var(--muted);margin-top:10px"><em>Kaiminus ne montre aucune affection visible. Il suit Elias comme un fait &eacute;tabli. Sa gueule est toujours l&eacute;g&egrave;rement entrouverte. Il a &eacute;t&eacute; trouv&eacute; seul dans des tunnels inond&eacute;s &mdash; il survivait d&eacute;j&agrave; tr&egrave;s bien sans personne.</em></p>
+        </div>
+      </div>
+
+      <div class="pnj-card" id="pk-acc-dresseur">
+        <div class="pnj-header" onclick="togglePnj('pk-acc-dresseur')">
+          <div>
+            <div class="pnj-name">Abra <span class="tag tag-psi">Partenaire</span></div>
+            <div class="pnj-role">Abra &middot; Psy &middot; Petit (-1) &middot; N&deg;63 &middot; Extra sp&eacute;cial &middot; 2 Blessures</div>
+          </div>
+          <span class="chapter-chevron">&#9654;</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline"><div class="stat-pill">Agilit&eacute; <span>d10</span></div><div class="stat-pill">Ruse <span>d10</span></div><div class="stat-pill">Force <span>d4</span></div><div class="stat-pill">Trempe <span>d6</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>4 / T&eacute;l&eacute;port 20&quot;</span></div></div>
+          <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Choc Mental</td><td class="atk-dmg">2d6</td><td>8&quot;/16&quot;</td><td>Psy &mdash; ignore armure physique. Tir d10.</td></tr><tr><td class="atk-name">T&eacute;l&eacute;portation</td><td class="atk-dmg">&mdash;</td><td>20&quot;</td><td>Se d&eacute;place sans d&eacute;clencher d'attaque d'opportunit&eacute;. Action de mouvement.</td></tr><tr><td class="atk-name">Barri&egrave;re Psy</td><td class="atk-dmg">&mdash;</td><td>Contact</td><td>+3 Parade pour Kael ou Abra ce round. Action standard.</td></tr></table>
+          <ul class="capa-list"><li><span class="capa-name">T&eacute;l&eacute;portation r&eacute;flexe (Passif)</span> : Si Abra est touch&eacute; par une attaque physique : jet Agilit&eacute; d10 diff. 4. Succ&egrave;s : se t&eacute;l&eacute;porte hors de port&eacute;e avant impact. Peut &eacute;chouer si surpris.</li><li><span class="capa-name">Sommeil profond (Contrainte)</span> : Abra dort 18h/24. Il ne peut &ecirc;tre utilis&eacute; qu'une fois par sc&egrave;ne sauf si Kael r&eacute;ussit un jet Dressage d12 diff. 6 pour le maintenir &eacute;veill&eacute; une sc&egrave;ne suppl&eacute;mentaire.</li><li><span class="capa-name">Lien &eacute;mergent</span> : Abra commence &agrave; faire confiance &agrave; Kael. Il n'ob&eacute;it pas encore instinctivement &mdash; il choisit. S'il juge l'ordre inutile, il dort plut&ocirc;t que d'ob&eacute;ir.</li><li><span class="capa-name">Pr&eacute;cognition (Passif)</span> : Kael ne peut jamais &ecirc;tre Distrait ou Secouu&eacute; par un effet de surprise tant qu'Abra est &eacute;veill&eacute; et adjacent.</li></ul>
+          <p style="font-size:12px;color:var(--muted);margin-top:10px"><em>Abra dormait dans une cage trop petite chez un dresseur qui ne comprenait pas ce qu'il avait. Il n'a pas choisi Kael. Il a juste arr&ecirc;t&eacute; de se t&eacute;l&eacute;porter quand Kael a ouvert la cage. C'est suffisant pour commencer.</em></p>
         </div>
       </div>
     </div><div class="section" id="tab-pnj">
