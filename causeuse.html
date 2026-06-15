@@ -1396,13 +1396,42 @@ function initPlayerBin() {
 function loadPhoto(event) {
   var file = event.target.files[0];
   if (!file) return;
+  // Redimensionner avant stockage pour limiter la taille
   var reader = new FileReader();
   reader.onload = function(e) {
-    var dataUrl = e.target.result;
-    localStorage.setItem(STORAGE_KEY + '_photo', dataUrl);
-    showPhoto(dataUrl);
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      var MAX = 256;
+      var ratio = Math.min(MAX / img.width, MAX / img.height, 1);
+      canvas.width  = Math.round(img.width  * ratio);
+      canvas.height = Math.round(img.height * ratio);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      localStorage.setItem(STORAGE_KEY + '_photo', dataUrl);
+      showPhoto(dataUrl);
+      _savePhotoToCloud(dataUrl);
+    };
+    img.src = e.target.result;
   };
   reader.readAsDataURL(file);
+}
+
+function _savePhotoToCloud(dataUrl) {
+  var binId = localStorage.getItem(BIN_ID_KEY);
+  if (!binId) return;
+  fetch(_JBURL + '/b/' + binId + '/latest', {
+    headers: { 'X-Master-Key': _JBKEY }
+  }).then(function(r) { return r.json(); })
+  .then(function(d) {
+    var rec = d.record || {};
+    rec.photo = dataUrl;
+    return fetch(_JBURL + '/b/' + binId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JBKEY },
+      body: JSON.stringify(rec)
+    });
+  }).catch(function() {});
 }
 
 function showPhoto(dataUrl) {
@@ -1416,8 +1445,25 @@ function showPhoto(dataUrl) {
 }
 
 function initPhoto() {
-  var saved = localStorage.getItem(STORAGE_KEY + '_photo');
-  if (saved) showPhoto(saved);
+  // Charger depuis localStorage d'abord (instantané)
+  var local = localStorage.getItem(STORAGE_KEY + '_photo');
+  if (local) showPhoto(local);
+  // Puis vérifier le cloud (sync cross-device)
+  _getOrCreateBin(function(binId) {
+    fetch(_JBURL + '/b/' + binId + '/latest', {
+      headers: { 'X-Master-Key': _JBKEY }
+    }).then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.record && d.record.photo) {
+        var cloudPhoto = d.record.photo;
+        // Mettre à jour si différent du local
+        if (cloudPhoto !== local) {
+          localStorage.setItem(STORAGE_KEY + '_photo', cloudPhoto);
+          showPhoto(cloudPhoto);
+        }
+      }
+    }).catch(function() {});
+  });
 }
 
 </script>
