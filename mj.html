@@ -973,9 +973,13 @@
 </head>
 <body>
 
-<header>
+<header style="display:flex;align-items:center;gap:16px;">
   <h1>Compagnon JDR</h1>
   <span class="subtitle">SWADE · Pokémon Kanto · v2.0</span>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+    <button onclick="refreshAll()" style="font-family:var(--mono);font-size:11px;background:var(--amber-dim);color:var(--amber);border:none;border-radius:2px;padding:7px 16px;cursor:pointer;letter-spacing:.04em;" title="Mettre a jour PJ et equipes">&#8635; Actualiser</button>
+    <a href="index.html" style="font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:2px;padding:6px 14px;transition:color .15s,border-color .15s;" onmouseover="this.style.color='var(--amber)';this.style.borderColor='var(--amber-dim)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">Portail</a>
+  </div>
 </header>
 
 <nav id="main-nav">
@@ -1035,7 +1039,7 @@
   <!-- ── GROUPE ── -->
   <div class="aside-tab-section" id="aside-groupe" style="display:none">
     <div class="aside-group"><div class="aside-label">Dresseurs</div>
-      <button class="aside-filter-btn" onclick="loadAllTeams()" style="margin-bottom:4px">Actualiser equipes</button>
+      
       <button onclick="scrollAndOpen('pj-acc-1')">L'Analyste</button>
       <button onclick="scrollAndOpen('pj-acc-2')">Le Pistolero</button>
       <button onclick="scrollAndOpen('pj-acc-3')">La Causeuse</button>
@@ -3698,6 +3702,12 @@ function loadAllTeams() {
 }
 
 function _ee(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function refreshAll() {
+  loadAllTeams();
+  loadAllPlayersNotes();
+}
+
 </script>
 </body>
 </html>
