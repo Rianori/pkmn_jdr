@@ -593,7 +593,22 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
 <div class="sc-aside-group"><div class="sc-aside-label">Aper&ccedil;u</div><button class="sc-aside-btn" onclick="scrollToEl('sc-resume')">R&eacute;sum&eacute;</button><button class="sc-aside-btn" onclick="scrollToEl('sc-lieux')">Lieux</button><button class="sc-aside-btn" onclick="scrollToEl('sc-histoire')">Histoire</button></div><div class="sc-aside-group"><div class="sc-aside-label">Acte I &mdash; L'arrivée</div><button class="sc-aside-btn" onclick="openPartie('acte1');scrollToEl('ch1')">CH1 &middot; Le mandat sans badge</button><button class="sc-aside-btn" onclick="openPartie('acte1');scrollToEl('ch2')">CH2 &middot; Lavanville la grise</button><button class="sc-aside-btn" onclick="openPartie('acte1');scrollToEl('ch3')">CH3 &middot; La cartographie de Fil</button></div><div class="sc-aside-group"><div class="sc-aside-label">Acte II &mdash; La descente</div><button class="sc-aside-btn" onclick="openPartie('acte2');scrollToEl('ch4')">CH4 &middot; Sous la Tour</button><button class="sc-aside-btn" onclick="openPartie('acte2');scrollToEl('ch5')">CH5 &middot; Premiere trahison</button><button class="sc-aside-btn" onclick="openPartie('acte2');scrollToEl('ch6')">CH6 &middot; Mira Holt</button></div><div class="sc-aside-group"><div class="sc-aside-label">Acte III &mdash; Le basculement</div><button class="sc-aside-btn" onclick="openPartie('acte3');scrollToEl('ch7')">CH7 &middot; La surveillance</button><button class="sc-aside-btn" onclick="openPartie('acte3');scrollToEl('ch8')">CH8 &middot; L'alerte de Yael</button><button class="sc-aside-btn" onclick="openPartie('acte3');scrollToEl('ch9')">CH9 &middot; Fil dans le reacteur</button></div><div class="sc-aside-group"><div class="sc-aside-label">Acte IV &mdash; La résolution</div><button class="sc-aside-btn" onclick="openPartie('acte4');scrollToEl('ch10')">CH10 &middot; La nuit entre deux</button><button class="sc-aside-btn" onclick="openPartie('acte4');scrollToEl('ch11')">CH11 &middot; La chute d'Ashford</button><button class="sc-aside-btn" onclick="openPartie('acte4');scrollToEl('ch12')">CH12 &middot; Ce que Lavanville garde</button></div>
       </div>
       <div class="sc-aside-panel" id="sc-panel-pnj" style="display:none;">
-<div class="sc-aside-group"><div class="sc-aside-label">Alli&eacute;s</div><button class="sc-aside-btn" onclick="scrollToEl('pnj-kaito')">Kaito Mura</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-fil')">Fil (Polichombr)</button></div><div class="sc-aside-group"><div class="sc-aside-label">Antagonistes</div><button class="sc-aside-btn" onclick="scrollToEl('pnj-holt')">Mira Holt</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-ashford')">Dir. Ashford</button></div><div class="sc-aside-group"><div class="sc-aside-label">Extras</div><button class="sc-aside-btn" onclick="scrollToEl('pnj-agents')">Agents Ashford</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-techniciens')">Techniciens</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-torkel')">Garde Torkel</button></div><div class="sc-aside-group"><div class="sc-aside-label">Extras</div><button class="sc-aside-btn" onclick="scrollToEl('pnj-agents')">Agents Ashford</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-techniciens')">Techniciens</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-torkel')">Garde Torkel</button></div>
+        <div class="sc-aside-group">
+          <div class="sc-aside-label">Alliés</div>
+          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-kaito')">Kaito Mura</button>
+          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-fil')">Fil — Polichombr</button>
+        </div>
+        <div class="sc-aside-group">
+          <div class="sc-aside-label">Antagonistes</div>
+          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-holt')">Mira Holt</button>
+          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-ashford')">Directeur Ashford</button>
+        </div>
+        <div class="sc-aside-group">
+          <div class="sc-aside-label">Extras</div>
+          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-agents')">Agents Ashford</button>
+          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-techniciens')">Techniciens</button>
+          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-torkel')">Garde Torkel</button>
+        </div>
       </div>
     </div>
   </nav>
@@ -1020,6 +1035,14 @@ function scrollToEl(id) {
 function togglePnj(id) {
   var card = document.getElementById(id);
   if (card) card.classList.toggle('open');
+}
+
+
+function scrollAndOpen(id) {
+  var card = document.getElementById(id);
+  if (!card) return;
+  if (!card.classList.contains('open')) card.classList.add('open');
+  setTimeout(function() { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
 }
 
 </script>
