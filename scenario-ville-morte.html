@@ -593,7 +593,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
 <div class="sc-aside-group"><div class="sc-aside-label">Aper&ccedil;u</div><button class="sc-aside-btn" onclick="scrollToEl('sc-resume')">R&eacute;sum&eacute;</button><button class="sc-aside-btn" onclick="scrollToEl('sc-lieux')">Lieux</button><button class="sc-aside-btn" onclick="scrollToEl('sc-histoire')">Histoire</button></div><div class="sc-aside-group"><div class="sc-aside-label">Acte I &mdash; L'arrivée</div><button class="sc-aside-btn" onclick="openPartie('acte1');scrollToEl('ch1')">CH1 &middot; Le mandat sans badge</button><button class="sc-aside-btn" onclick="openPartie('acte1');scrollToEl('ch2')">CH2 &middot; Lavanville la grise</button><button class="sc-aside-btn" onclick="openPartie('acte1');scrollToEl('ch3')">CH3 &middot; La cartographie de Fil</button></div><div class="sc-aside-group"><div class="sc-aside-label">Acte II &mdash; La descente</div><button class="sc-aside-btn" onclick="openPartie('acte2');scrollToEl('ch4')">CH4 &middot; Sous la Tour</button><button class="sc-aside-btn" onclick="openPartie('acte2');scrollToEl('ch5')">CH5 &middot; Premiere trahison</button><button class="sc-aside-btn" onclick="openPartie('acte2');scrollToEl('ch6')">CH6 &middot; Mira Holt</button></div><div class="sc-aside-group"><div class="sc-aside-label">Acte III &mdash; Le basculement</div><button class="sc-aside-btn" onclick="openPartie('acte3');scrollToEl('ch7')">CH7 &middot; La surveillance</button><button class="sc-aside-btn" onclick="openPartie('acte3');scrollToEl('ch8')">CH8 &middot; L'alerte de Yael</button><button class="sc-aside-btn" onclick="openPartie('acte3');scrollToEl('ch9')">CH9 &middot; Fil dans le reacteur</button></div><div class="sc-aside-group"><div class="sc-aside-label">Acte IV &mdash; La résolution</div><button class="sc-aside-btn" onclick="openPartie('acte4');scrollToEl('ch10')">CH10 &middot; La nuit entre deux</button><button class="sc-aside-btn" onclick="openPartie('acte4');scrollToEl('ch11')">CH11 &middot; La chute d'Ashford</button><button class="sc-aside-btn" onclick="openPartie('acte4');scrollToEl('ch12')">CH12 &middot; Ce que Lavanville garde</button></div>
       </div>
       <div class="sc-aside-panel" id="sc-panel-pnj" style="display:none;">
-<div class="sc-aside-group"><div class="sc-aside-label">Alli&eacute;s</div><button class="sc-aside-btn" onclick="scrollToEl('pnj-kaito')">Kaito Mura</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-fil')">Fil (Polichombr)</button></div><div class="sc-aside-group"><div class="sc-aside-label">Antagonistes</div><button class="sc-aside-btn" onclick="scrollToEl('pnj-holt')">Mira Holt</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-ashford')">Dir. Ashford</button></div><div class="sc-aside-group"><div class="sc-aside-label">Extras</div><button class="sc-aside-btn" onclick="scrollToEl('pnj-agents')">Agents Ashford</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-techniciens')">Techniciens</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-torkel')">Garde Torkel</button></div>
+<div class="sc-aside-group"><div class="sc-aside-label">Alli&eacute;s</div><button class="sc-aside-btn" onclick="scrollToEl('pnj-kaito')">Kaito Mura</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-fil')">Fil (Polichombr)</button></div><div class="sc-aside-group"><div class="sc-aside-label">Antagonistes</div><button class="sc-aside-btn" onclick="scrollToEl('pnj-holt')">Mira Holt</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-ashford')">Dir. Ashford</button></div><div class="sc-aside-group"><div class="sc-aside-label">Extras</div><button class="sc-aside-btn" onclick="scrollToEl('pnj-agents')">Agents Ashford</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-techniciens')">Techniciens</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-torkel')">Garde Torkel</button></div><div class="sc-aside-group"><div class="sc-aside-label">Extras</div><button class="sc-aside-btn" onclick="scrollToEl('pnj-agents')">Agents Ashford</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-techniciens')">Techniciens</button><button class="sc-aside-btn" onclick="scrollToEl('pnj-torkel')">Garde Torkel</button></div>
       </div>
     </div>
   </nav>
@@ -790,7 +790,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
         <div class="page-title">Fiches PNJ</div>
         <div class="page-tagline">La Ville Morte &middot; 7 personnages</div>
         <div class="section-title" style="margin-bottom:16px">Alli&eacute;s &mdash; Jokers</div>
-<div class="pnj-card" id="pnj-kaito">
+<div class="pnj-card open" id="pnj-kaito">
         <div class="pnj-header" onclick="togglePnj('pnj-kaito')">
           <div><div class="pnj-name">Kaito Mura <span class="tag tag-edge">Joker allié</span></div><div class="pnj-role">Inspecteur indépendant — présent tout au long du scénario</div></div>
           <span class="chapter-chevron">▶</span>
@@ -812,7 +812,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne combat presque jamais. Oriente, n'exécute pas. Équipement : imperméable, radio cryptée, appareil photo à mémoire physique, badge suspendu.</em></p>
         </div>
       </div>
-<div class="pnj-card" id="pnj-fil">
+<div class="pnj-card open" id="pnj-fil">
         <div class="pnj-header" onclick="togglePnj('pnj-fil')">
           <div><div class="pnj-name">Fil — Polichombr <span class="tag tag-edge">Joker allié spécial</span></div><div class="pnj-role">Capturé au Ch. 9 — Survie in extremis au Ch. 10</div></div>
           <span class="chapter-chevron">▶</span>
@@ -839,7 +839,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
         </div>
       </div>
 <div class="section-title" style="margin:28px 0 16px">Antagonistes &mdash; Jokers</div>
-<div class="pnj-card" id="pnj-holt">
+<div class="pnj-card open" id="pnj-holt">
         <div class="pnj-header" onclick="togglePnj('pnj-holt')">
           <div><div class="pnj-name">Mira Holt <span class="tag tag-psi">Joker ennemi</span></div><div class="pnj-role">Directrice technique du réacteur — apparaît Ch. 6</div></div>
           <span class="chapter-chevron">▶</span>
@@ -861,7 +861,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne fuit pas. Si le Groupe la confronte, elle argumente. Pokémon : 2 Absol + Tentacruel personnel (non PSI-B). Badge accès niveau 5. Tablette avec plans PSI-B.</em></p>
         </div>
       </div>
-<div class="pnj-card" id="pnj-ashford">
+<div class="pnj-card open" id="pnj-ashford">
         <div class="pnj-header" onclick="togglePnj('pnj-ashford')">
           <div><div class="pnj-name">Directeur Ashford <span class="tag tag-psi">Joker ennemi / absent</span></div><div class="pnj-role">Ligue Pokémon, Cramoisîle — n'apparaît jamais en personne</div></div>
           <span class="chapter-chevron">▶</span>
@@ -882,7 +882,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
         </div>
       </div>
 <div class="section-title" style="margin:28px 0 16px">Extras</div>
-<div class="pnj-card" id="pnj-agents">
+<div class="pnj-card open" id="pnj-agents">
         <div class="pnj-header" onclick="togglePnj('pnj-agents')">
           <div><div class="pnj-name">Agent de terrain d'Ashford <span class="tag tag-psi" style="background:#1a0520;color:#c050e0;">Extra</span></div><div class="pnj-role">Ch. 7 et 8 — embuscade, arrestation</div></div>
           <span class="chapter-chevron">▶</span>
@@ -899,7 +899,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted)"><em>Matraque (Str+d4) ou pistolet paralysant (2d6, Secousse). Pokémon : Arcanin (Extra) Combat d8, Str+d6, Parade 5, Robustesse 7. Tactique : un engage en mêlée, l'autre couvre. Fuite si 2 agents au sol.</em></p>
         </div>
       </div>
-<div class="pnj-card" id="pnj-techniciens">
+<div class="pnj-card open" id="pnj-techniciens">
         <div class="pnj-header" onclick="togglePnj('pnj-techniciens')">
           <div><div class="pnj-name">Technicien du réacteur <span class="tag tag-psi" style="background:#1a0520;color:#c050e0;">Extra</span></div><div class="pnj-role">Ch. 4 et 9 — dans la mine</div></div>
           <span class="chapter-chevron">▶</span>
@@ -916,7 +916,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted)"><em>Outil électrique improvisé (Str+d4). Pokémon : Voltorbe — Autodestruction (6d6, zone 2", usage unique). Tactique : déclenche les alarmes ou verrouille les accès. À neutraliser vite.</em></p>
         </div>
       </div>
-<div class="pnj-card" id="pnj-torkel">
+<div class="pnj-card open" id="pnj-torkel">
         <div class="pnj-header" onclick="togglePnj('pnj-torkel')">
           <div><div class="pnj-name">Garde Torkel <span class="tag tag-gardien" style="background:#051530;color:#6090e0;">Extra allié latent</span></div><div class="pnj-role">Agent de sécurité — laisse une porte ouverte au Ch. 9</div></div>
           <span class="chapter-chevron">▶</span>
