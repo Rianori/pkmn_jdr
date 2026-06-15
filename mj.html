@@ -1411,62 +1411,162 @@
         <div class="pnj-header" onclick="togglePnj('pk-acc-analyste')">
           <div>
             <div class="pnj-name">Métamorph <span class="tag tag-psi">Partenaire</span></div>
-            <div class="pnj-role">Type Normal</div>
+            <div class="pnj-role">Ditto · Normal · Petit (−1) · N°132 · Extra spécial · 2 Blessures</div>
           </div>
           <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
-          <div class="stat-inline"><div class="stat-pill">Agilité <span>d8</span></div><div class="stat-pill">Ruse <span>d4</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Trempe <span>d6</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>6"</span></div></div>
-          <div class="stat-block" style="margin-bottom:12px"><div class="stat-row"><span class="stat-name">Métamorphose</span><span class="stat-val">—</span></div><div class="stat-row"><span class="stat-name">Athlétisme</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d6</span></div></div>
-          <div class="edge-block"><div class="block-name">Capacité spéciale</div><div class="block-desc">Métamorphose — Copie les stats de base, l'apparence et les attaques d'un Pokémon ciblé. Dure jusqu'à fin du combat ou 1h.</div></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Identifié à Magdalena. Imite les comportements humains par mimétisme affectif. Détecte les anomalies biologiques sur les sujets CT-modifiés.</em></p>
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d6</span></div>
+            <div class="stat-pill">Ruse <span>d8</span></div>
+            <div class="stat-pill">Force <span>d4</span></div>
+            <div class="stat-pill">Trempe <span>d6</span></div>
+            <div class="stat-pill">Vigueur <span>d6</span></div>
+            <div class="stat-pill">Parade <span>3</span></div>
+            <div class="stat-pill">Robustesse <span>4</span></div>
+            <div class="stat-pill">Allure <span>6"</span></div>
+          </div>
+          <div class="section-title" style="margin:10px 0 6px">Attaques</div>
+          <table style="width:100%;font-size:12px;border-collapse:collapse;margin-bottom:12px">
+            <thead><tr style="color:var(--muted);font-family:var(--mono);font-size:10px;text-align:left;border-bottom:1px solid var(--border)">
+              <th style="padding:3px 8px 3px 0">Attaque</th><th style="padding:3px 8px">Domm.</th><th style="padding:3px 8px">Portée</th><th style="padding:3px 0">Effet</th>
+            </tr></thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px 4px 0">Copie</td><td style="padding:4px 8px;color:var(--muted)">—</td><td style="padding:4px 8px;color:var(--muted)">—</td><td style="padding:4px 0;color:var(--muted)">Observe 1 round → transformation disponible au suivant</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px 4px 0">Claquement</td><td style="padding:4px 8px;color:var(--muted)">Str+d4</td><td style="padding:4px 8px;color:var(--muted)">Mêlée</td><td style="padding:4px 0;color:var(--muted)">Forme de base uniquement — rarement utilisé</td></tr>
+              <tr><td style="padding:4px 8px 4px 0">Imitation</td><td style="padding:4px 8px;color:var(--muted)">Variable</td><td style="padding:4px 8px;color:var(--muted)">Variable</td><td style="padding:4px 0;color:var(--muted)">Transformé : utilise les attaques du Pokémon copié</td></tr>
+            </tbody>
+          </table>
+          <div class="section-title" style="margin-bottom:8px">Capacités spéciales</div>
+          <div class="edge-block"><div class="block-name">Transformation <span style="font-size:10px;font-weight:normal;color:var(--muted)">(action complète)</span></div><div class="block-desc">Copie un Pokémon observé 1 round complet. Adopte tous ses attributs, compétences, attaques et Robustesse — conserve ses Blessures actuelles. Dure jusqu'à fin combat ou KO. Limite : ne copie pas les capacités narratives uniques.</div></div>
+          <div class="edge-block"><div class="block-name">Mémoire d'observation <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Passif)</span></div><div class="block-desc">Retient jusqu'à 3 formes copiées par session. Peut repasser à une forme déjà copiée en action de mouvement. Hors combat, peut maintenir une forme humanoïde indéfiniment.</div></div>
+          <div class="edge-block"><div class="block-name">Analyse structurelle <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Passif — synergie)</span></div><div class="block-desc">Quand Magdalena effectue un jet de Sciences ou d'Électronique sur un Pokémon ou une CT, Métamorph donne +1 au jet s'il a déjà copié ce type dans la session. Cumulable avec l'analyseur de CT (+2) → total +3.</div></div>
+          <div class="hindrance-block"><div class="block-name">Fragilité de forme <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Contrainte)</span></div><div class="block-desc">Une Blessure en forme transformée = retour forme de base + Secoué. Ne peut pas se retransformer ce round.</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:10px"><em>Métamorph observe, absorbe, et retient. Pour une scientifique qui passe sa vie à analyser ce que les autres ratent, c'est le partenaire le plus honnête qui soit.</em></p>
         </div>
       </div>
+      
       <div class="pnj-card" id="pk-acc-pistolero">
         <div class="pnj-header" onclick="togglePnj('pk-acc-pistolero')">
           <div>
             <div class="pnj-name">Arcanin <span class="tag tag-psi">Partenaire</span></div>
-            <div class="pnj-role">Type Feu</div>
+            <div class="pnj-role">Arcanin · Feu · Grand (+1) · N°59 · Extra spécial · 2 Blessures</div>
           </div>
           <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
-          <div class="stat-inline"><div class="stat-pill">Agilité <span>d8</span></div><div class="stat-pill">Ruse <span>d6</span></div><div class="stat-pill">Force <span>d10</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d10</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>7</span></div><div class="stat-pill">Allure <span>10"</span></div></div>
-          <div class="stat-block" style="margin-bottom:12px"><div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Athlétisme</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d6</span></div></div>
-          <div class="edge-block"><div class="block-name">Capacité spéciale</div><div class="block-desc">Rugissement d'Intimidation — Jet d'Intimidation d8 contre toutes cibles à portée courte. Cibles échouant subissent Secoué.</div></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Protège Lidia avec une loyauté absolue. Détecte les sources de chaleur et peut pister à l'odorat jusqu'à 24h.</em></p>
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d10</span></div>
+            <div class="stat-pill">Ruse <span>d4</span></div>
+            <div class="stat-pill">Force <span>d10</span></div>
+            <div class="stat-pill">Trempe <span>d8</span></div>
+            <div class="stat-pill">Vigueur <span>d10</span></div>
+            <div class="stat-pill">Parade <span>7</span></div>
+            <div class="stat-pill">Robustesse <span>8</span></div>
+            <div class="stat-pill">Allure <span>10"</span></div>
+          </div>
+          <div class="section-title" style="margin:10px 0 6px">Attaques</div>
+          <table style="width:100%;font-size:12px;border-collapse:collapse;margin-bottom:12px">
+            <thead><tr style="color:var(--muted);font-family:var(--mono);font-size:10px;text-align:left;border-bottom:1px solid var(--border)">
+              <th style="padding:3px 8px 3px 0">Attaque</th><th style="padding:3px 8px">Domm.</th><th style="padding:3px 8px">Portée</th><th style="padding:3px 0">Effet</th>
+            </tr></thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px 4px 0">Morsure ardente</td><td style="padding:4px 8px;color:var(--muted)">Str+d8 🔥</td><td style="padding:4px 8px;color:var(--muted)">Mêlée</td><td style="padding:4px 0;color:var(--muted)">Armure ordinaire ignorée. En Feu si Relance (d6/round)</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px 4px 0">Lance-Flamme</td><td style="padding:4px 8px;color:var(--muted)">3d6</td><td style="padding:4px 8px;color:var(--muted)">12"/24"</td><td style="padding:4px 0;color:var(--muted)">Zone cône optionnelle. Barrage de feu possible au sol</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px 4px 0">Charge éclair</td><td style="padding:4px 8px;color:var(--muted)">Str+d10</td><td style="padding:4px 8px;color:var(--muted)">Charge 4"+</td><td style="padding:4px 0;color:var(--muted)">Renversé si Robustesse non atteinte. +2 domm. si charge 8"+</td></tr>
+              <tr><td style="padding:4px 8px 4px 0">Rugissement</td><td style="padding:4px 8px;color:var(--muted)">Trempe d8 opp.</td><td style="padding:4px 8px;color:var(--muted)">Zone 4"</td><td style="padding:4px 0;color:var(--muted)">Échec : Secoué. Relance : Secoué + Vulnérable ce round</td></tr>
+            </tbody>
+          </table>
+          <div class="section-title" style="margin-bottom:8px">Capacités spéciales</div>
+          <div class="edge-block"><div class="block-name">Flair de traqueur <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Passif)</span></div><div class="block-desc">Piste une cible par odeur sur 2km si piste &lt; 24h. Perception d8 diff. 4. Relance : sait depuis combien de temps et si la cible était seule. En sous-sol : ventilation artificielle −2 au jet.</div></div>
+          <div class="edge-block"><div class="block-name">Loyauté absolue <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Passif — miroir du Pistolero)</span></div><div class="block-desc">Quand Lidia Fireheart est Secoué ou Blessé, Arcanin peut s'interposer (action gratuite, sa Parade utilisée). S'il reçoit l'attaque à la place, Arcanin absorbe les dégâts. Une fois par round.</div></div>
+          <div class="edge-block"><div class="block-name">Crinière ardente <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Passif)</span></div><div class="block-desc">Toute attaque en mêlée sans protection thermique inflige d4 dégâts de feu réflexifs à l'attaquant. Les agents d'Ashford en équipement standard ne sont pas protégés.</div></div>
+          <div class="edge-block"><div class="block-name">Sprint légendaire <span style="font-size:10px;font-weight:normal;color:var(--muted)">(1 fois / combat)</span></div><div class="block-desc">Se déplace de 20" en ligne droite, traversant obstacles mineurs. Peut enchaîner une Charge éclair en bonus à l'arrivée. Allure réduite à 6" le round suivant.</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:10px"><em>Arcanin ne comprend pas les nuances morales de son dresseur — mais il comprend à qui il fait confiance. Et il protège cette personne comme si sa vie en dépendait. Elle en dépend souvent.</em></p>
         </div>
       </div>
+      
       <div class="pnj-card" id="pk-acc-causeuse">
         <div class="pnj-header" onclick="togglePnj('pk-acc-causeuse')">
           <div>
             <div class="pnj-name">Évoli <span class="tag tag-psi">Partenaire</span></div>
-            <div class="pnj-role">Type Normal</div>
+            <div class="pnj-role">Évoli · Normal · Petit (−1) · N°133 · Extra spécial · 2 Blessures</div>
           </div>
           <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
-          <div class="stat-inline"><div class="stat-pill">Agilité <span>d8</span></div><div class="stat-pill">Ruse <span>d8</span></div><div class="stat-pill">Force <span>d4</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>6"</span></div></div>
-          <div class="stat-block" style="margin-bottom:12px"><div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Discrétion</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d4</span></div></div>
-          <div class="edge-block"><div class="block-name">Capacité spéciale</div><div class="block-desc">Adaptabilité — 1×/session, choisit un bonus contextuel : +2 Persuasion, +2 Discrétion, ou +2 Perception selon l'environnement.</div></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Capte les micro-expressions et les tensions. Alerte Rizen Dao si un interlocuteur ment ou dissimule.</em></p>
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d10</span></div>
+            <div class="stat-pill">Ruse <span>d8</span></div>
+            <div class="stat-pill">Force <span>d4</span></div>
+            <div class="stat-pill">Trempe <span>d8</span></div>
+            <div class="stat-pill">Vigueur <span>d6</span></div>
+            <div class="stat-pill">Parade <span>5</span></div>
+            <div class="stat-pill">Robustesse <span>4</span></div>
+            <div class="stat-pill">Allure <span>8"</span></div>
+          </div>
+          <div class="section-title" style="margin:10px 0 6px">Attaques</div>
+          <table style="width:100%;font-size:12px;border-collapse:collapse;margin-bottom:12px">
+            <thead><tr style="color:var(--muted);font-family:var(--mono);font-size:10px;text-align:left;border-bottom:1px solid var(--border)">
+              <th style="padding:3px 8px 3px 0">Attaque</th><th style="padding:3px 8px">Domm.</th><th style="padding:3px 8px">Portée</th><th style="padding:3px 0">Effet</th>
+            </tr></thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px 4px 0">Vive-Attaque</td><td style="padding:4px 8px;color:var(--muted)">d6</td><td style="padding:4px 8px;color:var(--muted)">Mêlée</td><td style="padding:4px 0;color:var(--muted)">Priorité : agit toujours en premier dans le round, avant toute initiative</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px 4px 0">Regard Triste</td><td style="padding:4px 8px;color:var(--muted)">Trempe d8 opp.</td><td style="padding:4px 8px;color:var(--muted)">Ligne de vue 4"</td><td style="padding:4px 0;color:var(--muted)">Échec : ne peut pas attaquer Évoli ce round. Très efficace sur les gardes peu motivés</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px 4px 0">Mordre</td><td style="padding:4px 8px;color:var(--muted)">Str+d4</td><td style="padding:4px 8px;color:var(--muted)">Mêlée</td><td style="padding:4px 0;color:var(--muted)">Dernier recours. Peut arracher un objet / document</td></tr>
+              <tr><td style="padding:4px 8px 4px 0">Couverture</td><td style="padding:4px 8px;color:var(--muted)">—</td><td style="padding:4px 8px;color:var(--muted)">Contact</td><td style="padding:4px 0;color:var(--muted)">Rizen Dao gagne +2 Parade ce round. Évoli ciblable à +2 en retour. Action de déplacement gratuite</td></tr>
+            </tbody>
+          </table>
+          <div class="section-title" style="margin-bottom:8px">Capacités spéciales</div>
+          <div class="edge-block"><div class="block-name">Lecteur de salle <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Passif — synergie)</span></div><div class="block-desc">Avant un jet de Persuasion ou d'Investigation de Rizen Dao : Évoli observe la cible 1 round (Perception d10 diff. 4). Succès : transmet l'état émotionnel (sincère / nerveux / hostile / cache quelque chose) → +1 au jet suivant. Cumulable avec Charismatique (+2) → total +3.</div></div>
+          <div class="edge-block"><div class="block-name">Petit fantôme <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Passif)</span></div><div class="block-desc">Taille −1 : −2 aux jets pour le cibler. Passe sous les portes standard, dans les conduits larges, inaperçu dans une foule. Peut transporter de petits objets (clés, badge, micro-document) discrètement.</div></div>
+          <div class="edge-block"><div class="block-name">Instinct d'adaptation <span style="font-size:10px;font-weight:normal;color:var(--muted)">(1 fois / session)</span></div><div class="block-desc">Copie temporairement un trait élémentaire d'un Pokémon observé. Trempe d8 diff. 6. Succès : le trait s'applique 1 round.</div></div>
+          <div class="edge-block"><div class="block-name">Lien social amplifié <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Passif)</span></div><div class="block-desc">Quand Rizen Dao utilise Réseau d'informateurs avec Évoli présent lors du contact : la Relance est automatique si le premier jet est un succès.</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:10px"><em>Évoli n'a jamais évolué. Il apprend les gens avant que Rizen Dao ne leur parle : les hésitations, les regards qui fuient, les sourires qui arrivent trop tôt.</em></p>
         </div>
       </div>
+      
       <div class="pnj-card" id="pk-acc-pisteur">
         <div class="pnj-header" onclick="togglePnj('pk-acc-pisteur')">
           <div>
             <div class="pnj-name">Noctali <span class="tag tag-psi">Partenaire</span></div>
-            <div class="pnj-role">Type Normal</div>
+            <div class="pnj-role">Umbreon · Sinistre · Moyen · N°197 · Extra spécial · 2 Blessures</div>
           </div>
           <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
-          <div class="stat-inline"><div class="stat-pill">Agilité <span>d10</span></div><div class="stat-pill">Ruse <span>d6</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d8</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>8"</span></div></div>
-          <div class="stat-block" style="margin-bottom:12px"><div class="stat-row"><span class="stat-name">Discrétion</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Athlétisme</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d6</span></div></div>
-          <div class="edge-block"><div class="block-name">Capacité spéciale</div><div class="block-desc">Sixième Sens — Détecte les présences hostiles dans un rayon de 30m. Alerte silencieuse (touchers) vers Téléra.</div></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Lien télépathique partiel avec Téléra. En milieu naturel, perçoit les Pokémon PSI-B avant qu'ils manifestent leur état.</em></p>
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d8</span></div>
+            <div class="stat-pill">Ruse <span>d6</span></div>
+            <div class="stat-pill">Force <span>d6</span></div>
+            <div class="stat-pill">Trempe <span>d10</span></div>
+            <div class="stat-pill">Vigueur <span>d8</span></div>
+            <div class="stat-pill">Parade <span>5</span></div>
+            <div class="stat-pill">Robustesse <span>6</span></div>
+            <div class="stat-pill">Allure <span>6"</span></div>
+          </div>
+          <div class="section-title" style="margin:10px 0 6px">Attaques</div>
+          <table style="width:100%;font-size:12px;border-collapse:collapse;margin-bottom:12px">
+            <thead><tr style="color:var(--muted);font-family:var(--mono);font-size:10px;text-align:left;border-bottom:1px solid var(--border)">
+              <th style="padding:3px 8px 3px 0">Attaque</th><th style="padding:3px 8px">Domm.</th><th style="padding:3px 8px">Portée</th><th style="padding:3px 0">Effet</th>
+            </tr></thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px 4px 0">Dégradation</td><td style="padding:4px 8px;color:var(--muted)">2d4</td><td style="padding:4px 8px;color:var(--muted)">8"/16"</td><td style="padding:4px 0;color:var(--muted)">Réduit l'Armure de la cible de 1 pt (cumulatif, max −3)</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px 4px 0">Mordre</td><td style="padding:4px 8px;color:var(--muted)">Str+d6</td><td style="padding:4px 8px;color:var(--muted)">Mêlée</td><td style="padding:4px 0;color:var(--muted)">+d4 domm. si cible déjà Affaiblie par Dégradation</td></tr>
+              <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px 4px 0">Rayon Lune</td><td style="padding:4px 8px;color:var(--muted)">Trempe d8 opp.</td><td style="padding:4px 8px;color:var(--muted)">Zone 3"</td><td style="padding:4px 0;color:var(--muted)">Échec : Affaibli (−2 Force et Vigueur). Sur PSI-B : −2 à tous ses jets ce round</td></tr>
+              <tr><td style="padding:4px 8px 4px 0">Trempette</td><td style="padding:4px 8px;color:var(--muted)">Vigueur d8 opp.</td><td style="padding:4px 8px;color:var(--muted)">Zone 2"</td><td style="padding:4px 0;color:var(--muted)">Allure ÷2 jusqu'à jet de Vigueur réussi (action complète)</td></tr>
+            </tbody>
+          </table>
+          <div class="section-title" style="margin-bottom:8px">Capacités spéciales</div>
+          <div class="edge-block"><div class="block-name">Anneaux lumineux <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Passif)</span></div><div class="block-desc">Dans l'obscurité, anneaux visibles à 10". Peut les éteindre (action gratuite) → Discrétion d12 dans le noir complet. Balisage silencieux des galeries sans lampe, ou embuscade totale.</div></div>
+          <div class="edge-block"><div class="block-name">Détection d'intentions <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Passif)</span></div><div class="block-desc">Perçoit peur, colère, mensonge actif et douleur cachée dans un rayon de 6". Communique par variations d'anneaux : pulse = danger, s'éteint = mensonge / intention hostile. Perception d10 opposée pour lui dissimuler délibérément une intention.</div></div>
+          <div class="edge-block"><div class="block-name">Lien profond <span style="font-size:10px;font-weight:normal;color:var(--muted)">(1 fois / combat)</span></div><div class="block-desc">Transfère sa Trempe d10 au Pisteur pour ce round : le dresseur relance un jet de Trempe ou Vigueur raté et garde le meilleur. Si le dresseur est Secoué, le stabilise — mais Noctali subit une Secousse en retour (Trempe diff. 4 pour l'éviter).</div></div>
+          <div class="edge-block"><div class="block-name">Empathie Négative — Contre PSI-B <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Actif)</span></div><div class="block-desc">Ressent le contrôle PSI-B comme douleur physique à 4". Action complète + Trempe d10 diff. 6 : émet une interférence → cible à 2" subit −2 à tous ses jets pendant 1d4 rounds. Combinée à l'Empathie Pokémon du Pisteur : fenêtre tactique unique contre le réacteur.</div></div>
+          <div class="edge-block"><div class="block-name">Cicatrisation nocturne <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Hors combat)</span></div><div class="block-desc">Immobile dans l'obscurité 10 min → jet Vigueur d8 diff. 4. Succès : récupère 1 Blessure. Une fois par scène de repos. Lumière directe ou bruit intense interrompent le processus.</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:10px"><em>Ce n'est pas un Pokémon de combat par nature. C'est un Pokémon de présence. Dans les galeries sous la Tour Pokémon, cette qualité vaut de l'or.</em></p>
         </div>
       </div>
+      
 
   
 
