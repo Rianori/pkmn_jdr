@@ -999,11 +999,6 @@
     font-weight: 600;
     color: var(--text);
   }
-
-  /* filtre PNJ bestiaire */
-  .filter-bar-pnj { display:none; flex-wrap:wrap; gap:6px; margin-top:8px; padding-top:8px; border-top:1px solid var(--border); }
-  .filter-bar-pnj.active { display:flex; }
-  .beast-pnj-sub { transition:opacity .15s; }
 </style>
 </head>
 <body>
@@ -1076,18 +1071,8 @@
         <button onclick="filterBeast('elites',this)">&Eacute;lites</button>
         <button onclick="filterBeast('boss',this)">Boss</button>
         <button onclick="filterBeast('sc02',this)">Carmin s/ Mer</button>
-        <button onclick="filterBeast('alpha9',this)">Alpha-9</button>
       </div>
-      <div class="aside-group"><div class="aside-label">Par PNJ (Sc. 02)</div>
-        <button onclick="filterByPnj('all',this)">Tous</button>
-        <button onclick="filterByPnj('drevin',this)">Drevin</button>
-        <button onclick="filterByPnj('alban',this)">Alban</button>
-        <button onclick="filterByPnj('bob',this)">Major Bob</button>
-        <button onclick="filterByPnj('volt',this)">Volt</button>
-        <button onclick="filterByPnj('nessa',this)">Nessa</button>
-        <button onclick="filterByPnj('ondine',this)">Ondine</button>
       </div>
-    </div>
 
   <!-- ── NOTES ── -->
   <div class="aside-tab-section" id="aside-notes" style="display:none">
@@ -1117,17 +1102,6 @@
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
         <span style="font-family:var(--mono);font-size:10px;color:var(--safe);background:rgba(30,92,46,.15);border:1px solid rgba(30,92,46,.3);padding:2px 8px;border-radius:2px;">EN COURS</span>
-        <span style="font-family:var(--mono);font-size:11px;color:var(--amber);">Ouvrir &#8594;</span>
-      </div>
-    </a>
-            <a href="scenario-complexe-chimere.html" style="display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;text-decoration:none;transition:border-color .15s,background .15s;" onmouseover="this.style.borderColor='var(--amber-dim)';this.style.background='var(--surface)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--card)'">
-      <div style="flex:1;">
-        <div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Campagne 03</div>
-        <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;">Le Complexe Chim&egrave;re</div>
-        <div style="font-size:12px;color:var(--muted);">3 actes &middot; 6 chapitres &middot; Horreur industrielle</div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
-        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:2px 8px;border-radius:2px;">&Agrave; VENIR</span>
         <span style="font-family:var(--mono);font-size:11px;color:var(--amber);">Ouvrir &#8594;</span>
       </div>
     </a>
@@ -3596,9 +3570,7 @@ function filterBeast(cat, btn) {
    } else if (cat === 'sc02') {
     document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = g.id === 'bgroup-sc02' ? '' : 'none'; });
     if (pnjBar) pnjBar.classList.add('active');
-    filterByPnj('all', pnjBar ? pnjBar.querySelector('button') : null);
-  } else if (cat === 'alpha9') {
-    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = g.id === 'bgroup-alpha9' ? '' : 'none'; });
+    filterByPnj('all', pnjBar ? pnjBar.querySelector('button') : null););
     if (pnjBar) pnjBar.classList.remove('active'););
     if (pnjBar) pnjBar.classList.add('active');
     filterByPnj('all', pnjBar ? pnjBar.querySelector('button') : null);
@@ -3610,10 +3582,7 @@ function filterBeast(cat, btn) {
     if (pnjBar) pnjBar.classList.remove('active');
   }
 }
-
-function filterByPnj(slug, btn) {
-  if (btn) {
-    document.querySelectorAll('#filter-pnj-bar .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+);
     btn.classList.add('active');
   }
   document.querySelectorAll('.beast-pnj-sub').forEach(function(s) {
@@ -3655,19 +3624,8 @@ function filterByPnj(slug, btn) {
           <button class="filter-btn" onclick="filterBeast('elites',this)">&#128995; Élites</button>
           <button class="filter-btn" onclick="filterBeast('boss',this)">&#128128; Boss</button>
           <button class="filter-btn" onclick="filterBeast('sc02',this)">&#127942; Carmin s/ Mer</button>
-          <button class="filter-btn" onclick="filterBeast('alpha9',this)">&#9763; Alpha-9</button>
         </div>
-        <div class="filter-bar-pnj" id="filter-pnj-bar">
-          <span style="font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.08em;align-self:center;">PAR PNJ :</span>
-          <button class="filter-btn" onclick="filterByPnj('all',this)">Tous</button>
-          <button class="filter-btn" onclick="filterByPnj('drevin',this)">Drevin</button>
-          <button class="filter-btn" onclick="filterByPnj('alban',this)">Alban</button>
-          <button class="filter-btn" onclick="filterByPnj('bob',this)">Major Bob</button>
-          <button class="filter-btn" onclick="filterByPnj('volt',this)">Volt</button>
-          <button class="filter-btn" onclick="filterByPnj('nessa',this)">Nessa</button>
-          <button class="filter-btn" onclick="filterByPnj('ondine',this)">Ondine</button>
         </div>
-      </div>
   </div>
 </div>
 </body>
