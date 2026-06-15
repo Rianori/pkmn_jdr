@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Savage Pokémon S1 - Kanto</title>
+<title>Compagnon JDR — SWADE Pokémon Kanto</title>
 <style>
 
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
@@ -999,13 +999,18 @@
     font-weight: 600;
     color: var(--text);
   }
+
+  /* filtre PNJ bestiaire */
+  .filter-bar-pnj { display:none; flex-wrap:wrap; gap:6px; margin-top:8px; padding-top:8px; border-top:1px solid var(--border); }
+  .filter-bar-pnj.active { display:flex; }
+  .beast-pnj-sub { transition:opacity .15s; }
 </style>
 </head>
 <body>
 
 <header style="display:flex;align-items:center;gap:16px;">
-  <h1>Log du Professeur</h1>
-  <span class="subtitle">SW · Pokémon · v2.0</span>
+  <h1>Compagnon JDR</h1>
+  <span class="subtitle">SWADE · Pokémon Kanto · v2.0</span>
   <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
     <button onclick="refreshAll()" style="font-family:var(--mono);font-size:11px;background:var(--amber-dim);color:var(--amber);border:none;border-radius:2px;padding:7px 16px;cursor:pointer;letter-spacing:.04em;" title="Mettre a jour PJ et equipes">&#8635; Actualiser</button>
     <a href="index.html" style="font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:2px;padding:6px 14px;transition:color .15s,border-color .15s;" onmouseover="this.style.color='var(--amber)';this.style.borderColor='var(--amber-dim)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">Portail</a>
@@ -1072,7 +1077,16 @@
         <button onclick="filterBeast('boss',this)">Boss</button>
         <button onclick="filterBeast('sc02',this)">Carmin s/ Mer</button>
       </div>
+      <div class="aside-group"><div class="aside-label">Par PNJ (Sc. 02)</div>
+        <button onclick="filterByPnj('all',this)">Tous</button>
+        <button onclick="filterByPnj('drevin',this)">Drevin</button>
+        <button onclick="filterByPnj('alban',this)">Alban</button>
+        <button onclick="filterByPnj('bob',this)">Major Bob</button>
+        <button onclick="filterByPnj('volt',this)">Volt</button>
+        <button onclick="filterByPnj('nessa',this)">Nessa</button>
+        <button onclick="filterByPnj('ondine',this)">Ondine</button>
       </div>
+    </div>
 
   <!-- ── NOTES ── -->
   <div class="aside-tab-section" id="aside-notes" style="display:none">
@@ -1092,20 +1106,20 @@
     <!-- SCÉNARIOS -->
     <div class="section active" id="tab-scenarios">
   <div class="page-title">Scenarios</div>
-  <div class="page-tagline">Choissisez votre aventure</div>
+  <div class="page-tagline">Selectionnez un scenario pour l'ouvrir</div>
   <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px;max-width:600px;">
     <a href="scenario-ville-morte.html" style="display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;text-decoration:none;transition:border-color .15s,background .15s;" onmouseover="this.style.borderColor='var(--amber-dim)';this.style.background='var(--surface)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--card)'">
       <div style="flex:1;">
         <div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Campagne 01</div>
         <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;">La Ville Morte</div>
-        <div style="font-size:12px;color:var(--muted);">Lavanville est troublée depuis des mois. Les pokémons sauvages et de certains dresseurs disparaissent.</div>
+        <div style="font-size:12px;color:var(--muted);">12 chapitres &middot; 7 PNJ &middot; Lavanville</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
         <span style="font-family:var(--mono);font-size:10px;color:var(--safe);background:rgba(30,92,46,.15);border:1px solid rgba(30,92,46,.3);padding:2px 8px;border-radius:2px;">EN COURS</span>
         <span style="font-family:var(--mono);font-size:11px;color:var(--amber);">Ouvrir &#8594;</span>
       </div>
     </a>
-    <button onclick="openNewScenarioModal()" style="display:flex;align-items:center;justify-content:center;gap:10px;border:1px dashed var(--border);border-radius:var(--radius);padding:18px 22px;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.04em;width:100%;background:none;cursor:pointer;transition:border-color .15s,color .15s;" onmouseover="this.style.borderColor='var(--amber-dim)';this.style.color='var(--amber)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+        <button onclick="openNewScenarioModal()" style="display:flex;align-items:center;justify-content:center;gap:10px;border:1px dashed var(--border);border-radius:var(--radius);padding:18px 22px;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.04em;width:100%;background:none;cursor:pointer;transition:border-color .15s,color .15s;" onmouseover="this.style.borderColor='var(--amber-dim)';this.style.color='var(--amber)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
       <span style="font-size:16px;opacity:.6">+</span>&nbsp; Nouveau sc&eacute;nario
     </button>
   </div>
@@ -1113,7 +1127,7 @@
 
     <div class="section" id="tab-groupe">
   <div class="page-title">Le Groupe</div>
-  <div class="page-tagline">4 Dresseurs · Pokémon partenaires</div>
+  <div class="page-tagline">4 Dresseurs · Pokémon partenaires · Style Deadlands</div>
   <div class="pj-acc-list">
     
 <div class="pnj-card" id="pj-acc-1">
@@ -1166,7 +1180,7 @@
           <div class="edge-block"><div class="block-name"><span class="tag tag-background">Background</span> Réseau d'informateurs</div><div class="block-desc">1 fois par session : obtenir une info sur un personnage, lieu ou organisation. Jet Persuasion d10 diff. 4.</div></div><div class="edge-block"><div class="block-name"><span class="tag tag-background">Social</span> Attrait (Attractive)</div><div class="block-desc">+2 à Persuasion avec cibles sensibles au charme.</div></div><div class="edge-block"><div class="block-name"><span class="tag tag-background">Background</span> Mémoire photographique</div><div class="block-desc">Mémorise textes et détails visuels. +2 à Investigation sur documents.</div></div>
           <div class="hindrance-block"><div class="block-name"><span class="tag tag-majeur">Majeur</span> Têtue</div><div class="block-desc">Ne peut renoncer à une piste une fois lancée. Jet de Trempe d8 diff. 4 pour accepter de battre en retraite.</div></div><div class="hindrance-block"><div class="block-name"><span class="tag tag-mineur">Mineur</span> Sans le sou</div><div class="block-desc">Commence avec la moitié des fonds standard (250₽). Vit de ses contacts.</div></div>
           <div class="pj-team-strip" id="team-strip-causeuse"><span style="font-size:11px;color:var(--muted);font-style:italic">Cliquer Actualiser</span></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>A perdu son poste pour un article sur la corruption dans les tournois de Cramoisîle. Travaille en free-lance, vit de ses contacts qui lui donnes les sources les plus rentables.</em></p>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>A perdu son poste pour un article sur la corruption dans les tournois de Cramoisîle. Travaille en free-lance, vit de ses contacts.</em></p>
         </div>
       </div>
       
@@ -1184,7 +1198,7 @@
           <div class="edge-block"><div class="block-name"><span class="tag tag-background">Background</span> Vétérinaire Pokémon</div><div class="block-desc">+2 aux jets de Médecine Pokémon. Peut stabiliser un Pokémon à 0 PV en 1 round.</div></div><div class="edge-block"><div class="block-name"><span class="tag tag-background">Survie</span> Pisteur (Tracker)</div><div class="block-desc">Peut suivre une piste jusqu'à 24h. +2 à Survie en milieu naturel.</div></div><div class="edge-block"><div class="block-name"><span class="tag tag-background">Pokémon</span> Lien Profond (Noctali)</div><div class="block-desc">Noctali détecte les émotions hostiles dans un rayon de 30m. +2 à Perception (Notice) pour Téléra et Noctali en équipe.</div></div>
           <div class="hindrance-block"><div class="block-name"><span class="tag tag-majeur">Majeur</span> Protecteur compulsif</div><div class="block-desc">Ne peut pas laisser un Pokémon blessé ou en danger sans intervenir, même si ça compromet la mission. Jet de Trempe d10 diff. 6 pour s'y refuser.</div></div><div class="hindrance-block"><div class="block-name"><span class="tag tag-mineur">Mineur</span> Peur des Pokéball</div><div class="block-desc">Ne capture jamais de Pokémon sauvage. Refuse d'utiliser une Pokéball contre sa volonté.</div></div>
           <div class="pj-team-strip" id="team-strip-pisteur"><span style="font-size:11px;color:var(--muted);font-style:italic">Cliquer Actualiser</span></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ancien vétérinaire itinérant qui soignait les Pokémon sauvages. Elle perdu son agrément après avoir refusé d'euthanasier des Pokémon blessés sur ordre d'un consortium minier.</em></p>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ancien vétérinaire itinérant qui soignait les Pokémon sauvages. A perdu son agrément après avoir refusé d'euthanasier des Pokémon blessés sur ordre d'un consortium minier.</em></p>
         </div>
       </div>
       
@@ -1348,7 +1362,7 @@
           <div class="edge-block"><div class="block-name">Lien profond <span style="font-size:10px;font-weight:normal;color:var(--muted)">(1 fois / combat)</span></div><div class="block-desc">Transfère sa Trempe d10 au Pisteur pour ce round : le dresseur relance un jet de Trempe ou Vigueur raté et garde le meilleur. Si le dresseur est Secoué, le stabilise — mais Noctali subit une Secousse en retour (Trempe diff. 4 pour l'éviter).</div></div>
           <div class="edge-block"><div class="block-name">Empathie Négative — Contre PSI-B <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Actif)</span></div><div class="block-desc">Ressent le contrôle PSI-B comme douleur physique à 4". Action complète + Trempe d10 diff. 6 : émet une interférence → cible à 2" subit −2 à tous ses jets pendant 1d4 rounds. Combinée à l'Empathie Pokémon du Pisteur : fenêtre tactique unique contre le réacteur.</div></div>
           <div class="edge-block"><div class="block-name">Cicatrisation nocturne <span style="font-size:10px;font-weight:normal;color:var(--muted)">(Hors combat)</span></div><div class="block-desc">Immobile dans l'obscurité 10 min → jet Vigueur d8 diff. 4. Succès : récupère 1 Blessure. Une fois par scène de repos. Lumière directe ou bruit intense interrompent le processus.</div></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:10px"><em>Ce n'est pas un Pokémon de combat par nature. C'est un Pokémon de présence. Dans les galeries cette qualité vaut de l'or.</em></p>
+          <p style="font-size:12px;color:var(--muted);margin-top:10px"><em>Ce n'est pas un Pokémon de combat par nature. C'est un Pokémon de présence. Dans les galeries sous la Tour Pokémon, cette qualité vaut de l'or.</em></p>
         </div>
       </div>
     </div><div class="section" id="tab-pnj">
@@ -3025,52 +3039,6 @@
           </div>
         </div>
       </div>
-    
-      <div class="beast-cat-group" id="bgroup-alpha9">
-  <div class="beast-cat-title" style="border-top:2px solid #3a1010">Complexe Alpha-9 &mdash; Le Complexe Chim&egrave;re<span class="beast-count">4 cr&eacute;atures</span></div>
-  <div class="bestiary-grid">
-  <div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
-  <div class="beast-header"><div class="beast-name">Smogo &laquo;Sangsue&raquo;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha9</span> Poison &middot; Mutant &middot; Petit (-1) &middot; Extra</div></div>
-  <div class="beast-body">
-    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Poches de chair membraneuses et visqueuses. Rampent sur les plafonds et se laissent tomber sur leurs proies.</p>
-    <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">R&eacute;sistance <span>6</span></div><div class="stat-pill">Allure <span>4</span></div></div>
-    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Chute Embuscade</td><td class="atk-dmg">FOR+d4</td><td>Contact</td><td>Attaque surprise +2 Combat apr&egrave;s Discr&eacute;tion d8</td></tr><tr><td class="atk-name">Succion Toxique</td><td class="atk-dmg">1 Blessure/tour</td><td>Contact</td><td>Jet Vigueur ou blessure continue</td></tr></table>
-    <ul class="capa-list"><li><span class="capa-name">Discr&eacute;tion d8</span> : Se fondent dans les conduites. D&eacute;tection : Perception TN6.</li><li><span class="capa-name">Succion continue</span> : Accroch&eacute; &agrave; la cible jusqu'&agrave; arrachar&eacute; (Force oppos&eacute;e) ou KO.</li></ul>
-    <div class="tactique-block">Attaquent en groupes de 3-4. Chute Embuscade en premier round si plafond disponible. Fuient si Grotadmorv est neutralis&eacute;.</div>
-  </div>
-</div>
-  <div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
-  <div class="beast-header"><div class="beast-name">Grotadmorv &laquo;Amas Osseux&raquo;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha9</span> Poison &middot; Mutant &middot; Grand (+1) &middot; Joker de Zone</div></div>
-  <div class="beast-body">
-    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Masse de boue violette pars&eacute;m&eacute;e de cages thoraciques humaines et de d&eacute;bris industriels ac&eacute;r&eacute;s.</p>
-    <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d4</span></div><div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">R&eacute;sistance <span>9+2 armure</span></div><div class="stat-pill">Allure <span>3</span></div></div>
-    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Projectiles Shrapnel</td><td class="atk-dmg">2d6 (os + acier)</td><td>4&quot;/8&quot;/16&quot;</td><td>Tir d6 &mdash; zone d'&eacute;clats</td></tr><tr><td class="atk-name">Nuage D&eacute;composition</td><td class="atk-dmg">Jet Vigueur TN6</td><td>Contact</td><td>Secouu&eacute; par l'odeur au corps &agrave; corps</td></tr></table>
-    <ul class="capa-list"><li><span class="capa-name">Corps Amorphe</span> : Armes &agrave; feu perforantes : moiti&eacute; des d&eacute;g&acirc;ts seulement.</li><li><span class="capa-name">Armure d&eacute;bris</span> : +2 R&eacute;sistance gr&acirc;ce aux d&eacute;bris m&eacute;talliques absorb&eacute;s. Perd +1 par Blessure.</li></ul>
-    <div class="tactique-block">Gardien de zone du Hub des Conduites. Utilise Shrapnel &agrave; distance, reste immobile en attendant. Si les PJ restent &agrave; port&eacute;e de mêl&eacute;e : Nuage de D&eacute;composition en action bonus.</div>
-  </div>
-</div>
-  <div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
-  <div class="beast-header"><div class="beast-name">Nosferalto &laquo;&Eacute;corch&eacute;&raquo;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha9</span> Vol &middot; Mutant &middot; Petit (-1) &middot; Extra</div></div>
-  <div class="beast-body">
-    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Chauves-souris aveugles &agrave; la peau translucide. Canines s&eacute;cr&eacute;tant un anticoagulant synth&eacute;tique.</p>
-    <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">R&eacute;sistance <span>5</span></div><div class="stat-pill">Allure <span>2 sol / 8 vol</span></div></div>
-    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Morsure H&eacute;morragique</td><td class="atk-dmg">FOR+d4</td><td>M&ecirc;l&eacute;e</td><td>1 d&eacute;g&acirc;t/tour jusqu'&agrave; jet Soins r&eacute;ussi</td></tr><tr><td class="atk-name">Rugissement Parasite</td><td class="atk-dmg">—</td><td>Zone 3&quot;</td><td>Discr&eacute;tion d6 : attaque surprise si non d&eacute;tect&eacute;</td></tr></table>
-    <ul class="capa-list"><li><span class="capa-name">&Eacute;cholocation</span> : Ignore tous malus de visibilit&eacute; (obscurit&eacute;, brume). Lampes = avantage pour eux.</li><li><span class="capa-name">Anticoagulant</span> : H&eacute;morragie continue apr&egrave;s morsure. Jet de <em>Soins</em> TN4 pour stopper.</li></ul>
-    <div class="tactique-block">En essaims de 5-8 dans la Cryo-R&eacute;serve. &Eacute;teignez les lumi&egrave;res : ils ont l'avantage. Gardez les lumi&egrave;res : ils vous entendent venir de 10 cases.</div>
-  </div>
-</div>
-  <div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
-  <div class="beast-header"><div class="beast-name">La Chim&egrave;re &mdash; D&eacute;molosse Alpha</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha9</span> Ténèbres &middot; Normal &middot; Mutant Fusion &middot; Colossal (+4) &middot; BOSS JOKER</div></div>
-  <div class="beast-body">
-    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Masse de gel M&eacute;tamorph violet-noir fus&ioln;ionn&eacute;e avec un D&eacute;molosse Alpha. L'autel celte forme son c&oelig;ur.</p>
-    <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d12+2</span></div><div class="stat-pill">VIG <span>d12</span></div><div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">R&eacute;sistance <span>Variable (14+)</span></div><div class="stat-pill">Allure <span>6</span></div></div>
-    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Assimilation Imm&eacute;diate</td><td class="atk-dmg">Force oppos&eacute;</td><td>Contact</td><td>Enlise la cible &mdash; 2d6 corrosion/tour si &eacute;chec Force</td></tr><tr><td class="atk-name">Tir de Boue Toxique</td><td class="atk-dmg">3d6 + poison</td><td>10&quot;/20&quot;/40&quot;</td><td>Zone petite &mdash; Vigueur TN6 ou Empoisonn&eacute;</td></tr><tr><td class="atk-name">M&eacute;tamorphose Partielle</td><td class="atk-dmg">—</td><td>—</td><td>Change de forme chaque round &mdash; Jet Volont&eacute; TN6 pour ne pas &ecirc;tre Secouu&eacute; (Peur)</td></tr></table>
-    <ul class="capa-list"><li><span class="capa-name">Masse Assimilatrice</span> : R&eacute;sistance = 10 + N objets lourds absorb&eacute;s. D&eacute;marre &agrave; 14. Maximale possible : 20.</li><li><span class="capa-name">Vuln&eacute;rabilit&eacute; C&oelig;ur Celte</span> : Sciences TN-4 pour localiser. Attaque r&eacute;ussie : R&eacute;sistance r&eacute;duite &agrave; 8 d&eacute;finitivement.</li><li><span class="capa-name">Wild Die d12</span> : Joker Ultime &mdash; 3 Blessures. R&eacute;g&eacute;n&egrave;re 1 Blessure si Doom Track &ge; 5.</li></ul>
-    <div class="tactique-block">Priorit&eacute; : Assimiler les structures. Ne pas laisser les PJ d&eacute;truire les objets lourds. Si le c&oelig;ur celte est r&eacute;v&eacute;l&eacute; : attaque en priorit&eacute; l'Analyste. Tir de Boue sur les PJ qui restent &agrave; distance.</div>
-  </div>
-</div>
-  </div>
-</div>
     </div>
 
 <div class="section" id="tab-notes">
@@ -3100,7 +3068,8 @@
 function showTab(tab, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('#main-nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active'
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
   // Switcher le contenu de l'aside
   document.querySelectorAll('.aside-tab-section').forEach(s => s.style.display = 'none');
   const asideSection = document.getElementById('aside-' + tab);
@@ -3174,7 +3143,8 @@ function toggleAsideCampaign(id) {
 
 
 function filterBeast2(group, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
   const groups = {
     'sauvage': 'bgroup-sauvage',
     'psi':     'bgroup-psi',
@@ -3559,28 +3529,34 @@ function _addScenarioCard(title, sub, num, filename) {
 
 function filterBeast(cat, btn) {
   document.querySelectorAll('.filter-bar .filter-btn').forEach(function(b) { b.classList.remove('active'); });
-  if (btn) btn.classList.add('active');
+  btn.classList.add('active');
+  var pnjBar = document.getElementById('filter-pnj-bar');
   if (cat === 'all') {
     document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = ''; });
     document.querySelectorAll('.beast-card').forEach(function(c) { c.style.display = ''; });
+    if (pnjBar) pnjBar.classList.remove('active');
   } else if (cat === 'sc02') {
-    document.querySelectorAll('.beast-cat-group').forEach(function(g) {
-      g.style.display = g.id === 'bgroup-sc02' ? '' : 'none';
-    });
+    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = g.id === 'bgroup-sc02' ? '' : 'none'; });
+    if (pnjBar) pnjBar.classList.add('active');
+    filterByPnj('all', pnjBar ? pnjBar.querySelector('button') : null);
   } else {
-    document.querySelectorAll('.beast-cat-group').forEach(function(g) {
-      g.style.display = (g.id === 'bgroup-sc02' || g.id === 'bgroup-alpha9') ? 'none' : '';
-    });
+    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = g.id === 'bgroup-sc02' ? 'none' : ''; });
     document.querySelectorAll('.beast-card').forEach(function(c) {
       c.style.display = (c.dataset.cat === cat) ? '' : 'none';
     });
+    if (pnjBar) pnjBar.classList.remove('active');
   }
 }
 
+function filterByPnj(slug, btn) {
+  if (btn) {
+    document.querySelectorAll('#filter-pnj-bar .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+  }
   document.querySelectorAll('.beast-pnj-sub').forEach(function(s) {
     s.style.display = (slug === 'all' || s.id === 'bpnj-' + slug) ? '' : 'none';
   });
-
+}
 
 </script>
 
@@ -3617,7 +3593,17 @@ function filterBeast(cat, btn) {
           <button class="filter-btn" onclick="filterBeast('boss',this)">&#128128; Boss</button>
           <button class="filter-btn" onclick="filterBeast('sc02',this)">&#127942; Carmin s/ Mer</button>
         </div>
+        <div class="filter-bar-pnj" id="filter-pnj-bar">
+          <span style="font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.08em;align-self:center;">PAR PNJ :</span>
+          <button class="filter-btn" onclick="filterByPnj('all',this)">Tous</button>
+          <button class="filter-btn" onclick="filterByPnj('drevin',this)">Drevin</button>
+          <button class="filter-btn" onclick="filterByPnj('alban',this)">Alban</button>
+          <button class="filter-btn" onclick="filterByPnj('bob',this)">Major Bob</button>
+          <button class="filter-btn" onclick="filterByPnj('volt',this)">Volt</button>
+          <button class="filter-btn" onclick="filterByPnj('nessa',this)">Nessa</button>
+          <button class="filter-btn" onclick="filterByPnj('ondine',this)">Ondine</button>
         </div>
+      </div>
   </div>
 </div>
 </body>
