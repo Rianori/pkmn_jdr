@@ -969,6 +969,36 @@
   .mj-pnote-btn:hover{background:var(--amber);color:#1a1000;}
   .mj-pnote-ok{font-size:10px;color:var(--safe);display:none;}
   .mj-pnote-ok.on{display:inline;}
+
+  /* separateur scenario PNJ */
+  .pnj-scenario-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--amber-dim);
+  }
+  .pnj-scenario-header:first-child { margin-top: 0; }
+  .pnj-scenario-num {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    background: var(--amber-glow);
+    border: 1px solid var(--amber-dim);
+    border-radius: 2px;
+    padding: 3px 8px;
+    white-space: nowrap;
+  }
+  .pnj-scenario-name {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
 </style>
 </head>
 <body>
@@ -1013,20 +1043,25 @@
 
   <!-- ── PNJ ── -->
   <div class="aside-tab-section" id="aside-pnj" style="display:none">
-<div class="aside-group"><div class="aside-label">Alliés</div>
-<button onclick="scrollAndOpen('pnj-kaito')">Kaito Mura</button>
-<button onclick="scrollAndOpen('pnj-fil')">Fil — Polichombr</button>
-</div>
-<div class="aside-group"><div class="aside-label">Antagonistes</div>
-<button onclick="scrollAndOpen('pnj-holt')">Mira Holt</button>
-<button onclick="scrollAndOpen('pnj-ashford')">Directeur Ashford</button>
-</div>
-<div class="aside-group"><div class="aside-label">Extras</div>
-<button onclick="scrollAndOpen('pnj-agents')">Agents Ashford</button>
-<button onclick="scrollAndOpen('pnj-techniciens')">Techniciens</button>
-<button onclick="scrollAndOpen('pnj-torkel')">Garde Torkel</button>
-</div>
-</div>
+      <div class="aside-group"><div class="aside-label">Sc&eacute;nario 01 &mdash; La Ville Morte</div>
+        <button onclick="scrollAndOpen('pnj-kaito')">Kaito Mura</button>
+        <button onclick="scrollAndOpen('pnj-fil')">Fil &mdash; Polichombr</button>
+        <button onclick="scrollAndOpen('pnj-holt')">Mira Holt</button>
+        <button onclick="scrollAndOpen('pnj-ashford')">Directeur Ashford</button>
+        <button onclick="scrollAndOpen('pnj-agents')">Agents Ashford</button>
+        <button onclick="scrollAndOpen('pnj-techniciens')">Techniciens</button>
+        <button onclick="scrollAndOpen('pnj-torkel')">Garde Torkel</button>
+      </div>
+      <div class="aside-group"><div class="aside-label">Sc&eacute;nario 02 &mdash; Carmin sur Mer</div>
+        <button onclick="scrollAndOpen('pnj-drevin')">Marcus Drevin</button>
+        <button onclick="scrollAndOpen('pnj-alban')">Alban Drevin</button>
+        <button onclick="scrollAndOpen('pnj-bob')">Major Bob</button>
+        <button onclick="scrollAndOpen('pnj-volt')">Bastien Volt</button>
+        <button onclick="scrollAndOpen('pnj-nessa')">Kimara Nessa</button>
+        <button onclick="scrollAndOpen('pnj-ondine')">Ondine</button>
+        <button onclick="scrollAndOpen('pnj-roux')">Emile Roux</button>
+      </div>
+    </div>
     <div class="aside-tab-section" id="aside-bestiaire" style="display:none">
     <div class="aside-group"><div class="aside-label">Catégories</div>
       <button onclick="filterBeastAside('all')">Tous (65)</button>
@@ -1324,10 +1359,11 @@
       </div>
     </div><div class="section" id="tab-pnj">
       <div class="page-title">Fiches PNJ</div>
-      <div class="page-tagline">La Ville Morte &middot; 7 personnages</div>
-      <div style="margin-top:20px;">
-        <div class="section-title" style="margin-bottom:12px">Alli&eacute;s &mdash; Jokers</div>
-        <div class="pnj-card" id="pnj-kaito">
+      <div class="page-tagline">Organis&eacute;es par sc&eacute;nario</div>
+
+      <div class="pnj-scenario-header"><span class="pnj-scenario-num">Sc&eacute;nario 01</span><span class="pnj-scenario-name">La Ville Morte</span></div>
+      <div class="section-title" style="margin-bottom:12px">Alli&eacute;s &mdash; Jokers</div>
+      <div class="pnj-card" id="pnj-kaito">
         <div class="pnj-header" onclick="togglePnj('pnj-kaito')">
           <div><div class="pnj-name">Kaito Mura <span class="tag tag-edge">Joker allié</span></div><div class="pnj-role">Inspecteur indépendant — présent tout au long du scénario</div></div>
           <span class="chapter-chevron">▶</span>
@@ -1375,7 +1411,6 @@
           <div class="hindrance-block" style="margin-top:10px"><div class="block-name">⚠ Ch. 9 — Harnais réacteur</div><div class="block-desc">Branché depuis 6h. Au-delà de 8h : désintégration permanente des fils. Le Groupe a 2h de marge. Extraction = jet Vigueur ou Électronique diff. 6 (échec = 2d4 dégâts électriques, Fil déconnecté quand même).</div></div>
         </div>
       </div>
-
       <div class="section-title" style="margin:20px 0 12px">Antagonistes &mdash; Jokers</div>
       <div class="pnj-card" id="pnj-holt">
         <div class="pnj-header" onclick="togglePnj('pnj-holt')">
@@ -1419,7 +1454,6 @@
           <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne peut pas être confronté directement avant l'Acte IV. Se dérobe toujours avec une couverture légale. Seule une publication médiatique peut le neutraliser.</em></p>
         </div>
       </div>
-
       <div class="section-title" style="margin:20px 0 12px">Extras</div>
       <div class="pnj-card" id="pnj-agents">
         <div class="pnj-header" onclick="togglePnj('pnj-agents')">
@@ -1471,8 +1505,113 @@
           <p style="font-size:12px;color:var(--muted)"><em>Aucun Pokémon (le sien est mort dans le réacteur — sa Pokéball vide est dans sa poche). N'attaque les PJ que si directement ordonné. Déclencheur : un PJ remarque la Pokéball vide et pose la question. Jet Trempe d6 — succès : il coopère discrètement.</em></p>
         </div>
       </div>
+
+      <div class="pnj-scenario-header"><span class="pnj-scenario-num">Sc&eacute;nario 02</span><span class="pnj-scenario-name">Le Grand Tournoi de Carmin sur Mer</span></div>
+      <div class="section-title" style="margin-bottom:12px">Antagonistes</div>
+      <div class="pnj-card" id="pnj-drevin">
+        <div class="pnj-header" onclick="togglePnj('pnj-drevin')">
+          <div><div class="pnj-name">Marcus Drevin <span class="tag tag-majeur">Joker antagoniste</span></div><div class="pnj-role">Organisateur du tournoi &mdash; chef du r&eacute;seau de paris</div></div>
+          <span class="chapter-chevron">&#9654;</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline"><div class="stat-pill">Agilit&eacute; <span>d6</span></div><div class="stat-pill">&Acirc;me <span>d10</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Intellect <span>d10</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">R&eacute;sistance <span>5</span></div><div class="stat-pill">Allure <span>6</span></div><div class="stat-pill">Charisme <span>+2</span></div><div class="stat-pill">Blessures <span>3</span></div></div>
+          <div class="stat-block" style="margin-bottom:12px"><div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Conn. Milieu Criminel</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Subter&shy;fuge</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d4</span></div><div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d8</span></div></div>
+<div class="edge-block"><div class="block-name">Charismatique</div><div class="block-desc">+2 Charisme. Inspire confiance instinctivement.</div><div class="block-name">T&ecirc;te Froide</div><div class="block-desc">Relance les jets d'&Acirc;me contre la Peur et la Secousse.</div><div class="block-name">Riche</div><div class="block-desc">Ressources financi&egrave;res importantes &mdash; contacts dans trois r&eacute;gions.</div><div class="block-name">Chef</div><div class="block-desc">Alli&eacute;s dans 5 cases : +1 aux jets de moral.</div><div class="block-name">Connexions</div><div class="block-desc">Peut appeler un contact influent une fois par session.</div></div>
+<div class="hindrance-block"><div class="block-name">Arrogance [Mineur]</div><div class="block-desc">Difficult&eacute;s &agrave; reconna&icirc;tre ses erreurs face &agrave; ses inf&eacute;rieurs.</div></div><div class="hindrance-block"><div class="block-name">Loyal [Mineur]</div><div class="block-desc">Ne sacrifierait jamais son fr&egrave;re Alban &mdash; point aveugle exploitable.</div></div><div class="hindrance-block"><div class="block-name">V&oelig;u (r&eacute;seau) [Majeur]</div><div class="block-desc">Ne peut laisser le r&eacute;seau &ecirc;tre expos&eacute; &mdash; objectif absolu.</div></div>
+<div class="edge-block" style="margin-top:8px"><div class="block-name">Equipement</div><div class="block-desc">Terminal chiffr&eacute; (preuves) &middot; Badge Ligue Indigo &middot; Pok&eacute;balls x3 (Noctali, Togekiss) &middot; Billet ferry vers les &Icirc;les Sevii</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ancien fonctionnaire de la Ligue Indigo. Froid, m&eacute;thodique, jamais en col&egrave;re visible. Ne se bat jamais directement &mdash; contr&ocirc;le l'environnement et fuit si n&eacute;cessaire. En fuite d&egrave;s la 1re Blessure.</em></p>
+        </div>
       </div>
+      <div class="pnj-card" id="pnj-alban">
+        <div class="pnj-header" onclick="togglePnj('pnj-alban')">
+          <div><div class="pnj-name">Alban Drevin <span class="tag tag-majeur">Extra antagoniste</span></div><div class="pnj-role">Fr&egrave;re jumeau &mdash; faux arbitre &mdash; ex&eacute;cutant</div></div>
+          <span class="chapter-chevron">&#9654;</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline"><div class="stat-pill">Agilit&eacute; <span>d8</span></div><div class="stat-pill">&Acirc;me <span>d6</span></div><div class="stat-pill">Force <span>d8</span></div><div class="stat-pill">Intellect <span>d6</span></div><div class="stat-pill">Vigueur <span>d8</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">R&eacute;sistance <span>6</span></div><div class="stat-pill">Allure <span>6</span></div><div class="stat-pill">Charisme <span>0</span></div><div class="stat-pill">Blessures <span>1*</span></div></div>
+          <div class="stat-block" style="margin-bottom:12px"><div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Subter&shy;fuge</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Athl&eacute;tisme</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d6</span></div></div>
+<div class="edge-block"><div class="block-name">Ambidextre</div><div class="block-desc">Pas de malus main non-directrice au corps &agrave; corps.</div><div class="block-name">Combat Farouche</div><div class="block-desc">Reroll un d&eacute; de d&eacute;g&acirc;ts une fois par attaque.</div><div class="block-name">Sosie (Marcus)</div><div class="block-desc">En tenue d'arbitre : Subter&shy;fuge d8 pour se faire passer pour son fr&egrave;re.</div></div>
+<div class="hindrance-block"><div class="block-name">Impulsif [Mineur]</div><div class="block-desc">Jet d'&Acirc;me TN8 pour ne pas r&eacute;agir &agrave; une provocation.</div></div><div class="hindrance-block"><div class="block-name">Loyal (Marcus) [Mineur]</div><div class="block-desc">Ne peut agir d&eacute;lib&eacute;r&eacute;ment contre les int&eacute;r&ecirc;ts de son fr&egrave;re.</div></div><div class="hindrance-block"><div class="block-name">Honteux [Mineur]</div><div class="block-desc">Vit dans l'ombre de Marcus &mdash; sensible aux remarques sur ce sujet.</div></div>
+<div class="edge-block" style="margin-top:8px"><div class="block-name">Equipement</div><div class="block-desc">Tenue d'arbitre officielle &middot; Pok&eacute;balls x2 (Mackogneur, M&eacute;tamorph) &middot; &Eacute;metteur radio ligne directe Marcus</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Sosie physique parfait de Marcus &mdash; seule diff&eacute;rence : cravate bleue (Marcus porte le rouge). Plus impulsif, plus direct, moins strat&egrave;ge. Tombe sur une seule Blessure significative. Fuit si Mackogneur est KO.</em></p>
+        </div>
+      </div>
+      <div class="section-title" style="margin:20px 0 12px">Alli&eacute;s potentiels</div>
+      <div class="pnj-card" id="pnj-bob">
+        <div class="pnj-header" onclick="togglePnj('pnj-bob')">
+          <div><div class="pnj-name">Major Bob <span class="tag tag-edge">Joker alli&eacute;</span></div><div class="pnj-role">Champion d'Ar&egrave;ne de Carmin sur Mer &mdash; alli&eacute; potentiel</div></div>
+          <span class="chapter-chevron">&#9654;</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline"><div class="stat-pill">Agilit&eacute; <span>d6</span></div><div class="stat-pill">&Acirc;me <span>d8</span></div><div class="stat-pill">Force <span>d10</span></div><div class="stat-pill">Intellect <span>d8</span></div><div class="stat-pill">Vigueur <span>d10</span></div><div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">R&eacute;sistance <span>9</span></div><div class="stat-pill">Allure <span>6</span></div><div class="stat-pill">Charisme <span>-1</span></div><div class="stat-pill">Blessures <span>3</span></div></div>
+          <div class="stat-block" style="margin-bottom:12px"><div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Commandement</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Athl&eacute;tisme</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Conn. Tactique Militaire</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Tir</span><span class="stat-val">d6</span></div></div>
+<div class="edge-block"><div class="block-name">M&acirc;choire d'Acier</div><div class="block-desc">Relance les jets d'Encaissement.</div><div class="block-name">Chef (am&eacute;lior&eacute;)</div><div class="block-desc">Alli&eacute;s dans 5 cases : +1 &agrave; tous jets de Trait en combat.</div><div class="block-name">Brute</div><div class="block-desc">Utilise Force &agrave; la place d'Agilit&eacute; pour Athl&eacute;tisme.</div><div class="block-name">V&eacute;t&eacute;ran de Guerre</div><div class="block-desc">Immunit&eacute; &agrave; la Peur en contexte militaire.</div><div class="block-name">Lien Pok&eacute;mon (Raichu)</div><div class="block-desc">Raichu agit en bonus d'action sans malus.</div></div>
+<div class="hindrance-block"><div class="block-name">Arrogance [Mineur]</div><div class="block-desc">Sous-estime les challengers ch&eacute;tifs &mdash; 1er round en Distrait.</div></div><div class="hindrance-block"><div class="block-name">Code d'Honneur [Majeur]</div><div class="block-desc">Ne frappe jamais quelqu'un de d&eacute;sarm&eacute;. Ne trahit jamais un accord.</div></div><div class="hindrance-block"><div class="block-name">Loyal (Kanto) [Mineur]</div><div class="block-desc">Ne peut ignorer une menace pour Carmin sur Mer.</div></div>
+<div class="edge-block" style="margin-top:8px"><div class="block-name">Equipement</div><div class="block-desc">Veste militaire renforc&eacute;e (Armure +1) &middot; Pok&eacute;balls x3 (Raichu, &Eacute;lectrode, Voltorbe) &middot; Cl&eacute;s de l'Ar&egrave;ne &middot; Radio Ligue Kanto</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ancien lieutenant de l'arm&eacute;e d'Unys. Bourru en surface, juste en profondeur. Devient un alli&eacute; redoutable si les PJ le respectent et lui parlent droit.</em></p>
+        </div>
+      </div>
+      <div class="pnj-card" id="pnj-volt">
+        <div class="pnj-header" onclick="togglePnj('pnj-volt')">
+          <div><div class="pnj-name">Bastien Volt <span class="tag tag-edge">Joker alli&eacute;</span></div><div class="pnj-role">Champion sortant &mdash; alli&eacute; compliqu&eacute;</div></div>
+          <span class="chapter-chevron">&#9654;</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline"><div class="stat-pill">Agilit&eacute; <span>d8</span></div><div class="stat-pill">&Acirc;me <span>d8</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Intellect <span>d10</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">R&eacute;sistance <span>5</span></div><div class="stat-pill">Allure <span>6</span></div><div class="stat-pill">Charisme <span>+1</span></div><div class="stat-pill">Blessures <span>3</span></div></div>
+          <div class="stat-block" style="margin-bottom:12px"><div class="stat-row"><span class="stat-name">Dressage Pok&eacute;mon</span><span class="stat-val">d12</span></div><div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Subter&shy;fuge</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Conn. Pok&eacute;mon</span><span class="stat-val">d10</span></div></div>
+<div class="edge-block"><div class="block-name">Lien Pok&eacute;mon (&Eacute;lecthor)</div><div class="block-desc">&Eacute;lecthor agit en action bonus sans malus multi-actions.</div><div class="block-name">Analyste</div><div class="block-desc">Analyse forces/faiblesses d'un adversaire en 1 round (Intellect d10).</div><div class="block-name">Sang-Froid</div><div class="block-desc">Immunit&eacute; &agrave; la Peur. Relance jets d'&Acirc;me contre effets mentaux.</div><div class="block-name">Strat&egrave;ge</div><div class="block-desc">1x/combat : octroie +2 &agrave; un alli&eacute; sur son prochain jet.</div></div>
+<div class="hindrance-block"><div class="block-name">Orgueil [Majeur]</div><div class="block-desc">Ne peut accepter d'aide sans jet d'&Acirc;me TN6. Peut refuser des alli&eacute;s.</div></div><div class="hindrance-block"><div class="block-name">Code (victoire propre) [Mineur]</div><div class="block-desc">Physiquement incapable de tricher &mdash; m&ecirc;me tactiquement.</div></div><div class="hindrance-block"><div class="block-name">Secret (r&eacute;seau) [Majeur]</div><div class="block-desc">Poss&egrave;de des preuves sur Drevin mais refuse de les livrer avant 'le bon moment'.</div></div>
+<div class="edge-block" style="margin-top:8px"><div class="block-name">Equipement</div><div class="block-desc">Disque dur chiffr&eacute; (preuves sur Drevin) &middot; Pok&eacute;balls x3 (&Eacute;lecthor, Amphinobi, Dracolosse) &middot; Badge Champion</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Meilleur dresseur de sa r&eacute;gion. Orgueilleux, strat&egrave;ge, calculateur. Conna&icirc;t le r&eacute;seau Drevin depuis 18 mois et s'est servi des PJ sans les avertir. Son arc : comprendre que la victoire solitaire n'existe pas.</em></p>
+        </div>
+      </div>
+      <div class="pnj-card" id="pnj-nessa">
+        <div class="pnj-header" onclick="togglePnj('pnj-nessa')">
+          <div><div class="pnj-name">Kimara Nessa <span class="tag tag-edge">Joker alli&eacute;e</span></div><div class="pnj-role">Ancienne analyste du r&eacute;seau &mdash; informatrice conditionnelle</div></div>
+          <span class="chapter-chevron">&#9654;</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline"><div class="stat-pill">Agilit&eacute; <span>d10</span></div><div class="stat-pill">&Acirc;me <span>d6</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Intellect <span>d10</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">R&eacute;sistance <span>5</span></div><div class="stat-pill">Allure <span>7</span></div><div class="stat-pill">Charisme <span>+0</span></div><div class="stat-pill">Blessures <span>3</span></div></div>
+          <div class="stat-block" style="margin-bottom:12px"><div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Subter&shy;fuge</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Discr&eacute;tion</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Piratage</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Athl&eacute;tisme</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d6</span></div></div>
+<div class="edge-block"><div class="block-name">Voleur</div><div class="block-desc">+2 Subter&shy;fuge, Discr&eacute;tion et Crochetage. Reroll si rat&eacute;.</div><div class="block-name">Hacker</div><div class="block-desc">Pirate des syst&egrave;mes num&eacute;riques avec Piratage d10 (action standard).</div><div class="block-name">Esquive</div><div class="block-desc">Les attaquants souffrent d'un malus -1 pour la toucher.</div><div class="block-name">Pied L&eacute;ger</div><div class="block-desc">Allure +1, jamais de trace laiss&eacute;e sans jet TN4.</div></div>
+<div class="hindrance-block"><div class="block-name">M&eacute;fiant [Majeur]</div><div class="block-desc">Ne fait confiance &agrave; personne sans jet d'&Acirc;me TN6.</div></div><div class="hindrance-block"><div class="block-name">Ennemi (r&eacute;seau) [Majeur]</div><div class="block-desc">Les bookmakers des &Icirc;les Sevii la cherchent activement.</div></div><div class="hindrance-block"><div class="block-name">Identit&eacute; fausse [Mineur]</div><div class="block-desc">Son vrai dossier est vide &mdash; avantage et vuln&eacute;rabilit&eacute;.</div></div>
+<div class="edge-block" style="margin-top:8px"><div class="block-name">Equipement</div><div class="block-desc">Copies de 47 dossiers (arme de pression) &middot; Outil de piratage (+2 syst&egrave;mes Ligue) &middot; Fausse accr&eacute;ditation VIP &middot; Pok&eacute;balls x2 (Porygon-Z, Bras&eacute;gali)</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Son vrai nom n'est pas Kimara Nessa. Conna&icirc;t tout de l'int&eacute;rieur &mdash; y compris les failles du Porygon2. Aide les PJ uniquement si &ccedil;a sert son objectif. Fuit sans h&eacute;siter. Revient si les PJ ont avanc&eacute; sans elle.</em></p>
+        </div>
+      </div>
+      <div class="pnj-card" id="pnj-ondine">
+        <div class="pnj-header" onclick="togglePnj('pnj-ondine')">
+          <div><div class="pnj-name">Ondine <span class="tag tag-psi">Joker PNJ</span></div><div class="pnj-role">Championne d'Ar&egrave;ne d'Azuria &mdash; sp&eacute;cialiste Type Eau</div></div>
+          <span class="chapter-chevron">&#9654;</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline"><div class="stat-pill">Agilit&eacute; <span>d8</span></div><div class="stat-pill">&Acirc;me <span>d10</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Intellect <span>d8</span></div><div class="stat-pill">Vigueur <span>d8</span></div><div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">R&eacute;sistance <span>6</span></div><div class="stat-pill">Allure <span>7</span></div><div class="stat-pill">Charisme <span>+2</span></div><div class="stat-pill">Blessures <span>3</span></div></div>
+          <div class="stat-block" style="margin-bottom:12px"><div class="stat-row"><span class="stat-name">Dressage Pok&eacute;mon</span><span class="stat-val">d12</span></div><div class="stat-row"><span class="stat-name">Natation</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Conn. Pok&eacute;mon Eau</span><span class="stat-val">d12</span></div><div class="stat-row"><span class="stat-name">Commandement</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Athl&eacute;tisme</span><span class="stat-val">d8</span></div></div>
+<div class="edge-block"><div class="block-name">Lien Pok&eacute;mon (Lokhlass)</div><div class="block-desc">Lokhlass agit en action bonus sans malus multi-actions.</div><div class="block-name">Charismatique</div><div class="block-desc">+2 Charisme. Inspire respect imm&eacute;diat des dresseurs.</div><div class="block-name">Sens de l'Eau</div><div class="block-desc">En terrain aquatique ou portuaire : +2 Perception et Athl&eacute;tisme.</div><div class="block-name">Commandement (am&eacute;lior&eacute;)</div><div class="block-desc">Alli&eacute;s dans 5 cases : +1 &agrave; tous jets de Trait.</div><div class="block-name">T&eacute;moin Officiel</div><div class="block-desc">Son t&eacute;moignage devant la Ligue Kanto a valeur juridique rang +2.</div></div>
+<div class="hindrance-block"><div class="block-name">Directe [Mineur]</div><div class="block-desc">Incapable de diplomatie ambigu&euml; &mdash; dit ce qu'elle pense.</div></div><div class="hindrance-block"><div class="block-name">Orgueil (doux) [Mineur]</div><div class="block-desc">N'admet pas avoir besoin d'aide mais peut l'accepter si formul&eacute; comme collaboration.</div></div><div class="hindrance-block"><div class="block-name">Responsabilit&eacute; (Ar&egrave;ne) [Mineur]</div><div class="block-desc">Ses s&oelig;urs gardent l'Ar&egrave;ne d'Azuria &mdash; ne peut s'absenter ind&eacute;finiment.</div></div>
+<div class="edge-block" style="margin-top:8px"><div class="block-name">Equipement</div><div class="block-desc">Badge Cascade &middot; Pok&eacute;balls x4 (Lokhlass, Staross, Maraiste, Togepi) &middot; Combinaison de plong&eacute;e &middot; Sifflet Pok&eacute;mon Eau</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Championne d'Ar&egrave;ne d'Azuria, Badge Cascade. &Agrave; bord de l'Oc&eacute;ane en transit vers Johto. N'intervient qu'&agrave; sa discr&eacute;tion (Persuasion TN8 + argument valide). Son t&eacute;moignage final est une carte narrative &agrave; conserver pour la fin du sc&eacute;nario.</em></p>
+        </div>
+      </div>
+      <div class="section-title" style="margin:20px 0 12px">T&eacute;moin cl&eacute;</div>
+      <div class="pnj-card" id="pnj-roux">
+        <div class="pnj-header" onclick="togglePnj('pnj-roux')">
+          <div><div class="pnj-name">Emile Roux <span class="tag tag-background">Extra</span></div><div class="pnj-role">Pr&eacute;parateur officiel &mdash; pion sous contrainte &mdash; t&eacute;moin cl&eacute;</div></div>
+          <span class="chapter-chevron">&#9654;</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline"><div class="stat-pill">Agilit&eacute; <span>d4</span></div><div class="stat-pill">&Acirc;me <span>d6</span></div><div class="stat-pill">Force <span>d4</span></div><div class="stat-pill">Intellect <span>d6</span></div><div class="stat-pill">Vigueur <span>d4</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">R&eacute;sistance <span>4</span></div><div class="stat-pill">Allure <span>5</span></div><div class="stat-pill">Charisme <span>0</span></div><div class="stat-pill">Blessures <span>1*</span></div></div>
+          <div class="stat-block" style="margin-bottom:12px"><div class="stat-row"><span class="stat-name">Soins Pok&eacute;mon</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d4</span></div><div class="stat-row"><span class="stat-name">Discr&eacute;tion</span><span class="stat-val">d4</span></div><div class="stat-row"><span class="stat-name">Conn. Nutrition Pok&eacute;mon</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d6</span></div></div>
+<div class="edge-block"><div class="block-name">Expert (Nutrition)</div><div class="block-desc">Relance jets de Conn. Nutrition. Identifie tout dosage dans une ration.</div><div class="block-name">Journal D&eacute;taill&eacute;</div><div class="block-desc">3 ans de preuves document&eacute;es. Valeur narrative majeure.</div></div>
+<div class="hindrance-block"><div class="block-name">Peur (Drevin) [Majeur]</div><div class="block-desc">Jet d'&Acirc;me TN8 pour agir contre Drevin sans garantie de protection.</div></div><div class="hindrance-block"><div class="block-name">Responsabilit&eacute; (L&eacute;a) [Majeur]</div><div class="block-desc">Ne prend aucune d&eacute;cision mettant sa fille en danger suppl&eacute;mentaire.</div></div><div class="hindrance-block"><div class="block-name">Traumatis&eacute; [Mineur]</div><div class="block-desc">Malus -1 &agrave; tous jets d'&Acirc;me en pr&eacute;sence d'agents du r&eacute;seau.</div></div>
+<div class="edge-block" style="margin-top:8px"><div class="block-name">Equipement</div><div class="block-desc">Sacoche double fond (journal) &middot; Cl&eacute;s cuisine de service &middot; T&eacute;l&eacute;phone chiffr&eacute; ligne Drevin</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>54 ans, visage creus&eacute;, mains tremblantes. Pr&eacute;parateur Ligue Kanto depuis 17 ans. Sous contrainte depuis 3 ans. Ne combat pas. Attend que quelqu'un puisse vraiment aider L&eacute;a. Extra non-combattant &mdash; &eacute;limin&eacute; &agrave; la premi&egrave;re confrontation physique.</em></p>
+        </div>
+      </div>
+
     </div>
+
+    
 
     <div class="section" id="tab-bestiaire">
   <div class="page-title">Bestiaire</div>
