@@ -999,6 +999,11 @@
     font-weight: 600;
     color: var(--text);
   }
+
+  /* filtre PNJ bestiaire */
+  .filter-bar-pnj { display:none; flex-wrap:wrap; gap:6px; margin-top:8px; padding-top:8px; border-top:1px solid var(--border); }
+  .filter-bar-pnj.active { display:flex; }
+  .beast-pnj-sub { transition:opacity .15s; }
 </style>
 </head>
 <body>
@@ -1063,22 +1068,25 @@
       </div>
     </div>
     <div class="aside-tab-section" id="aside-bestiaire" style="display:none">
-    <div class="aside-group"><div class="aside-label">Catégories</div>
-      <button onclick="filterBeastAside('all')">Tous (65)</button>
-      <button onclick="filterBeastAside('sauvage')">🌿 Sauvages (32)</button>
-      <button onclick="filterBeastAside('psi')">🔴 PSI-B (7)</button>
-      <button onclick="filterBeastAside('allies')">🔵 Alliés (8)</button>
-      <button onclick="filterBeastAside('elites')">🟣 Élites (10)</button>
-      <button onclick="filterBeastAside('boss')">💀 Boss (8)</button>
+      <div class="aside-group"><div class="aside-label">Filtres</div>
+        <button onclick="filterBeast('all',this)">Tous</button>
+        <button onclick="filterBeast('sauvage',this)">Sauvages</button>
+        <button onclick="filterBeast('psi',this)">PSI-B</button>
+        <button onclick="filterBeast('allies',this)">Alli&eacute;s</button>
+        <button onclick="filterBeast('elites',this)">&Eacute;lites</button>
+        <button onclick="filterBeast('boss',this)">Boss</button>
+        <button onclick="filterBeast('sc02',this)">Carmin s/ Mer</button>
+      </div>
+      <div class="aside-group"><div class="aside-label">Par PNJ (Sc. 02)</div>
+        <button onclick="filterByPnj('all',this)">Tous</button>
+        <button onclick="filterByPnj('drevin',this)">Drevin</button>
+        <button onclick="filterByPnj('alban',this)">Alban</button>
+        <button onclick="filterByPnj('bob',this)">Major Bob</button>
+        <button onclick="filterByPnj('volt',this)">Volt</button>
+        <button onclick="filterByPnj('nessa',this)">Nessa</button>
+        <button onclick="filterByPnj('ondine',this)">Ondine</button>
+      </div>
     </div>
-    <div class="aside-group"><div class="aside-label">Groupes</div>
-      <button onclick="scrollToEl('bgroup-sauvage')">Sauvages</button>
-      <button onclick="scrollToEl('bgroup-psi')">PSI-B</button>
-      <button onclick="scrollToEl('bgroup-allies')">Alliés</button>
-      <button onclick="scrollToEl('bgroup-elites')">Élites</button>
-      <button onclick="scrollToEl('bgroup-boss')">Boss</button>
-    </div>
-  </div>
 
   <!-- ── NOTES ── -->
   <div class="aside-tab-section" id="aside-notes" style="display:none">
@@ -2867,7 +2875,171 @@
 </div>
   </div>
 
-</div>
+
+      <div class="beast-cat-group" id="bgroup-sc02">
+        <div class="beast-cat-title" style="border-top:2px solid var(--amber-dim)">Sc&eacute;nario 02 &mdash; Le Grand Tournoi de Carmin sur Mer<span class="beast-count">13 Pok&eacute;mon</span></div>
+        <div class="beast-pnj-sub" id="bpnj-drevin" style="margin-bottom:16px">
+          <div style="font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 0 5px;border-bottom:1px solid var(--border);margin-bottom:8px;">Drevin (Noctali, Togekiss)</div>
+          <div class="bestiary-grid">
+          <div class="beast-card cat-sc02" data-cat="sc02" data-pnj="drevin" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Noctali (Drevin)</div><div class="beast-meta"><span class="tag tag-sc02">Sc02</span> T&eacute;n&egrave;bres &middot; Moyen &middot; Extra &middot; Pok&eacute;mon de Drevin</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Agit sur ordre explicite uniquement. Fuit si Drevin est neutralis&eacute;.</p>
+            <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>5</span></div></div>
+            <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Tranche-Nuit</td><td class="atk-dmg">FOR+d6</td><td>M&ecirc;l&eacute;e</td><td>Combat d8</td></tr><tr><td class="atk-name">M&acirc;chouille</td><td class="atk-dmg">FOR+d8</td><td>M&ecirc;l&eacute;e</td><td>Chance de Secousse</td></tr><tr><td class="atk-name">Rugissement</td><td class="atk-dmg">Intimidation d8</td><td>Zone 3&quot;</td><td>Cible Secouu&eacute;e si &eacute;chec &Acirc;me</td></tr><tr><td class="atk-name">Faux-Chage</td><td class="atk-dmg">&mdash;</td><td>&mdash;</td><td>Retraite sans jet de d&eacute;sengagement</td></tr></table>
+            <ul class="capa-list"><li><span class="capa-name">Loyaut&eacute; absolue</span> : Ne combat jamais de sa propre initiative &mdash; attend l'ordre de Drevin.</li></ul>
+            <div class="tactique-block">R&ocirc;le de dissuasion sociale. En sc&egrave;ne de n&eacute;gociation, sa pr&eacute;sence seule donne -1 aux jets de Persuasion contre Drevin.</div>
+          </div>
+        </div>
+          <div class="beast-card cat-sc02" data-cat="sc02" data-pnj="drevin" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Togekiss (Drevin)</div><div class="beast-meta"><span class="tag tag-sc02">Sc02</span> F&eacute;e &middot; Vol &middot; Moyen &middot; Extra &middot; Pok&eacute;mon de Drevin</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">R&ocirc;le d'image en sc&egrave;ne sociale. Uniquement en combat si Drevin est acculé.</p>
+            <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d4</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>5</span></div></div>
+            <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Vent Sacr&eacute;</td><td class="atk-dmg">2d6</td><td>Zone 2x2</td><td>Chance de Secouer</td></tr><tr><td class="atk-name">Charme</td><td class="atk-dmg">Persuasion d10</td><td>Vue 6&quot;</td><td>Cible fait une action au choix de Drevin (r&eacute;sistance &Acirc;me)</td></tr><tr><td class="atk-name">Soin</td><td class="atk-dmg">Gu&eacute;rison d8</td><td>Contact</td><td>Retire 1 Blessure alli&eacute; &mdash; 1x/combat par cible</td></tr></table>
+            <ul class="capa-list"><li><span class="capa-name">Outil diplomatique</span> : En sc&egrave;ne sociale, +1 Charisme &agrave; Drevin si Togekiss est visible.</li></ul>
+            <div class="tactique-block">Sort&eacute; en dernier recours. Si Drevin s'enfuit, Togekiss couvre la retraite avec Vent Sacr&eacute; en zone.</div>
+          </div>
+        </div>
+          </div>
+        </div>
+        <div class="beast-pnj-sub" id="bpnj-alban" style="margin-bottom:16px">
+          <div style="font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 0 5px;border-bottom:1px solid var(--border);margin-bottom:8px;">Alban Drevin (Mackogneur, M&eacute;tamorph)</div>
+          <div class="bestiary-grid">
+          <div class="beast-card cat-sc02" data-cat="sc02" data-pnj="alban" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Mackogneur (Alban)</div><div class="beast-meta"><span class="tag tag-sc02">Sc02</span> Normal &middot; Grand (+1) &middot; Extra &middot; Pok&eacute;mon d'Alban Drevin</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Tank. S'arr&ecirc;te si Alban est neutralis&eacute; ou hors de port&eacute;e de voix.</p>
+            <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>9</span></div></div>
+            <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">M&eacute;gapoing</td><td class="atk-dmg">FOR+d8</td><td>M&ecirc;l&eacute;e</td><td>Peut Secouer m&ecirc;me sur succ&egrave;s simple</td></tr><tr><td class="atk-name">Poing-&Eacute;clair</td><td class="atk-dmg">FOR+d6</td><td>M&ecirc;l&eacute;e</td><td>Combat d10, initiative +2 ce tour</td></tr><tr><td class="atk-name">Intimidation</td><td class="atk-dmg">Intimidation d8</td><td>Zone 3&quot;</td><td>-2 Parade adverse 1 round</td></tr><tr><td class="atk-name">Corps-&agrave;-Corps</td><td class="atk-dmg">FOR+d6 bonus</td><td>M&ecirc;l&eacute;e</td><td>Si Secousse sur cible, d6 bonus auto</td></tr></table>
+            <ul class="capa-list"><li><span class="capa-name">Robustesse 9</span> : Absorbe des coups massifs. Priorit&eacute; : contr&ocirc;ler les PJ sans les tuer.</li></ul>
+            <div class="tactique-block">Objectif : bloquer les PJ physiquement, pas les &eacute;liminer. Si Alban ordonne une retraite, Mackogneur couvre en dernier.</div>
+          </div>
+        </div>
+          <div class="beast-card cat-sc02" data-cat="sc02" data-pnj="alban" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">M&eacute;tamorph (Alban)</div><div class="beast-meta"><span class="tag tag-sc02">Sc02</span> Normal &middot; Petit (-1) &middot; Extra &middot; Pok&eacute;mon d'Alban Drevin</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Toujours en forme copi&eacute;e en combat. R&eacute;v&egrave;le la ruse si Secousse sur Subter&shy;fuge.</p>
+            <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>5</span></div></div>
+            <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Transformation</td><td class="atk-dmg">Subter&shy;fuge d10</td><td>&mdash;</td><td>Imite le Pok&eacute;mon cibl&eacute; &mdash; stats de base copi&eacute;es</td></tr><tr><td class="atk-name">Comp&eacute;tences imit&eacute;es</td><td class="atk-dmg">Variable</td><td>Variable</td><td>Utilise les comp&eacute;tences du Pok&eacute;mon imit&eacute; &agrave; -1 d&eacute;</td></tr></table>
+            <ul class="capa-list"><li><span class="capa-name">Usurpation</span> : Peut imiter un Pok&eacute;mon des PJ en un round d'observation. Subter&shy;fuge TN6 pour que les PJ ne voient pas la substitution.</li></ul>
+            <div class="tactique-block">Utilis&eacute; par Alban pour la substitution en finale : se transforme en Pok&eacute;mon d'un PJ pendant l'arbitrage. R&eacute;v&eacute;l&eacute; sur une Secousse au jet de Subter&shy;fuge.</div>
+          </div>
+        </div>
+          </div>
+        </div>
+        <div class="beast-pnj-sub" id="bpnj-bob" style="margin-bottom:16px">
+          <div style="font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 0 5px;border-bottom:1px solid var(--border);margin-bottom:8px;">Major Bob (Raichu, &Eacute;lectrode, Voltorbe)</div>
+          <div class="bestiary-grid">
+          <div class="beast-card cat-sc02" data-cat="sc02" data-pnj="bob" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Raichu (Major Bob)</div><div class="beast-meta"><span class="tag tag-sc02">Sc02</span> &Eacute;lectrik &middot; Moyen &middot; Joker &middot; Pok&eacute;mon du Major Bob</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Lien &eacute;motionnel avec le Major. Puissant mais lent (Allure 5).</p>
+            <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>5</span></div></div>
+            <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Tonnerre</td><td class="atk-dmg">3d6</td><td>12&quot;/24&quot;</td><td>Paralysie si Vigueur TN6 &eacute;chou&eacute;e</td></tr><tr><td class="atk-name">Ultimapoing</td><td class="atk-dmg">FOR+d8+d6 &eacute;lectrique</td><td>M&ecirc;l&eacute;e</td><td>Contact obligatoire</td></tr><tr><td class="atk-name">Ultimawashi</td><td class="atk-dmg">FOR+d10</td><td>Zone 2 cases autour</td><td>Combat d10</td></tr><tr><td class="atk-name">Onde de Choc</td><td class="atk-dmg">2d6</td><td>12&quot;</td><td>Ne rate jamais &mdash; pas de jet pour toucher</td></tr></table>
+            <ul class="capa-list"><li><span class="capa-name">Wild Die d6</span> : Joker &mdash; 3 Blessures avant KO.</li><li><span class="capa-name">Lien (Major Bob)</span> : Si le Major est Secouu&eacute;, Raichu gagne +1 d&eacute; Wild sur son prochain jet.</li></ul>
+            <div class="tactique-block">Sort&eacute; d&egrave;s le d&eacute;but du combat si le Major fait confiance aux PJ. Onde de Choc utilis&eacute;e pour couvrir une retraite ou neutraliser un groupe.</div>
+          </div>
+        </div>
+          <div class="beast-card cat-sc02" data-cat="sc02" data-pnj="bob" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">&Eacute;lectrode (Major Bob)</div><div class="beast-meta"><span class="tag tag-sc02">Sc02</span> &Eacute;lectrik &middot; Moyen &middot; Extra &middot; Pok&eacute;mon du Major Bob</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Patrouille l'Ar&egrave;ne. Explosion en dernier recours assum&eacute;.</p>
+            <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">Robustesse <span>6</span></div></div>
+            <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Cage-&Eacute;clair</td><td class="atk-dmg">2d6</td><td>Zone 3x3</td><td>Paralysie possible</td></tr><tr><td class="atk-name">Sonicboom</td><td class="atk-dmg">20 PV fixes</td><td>Longue port&eacute;e</td><td>Ignore l'armure</td></tr><tr><td class="atk-name">Autotomie</td><td class="atk-dmg">&mdash;</td><td>&mdash;</td><td>+2 AGI et Allure pendant 3 rounds</td></tr><tr><td class="atk-name">Explosion</td><td class="atk-dmg">4d8</td><td>Zone 4 cases</td><td>&Eacute;lectrode KO apr&egrave;s usage</td></tr></table>
+            <ul class="capa-list"><li><span class="capa-name">Sentinelle</span> : Patrouille autonome. D&eacute;clenche l'alarme si intrusion d&eacute;tect&eacute;e.</li><li><span class="capa-name">Explosion</span> : Activ&eacute;e uniquement sur ordre explicite du Major ou si acculé.</li></ul>
+            <div class="tactique-block">Ne cherche pas le combat offensif. Contr&ocirc;le de zone par Cage-&Eacute;clair. En cas d'envahissement de l'Ar&egrave;ne : Explosion sur ordre.</div>
+          </div>
+        </div>
+          <div class="beast-card cat-sc02" data-cat="sc02" data-pnj="bob" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Voltorbe (Major Bob)</div><div class="beast-meta"><span class="tag tag-sc02">Sc02</span> &Eacute;lectrik &middot; Petit (-1) &middot; Extra &middot; Pok&eacute;mon du Major Bob</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Sentinelle cach&eacute;e dans les poubelles de l'Ar&egrave;ne. D&eacute;clenche l'alarme.</p>
+            <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d4</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>5</span></div></div>
+            <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Sonicboom</td><td class="atk-dmg">20 PV fixes</td><td>12&quot;</td><td>Ne rate jamais</td></tr><tr><td class="atk-name">Rugissement</td><td class="atk-dmg">Intimidation d6</td><td>Zone 2&quot;</td><td>-1 Parade adverse 1 round</td></tr></table>
+            <ul class="capa-list"><li><span class="capa-name">Alarme</span> : Si Voltorbe est d&eacute;couvert et attaqu&eacute;, Rugissement automatique + signal radio vers le Major.</li></ul>
+            <div class="tactique-block">Camoufl&eacute; parmi les d&eacute;chets. Les PJ peuvent le rep&eacute;rer avec Perception TN6. S'il n'est pas neutralis&eacute; discr&egrave;tement, le Major Bob est alert&eacute; en 1 round.</div>
+          </div>
+        </div>
+          </div>
+        </div>
+        <div class="beast-pnj-sub" id="bpnj-volt" style="margin-bottom:16px">
+          <div style="font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 0 5px;border-bottom:1px solid var(--border);margin-bottom:8px;">Bastien Volt (&Eacute;lecthor, Amphinobi, Dracolosse)</div>
+          <div class="bestiary-grid">
+          <div class="beast-card cat-sc02" data-cat="sc02" data-pnj="volt" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">&Eacute;lecthor (Bastien Volt)</div><div class="beast-meta"><span class="tag tag-sc02">Sc02</span> &Eacute;lectrik &middot; Vol &middot; Grand (+1) &middot; Joker &middot; Pok&eacute;mon de Bastien Volt</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Son &eacute;tat &eacute;motionnel refl&egrave;te celui de Volt. Jet Dressage si Volt est Secouu&eacute;.</p>
+            <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">FOR <span>d8</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">Robustesse <span>6</span></div></div>
+            <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Tonnerre</td><td class="atk-dmg">3d6+2</td><td>12&quot;/24&quot;</td><td>Paralysie TN6 Vigueur ou Secousse</td></tr><tr><td class="atk-name">Tranche-Air</td><td class="atk-dmg">FOR+d8</td><td>Zone 3 cases en ligne</td><td>Combat d8</td></tr><tr><td class="atk-name">Cage-&Eacute;clair</td><td class="atk-dmg">2d6</td><td>12&quot;</td><td>Ralentit cible &mdash; Allure -2 pendant 2 rounds</td></tr><tr><td class="atk-name">Cru-Aile</td><td class="atk-dmg">FOR+d10</td><td>M&ecirc;l&eacute;e</td><td>Combat d10, initiative +4 ce round</td></tr></table>
+            <ul class="capa-list"><li><span class="capa-name">Wild Die d6</span> : Joker &mdash; 3 Blessures.</li><li><span class="capa-name">Lien &eacute;motionnel</span> : Si Volt est Secouu&eacute; : jet Dressage TN6 ou &Eacute;lecthor perd sa prochaine action.</li></ul>
+            <div class="tactique-block">Atout strat&eacute;gique de Volt. Utilis&eacute; pour contr&ocirc;ler le terrain d&egrave;s le round 1. Cage-&Eacute;clair pour ralentir les cibles prioritaires, Cru-Aile pour l'&eacute;limination rapide.</div>
+          </div>
+        </div>
+          <div class="beast-card cat-sc02" data-cat="sc02" data-pnj="volt" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Amphinobi (Bastien Volt)</div><div class="beast-meta"><span class="tag tag-sc02">Sc02</span> Eau &middot; T&eacute;n&egrave;bres &middot; Moyen &middot; Extra &middot; Pok&eacute;mon de Bastien Volt</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Le plus rapide de l'&eacute;quipe. Initiative presque toujours gagn&eacute;e.</p>
+            <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d12</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>8</span></div><div class="stat-pill">Robustesse <span>5</span></div></div>
+            <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Surf</td><td class="atk-dmg">2d6</td><td>Zone 3x3</td><td>Pousse les cibles &mdash; Force vs Force</td></tr><tr><td class="atk-name">Tranche-Nuit</td><td class="atk-dmg">FOR+d8</td><td>M&ecirc;l&eacute;e</td><td>Combat d10, ignore 2 points d'armure</td></tr><tr><td class="atk-name">Vive-Attaque</td><td class="atk-dmg">FOR+d4</td><td>M&ecirc;l&eacute;e</td><td>Agit avant tout le monde ce round (+4 initiative)</td></tr></table>
+            <ul class="capa-list"><li><span class="capa-name">Premier &agrave; frapper</span> : Agit presque toujours avant tout le monde gr&acirc;ce &agrave; Vive-Attaque.</li></ul>
+            <div class="tactique-block">Utilis&eacute; pour d&eacute;stabiliser la formation adverse d&egrave;s le round 1. Tranche-Nuit sur les cibles en armure. Surf pour disperser les groupes serrés.</div>
+          </div>
+        </div>
+          <div class="beast-card cat-sc02" data-cat="sc02" data-pnj="volt" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Dracolosse (Bastien Volt)</div><div class="beast-meta"><span class="tag tag-sc02">Sc02</span> Dragon &middot; Vol &middot; Tr&egrave;s Grand (+2) &middot; Extra &middot; Pok&eacute;mon de Bastien Volt</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Sort&eacute; uniquement en situation sans issue. Draco-M&eacute;t&eacute;ore affaiblit Volt apr&egrave;s usage.</p>
+            <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">FOR <span>d12</span></div><div class="stat-pill">VIG <span>d12</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>11</span></div></div>
+            <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Draco-M&eacute;t&eacute;ore</td><td class="atk-dmg">4d8</td><td>12&quot;/24&quot;</td><td>Tir d10 &mdash; -2 Intellect Volt apr&egrave;s usage</td></tr><tr><td class="atk-name">S&eacute;isme</td><td class="atk-dmg">FOR+d10</td><td>Zone 4x4 au sol</td><td>Affecte uniquement les cibles au sol</td></tr><tr><td class="atk-name">Mur-Lumi&egrave;re</td><td class="atk-dmg">&mdash;</td><td>&mdash;</td><td>Parade +4 pour toute l'&eacute;quipe pendant 3 rounds</td></tr></table>
+            <ul class="capa-list"><li><span class="capa-name">Robustesse 11</span> : Pr&agrave;tiquement indestructible. Draco-M&eacute;t&eacute;ore laisse Volt &eacute;puis&eacute; (-2 Intellect sur ses prochains jets).</li></ul>
+            <div class="tactique-block">Dernier recours absolu. Volt r&eacute;pugne &agrave; l'utiliser car il sait le co&ucirc;t. Si sorti : Mur-Lumi&egrave;re d'abord, puis S&eacute;isme pour le terrain, Draco-M&eacute;t&eacute;ore uniquement si inévitable.</div>
+          </div>
+        </div>
+          </div>
+        </div>
+        <div class="beast-pnj-sub" id="bpnj-nessa" style="margin-bottom:16px">
+          <div style="font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 0 5px;border-bottom:1px solid var(--border);margin-bottom:8px;">Kimara Nessa (Porygon-Z, Bras&eacute;gali)</div>
+          <div class="bestiary-grid">
+          <div class="beast-card cat-sc02" data-cat="sc02" data-pnj="nessa" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Porygon-Z (Nessa)</div><div class="beast-meta"><span class="tag tag-sc02">Sc02</span> Normal &middot; Moyen &middot; Extra &middot; Pok&eacute;mon de Kimara Nessa</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Connexion directe au Porygon2 de la Loge. Extrait les logs en 2 rounds.</p>
+            <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d4</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>5</span></div></div>
+            <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Piratage r&eacute;seau</td><td class="atk-dmg">Piratage d10</td><td>Syst&egrave;mes adjacents</td><td>Connecte aux syst&egrave;mes num&eacute;riques en 1 action</td></tr><tr><td class="atk-name">Tranche Laser</td><td class="atk-dmg">2d6+2</td><td>12&quot;/24&quot;</td><td>Ignore armure non-m&eacute;tal</td></tr><tr><td class="atk-name">Signal Faisceau</td><td class="atk-dmg">Intellect TN6</td><td>Zone 3x3</td><td>Distrait 2 rounds si &eacute;chec</td></tr><tr><td class="atk-name">Conversion 2</td><td class="atk-dmg">&mdash;</td><td>&mdash;</td><td>Change sa r&eacute;sistance de type 1x/combat</td></tr></table>
+            <ul class="capa-list"><li><span class="capa-name">Hack du Porygon2</span> : En 2 rounds d'action continus : extrait les logs complets du syst&egrave;me de surveillance de la Loge &Eacute;carlate.</li></ul>
+            <div class="tactique-block">Outil prioritaire de Nessa. Elle le sort d&egrave;s qu'un terminal est accessible. Son extraction des logs est l'objectif cl&eacute; du plan.</div>
+          </div>
+        </div>
+          <div class="beast-card cat-sc02" data-cat="sc02" data-pnj="nessa" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Bras&eacute;gali (Nessa)</div><div class="beast-meta"><span class="tag tag-sc02">Sc02</span> Feu &middot; Combat &middot; Grand (+1) &middot; Extra &middot; Pok&eacute;mon de Kimara Nessa</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">R&ocirc;le d&eacute;fensif et de fuite. Ouvre les sorties, ne cherche pas le combat prolong&eacute;.</p>
+            <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">Robustesse <span>8</span></div></div>
+            <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Close Combat</td><td class="atk-dmg">FOR+d8</td><td>Zone adjacente</td><td>Touche toutes les cibles adjacentes</td></tr><tr><td class="atk-name">Poing-de-Feu</td><td class="atk-dmg">FOR+d6+d6 feu</td><td>M&ecirc;l&eacute;e</td><td>Br&ucirc;lure TN6 Vigueur</td></tr><tr><td class="atk-name">Faux-Chage</td><td class="atk-dmg">&mdash;</td><td>&mdash;</td><td>D&eacute;sengagement garanti &mdash; Nessa retraite sans jet</td></tr><tr><td class="atk-name">Mur-Lumi&egrave;re</td><td class="atk-dmg">&mdash;</td><td>&mdash;</td><td>+2 R&eacute;sistance pour Nessa pendant 3 rounds</td></tr></table>
+            <ul class="capa-list"><li><span class="capa-name">Couverture de fuite</span> : Bras&eacute;gali s'intercale entre Nessa et les poursuivants. Faux-Chage garanti m&ecirc;me si encercl&eacute;.</li></ul>
+            <div class="tactique-block">D&egrave;s que Nessa d&eacute;cide de fuir, Bras&eacute;gali ouvre le chemin. Close Combat pour cr&eacute;er un espace, Mur-Lumi&egrave;re pour absorber les tirs couvrants.</div>
+          </div>
+        </div>
+          </div>
+        </div>
+        <div class="beast-pnj-sub" id="bpnj-ondine" style="margin-bottom:16px">
+          <div style="font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 0 5px;border-bottom:1px solid var(--border);margin-bottom:8px;">Ondine (Lokhlass)</div>
+          <div class="bestiary-grid">
+          <div class="beast-card cat-sc02" data-cat="sc02" data-pnj="ondine" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Lokhlass (Ondine)</div><div class="beast-meta"><span class="tag tag-sc02">Sc02</span> Eau &middot; Normal &middot; Immense (+3) &middot; Joker &middot; Pok&eacute;mon d'Ondine</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Le plus r&eacute;sistant de l'&eacute;quipe. Requiem est son outil de contr&ocirc;le absolu.</p>
+            <div class="stat-inline" style="margin-bottom:8px"><div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">FOR <span>d12</span></div><div class="stat-pill">VIG <span>d12</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>13</span></div></div>
+            <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr><tr><td class="atk-name">Danse Pluie</td><td class="atk-dmg">&mdash;</td><td>Zone 10 cases</td><td>+2 d&eacute;g&acirc;ts Pok&eacute;mon Eau alli&eacute;s pendant 3 rounds</td></tr><tr><td class="atk-name">Blizzard</td><td class="atk-dmg">3d6</td><td>Zone 3x3</td><td>Gel TN8 Vigueur &mdash; Entrav&eacute; 2 rounds</td></tr><tr><td class="atk-name">Berceuse</td><td class="atk-dmg">&Acirc;me d10 vs &Acirc;me</td><td>Zone 5&quot;</td><td>Cible endormie jusqu'&agrave; d&eacute;g&acirc;ts</td></tr><tr><td class="atk-name">Requiem</td><td class="atk-dmg">&mdash;</td><td>Vue 12&quot;</td><td>Cible change de Pok&eacute;mon en 3 rounds ou KO auto</td></tr></table>
+            <ul class="capa-list"><li><span class="capa-name">Wild Die d6</span> : Joker &mdash; 3 Blessures. Robustesse 13 : quasiment insensible aux attaques des Extras.</li><li><span class="capa-name">Danse Pluie en soutien</span> : Active Danse Pluie en premier pour booster Staross et Maraiste imm&eacute;diatement.</li></ul>
+            <div class="tactique-block">Ondine l'utilise comme ancre de combat. Berceuse sur les Jokers ennemis, Requiem pour forcer les adversaires &agrave; changer de Pok&eacute;mon. Ne s'aventure pas loin si le terrain n'est pas aquatique.</div>
+          </div>
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
 <div class="section" id="tab-notes">
       <div class="page-title">Notes</div>
@@ -2968,12 +3140,7 @@ function toggleAsideCampaign(id) {
 }
 
 // ── Bestiaire : filtres ──────────────────────────────────────────────────
-function filterBeast(cat, btn) {
-  // "Tous" — afficher tous les groupes
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.beast-cat-group').forEach(g => g.style.display = '');
-}
+
 
 function filterBeast2(group, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -3126,20 +3293,7 @@ function scrollAndOpen(id) {
 }
 
 // ── Filtre bestiaire depuis l'aside ────────────────────────────────────
-function filterBeastAside(group) {
-  document.querySelectorAll('aside button').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  if (group === 'all') {
-    document.querySelectorAll('.beast-cat-group').forEach(g => g.style.display = '');
-  } else {
-    const showId = 'bgroup-' + group;
-    document.querySelectorAll('.beast-cat-group').forEach(g => {
-      g.style.display = (g.id === showId) ? '' : 'none';
-    });
-    const el = document.getElementById(showId);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-}
+
 
 
 // ── JSONBin — lecture des notes joueurs (MJ) ─────────────────────────────
@@ -3372,6 +3526,38 @@ function _addScenarioCard(title, sub, num, filename) {
   else { container.appendChild(card); }
 }
 
+
+function filterBeast(cat, btn) {
+  document.querySelectorAll('.filter-bar .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  var pnjBar = document.getElementById('filter-pnj-bar');
+  if (cat === 'all') {
+    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = ''; });
+    document.querySelectorAll('.beast-card').forEach(function(c) { c.style.display = ''; });
+    if (pnjBar) pnjBar.classList.remove('active');
+  } else if (cat === 'sc02') {
+    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = g.id === 'bgroup-sc02' ? '' : 'none'; });
+    if (pnjBar) pnjBar.classList.add('active');
+    filterByPnj('all', pnjBar ? pnjBar.querySelector('button') : null);
+  } else {
+    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = g.id === 'bgroup-sc02' ? 'none' : ''; });
+    document.querySelectorAll('.beast-card').forEach(function(c) {
+      c.style.display = (c.dataset.cat === cat) ? '' : 'none';
+    });
+    if (pnjBar) pnjBar.classList.remove('active');
+  }
+}
+
+function filterByPnj(slug, btn) {
+  if (btn) {
+    document.querySelectorAll('#filter-pnj-bar .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+  }
+  document.querySelectorAll('.beast-pnj-sub').forEach(function(s) {
+    s.style.display = (slug === 'all' || s.id === 'bpnj-' + slug) ? '' : 'none';
+  });
+}
+
 </script>
 
 <!-- Modal nouveau scenario -->
@@ -3397,7 +3583,27 @@ function _addScenarioCard(title, sub, num, filename) {
       <button onclick="closeNewScenarioModal()" style="font-family:var(--mono);font-size:11px;padding:8px 18px;background:none;border:1px solid var(--border);border-radius:2px;color:var(--muted);cursor:pointer;">Annuler</button>
       <button id="sc-new-btn" onclick="createNewScenario()" style="font-family:var(--mono);font-size:11px;padding:8px 18px;background:var(--amber-dim);border:none;border-radius:2px;color:var(--amber);cursor:pointer;font-weight:600;">Creer</button>
     </div>
-    <div id="sc-new-status" style="margin-top:12px;font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center;display:none;"></div>
+    <div class="filter-bar" id="beast-filter-bar">
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;">
+          <button class="filter-btn active" onclick="filterBeast('all',this)">Tous</button>
+          <button class="filter-btn" onclick="filterBeast('sauvage',this)">&#127807; Sauvages</button>
+          <button class="filter-btn" onclick="filterBeast('psi',this)">&#128308; PSI-B</button>
+          <button class="filter-btn" onclick="filterBeast('allies',this)">&#128309; Alliés</button>
+          <button class="filter-btn" onclick="filterBeast('elites',this)">&#128995; Élites</button>
+          <button class="filter-btn" onclick="filterBeast('boss',this)">&#128128; Boss</button>
+          <button class="filter-btn" onclick="filterBeast('sc02',this)">&#127942; Carmin s/ Mer</button>
+        </div>
+        <div class="filter-bar-pnj" id="filter-pnj-bar">
+          <span style="font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.08em;align-self:center;">PAR PNJ :</span>
+          <button class="filter-btn" onclick="filterByPnj('all',this)">Tous</button>
+          <button class="filter-btn" onclick="filterByPnj('drevin',this)">Drevin</button>
+          <button class="filter-btn" onclick="filterByPnj('alban',this)">Alban</button>
+          <button class="filter-btn" onclick="filterByPnj('bob',this)">Major Bob</button>
+          <button class="filter-btn" onclick="filterByPnj('volt',this)">Volt</button>
+          <button class="filter-btn" onclick="filterByPnj('nessa',this)">Nessa</button>
+          <button class="filter-btn" onclick="filterByPnj('ondine',this)">Ondine</button>
+        </div>
+      </div>
   </div>
 </div>
 </body>
