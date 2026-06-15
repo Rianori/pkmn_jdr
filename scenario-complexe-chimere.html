@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Complexe Chim&egrave;re &mdash; Sc&eacute;nario</title>
+<style>
+
+:root {
+    --bg:        #0e0e0f;
+    --surface:   #161618;
+    --card:      #1c1c1f;
+    --border:    #2a2a2e;
+    --amber:     #c8922a;
+    --amber-dim: #7a5510;
+    --amber-glow:#c8922a22;
+    --text:      #d4cfc5;
+    --muted:     #6b6660;
+    --danger:    #8b2020;
+    --safe:      #1e5c2e;
+    --blue:      #1e3a6b;
+    --boss:      #4a2800;
+    --radius:    4px;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--amber); }
+.subtitle { font-size: 12px; color: var(--muted); font-style: italic; }
+
+/* LAYOUT */
+.sc-shell {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  height: calc(100vh - 101px);
+}
+
+/* SIDEBAR */
+.sc-aside {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.sc-aside-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.sc-tab-btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: var(--muted);
+  cursor: pointer;
+  text-align: left;
+  transition: background .12s, color .12s;
+}
+.sc-tab-btn:hover { background: var(--card); color: var(--text); }
+.sc-tab-btn.active { background: var(--amber-glow); color: var(--amber); }
+.sc-aside-body { flex: 1; overflow-y: auto; padding: 8px; }
+.sc-aside-group { margin-bottom: 16px; }
+.sc-aside-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 4px 8px 6px;
+  display: block;
+}
+.sc-aside-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 6px 10px;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background .1s, color .1s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sc-aside-btn:hover { background: var(--card); color: var(--amber); }
+
+/* CONTENU PRINCIPAL */
+.sc-main {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ONGLETS PRINCIPAUX */
+.sc-tabs-content { flex: 1; }
+.sc-tab { display: none; padding: 28px 32px 60px; }
+.sc-tab.active { display: block; }
+
+/* TITRE DE PAGE */
+.page-title {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.page-tagline {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: .06em;
+  margin-bottom: 24px;
+}
+.section-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+/* RESUME */
+.sc-resume-text { font-size: 14px; line-height: 1.85; color: var(--text); max-width: 720px; margin-bottom: 36px; }
+
+/* LIEUX EN LIGNE */
+.lieux-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
+.lieu-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  min-width: 150px;
+  flex: 1;
+  max-width: 220px;
+}
+.lieu-name { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--amber); margin-bottom: 5px; }
+.lieu-card p { font-size: 12px; color: var(--muted); line-height: 1.5; margin: 0; }
+
+/* PARTIES / ACTES */
+.partie-block { margin-bottom: 10px; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+.partie-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--surface);
+  cursor: pointer;
+  user-select: none;
+  transition: background .12s;
+}
+.partie-header:hover { background: var(--card); }
+.partie-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--amber);
+  background: var(--amber-glow);
+  border: 1px solid var(--amber-dim);
+  padding: 2px 8px;
+  border-radius: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.partie-nom { font-size: 14px; font-weight: 500; color: var(--text); flex: 1; }
+.partie-chevron { font-size: 11px; color: var(--muted); transition: transform .2s; flex-shrink: 0; }
+.partie-block.open .partie-chevron { transform: rotate(90deg); }
+.partie-body { display: none; border-top: 1px solid var(--border); background: var(--bg); }
+.partie-block.open .partie-body { display: block; }
+
+/* CHAPITRES dans les parties */
+.chapter { border-bottom: 1px solid var(--border); }
+.chapter:last-child { border-bottom: none; }
+.chapter-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background .1s;
+  user-select: none;
+}
+.chapter-header:hover { background: var(--surface); }
+.chapter-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  color: var(--muted);
+  min-width: 36px;
+}
+.chapter-title { flex: 1; font-size: 14px; font-weight: 500; color: var(--text); }
+.chapter-chevron { font-size: 11px; color: var(--muted); transition: transform .2s; }
+.chapter.open .chapter-chevron { transform: rotate(90deg); }
+.chapter-body { display: none; padding: 8px 20px 20px 56px; }
+.chapter.open .chapter-body { display: block; }
+.sub-section { margin-bottom: 16px; }
+.sub-label { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .08em; color: var(--amber); text-transform: uppercase; margin-bottom: 5px; }
+.sub-section p { font-size: 13px; line-height: 1.7; color: var(--muted); }
+.chapter-enjeu { background: var(--surface); border-left: 2px solid var(--amber-dim); padding: 10px 14px; border-radius: 0 4px 4px 0; margin-top: 12px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+.chapter-enjeu strong { color: var(--amber); font-family: var(--mono); font-size: 10px; letter-spacing: .08em; }
+
+/* PNJ */
+
+
+
+
+
+
+
+.stat-inline { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.stat-pill {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 3px 9px;
+  color: var(--muted);
+}
+.stat-pill span { color: var(--text); font-weight: 600; margin-left: 4px; }
+.stat-block { margin-bottom: 12px; }
+.stat-block-title { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.stat-row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.stat-row:last-child { border-bottom: none; }
+.stat-name { color: var(--muted); }
+.stat-val { font-family: var(--mono); font-weight: 600; color: var(--text); }
+.edge-block { background: var(--card); border: 1px solid var(--border); border-radius: 4px; padding: 10px 12px; margin-bottom: 8px; }
+.hindrance-block { background: var(--card); border: 1px solid #3a1010; border-radius: 4px; padding: 10px 12px; margin-bottom: 8px; }
+.block-name { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--amber); margin-bottom: 4px; }
+.block-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* TAGS */
+.tag { font-family: var(--mono); font-size: 9px; letter-spacing: .06em; padding: 2px 7px; border-radius: 3px; font-weight: 600; margin-left: 6px; }
+.tag-edge { background: rgba(200,146,42,.15); color: var(--amber); border: 1px solid var(--amber-dim); }
+.tag-psi { background: rgba(120,80,200,.15); color: #a08be0; border: 1px solid rgba(120,80,200,.3); }
+.tag-majeur { background: rgba(139,32,32,.2); color: #e07070; border: 1px solid rgba(139,32,32,.4); }
+.tag-mineur { background: rgba(60,80,120,.2); color: #8090c0; border: 1px solid rgba(60,80,120,.4); }
+.tag-background { background: rgba(40,100,60,.2); color: #70b080; border: 1px solid rgba(40,100,60,.4); }
+.tag-combat { background: rgba(150,60,40,.2); color: #d08060; border: 1px solid rgba(150,60,40,.4); }
+
+
+
+
+
+
+
+
+
+
+
+.chapter {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+.chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--card);
+    cursor: pointer;
+    user-select: none;
+    transition: background .12s;
+  }
+.chapter-header:hover { background: #202024; }
+.chapter-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--amber);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+  }
+.chapter-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+  }
+.chapter-chevron {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    transition: transform .2s;
+  }
+.chapter.open .chapter-chevron { transform: rotate(90deg); }
+.chapter-body { display: none; padding: 0 18px 18px; }
+.chapter.open .chapter-body { display: block; }
+.chapter-chevron { transform: rotate(90deg); }
+.stat-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+  }
+.stat-block-title {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+.stat-row:last-child { border-bottom: none; }
+.stat-name { color: var(--muted); }
+.stat-val  { font-family: var(--mono); font-weight: 600; color: var(--amber); font-size: 13px; }
+.stat-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+.stat-pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 2px 8px;
+    color: var(--text);
+  }
+.stat-pill span { color: var(--amber); font-weight: 600; }
+.stat-block {
+    padding: 7px 10px;
+  }
+.stat-block-title {
+    font-size: 7.5px;
+    margin-bottom: 4px;
+  }
+.stat-row {
+    padding: 2px 0;
+    font-size: 12px;
+  }
+.tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+.tag-majeur   { background: #3a1010; color: #e07070; }
+.tag-mineur   { background: #1a2a10; color: #80b060; }
+.tag-edge     { background: #102030; color: #5090c0; }
+.tag-background { background: #2a1a00; color: #c08030; }
+.tag-combat   { background: #200010; color: #c040a0; }
+.tag-social   { background: #0a1a30; color: #4090e0; }
+.tag-weird    { background: #1a0a30; color: #9060d0; }
+.tag-psi      { background: #3a0505; color: #e05050; }
+.tag-sauvage  { background: #05200a; color: #50c060; }
+.tag-gardien  { background: #051530; color: #5080e0; }
+.tag-boss     { background: #201000; color: #d08020; }
+.edge-block {
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    margin-bottom: 6px;
+  }
+.edge-block      { background: #0a1020; border-left: 2px solid #203050; }
+.hindrance-block, .edge-block {
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    margin-bottom: 6px;
+  }
+.hindrance-block { background: #1a0a0a; border-left: 2px solid #5a2020; }
+.section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 32px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+.page-title {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--amber);
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+.page-tagline {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+.block-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.block-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.sub-section { margin-top: 14px; }
+.sub-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--amber-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+.resume-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--amber);
+    padding: 18px 22px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin-bottom: 24px;
+  }
+.resume-box p { font-size: 14px; color: #b0aba1; margin: 0; line-height: 1.75; }
+.lieux-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+.lieu-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+.lieu-name { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--amber); margin-bottom: 4px; }
+.lieu-card p { font-size: 12px; color: var(--muted); margin: 0; line-height: 1.5; }
+.filter-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+.filter-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 5px 12px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all .12s;
+  }
+.filter-btn:hover { color: var(--text); border-color: var(--muted); }
+.filter-btn.active { background: var(--amber-glow); border-color: var(--amber); color: var(--amber); }
+.perso-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 8px;
+  }
+.perso-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.perso-card p { font-size: 13px; color: var(--muted); margin: 0; line-height: 1.55; }
+.capa-list { list-style: none; margin-top: 8px; }
+.capa-list li {
+    font-size: 12px;
+    color: #a8a39a;
+    padding: 4px 0 4px 12px;
+    border-bottom: 1px solid #1e1e22;
+    position: relative;
+    line-height: 1.5;
+  }
+.capa-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--amber-dim);
+    font-size: 10px;
+    top: 5px;
+  }
+.capa-list li:last-child { border-bottom: none; }
+.capa-name { color: var(--text); font-weight: 600; }
+
+  /* nav principale */
+  nav .sc-tab-btn { transition: color .15s, border-bottom-color .15s; }
+  nav .sc-tab-btn:hover:not(.active) { color: var(--text) !important; }
+  nav .sc-tab-btn.active { color: var(--amber) !important; border-bottom-color: var(--amber) !important; }
+
+  /* == PNJ CARDS (original MJ) == */
+  .pnj-card { border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden; }
+  .pnj-header { display:flex;align-items:center;justify-content:space-between;padding:13px 18px;background:var(--card);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:background .12s; }
+  .pnj-header:hover { background:#202024; }
+  .pnj-name { font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px; }
+  .pnj-role { font-size:12px;color:var(--muted);font-style:italic; }
+  .pnj-body { display:none;padding:18px;border-top:1px solid var(--border); }
+  .pnj-card.open .pnj-body { display:block; }
+  .pnj-card.open .chapter-chevron { transform:rotate(90deg); }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);">Campagne 03</div>
+    <h1>Le Complexe Chim&egrave;re</h1>
+  </div>
+  <span class="subtitle">&laquo;&nbsp;Il a pris les mains&hellip; il les a toutes prises. &Ccedil;a ne s'arr&ecirc;te pas de changer.&nbsp;&raquo;</span>
+  <div style="margin-left:auto;display:flex;gap:10px;align-items:center;">
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:3px 10px;border-radius:2px;">&Agrave; VENIR</span>
+    <a href="mj.html" style="font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:2px;padding:6px 14px;transition:color .15s,border-color .15s;" onmouseover="this.style.color='var(--amber)';this.style.borderColor='var(--amber-dim)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">&larr; Compagnon MJ</a>
+  </div>
+</header>
+
+<div class="sc-shell">
+  <nav class="sc-aside">
+    <div class="sc-aside-body">
+      <div class="sc-aside-group">
+      <div class="sc-aside-label">Aperçu</div>
+      <button class="sc-aside-btn" onclick="scrollToEl('sc-resume')">Résumé</button>
+      <button class="sc-aside-btn" onclick="scrollToEl('sc-lieux')">Lieux</button>
+      <button class="sc-aside-btn" onclick="scrollToEl('sc-histoire')">Histoire</button>
+    </div>
+    <div class="sc-aside-group">
+      <div class="sc-aside-label">Acte I</div>
+      <button class="sc-aside-btn" onclick="openPartie('cc-acte1');scrollToEl('cc1')">CH 01 · La Piste Toxique</button>
+    </div>
+    <div class="sc-aside-group">
+      <div class="sc-aside-label">Acte II</div>
+      <button class="sc-aside-btn" onclick="openPartie('cc-acte2');scrollToEl('cc2')">CH 02 · Hub des Conduites</button>
+      <button class="sc-aside-btn" onclick="openPartie('cc-acte2');scrollToEl('cc3')">CH 03 · Laboratoires</button>
+      <button class="sc-aside-btn" onclick="openPartie('cc-acte2');scrollToEl('cc4')">CH 04 · Cryo-Réserve</button>
+    </div>
+    <div class="sc-aside-group">
+      <div class="sc-aside-label">Acte III</div>
+      <button class="sc-aside-btn" onclick="openPartie('cc-acte3');scrollToEl('cc5')">CH 05 · La Fusion Alpha</button>
+      <button class="sc-aside-btn" onclick="openPartie('cc-acte3');scrollToEl('cc6')">CH 06 · Évacuation</button>
+    </div>
+    </div>
+  </nav>
+
+  <main class="sc-main">
+    <nav class="sc-nav" id="sc-nav">
+      <button class="active" data-tab="scenario" onclick="scShowTab('scenario',this)">Sc&eacute;nario</button>
+    </nav>
+
+    <div class="sc-tab active" id="sc-tab-scenario">
+
+      <div id="sc-resume" style="margin-bottom:32px;">
+        <div class="page-title">Le Complexe Chim&egrave;re</div>
+        <div class="page-tagline">Horreur Industrielle &middot; SWADE Pok&eacute;mon &middot; 3&ndash;4 heures</div>
+        <div class="sc-resume-text" style="margin-top:16px;">Un terminal isol&eacute; de la <strong>Silph Co.</strong> a &eacute;mis un signal de d&eacute;tresse crypt&eacute;. La mission est simple : localiser le <em>complexe de traitement des d&eacute;chets dangereux Alpha-9</em> et &eacute;vacuer l'&eacute;quipe de recherche. La zone bois&eacute;e a &eacute;t&eacute; d&eacute;vor&eacute;e par une v&eacute;g&eacute;tation n&eacute;crotique. Une brume chimique jaune-violette masque l'entr&eacute;e. Au c&oelig;ur des ruines, quelque chose a fusionn&eacute; avec l'autel celte. &Ccedil;a ne s'arr&ecirc;te pas de changer.</div>
+        <div class="chapter-enjeu" style="margin-top:16px;">
+          <strong>Doom Track</strong><br>
+          Un compteur de 0 &agrave; 6. Chaque &eacute;chec critique ou d&eacute;lai injustifi&eacute; ajoute +1. &Agrave; 4 : les Smogos commencent &agrave; se coordonner. &Agrave; 6 : l'acide monte dans le secteur central.
+        </div>
+      </div>
+
+      <div id="sc-lieux" style="margin-bottom:36px;">
+        <div class="section-title">Lieux</div>
+        <div class="lieux-strip">
+          <div class="lieu-card"><div class="lieu-name">Zone bois&eacute;e</div><p>V&eacute;g&eacute;tation n&eacute;crotique. Brume corrosive. Jet Vigueur -2 sans &eacute;quipement.</p></div>
+          <div class="lieu-card"><div class="lieu-name">Hub des Conduites</div><p>Passerelle effondr&eacute;e. Bassin violet fluorescent. Athl&eacute;tisme -2 pour traverser.</p></div>
+          <div class="lieu-card"><div class="lieu-name">Laboratoires de Culture</div><p>Cuves de clonage bris&eacute;es. Dictaphone du chercheur. Faiblesse de la Chim&egrave;re.</p></div>
+          <div class="lieu-card"><div class="lieu-name">Cryo-R&eacute;serve</div><p>Givre chimique noir — 1d6 d&eacute;g&acirc;ts froid (ignore armure). Carte d'acc&egrave;s superviseur.</p></div>
+          <div class="lieu-card"><div class="lieu-name">Secteur Central</div><p>Ruines souterraines. Autel celte absorb&eacute;. D&eacute;molosse Alpha &eacute;merge.</p></div>
+          <div class="lieu-card"><div class="lieu-name">Complexe Alpha-9</div><p>Terminal Silph Co. Isolement total. &Eacute;vacuation si mission r&eacute;ussie.</p></div>
+        </div>
+      </div>
+
+      <div id="sc-histoire">
+        <div class="section-title" style="margin-bottom:16px;">Histoire</div>
+        <div class="partie-block" id="cc-acte1">
+  <div class="partie-header" onclick="togglePartie('cc-acte1')"><span class="partie-label">Acte I</span><span class="partie-nom">La Piste Toxique</span><span class="partie-chevron" id="chev-cc-acte1">&#9654;</span></div>
+  <div class="partie-body" id="body-cc-acte1">
+<div class="chapter" id="cc1">
+  <div class="chapter-header" onclick="toggleChapter('cc1')"><span class="chapter-num">CH 01</span><span class="chapter-title">La Piste Toxique</span><span class="chapter-chevron">&#9654;</span></div>
+  <div class="chapter-body"><div class="sub-section"><div class="sub-label">Situation</div><p>La zone bois&eacute;e a &eacute;t&eacute; d&eacute;vor&eacute;e par une v&eacute;g&eacute;tation n&eacute;crotique. Brume chimique jaune-violette, hautement corrosive, masquant l'entr&eacute;e du complexe.</p></div><div class="sub-section"><div class="sub-label">D&eacute;fi de survie</div><p>Jet de <em>Vigueur</em> &agrave; -2. Sans &eacute;quipement trouv&eacute; via un jet de <em>Recherche</em>, les PJ subissent un niveau de Fatigue d&ucirc; &agrave; l'empoisonnement.</p></div><div class="sub-section"><div class="sub-label">La Menace</div><p>Le M&eacute;tamorph est trop instable pour attaquer mais imite des formes humaines hurlantes &agrave; travers le gel. Jet de <em>Volont&eacute;</em> obligatoire pour &eacute;viter la Peur.</p></div><div class="chapter-enjeu"><strong>Enjeu MJ</strong><br>Introduire l'atmosph&egrave;re d'horreur et la m&eacute;canique de Fatigue d&egrave;s l'entr&eacute;e. Le dictaphone peut &ecirc;tre trouv&eacute; ici si les PJ fouillent les corps.</div></div>
+</div>
+  </div>
+</div>
+<div class="partie-block" id="cc-acte2">
+  <div class="partie-header" onclick="togglePartie('cc-acte2')"><span class="partie-label">Acte II</span><span class="partie-nom">Cartographie de la Terreur</span><span class="partie-chevron" id="chev-cc-acte2">&#9654;</span></div>
+  <div class="partie-body" id="body-cc-acte2">
+<div class="chapter" id="cc2">
+  <div class="chapter-header" onclick="toggleChapter('cc2')"><span class="chapter-num">CH 02</span><span class="chapter-title">Hub des Conduites</span><span class="chapter-chevron">&#9654;</span></div>
+  <div class="chapter-body"><div class="sub-section"><div class="sub-label">Zone inond&eacute;e</div><p>Passerelle m&eacute;tallique effondr&eacute;e dans un bassin de liquide violet fluorescent.</p></div><div class="sub-section"><div class="sub-label">M&eacute;canique</div><p>Jet d'<em>Athl&eacute;tisme</em> (-2) pour sauter de tuyau en tuyau. &Eacute;chec : chute dans le bassin. D&eacute;clenchement d'une rencontre avec des Smogos Sangsues.</p></div><div class="sub-section"><div class="sub-label">Indice</div><p>Une balise radio partiellement fonctionnelle, r&eacute;cup&eacute;rable avec un jet d'&Eacute;lectronique TN4.</p></div><div class="chapter-enjeu"><strong>Enjeu MJ</strong><br>Premier contact avec les Smogos. Tester la gestion des ressources (soins, &eacute;quipement) avant le boss.</div></div>
+</div>
+<div class="chapter" id="cc3">
+  <div class="chapter-header" onclick="toggleChapter('cc3')"><span class="chapter-num">CH 03</span><span class="chapter-title">Laboratoires de Culture</span><span class="chapter-chevron">&#9654;</span></div>
+  <div class="chapter-body"><div class="sub-section"><div class="sub-label">Situation</div><p>Des dizaines de cuves de clonage en verre bris&eacute;es. Gel m&eacute;tamorph s&eacute;ch&eacute; sur tous les murs.</p></div><div class="sub-section"><div class="sub-label">M&eacute;canique</div><p>Le M&eacute;tamorph utilise <em>Imitation Acoustique</em> pour feindre des pleurs. Jet de <em>Perception</em> TN8 pour identifier la ruse &mdash; &eacute;chec : Peur.</p></div><div class="sub-section"><div class="sub-label">Indice cl&eacute;</div><p>Jet de <em>Recherche</em> r&eacute;ussi : dictaphone d'un chercheur d&eacute;c&eacute;d&eacute;. Contient la faiblesse de la Chim&egrave;re (l'artefact celte) et le code de la Cryo-R&eacute;serve.</p></div><div class="chapter-enjeu"><strong>Enjeu MJ</strong><br>Ce chapitre peut &ecirc;tre court ou long selon que les PJ fouillent m&eacute;thodiquement. Le dictaphone est optionnel mais facilite massivement l'Acte III.</div></div>
+</div>
+<div class="chapter" id="cc4">
+  <div class="chapter-header" onclick="toggleChapter('cc4')"><span class="chapter-num">CH 04</span><span class="chapter-title">La Cryo-R&eacute;serve D&eacute;faillante</span><span class="chapter-chevron">&#9654;</span></div>
+  <div class="chapter-body"><div class="sub-section"><div class="sub-label">Situation</div><p>Le syst&egrave;me de refroidissement a explos&eacute;. Givre chimique noir se propage sur les sols et les murs.</p></div><div class="sub-section"><div class="sub-label">M&eacute;canique</div><p>Toucher le givre : 1d6 d&eacute;g&acirc;ts de froid (ignore l'armure). Extraction de la carte d'acc&egrave;s superviseur : Pok&eacute;mon Feu OR jet d'<em>Agilit&eacute;</em> pr&eacute;cis (TN6).</p></div><div class="sub-section"><div class="sub-label">Rencontre</div><p>Nosferaltos Ecorch&eacute;s en embuscade dans les conduits. &Eacute;crolocation leur donne avantage si les PJ utilisent des lampes.</p></div><div class="chapter-enjeu"><strong>Enjeu MJ</strong><br>Cr&eacute;er une pression temporelle : plus les PJ restent, plus le givre se propage (Doom Track +1 par round d'h&eacute;sitation).</div></div>
+</div>
+  </div>
+</div>
+<div class="partie-block" id="cc-acte3">
+  <div class="partie-header" onclick="togglePartie('cc-acte3')"><span class="partie-label">Acte III</span><span class="partie-nom">La Fusion Alpha</span><span class="partie-chevron" id="chev-cc-acte3">&#9654;</span></div>
+  <div class="partie-body" id="body-cc-acte3">
+<div class="chapter" id="cc5">
+  <div class="chapter-header" onclick="toggleChapter('cc5')"><span class="chapter-num">CH 05</span><span class="chapter-title">La Fusion Alpha</span><span class="chapter-chevron">&#9654;</span></div>
+  <div class="chapter-body"><div class="sub-section"><div class="sub-label">Situation</div><p>Au c&oelig;ur des ruines souterraines. L'autel celte est absorb&eacute; par une masse colossale de gel M&eacute;tamorph violet-noir d'o&ugrave; &eacute;merge un D&eacute;molosse Alpha monstrueux.</p></div><div class="sub-section"><div class="sub-label">M&eacute;canique Boss</div><p><strong>Masse Assimilatrice</strong> : R&eacute;sistance = 10 + N (objets lourds assimil&eacute;s dans la pi&egrave;ce). Au d&eacute;but : 14. Chaque meuble/structure absorb&eacute; : +1 R&eacute;sistance.</p></div><div class="sub-section"><div class="sub-label">Vuln&eacute;rabilit&eacute;</div><p>L'Analyste peut localiser le c&oelig;ur celte : jet de <em>Sciences</em> &agrave; -4. Une attaque r&eacute;ussie sur ce point r&eacute;duit la R&eacute;sistance &agrave; 8 d&eacute;finitivement.</p></div><div class="sub-section"><div class="sub-label">Assimilation Imm&eacute;diate</div><p>Apr&egrave;s un coup r&eacute;ussi : jet de Force oppos&eacute;. &Eacute;chec : la cible est enslis&eacute;e, subit 2d6 d&eacute;g&acirc;ts de corrosion par tour.</p></div><div class="chapter-enjeu"><strong>Enjeu MJ</strong><br>L'&eacute;vacuation n'est possible qu'apr&egrave;s avoir neutralis&eacute; la Chim&egrave;re OU trouv&eacute; le c&oelig;ur. Si le Doom Track est &agrave; 6, l'acide commence &agrave; remplir la salle. La course contre la montre commence.</div></div>
+</div>
+<div class="chapter" id="cc6">
+  <div class="chapter-header" onclick="toggleChapter('cc6')"><span class="chapter-num">CH 06</span><span class="chapter-title">&Eacute;vacuation Alpha-9</span><span class="chapter-chevron">&#9654;</span></div>
+  <div class="chapter-body"><div class="sub-section"><div class="sub-label">D&eacute;nouement</div><p>Si la Chim&egrave;re est neutralis&eacute;e ou le c&oelig;ur celte extrait, le complexe commence &agrave; s'effondrer. Les PJ ont 3 rounds pour rejoindre la surface.</p></div><div class="sub-section"><div class="sub-label">Variantes</div><p><strong>Succ&egrave;s complet</strong> : &eacute;quipe de recherche sauv&eacute;e + preuves sur les exp&eacute;riences Silph Co. &mdash; <strong>Succ&egrave;s partiel</strong> : fuite sans preuves &mdash; <strong>&Eacute;chec</strong> : complexe scell&eacute; par la Ligue pour 10 ans.</p></div><div class="chapter-enjeu"><strong>Enjeu MJ</strong><br>Terminer avec une r&eacute;v&eacute;lation : les exp&eacute;riences ne venaient pas de la Silph Co. mais d'un projet int&eacute;rieur &agrave; la Ligue Indigo. Setup possible pour une suite.</div></div>
+</div>
+  </div>
+</div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+
+function toggleChapter(id)  { document.getElementById(id).classList.toggle('open'); }
+function togglePnj(id)      { document.getElementById(id).classList.toggle('open'); }
+function scrollToEl(id) {
+  // Ouvrir la campagne dans la sidebar
+  const asc = document.getElementById('asc-1');
+  if (asc && asc.classList.contains('hidden')) {
+    asc.classList.remove('hidden');
+    const chev = document.getElementById('asc-1-chev');
+    if (chev) chev.classList.remove('closed');
+  }
+  // Ouvrir la campaign-card dans le contenu
+  const c = document.getElementById('camp-1');
+  if (c && !c.classList.contains('open')) c.classList.add('open');
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 120);
+  document.querySelectorAll('aside button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+function openChapter(id) {
+  // Ouvrir le sous-menu sidebar
+  const asc = document.getElementById('asc-1');
+  if (asc && asc.classList.contains('hidden')) {
+    asc.classList.remove('hidden');
+    const chev = document.getElementById('asc-1-chev');
+    if (chev) chev.classList.remove('closed');
+  }
+  // Ouvrir la campaign-card dans le contenu
+  const c = document.getElementById('camp-1');
+  if (c && !c.classList.contains('open')) c.classList.add('open');
+  setTimeout(() => {
+    const ch = document.getElementById(id);
+    if (!ch) return;
+    if (!ch.classList.contains('open')) ch.classList.add('open');
+    ch.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 120);
+  document.querySelectorAll('aside button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+/* == SCENARIO JS == */
+function scShowTab(tab) {
+  document.querySelectorAll('.sc-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.sc-tab-btn').forEach(function(b) {
+    b.classList.remove('active');
+    b.style.color = 'var(--muted)';
+    b.style.borderBottomColor = 'transparent';
+  });
+  var el = document.getElementById('sc-tab-' + tab);
+  if (el) el.classList.add('active');
+  document.querySelectorAll('.sc-tab-btn[data-tab="' + tab + '"]').forEach(function(b) {
+    b.classList.add('active');
+    b.style.color = 'var(--amber)';
+    b.style.borderBottomColor = 'var(--amber)';
+  });
+  document.querySelectorAll('.sc-aside-panel').forEach(function(p) { p.style.display = 'none'; });
+  var panel = document.getElementById('sc-panel-' + tab);
+  if (panel) panel.style.display = 'block';
+}
+
+function togglePartie(id) {
+  var block = document.getElementById(id);
+  if (block) block.classList.toggle('open');
+}
+
+function openPartie(id) {
+  var block = document.getElementById(id);
+  if (block && !block.classList.contains('open')) block.classList.add('open');
+}
+
+function scrollToEl(id) {
+  var el = document.getElementById(id);
+  if (el) setTimeout(function() { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
+}
+
+function togglePnj(id) {
+  var card = document.getElementById(id);
+  if (card) card.classList.toggle('open');
+}
+
+
+function scrollAndOpen(id) {
+  var card = document.getElementById(id);
+  if (!card) return;
+  if (!card.classList.contains('open')) card.classList.add('open');
+  setTimeout(function() { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80);
+}
+
+
+</script>
+</body>
+</html>
