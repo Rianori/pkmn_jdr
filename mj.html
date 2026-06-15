@@ -1004,6 +1004,8 @@
   .filter-bar-pnj { display:none; flex-wrap:wrap; gap:6px; margin-top:8px; padding-top:8px; border-top:1px solid var(--border); }
   .filter-bar-pnj.active { display:flex; }
   .beast-pnj-sub { transition:opacity .15s; }
+
+  .tag-alpha9 { background:rgba(139,32,32,.2); color:#e07070; border:1px solid rgba(139,32,32,.5); }
 </style>
 </head>
 <body>
@@ -1076,6 +1078,7 @@
         <button onclick="filterBeast('elites',this)">&Eacute;lites</button>
         <button onclick="filterBeast('boss',this)">Boss</button>
         <button onclick="filterBeast('sc02',this)">Carmin s/ Mer</button>
+        <button onclick="filterBeast('alpha9',this)">Alpha-9</button>
       </div>
       <div class="aside-group"><div class="aside-label">Par PNJ (Sc. 02)</div>
         <button onclick="filterByPnj('all',this)">Tous</button>
@@ -3039,6 +3042,72 @@
           </div>
         </div>
       </div>
+    
+      <div class="beast-cat-group" id="bgroup-alpha9">
+        <div class="beast-cat-title">Complexe Alpha-9 &mdash; Le Complexe Chim&egrave;re<span class="beast-count">4 cr&eacute;atures</span></div>
+        <div class="bestiary-grid">
+<div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Smogo &laquo;Sangsue&raquo;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha-9</span> Poison &middot; Mutant &middot; Petit (-1) &middot; Extra</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Poches de chair membraneuses et visqueuses qui rampent sur les plafonds et se laissent tomber sur leurs proies. Produit de l'exposition chronique aux effluents du r&eacute;acteur Alpha-9.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>4</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Chute Embuscade</td><td class="atk-dmg">FOR+d4</td><td>Contact</td><td>Discr&eacute;tion d8 r&eacute;ussie : +2 au jet de Combat</td></tr><tr><td class="atk-name">Succion Toxique</td><td class="atk-dmg">1 Blessure/tour</td><td>Contact</td><td>Jet Vigueur TN6 ou d&eacute;g&acirc;ts continus</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Discr&eacute;tion d8</span> : Se fondent dans les conduites et tuyaux. Perception TN6 pour les rep&eacute;rer.</li><li><span class="capa-name">Accroch&eacute;</span> : Une fois fix&eacute;, reste attach&eacute; jusqu'&agrave; arrachar&eacute; (Force oppos&eacute; TN6) ou KO.</li></ul>
+            <div class="tactique-block">Attaquent en groupes de 3 ou 4, jamais seuls. Chute Embuscade coordonn&eacute;e si plafond disponible. Fuient imm&eacute;diatement si Grotadmorv est neutralis&eacute;.</div>
+          </div>
+        </div>
+          <div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Grotadmorv &laquo;Amas Osseux&raquo;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha-9</span> Poison &middot; Mutant &middot; Grand (+1) &middot; Joker de Zone</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Masse de boue violette pars&eacute;m&eacute;e de cages thoraciques humaines et de d&eacute;bris industriels ac&eacute;r&eacute;s. Absorbe progressivement tout ce qui entre en contact avec lui.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d4</span></div><div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>9</span></div><div class="stat-pill">Allure <span>3</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Projectiles Shrapnel</td><td class="atk-dmg">2d6</td><td>4&quot;/8&quot;/16&quot;</td><td>Os et acier project&eacute;s &mdash; Tir d6</td></tr><tr><td class="atk-name">Nuage de D&eacute;composition</td><td class="atk-dmg">&mdash;</td><td>Zone contact</td><td>Vigueur TN6 ou Secouu&eacute; par l'odeur</td></tr><tr><td class="atk-name">Frappe de Masse</td><td class="atk-dmg">FOR+d8</td><td>M&ecirc;l&eacute;e</td><td>Renverse si Robustesse non atteinte</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Corps Amorphe</span> : Armes &agrave; feu perforantes : moiti&eacute; des d&eacute;g&acirc;ts seulement. Armes tranchantes : -1 d&eacute; de d&eacute;g&acirc;ts.</li><li><span class="capa-name">Armure D&eacute;bris</span> : +2 Robustesse (inclus dans le profil). Perd +1 par Blessure encaiss&eacute;e.</li><li><span class="capa-name">Joker de Zone</span> : Wild Die d6. Ne fuit jamais. Reste immobile et attend ses cibles.</li></ul>
+            <div class="tactique-block">Gardien statique du Hub des Conduites. Utilise Shrapnel &agrave; distance d&egrave;s qu'une cible entre dans sa port&eacute;e. Nuage de D&eacute;composition en action bonus si engag&eacute; au corps &agrave; corps.</div>
+          </div>
+        </div>
+          <div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Nosferalto &laquo;&Eacute;corch&eacute;&raquo;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha-9</span> Vol &middot; Mutant &middot; Petit (-1) &middot; Extra</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Chauves-souris aveugles &agrave; la peau translucide. Leurs canines s&eacute;cr&egrave;tent un anticoagulant synth&eacute;tique issu des produits chimiques du r&eacute;acteur. Volent silencieusement dans l'obscurit&eacute; totale.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>2 sol / 8 vol</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Morsure H&eacute;morragique</td><td class="atk-dmg">FOR+d4</td><td>M&ecirc;l&eacute;e</td><td>1 d&eacute;g&acirc;t automatique/tour jusqu'&agrave; jet Soins r&eacute;ussi</td></tr><tr><td class="atk-name">Plong&eacute;e</td><td class="atk-dmg">FOR+d6</td><td>M&ecirc;l&eacute;e</td><td>Initiative +2 si attaque depuis le vol</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">&Eacute;cholocation</span> : Ignore tous malus de visibilit&eacute; (obscurit&eacute;, brume). Les sources lumineuses intenses les d&eacute;sorienternt (-2 &agrave; tous jets pendant 1 round).</li><li><span class="capa-name">Anticoagulant</span> : H&eacute;morragie continue apr&egrave;s morsure. Soins TN4 pour stopper. Deux Smogos actifs simultan&eacute;ment : le PJ ne peut pas r&eacute;cup&eacute;rer naturellement.</li></ul>
+            <div class="tactique-block">En essaim de 5 &agrave; 8 dans la Cryo-R&eacute;serve. Attaquent dans le noir &mdash; l'obscurit&eacute; est leur avantage. Si les PJ utilisent des lampes puissantes, les Nosferaltos fuient 1 round avant de reformer l'essaim.</div>
+          </div>
+        </div>
+          <div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">La Chim&egrave;re &mdash; D&eacute;molosse Alpha Fus&iacute;onn&eacute;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha-9</span> T&eacute;n&egrave;bres &middot; Normal &middot; Mutant &middot; Colossal (+4) &middot; BOSS JOKER</div></div>
+          <div class="beast-body">
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Masse de gel M&eacute;tamorph violet-noir fusionne avec un D&eacute;molosse Alpha et absorb&eacute; l'autel celte du complexe souterrain. Sa R&eacute;sistance augmente &agrave; chaque objet lourd int&eacute;gr&eacute;. Incoh&eacute;rente, instable, indestructible par les moyens conventionnels.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d12+2</span></div><div class="stat-pill">VIG <span>d12</span></div><div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">Robustesse <span>14+ variable</span></div><div class="stat-pill">Allure <span>6&quot;</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Assimilation Imm&eacute;diate</td><td class="atk-dmg">Force oppos&eacute;</td><td>Contact</td><td>&Eacute;chec : enlise la cible &mdash; 2d6 corrosion/tour</td></tr><tr><td class="atk-name">Tir de Boue Toxique</td><td class="atk-dmg">3d6 + poison</td><td>10&quot;/20&quot;/40&quot;</td><td>Zone petite &mdash; Vigueur TN6 ou Empoisonn&eacute;</td></tr><tr><td class="atk-name">M&eacute;tamorphose Partielle</td><td class="atk-dmg">Trempe TN6</td><td>Zone 5&quot;</td><td>&Eacute;chec : Secouu&eacute; (Peur) &mdash; la forme change &agrave; chaque round</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Masse Assimilatrice</span> : R&eacute;sistance = 10 + N objets lourds absorb&eacute;s dans la pi&egrave;ce. D&eacute;marre &agrave; 14. Maximum th&eacute;orique 20. D&eacute;truire les structures = r&eacute;duire sa R&eacute;sistance.</li><li><span class="capa-name">C&oelig;ur Celte</span> : Vuln&eacute;rabilit&eacute; cach&eacute;e. Sciences TN-4 pour localiser. Attaque r&eacute;ussie sur ce point : R&eacute;sistance r&eacute;duite &agrave; 8 d&eacute;finitivement.</li><li><span class="capa-name">Wild Die d12</span> : Boss Joker &mdash; 3 Blessures. R&eacute;g&egrave;n&egrave;re 1 Blessure si Doom Track &ge; 5 au d&eacute;but de son tour.</li></ul>
+            <div class="tactique-block">Priorit&eacute; : absorber les structures m&eacute;talliques lourdes pour augmenter sa R&eacute;sistance. Cible l'Analyste en priorit&eacute; si le c&oelig;ur celte est r&eacute;v&eacute;l&eacute;. Tir de Boue sur les PJ qui restent &agrave; distance. Assimilation Imm&eacute;diate sur le PJ le plus proche &agrave; chaque round.</div>
+          </div>
+        </div>
+        </div>
+      </div>
     </div>
 
 <div class="section" id="tab-notes">
@@ -3539,8 +3608,10 @@ function filterBeast(cat, btn) {
     document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = g.id === 'bgroup-sc02' ? '' : 'none'; });
     if (pnjBar) pnjBar.classList.add('active');
     filterByPnj('all', pnjBar ? pnjBar.querySelector('button') : null);
+  } else if (cat === 'alpha9') {
+    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = g.id === 'bgroup-alpha9' ? '' : 'none'; });
   } else {
-    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = g.id === 'bgroup-sc02' ? 'none' : ''; });
+    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = (g.id === 'bgroup-sc02' || g.id === 'bgroup-alpha9') ? 'none' : ''; });
     document.querySelectorAll('.beast-card').forEach(function(c) {
       c.style.display = (c.dataset.cat === cat) ? '' : 'none';
     });
@@ -3592,6 +3663,7 @@ function filterByPnj(slug, btn) {
           <button class="filter-btn" onclick="filterBeast('elites',this)">&#128995; Élites</button>
           <button class="filter-btn" onclick="filterBeast('boss',this)">&#128128; Boss</button>
           <button class="filter-btn" onclick="filterBeast('sc02',this)">&#127942; Carmin s/ Mer</button>
+          <button class="filter-btn" onclick="filterBeast('alpha9',this)">&#9763; Alpha-9</button>
         </div>
         <div class="filter-bar-pnj" id="filter-pnj-bar">
           <span style="font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.08em;align-self:center;">PAR PNJ :</span>
