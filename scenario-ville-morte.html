@@ -252,14 +252,11 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
   justify-content: space-between;
   padding: 14px 18px;
   background: var(--surface);
-  cursor: pointer;
-  transition: background .12s;
-  user-select: none;
 }
 .pnj-header:hover { background: var(--card); }
 .pnj-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
 .pnj-role { font-size: 12px; color: var(--muted); }
-.pnj-body { display: none; padding: 16px 18px; border-top: 1px solid var(--border); }
+.pnj-body { display: block; padding: 16px 18px; border-top: 1px solid var(--border); }
 .pnj-card.open .pnj-body { display: block; }
 .stat-inline { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .stat-pill {
@@ -595,19 +592,19 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
       <div class="sc-aside-panel" id="sc-panel-pnj" style="display:none;">
         <div class="sc-aside-group">
           <div class="sc-aside-label">Alliés</div>
-          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-kaito')">Kaito Mura</button>
-          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-fil')">Fil — Polichombr</button>
+          <button class="sc-aside-btn" onclick="scrollToEl('pnj-kaito')">Kaito Mura</button>
+          <button class="sc-aside-btn" onclick="scrollToEl('pnj-fil')">Fil — Polichombr</button>
         </div>
         <div class="sc-aside-group">
           <div class="sc-aside-label">Antagonistes</div>
-          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-holt')">Mira Holt</button>
-          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-ashford')">Directeur Ashford</button>
+          <button class="sc-aside-btn" onclick="scrollToEl('pnj-holt')">Mira Holt</button>
+          <button class="sc-aside-btn" onclick="scrollToEl('pnj-ashford')">Directeur Ashford</button>
         </div>
         <div class="sc-aside-group">
           <div class="sc-aside-label">Extras</div>
-          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-agents')">Agents Ashford</button>
-          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-techniciens')">Techniciens</button>
-          <button class="sc-aside-btn" onclick="scrollAndOpen('pnj-torkel')">Garde Torkel</button>
+          <button class="sc-aside-btn" onclick="scrollToEl('pnj-agents')">Agents Ashford</button>
+          <button class="sc-aside-btn" onclick="scrollToEl('pnj-techniciens')">Techniciens</button>
+          <button class="sc-aside-btn" onclick="scrollToEl('pnj-torkel')">Garde Torkel</button>
         </div>
       </div>
     </div>
@@ -648,7 +645,6 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
         <div class="chapter-header" onclick="toggleChapter('ch1')">
           <span class="chapter-num">CH 01</span>
           <span class="chapter-title">Le mandat sans badge</span>
-          <span class="chapter-chevron">▶</span>
         </div>
         <div class="chapter-body">
           <div class="sub-section"><div class="sub-label">L'enveloppe</div><p>Une enveloppe sans en-tête glissée sous la porte à l'aube. Mission : enquêter sur les disparitions de Pokémon à Lavanville. Aucun contact officiel. Honoraires versés en avance sur un compte anonyme. Instructions rédigées dans un style administratif reconnaissable — Kaito le note, range la pensée pour plus tard.</p></div>
@@ -659,7 +655,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
       </div>
 <div class="chapter" id="ch2">
         <div class="chapter-header" onclick="toggleChapter('ch2')">
-          <span class="chapter-num">CH 02</span><span class="chapter-title">Lavanville la grise</span><span class="chapter-chevron">▶</span>
+          <span class="chapter-num">CH 02</span><span class="chapter-title">Lavanville la grise</span>
         </div>
         <div class="chapter-body">
           <div class="sub-section"><div class="sub-label">La ville sous cloche</div><p>Lavanville est silencieuse d'une façon qui n'est pas naturelle. Le silence des villes vidées de quelque chose d'essentiel. Les gens marchent comme des ombres. Des Osselaits errent sans dresseur. Des Fantominus sortent de la Tour Pokémon en plein jour.</p></div>
@@ -670,7 +666,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
       </div>
 <div class="chapter" id="ch3">
         <div class="chapter-header" onclick="toggleChapter('ch3')">
-          <span class="chapter-num">CH 03</span><span class="chapter-title">La cartographie de Fil</span><span class="chapter-chevron">▶</span>
+          <span class="chapter-num">CH 03</span><span class="chapter-title">La cartographie de Fil</span>
         </div>
         <div class="chapter-body">
           <div class="sub-section"><div class="sub-label">Trois nuits d'arpentage</div><p>Fil passe trois nuits à parcourir Lavanville seul. Chaque matin, il est là au réveil, fils légèrement chargés d'informations qu'il n'a pas encore transmises.</p></div>
@@ -686,7 +682,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
   <div class="partie-body" id="body-acte2">
 <div class="chapter" id="ch4">
         <div class="chapter-header" onclick="toggleChapter('ch4')">
-          <span class="chapter-num">CH 04</span><span class="chapter-title">Sous la Tour</span><span class="chapter-chevron">▶</span>
+          <span class="chapter-num">CH 04</span><span class="chapter-title">Sous la Tour</span>
         </div>
         <div class="chapter-body">
           <div class="sub-section"><div class="sub-label">La descente</div><p>Trois niveaux. Au troisième, une porte en acier renforcé, fermée électroniquement. Fil travaille sur le câblage périphérique. <strong>Électronique d6, diff. 6</strong> pour forcer sans déclencher l'alarme.</p></div>
@@ -697,7 +693,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
       </div>
 <div class="chapter" id="ch5">
         <div class="chapter-header" onclick="toggleChapter('ch5')">
-          <span class="chapter-num">CH 05</span><span class="chapter-title">Première trahison — le faux contact</span><span class="chapter-chevron">▶</span>
+          <span class="chapter-num">CH 05</span><span class="chapter-title">Première trahison — le faux contact</span>
         </div>
         <div class="chapter-body">
           <div class="sub-section"><div class="sub-label">La transmission</div><p>Le Groupe transmet ses découvertes au contact de la Ligue. Réponse en une heure : "Ne parlez à personne en dehors de ce canal." Ton différent du premier message — plus directif, moins formel.</p></div>
@@ -708,7 +704,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
       </div>
 <div class="chapter" id="ch6">
         <div class="chapter-header" onclick="toggleChapter('ch6')">
-          <span class="chapter-num">CH 06</span><span class="chapter-title">Mira Holt</span><span class="chapter-chevron">▶</span>
+          <span class="chapter-num">CH 06</span><span class="chapter-title">Mira Holt</span>
         </div>
         <div class="chapter-body">
           <div class="sub-section"><div class="sub-label">La rencontre de couverture</div><p>Le Groupe obtient un accès au site grâce au faux badge de Yuki ou en improvisant. <strong>Persuasion d10, diff. 4.</strong> Mira Holt les reçoit elle-même — pas méfiante, occupée.</p></div>
@@ -724,7 +720,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
   <div class="partie-body" id="body-acte3">
 <div class="chapter" id="ch7">
         <div class="chapter-header" onclick="toggleChapter('ch7')">
-          <span class="chapter-num">CH 07</span><span class="chapter-title">Rebondissement — La surveillance</span><span class="chapter-chevron">▶</span>
+          <span class="chapter-num">CH 07</span><span class="chapter-title">Rebondissement — La surveillance</span>
         </div>
         <div class="chapter-body">
           <div class="sub-section"><div class="sub-label">Les deux ombres</div><p>Deux agents en civil dans le sillage de le Groupe. <strong>Perception diff. 4</strong> pour les repérer avant l'embuscade Route 8. Échec = agents choisissent le moment — avantage d'initiative.</p></div>
@@ -735,7 +731,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
       </div>
 <div class="chapter" id="ch8">
         <div class="chapter-header" onclick="toggleChapter('ch8')">
-          <span class="chapter-num">CH 08</span><span class="chapter-title">L'alerte de Yael</span><span class="chapter-chevron">▶</span>
+          <span class="chapter-num">CH 08</span><span class="chapter-title">L'alerte de Yael</span>
         </div>
         <div class="chapter-body">
           <div class="sub-section"><div class="sub-label">La rencontre</div><p>Yael Ors a les témoignages. Le Groupe a les preuves visuelles. Rendez-vous décidé pour le lendemain soir dans un lieu neutre.</p></div>
@@ -746,7 +742,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
       </div>
 <div class="chapter" id="ch9">
         <div class="chapter-header" onclick="toggleChapter('ch9')">
-          <span class="chapter-num">CH 09</span><span class="chapter-title">Fil dans le réacteur</span><span class="chapter-chevron">▶</span>
+          <span class="chapter-num">CH 09</span><span class="chapter-title">Fil dans le réacteur</span>
         </div>
         <div class="chapter-body">
           <div class="sub-section"><div class="sub-label">La découverte</div><p>Fil est branché à un harnais bio-énergétique de taille minimum. Ses fils épars, désynchronisés, translucides. Capturé pendant sa reconnaissance nocturne. <strong>Il est là depuis six heures.</strong></p></div>
@@ -762,7 +758,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
   <div class="partie-body" id="body-acte4">
 <div class="chapter" id="ch10">
         <div class="chapter-header" onclick="toggleChapter('ch10')">
-          <span class="chapter-num">CH 10</span><span class="chapter-title">La nuit entre deux</span><span class="chapter-chevron">▶</span>
+          <span class="chapter-num">CH 10</span><span class="chapter-title">La nuit entre deux</span>
         </div>
         <div class="chapter-body">
           <div class="sub-section"><div class="sub-label">L'attente</div><p>Kaito s'installe dans une galerie abandonnée, Fil posé sur ses genoux. Il ne fait pas de gestes. Il ne parle pas. Il sait que les interventions extérieures n'accélèrent pas le processus. Il attend.</p></div>
@@ -773,7 +769,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
       </div>
 <div class="chapter" id="ch11">
         <div class="chapter-header" onclick="toggleChapter('ch11')">
-          <span class="chapter-num">CH 11</span><span class="chapter-title">La chute d'Ashford</span><span class="chapter-chevron">▶</span>
+          <span class="chapter-num">CH 11</span><span class="chapter-title">La chute d'Ashford</span>
         </div>
         <div class="chapter-body">
           <div class="sub-section"><div class="sub-label">La transmission à Yael</div><p>Le Groupe remet tout à Yael Ors. <strong>Persuasion d10, diff. 6</strong> pour convaincre Yael de publier immédiatement sur trois supports. Succès = publication en 24h. Échec = Yael exige un délai.</p></div>
@@ -784,7 +780,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
       </div>
 <div class="chapter" id="ch12">
         <div class="chapter-header" onclick="toggleChapter('ch12')">
-          <span class="chapter-num">CH 12</span><span class="chapter-title">Ce que Lavanville garde</span><span class="chapter-chevron">▶</span>
+          <span class="chapter-num">CH 12</span><span class="chapter-title">Ce que Lavanville garde</span>
         </div>
         <div class="chapter-body">
           <div class="sub-section"><div class="sub-label">Les Pokémon qui ne rentrent pas</div><p>Le réacteur est démantelé. Certains Pokémon sont trop affaiblis pour être retracés. Le Marill de la femme du Ch. 2 ne sera pas retrouvé. Kaito l'apprend par Yael. Il ne lui rend pas visite.</p></div>
@@ -805,10 +801,9 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
         <div class="page-title">Fiches PNJ</div>
         <div class="page-tagline">La Ville Morte &middot; 7 personnages</div>
         <div class="section-title" style="margin-bottom:16px">Alli&eacute;s &mdash; Jokers</div>
-<div class="pnj-card open" id="pnj-kaito">
-        <div class="pnj-header" onclick="togglePnj('pnj-kaito')">
+<div class="pnj-card" id="pnj-kaito">
+        <div class="pnj-header">
           <div><div class="pnj-name">Kaito Mura <span class="tag tag-edge">Joker allié</span></div><div class="pnj-role">Inspecteur indépendant — présent tout au long du scénario</div></div>
-          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
@@ -827,10 +822,9 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne combat presque jamais. Oriente, n'exécute pas. Équipement : imperméable, radio cryptée, appareil photo à mémoire physique, badge suspendu.</em></p>
         </div>
       </div>
-<div class="pnj-card open" id="pnj-fil">
-        <div class="pnj-header" onclick="togglePnj('pnj-fil')">
+<div class="pnj-card" id="pnj-fil">
+        <div class="pnj-header">
           <div><div class="pnj-name">Fil — Polichombr <span class="tag tag-edge">Joker allié spécial</span></div><div class="pnj-role">Capturé au Ch. 9 — Survie in extremis au Ch. 10</div></div>
-          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
@@ -854,10 +848,9 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
         </div>
       </div>
 <div class="section-title" style="margin:28px 0 16px">Antagonistes &mdash; Jokers</div>
-<div class="pnj-card open" id="pnj-holt">
-        <div class="pnj-header" onclick="togglePnj('pnj-holt')">
+<div class="pnj-card" id="pnj-holt">
+        <div class="pnj-header">
           <div><div class="pnj-name">Mira Holt <span class="tag tag-psi">Joker ennemi</span></div><div class="pnj-role">Directrice technique du réacteur — apparaît Ch. 6</div></div>
-          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
@@ -876,10 +869,9 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne fuit pas. Si le Groupe la confronte, elle argumente. Pokémon : 2 Absol + Tentacruel personnel (non PSI-B). Badge accès niveau 5. Tablette avec plans PSI-B.</em></p>
         </div>
       </div>
-<div class="pnj-card open" id="pnj-ashford">
-        <div class="pnj-header" onclick="togglePnj('pnj-ashford')">
+<div class="pnj-card" id="pnj-ashford">
+        <div class="pnj-header">
           <div><div class="pnj-name">Directeur Ashford <span class="tag tag-psi">Joker ennemi / absent</span></div><div class="pnj-role">Ligue Pokémon, Cramoisîle — n'apparaît jamais en personne</div></div>
-          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
@@ -897,10 +889,9 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
         </div>
       </div>
 <div class="section-title" style="margin:28px 0 16px">Extras</div>
-<div class="pnj-card open" id="pnj-agents">
-        <div class="pnj-header" onclick="togglePnj('pnj-agents')">
+<div class="pnj-card" id="pnj-agents">
+        <div class="pnj-header">
           <div><div class="pnj-name">Agent de terrain d'Ashford <span class="tag tag-psi" style="background:#1a0520;color:#c050e0;">Extra</span></div><div class="pnj-role">Ch. 7 et 8 — embuscade, arrestation</div></div>
-          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
@@ -914,10 +905,9 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted)"><em>Matraque (Str+d4) ou pistolet paralysant (2d6, Secousse). Pokémon : Arcanin (Extra) Combat d8, Str+d6, Parade 5, Robustesse 7. Tactique : un engage en mêlée, l'autre couvre. Fuite si 2 agents au sol.</em></p>
         </div>
       </div>
-<div class="pnj-card open" id="pnj-techniciens">
-        <div class="pnj-header" onclick="togglePnj('pnj-techniciens')">
+<div class="pnj-card" id="pnj-techniciens">
+        <div class="pnj-header">
           <div><div class="pnj-name">Technicien du réacteur <span class="tag tag-psi" style="background:#1a0520;color:#c050e0;">Extra</span></div><div class="pnj-role">Ch. 4 et 9 — dans la mine</div></div>
-          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
@@ -931,10 +921,9 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted)"><em>Outil électrique improvisé (Str+d4). Pokémon : Voltorbe — Autodestruction (6d6, zone 2", usage unique). Tactique : déclenche les alarmes ou verrouille les accès. À neutraliser vite.</em></p>
         </div>
       </div>
-<div class="pnj-card open" id="pnj-torkel">
-        <div class="pnj-header" onclick="togglePnj('pnj-torkel')">
+<div class="pnj-card" id="pnj-torkel">
+        <div class="pnj-header">
           <div><div class="pnj-name">Garde Torkel <span class="tag tag-gardien" style="background:#051530;color:#6090e0;">Extra allié latent</span></div><div class="pnj-role">Agent de sécurité — laisse une porte ouverte au Ch. 9</div></div>
-          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
