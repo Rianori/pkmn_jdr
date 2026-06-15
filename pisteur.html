@@ -918,15 +918,7 @@ function closeAddForm() {
   document.getElementById('pk-add-notes').value = '';
 }
 
-function addPokemon() {
-  var slot = parseInt(document.getElementById('add-slot-hidden').value);
-  var name = document.getElementById('pk-add-name').value.trim();
-  var type = document.getElementById('pk-add-type').value.trim();
-  var notes = document.getElementById('pk-add-notes').value.trim();
-  if (!name) { document.getElementById('pk-add-name').focus(); return; }
-  state.team[slot] = { name:name, type:type, notes:notes, partner:false };
-  saveState(); closeAddForm(); renderTeam();
-}
+
 
 function removePokemon(i) {
   if (i===0) return;
@@ -935,26 +927,7 @@ function removePokemon(i) {
   saveState(); renderTeam();
 }
 
-function renderPanel() {
-  var panel = document.getElementById('team-panel');
-  if (!panel) return;
-  var slot = state.team[state.activeSlot];
-  if (!slot) { panel.innerHTML='<div class="team-empty-state">Selectionne un slot.</div>'; return; }
-  if (state.activeSlot===0) {
-    var pk = document.getElementById('partner-pk-card');
-    if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
-    return;
-  }
-  panel.innerHTML =
-    '<div class="team-panel-header">'
-    + '<span class="team-panel-name">'+slot.name+'</span>'
-    + '<span style="font-size:12px;color:var(--muted)">'+slot.type+'</span>'
-    + '<button class="btn-danger" style="margin-left:auto" onclick="removePokemon('+state.activeSlot+')">Retirer</button>'
-    + '</div><div class="team-panel-body">'
-    + '<div class="section-title" style="margin-bottom:8px">Notes de session</div>'
-    + '<textarea style="width:100%;min-height:120px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:13px;padding:10px;resize:vertical" oninput="updatePkNotes(this.value)">'+(slot.notes||'')+'</textarea>'
-    + '</div>';
-}
+
 
 function updatePkNotes(val) { state.team[state.activeSlot].notes=val; saveState(); }
 
