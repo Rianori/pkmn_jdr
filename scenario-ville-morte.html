@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Ville Morte &mdash; Scenario</title>
+<style>
+
+
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+
+  :root {
+    --bg:        #0e0e0f;
+    --surface:   #161618;
+    --card:      #1c1c1f;
+    --border:    #2a2a2e;
+    --amber:     #c8922a;
+    --amber-dim: #7a5510;
+    --amber-glow:#c8922a22;
+    --text:      #d4cfc5;
+    --muted:     #6b6660;
+    --danger:    #8b2020;
+    --safe:      #1e5c2e;
+    --blue:      #1e3a6b;
+    --boss:      #4a2800;
+    --radius:    4px;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+  }
+  header h1 {
+    font-family: var(--mono);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--amber);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  header .subtitle {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    gap: 2px;
+    padding: 0 32px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  nav button {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 13px 18px 11px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color .15s, border-color .15s;
+  }
+  nav button:hover  { color: var(--text); }
+  nav button.active { color: var(--amber); border-bottom-color: var(--amber); }
+
+  /* ── LAYOUT ── */
+  main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* Sidebar (sections du scénario) */
+  aside {
+    width: 180px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    overflow-y: auto;
+    padding: 16px 0;
+    display: block;
+  }
+  aside .aside-group { margin-bottom: 4px; }
+  aside .aside-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 12px 4px;
+  }
+  aside button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--muted);
+    padding: 7px 12px;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all .12s;
+    line-height: 1.3;
+  }
+  aside button:hover  { color: var(--text); background: var(--card); }
+  aside button.active { color: var(--amber); border-left-color: var(--amber); background: var(--amber-glow); }
+
+  /* Content pane */
+  .content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 24px 24px 16px;
+  }
+
+  /* ── SECTION ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── TYPOGRAPHY ── */
+  .page-title {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--amber);
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .page-tagline {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+  .section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 32px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 20px 0 6px;
+  }
+  p { color: #a8a39a; margin-bottom: 10px; line-height: 1.7; }
+  strong { color: var(--text); font-weight: 600; }
+  em { color: var(--muted); font-style: italic; }
+
+  /* ── CHAPITRE ── */
+  .chapter {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .chapter-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--card);
+    cursor: pointer;
+    user-select: none;
+    transition: background .12s;
+  }
+  .chapter-header:hover { background: #202024; }
+  .chapter-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--amber);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+  }
+  .chapter-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+  }
+  .chapter-chevron {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    transition: transform .2s;
+  }
+  .chapter.open .chapter-chevron { transform: rotate(90deg); }
+  .chapter-body { display: none; padding: 0 18px 18px; }
+  .chapter.open .chapter-body { display: block; }
+
+  .sub-section { margin-top: 14px; }
+  .sub-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--amber-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .enjeu {
+    margin-top: 14px;
+    padding: 10px 14px;
+    background: var(--amber-glow);
+    border-left: 2px solid var(--amber-dim);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .enjeu-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 4px;
+  }
+  .enjeu p { font-style: italic; font-size: 13px; color: #8a8278; margin: 0; }
+
+  /* ── ACTE ── */
+  .acte-block {
+    padding: 12px 16px;
+    border-left: 3px solid var(--amber-dim);
+    background: var(--card);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin-bottom: 10px;
+  }
+  .acte-title { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--amber); margin-bottom: 4px; }
+  .acte-block p { font-size: 13px; margin: 0; }
+
+  /* ── FIN ── */
+  .fin-block {
+    padding: 12px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+  }
+  .fin-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .fin-block p { font-size: 13px; margin: 0; }
+
+  /* ── FICHE PJ ── */
+  .pj-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .pj-header {
+    background: var(--card);
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pj-num {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .pj-name {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--amber);
+    margin-bottom: 2px;
+  }
+  .pj-concept { font-size: 13px; color: var(--muted); font-style: italic; }
+  .pj-body { padding: 22px; }
+
+  /* Stats grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+  }
+  .stat-block-title {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-name { color: var(--muted); }
+  .stat-val  { font-family: var(--mono); font-weight: 600; color: var(--amber); font-size: 13px; }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+  .tag-majeur   { background: #3a1010; color: #e07070; }
+  .tag-mineur   { background: #1a2a10; color: #80b060; }
+  .tag-edge     { background: #102030; color: #5090c0; }
+  .tag-background { background: #2a1a00; color: #c08030; }
+  .tag-combat   { background: #200010; color: #c040a0; }
+  .tag-social   { background: #0a1a30; color: #4090e0; }
+  .tag-weird    { background: #1a0a30; color: #9060d0; }
+  .tag-psi      { background: #3a0505; color: #e05050; }
+  .tag-sauvage  { background: #05200a; color: #50c060; }
+  .tag-gardien  { background: #051530; color: #5080e0; }
+  .tag-boss     { background: #201000; color: #d08020; }
+
+  .hindrance-block, .edge-block {
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    margin-bottom: 6px;
+  }
+  .hindrance-block { background: #1a0a0a; border-left: 2px solid #5a2020; }
+  .edge-block      { background: #0a1020; border-left: 2px solid #203050; }
+  .block-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .block-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .gear-list { list-style: none; }
+  .gear-list li {
+    font-size: 13px;
+    color: #a8a39a;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .gear-list li::before {
+    content: '·';
+    font-family: var(--mono);
+    color: var(--amber-dim);
+    flex-shrink: 0;
+  }
+
+  /* ── PNJ ── */
+  .pnj-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    width: 100%;
+  }
+  .pnj-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 18px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+    transition: background .12s;
+  }
+  .pnj-header:hover { background: #202024; }
+  .pnj-name { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--text); }
+  .pnj-role { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 2px; }
+  .pnj-body { display: none; padding: 18px; }
+  .pnj-card.open .pnj-body { display: block; }
+  .pnj-card.open .chapter-chevron { transform: rotate(90deg); }
+
+  .stat-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .stat-pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 2px 8px;
+    color: var(--text);
+  }
+  .stat-pill span { color: var(--amber); font-weight: 600; }
+
+  /* ── BESTIAIRE ── */
+  .bestiary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 700px) { .bestiary-grid { grid-template-columns: 1fr; } }
+
+  .beast-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color .15s;
+  }
+  .beast-card:hover { border-color: var(--amber-dim); }
+  .beast-card.open  { border-color: var(--amber-dim); }
+
+  .beast-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid transparent;
+    transition: border-color .15s;
+  }
+  .beast-card.open .beast-header { border-color: var(--border); }
+
+  .beast-name {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .beast-meta { font-size: 11px; color: var(--muted); }
+  .beast-body { display: none; padding: 14px 16px; }
+  .beast-card.open .beast-body { display: block; }
+
+  .atk-table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 12px; }
+  .atk-table th {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .atk-table td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #1e1e22;
+    color: #a8a39a;
+    vertical-align: top;
+  }
+  .atk-table tr:last-child td { border-bottom: none; }
+  .atk-name { color: var(--text); font-weight: 600; }
+  .atk-dmg  { font-family: var(--mono); color: var(--amber); white-space: nowrap; }
+
+  .capa-list { list-style: none; margin-top: 8px; }
+  .capa-list li {
+    font-size: 12px;
+    color: #a8a39a;
+    padding: 4px 0 4px 12px;
+    border-bottom: 1px solid #1e1e22;
+    position: relative;
+    line-height: 1.5;
+  }
+  .capa-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--amber-dim);
+    font-size: 10px;
+    top: 5px;
+  }
+  .capa-list li:last-child { border-bottom: none; }
+  .capa-name { color: var(--text); font-weight: 600; }
+  .tactique-block {
+    margin-top: 8px;
+    padding: 8px 10px;
+    background: var(--surface);
+    border-left: 2px solid var(--muted);
+    font-size: 11px;
+    color: var(--muted);
+    font-style: italic;
+    line-height: 1.5;
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* Filtre bestiaire */
+  .filter-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 5px 12px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all .12s;
+  }
+  .filter-btn:hover { color: var(--text); border-color: var(--muted); }
+  .filter-btn.active { background: var(--amber-glow); border-color: var(--amber); color: var(--amber); }
+
+  /* catégorie bg */
+  .cat-sauvage  { border-top: 2px solid #3A7D44; }
+  .cat-psi      { border-top: 2px solid #8B1A1A; }
+  .cat-gardien  { border-top: 2px solid #1A3A8B; }
+  .cat-boss     { border-top: 2px solid #8B5000; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Résumé */
+  .resume-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--amber);
+    padding: 18px 22px;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    margin-bottom: 24px;
+  }
+  .resume-box p { font-size: 14px; color: #b0aba1; margin: 0; line-height: 1.75; }
+
+  .lieux-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .lieu-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+  .lieu-name { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--amber); margin-bottom: 4px; }
+  .lieu-card p { font-size: 12px; color: var(--muted); margin: 0; line-height: 1.5; }
+
+  .perso-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-bottom: 8px;
+  }
+  .perso-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .perso-card p { font-size: 13px; color: var(--muted); margin: 0; line-height: 1.55; }
+
+  .divider { height: 1px; background: var(--border); margin: 28px 0; }
+
+  /* ── FICHES POKÉMON ── */
+  .pk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  @media (max-width: 750px) { .pk-grid { grid-template-columns: 1fr; } }
+
+  .pk-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .pk-card-header {
+    padding: 14px 18px 10px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .pk-owner {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .pk-name {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--amber);
+    margin-bottom: 1px;
+  }
+  .pk-species {
+    font-size: 11px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+  .pk-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 2px;
+  }
+  .pk-body { padding: 16px 18px; }
+
+  .pk-lore {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Stats en ligne horizontale */
+  .pk-stats-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .pk-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 4px 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .pk-stat .val { color: var(--amber); font-weight: 600; }
+
+  /* Sous-sections compactes */
+  .pk-section-lbl {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 12px 0 5px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Table attaques compacte */
+  .pk-atk-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 4px; }
+  .pk-atk-table th {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 3px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pk-atk-table td {
+    padding: 4px 6px;
+    border-bottom: 1px solid #1e1e22;
+    color: #a8a39a;
+    vertical-align: top;
+    line-height: 1.4;
+  }
+  .pk-atk-table tr:last-child td { border-bottom: none; }
+  .pk-atk-name { color: var(--text); font-weight: 600; font-size: 11px; white-space: nowrap; }
+  .pk-atk-dmg  { font-family: var(--mono); color: var(--amber); font-size: 10px; white-space: nowrap; }
+
+  /* Capacités */
+  .pk-capa { margin-bottom: 8px; }
+  .pk-capa-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .pk-capa-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+    padding-left: 10px;
+  }
+
+  /* Blessures Pokémon */
+  .pk-wounds {
+    display: flex;
+    gap: 5px;
+    margin: 10px 0 6px;
+  }
+  .pk-wound-box {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 6px 4px;
+    text-align: center;
+    font-size: 10px;
+    background: var(--surface);
+  }
+  .pk-wound-box.ko { background: #1a0505; border-color: #5a2020; color: #e07070; }
+  .pk-wound-lbl { font-family: var(--mono); font-size: 8px; color: var(--muted); display: block; margin-bottom: 3px; }
+  .pk-wound-check { font-size: 16px; color: var(--muted); line-height: 1; }
+
+  /* Boite narrative */
+  .pk-note {
+    background: var(--amber-glow);
+    border-left: 2px solid var(--amber-dim);
+    border-radius: 0 2px 2px 0;
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-size: 11px;
+    font-style: italic;
+    color: #8a8278;
+    line-height: 1.5;
+  }
+  .pk-note strong { color: var(--amber); font-style: normal; }
+
+
+  /* POSSE COLONNES */
+  .posse-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+  @media(max-width:800px){.posse-grid{grid-template-columns:1fr;}}
+  .posse-col{display:flex;flex-direction:column;gap:12px;}
+  .pokemon-section-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:6px;padding:4px 0;border-bottom:1px solid var(--amber-dim);}
+  /* CAMPAGNES */
+  .campaign-list{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+  .campaign-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  .campaign-header{display:flex;align-items:center;gap:14px;padding:13px 18px;background:var(--card);cursor:pointer;user-select:none;transition:background .12s;border-bottom:1px solid transparent;}
+  .campaign-header:hover{background:#202024;}
+  .campaign-card.open .campaign-header{border-bottom-color:var(--border);}
+  .campaign-num{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:2px 7px;flex-shrink:0;}
+  .campaign-name{font-size:14px;font-weight:600;color:var(--text);flex:1;}
+  .campaign-status{font-family:var(--mono);font-size:9px;font-weight:600;padding:2px 8px;border-radius:2px;flex-shrink:0;}
+  .status-active{background:#0a200a;color:#40a040;border:1px solid #205020;}
+  .status-empty{background:var(--surface);color:var(--muted);border:1px solid var(--border);}
+  .campaign-body{display:none;padding:20px;}
+  .campaign-card.open .campaign-body{display:block;}
+  .campaign-add-slot{border:2px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.05em;}
+  /* PNJ CATEGORIE */
+  .pnj-campaign-header{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);padding:10px 0 6px;border-bottom:1px solid var(--amber-dim);margin:20px 0 12px;display:flex;align-items:center;gap:10px;}
+  .pnj-campaign-badge{font-size:8px;background:var(--amber-glow);border:1px solid var(--amber-dim);border-radius:2px;padding:2px 6px;color:var(--amber);}
+  .pnj-add-slot{border:2px dashed var(--border);border-radius:var(--radius);padding:20px;text-align:center;color:var(--muted);font-family:var(--mono);font-size:11px;margin-top:16px;}
+  /* BESTIAIRE GROUPES */
+  .beast-cat-group{margin-bottom:28px;}
+  .beast-cat-title{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:8px 0 6px;border-bottom:1px solid var(--border);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+  .beast-count{font-size:8px;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:1px 6px;color:var(--muted);}
+  .cat-sauvage2{border-top:2px solid #2d6e35;}
+  .cat-elite{border-top:2px solid #6e2d8b;}
+  .cat-boss2{border-top:2px solid #8B3300;}
+  /* NOTES */
+  .note-editor-area{height:calc(100vh - 160px);}
+  .notes-sidebar{display:flex;flex-direction:column;gap:6px;}
+  .notes-sidebar-title{font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:4px;}
+  .note-tab-btn{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-family:var(--sans);font-size:12px;color:var(--muted);transition:all .12s;text-align:left;width:100%;}
+  .note-tab-btn:hover{color:var(--text);border-color:var(--muted);}
+  .note-tab-btn.active{color:var(--amber);border-color:var(--amber);background:var(--amber-glow);}
+  .note-tab-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;}
+  .note-tab-btn.active .note-tab-dot{background:var(--amber);}
+  .note-tab-btn.has-content .note-tab-dot{background:#50a050;}
+  .note-add-btn{padding:7px 10px;background:none;border:1px dashed var(--border);border-radius:var(--radius);cursor:pointer;font-family:var(--mono);font-size:10px;color:var(--muted);transition:all .12s;text-align:center;margin-top:4px;width:100%;}
+  .note-add-btn:hover{border-color:var(--amber);color:var(--amber);}
+  .note-editor-area{display:flex;flex-direction:column;gap:8px;}
+  .note-editor-header{display:flex;align-items:center;gap:10px;}
+  .note-title-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--mono);font-size:13px;font-weight:600;padding:8px 12px;outline:none;transition:border-color .15s;}
+  .note-title-input:focus{border-color:var(--amber);}
+  .note-actions{display:flex;gap:6px;}
+  .note-btn{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;background:var(--surface);border:1px solid var(--border);border-radius:2px;cursor:pointer;color:var(--muted);transition:all .12s;}
+  .note-btn:hover{color:var(--text);border-color:var(--muted);}
+  .note-btn.danger:hover{color:#e07070;border-color:#5a2020;background:#1a0505;}
+  .note-meta{font-family:var(--mono);font-size:9px;color:var(--muted);}
+  .note-textarea{flex:1;min-height:420px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.7;padding:16px 18px;resize:none;outline:none;transition:border-color .15s;}
+  .note-textarea:focus{border-color:var(--amber-dim);}
+  .note-textarea::placeholder{color:var(--muted);}
+  .note-empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);font-family:var(--mono);font-size:11px;gap:8px;border:1px dashed var(--border);border-radius:var(--radius);min-height:300px;}
+  .note-word-count{font-family:var(--mono);font-size:9px;color:var(--muted);text-align:right;}
+  .save-indicator{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:2px;transition:all .3s;}
+  .save-indicator.saved{color:#50a050;background:#0a1a0a;border:1px solid #205020;}
+  .save-indicator.unsaved{color:#a08030;background:#1a1500;border:1px solid #3a3000;}
+
+
+  /* ── PJ ACCORDÉON ── */
+  .pj-acc-list { display: flex; flex-direction: column; gap: 10px; }
+  .pj-acc-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .pj-acc-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 18px;
+    background: var(--card);
+    cursor: pointer;
+    user-select: none;
+    transition: background .12s;
+    border-bottom: 1px solid transparent;
+  }
+  .pj-acc-header:hover { background: #202024; }
+  .pj-acc-card.open .pj-acc-header { border-bottom-color: var(--border); }
+  .pj-acc-meta {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex-shrink: 0;
+    min-width: 220px;
+  }
+  .pj-acc-num {
+    font-family: var(--mono);
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 3px 7px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .pj-acc-info { flex: 1; }
+  .pj-acc-name {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--amber);
+    margin-bottom: 2px;
+  }
+  .pj-acc-concept {
+    font-size: 11px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 2px;
+    line-height: 1.4;
+  }
+  .pj-acc-role {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--amber-dim);
+    letter-spacing: 0.05em;
+  }
+  .pj-acc-stats {
+    flex: 1;
+  }
+  .pj-acc-stats .stats-grid {
+    gap: 8px;
+    margin-bottom: 0;
+  }
+  .pj-acc-stats .stat-block {
+    padding: 7px 10px;
+  }
+  .pj-acc-stats .stat-block-title {
+    font-size: 7.5px;
+    margin-bottom: 4px;
+  }
+  .pj-acc-stats .stat-row {
+    padding: 2px 0;
+    font-size: 12px;
+  }
+  .pj-chevron {
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .pj-acc-card.open .pj-chevron { transform: rotate(90deg); }
+  .pj-acc-body {
+    display: none;
+    padding: 20px;
+  }
+  .pj-acc-card.open .pj-acc-body { display: block; }
+
+
+  /* ── SIDEBAR SOUS-MENU CAMPAGNE ── */
+  .aside-campaign-block {
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+  }
+  .aside-campaign-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: background .12s;
+  }
+  .aside-campaign-toggle:hover { background: var(--card); }
+  .aside-campaign-name {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--amber);
+  }
+  .aside-campaign-chevron {
+    font-size: 9px;
+    color: var(--amber-dim);
+    transition: transform .2s;
+  }
+  .aside-campaign-chevron.closed { transform: rotate(-90deg); }
+  .aside-campaign-body {
+    padding-left: 8px;
+  }
+  .aside-campaign-body.hidden { display: none; }
+
+
+  /* team-strip sous stats PJ */
+  .pj-team-strip{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);}
+  .pj-team-pk{position:relative;cursor:default;}
+  .pj-pk-badge{font-family:var(--mono);font-size:10px;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:3px 8px;color:var(--muted);transition:border-color .12s,color .12s;}
+  .pj-team-pk:hover .pj-pk-badge{border-color:var(--amber-dim);color:var(--amber);}
+  .pj-pk-tooltip{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;background:var(--card);border:1px solid var(--amber-dim);border-radius:var(--radius);padding:10px 14px;min-width:180px;z-index:200;}
+  .pj-team-pk:hover .pj-pk-tooltip{display:block;}
+  .pj-pk-tt-name{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--amber);margin-bottom:6px;}
+  .pj-pk-tt-stat{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:12px;margin-bottom:2px;}
+  .pj-pk-tt-stat span:last-child{color:var(--text);font-family:var(--mono);}
+  .pj-pk-tt-type{font-size:10px;color:var(--muted);margin-bottom:4px;}
+  /* messages MJ */
+  .mj-pnote-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px;}
+  .mj-pnote-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;flex-direction:column;gap:8px;}
+  .mj-pnote-name{font-family:var(--mono);font-size:11px;color:var(--amber);font-weight:600;}
+  .mj-pnote-ta{background:var(--surface);border:1px solid var(--border);border-radius:2px;color:var(--text);font-family:var(--sans);font-size:12px;padding:8px 10px;resize:vertical;min-height:60px;width:100%;}
+  .mj-pnote-btn{background:var(--amber-dim);color:var(--amber);border:none;border-radius:2px;font-family:var(--mono);font-size:10px;padding:6px 12px;cursor:pointer;align-self:flex-end;}
+  .mj-pnote-btn:hover{background:var(--amber);color:#1a1000;}
+  .mj-pnote-ok{font-size:10px;color:var(--safe);display:none;}
+  .mj-pnote-ok.on{display:inline;}
+
+  /* sous-onglets scenario */
+  .sc-nav { display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--surface);padding:0 20px; }
+  .sc-nav button { font-family:var(--mono);font-size:11px;letter-spacing:.06em;padding:12px 20px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;transition:color .15s,border-color .15s; }
+  .sc-nav button.active { color:var(--amber);border-bottom-color:var(--amber); }
+  .sc-nav button:hover:not(.active) { color:var(--text); }
+  .sc-tab { display:none;padding:24px 28px 60px; }
+  .sc-tab.active { display:block; }
+
+</style>
+</head>
+<body>
+<header style="display:flex;align-items:center;gap:16px;">
+  <div>
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);">Campagne 01</div>
+    <h1>La Ville Morte</h1>
+  </div>
+  <span class="subtitle">&laquo;&nbsp;Ce qu'on ne peut pas voir peut quand m&ecirc;me mourir.&nbsp;&raquo;</span>
+  <div style="margin-left:auto;display:flex;gap:10px;align-items:center;">
+    <span style="font-family:var(--mono);font-size:10px;color:var(--safe);background:rgba(30,92,46,.15);border:1px solid rgba(30,92,46,.3);padding:3px 10px;border-radius:2px;">EN COURS</span>
+    <a href="mj.html" style="font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:2px;padding:6px 14px;transition:color .15s,border-color .15s;" onmouseover="this.style.color='var(--amber)';this.style.borderColor='var(--amber-dim)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">&#8592; Compagnon MJ</a>
+  </div>
+</header>
+
+<div style="display:flex;min-height:calc(100vh - 60px);">
+
+  <aside class="aside">
+    <div id="aside-resume" class="aside-tab-section" style="display:block;">
+      <div class="aside-group">
+        <div class="aside-label">Resume</div>
+        <button onclick="scrollToEl('resume')">Vue d'ensemble</button>
+        <button onclick="scrollToEl('lieux')">Lieux</button>
+        <button onclick="scrollToEl('personn')">Personnages cles</button>
+      </div>
+    </div>
+    <div id="aside-chapitres" class="aside-tab-section" style="display:none;">
+      <div class="aside-group">
+        <div class="aside-label">Chapitres</div>
+        <button onclick="scShowTab('chapitres');scrollToEl('ch1')">CH1 &middot; Le mandat sans badge</button>
+<button onclick="scShowTab('chapitres');scrollToEl('ch2')">CH2 &middot; Lavanville la grise</button>
+<button onclick="scShowTab('chapitres');scrollToEl('ch3')">CH3 &middot; La cartographie de Fil</button>
+<button onclick="scShowTab('chapitres');scrollToEl('ch4')">CH4 &middot; Sous la Tour</button>
+<button onclick="scShowTab('chapitres');scrollToEl('ch5')">CH5 &middot; Premiere trahison</button>
+<button onclick="scShowTab('chapitres');scrollToEl('ch6')">CH6 &middot; Mira Holt</button>
+<button onclick="scShowTab('chapitres');scrollToEl('ch7')">CH7 &middot; La surveillance</button>
+<button onclick="scShowTab('chapitres');scrollToEl('ch8')">CH8 &middot; L'alerte de Yael</button>
+<button onclick="scShowTab('chapitres');scrollToEl('ch9')">CH9 &middot; Fil dans le reacteur</button>
+<button onclick="scShowTab('chapitres');scrollToEl('ch10')">CH10 &middot; La nuit entre deux</button>
+<button onclick="scShowTab('chapitres');scrollToEl('ch11')">CH11 &middot; La chute d'Ashford</button>
+<button onclick="scShowTab('chapitres');scrollToEl('ch12')">CH12 &middot; Ce que Lavanville garde</button>
+      </div>
+    </div>
+    <div id="aside-pnj" class="aside-tab-section" style="display:none;">
+      <div class="aside-group">
+        <div class="aside-label">Allies</div>
+        <button onclick="scrollToEl('pnj-kaito')">Kaito Mura</button>
+        <button onclick="scrollToEl('pnj-fil')">Fil (Polichombr)</button>
+      </div>
+      <div class="aside-group">
+        <div class="aside-label">Antagonistes</div>
+        <button onclick="scrollToEl('pnj-holt')">Mira Holt</button>
+        <button onclick="scrollToEl('pnj-ashford')">Dir. Ashford</button>
+      </div>
+      <div class="aside-group">
+        <div class="aside-label">Extras</div>
+        <button onclick="scrollToEl('pnj-agents')">Agents Ashford</button>
+        <button onclick="scrollToEl('pnj-techniciens')">Techniciens</button>
+        <button onclick="scrollToEl('pnj-torkel')">Garde Torkel</button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="content" style="flex:1;overflow-y:auto;padding:0;">
+    <nav class="sc-nav" id="sc-nav">
+      <button class="active" data-tab="resume" onclick="scShowTab('resume',this)">Resume</button>
+      <button data-tab="chapitres" onclick="scShowTab('chapitres',this)">Chapitres</button>
+      <button data-tab="pnj" onclick="scShowTab('pnj',this)">PNJ</button>
+    </nav>
+
+    <div class="sc-tab active" id="sc-tab-resume">
+      id="resume">
+        <div class="section-title">Résumé</div>
+        <div class="resume-box">
+          <p>Le Groupe est mandatée par la Ligue Pokémon pour enquêter sur les disparitions inexpliquées de Pokémon à Lavanville. La Ligue les choisit précisément parce qu'ils sont des électrons libres — mais la vraie raison est plus sombre : elle veut une enquête qui s'enlise, pas une qui aboutit. Derrière les disparitions se cache un réacteur bio-énergétique clandestin dissimulé sous la Tour Pokémon, qui aspire la force vitale des Pokémon sauvages. Le Groupe remonte jusqu'au Directeur Ashford, commanditaire de leur propre mission. Au cœur de la révélation, Fil est capturé et branché au réacteur. L'enquête se conclut par une vérité rendue publique au prix du silence officiel.</p>
+        </div>
+      </div>
+
+      <div id="lieux">
+        <div class="section-title">Lieux de Kanto</div>
+        <div class="lieux-grid">
+          <div class="lieu-card"><div class="lieu-name">Lavanville</div><p>Ville principale. Silencieuse, hantée. La Tour Pokémon cache le réacteur en sous-sol.</p></div>
+          <div class="lieu-card"><div class="lieu-name">Tour Pokémon (−1 à −3)</div><p>Façade historique. Sous-sol = réacteur PSI-B. Point final du scénario.</p></div>
+          <div class="lieu-card"><div class="lieu-name">Réacteur (Niveau −3)</div><p>Installation industrielle clandestine. Pokémon captifs sous harnais. Fil y est branché au Ch. 9.</p></div>
+          <div class="lieu-card"><div class="lieu-name">Route 8</div><p>Chemin d'approche. Embuscade des agents d'Ashford au Chapitre 7.</p></div>
+          <div class="lieu-card"><div class="lieu-name">Céladopole</div><p>Ville d'origine de le Groupe. Source d'informations sur les disparitions.</p></div>
+          <div class="lieu-card"><div class="lieu-name">Cramoisîle</div><p>QG régional de la Ligue — bureau du Directeur Ashford.</p></div>
+        </div>
+      </div>
+
+      <div id="personnages">
+        <div class="section-title">Personnages</div>
+        <div class="perso-card"><div class="perso-name">Kaito Mura — Inspecteur indépendant <span class="tag tag-edge">Joker allié</span></div><p>Mandaté officiellement, manipulé structurellement. Sa priorité absolue est Fil. Ne perd ses moyens que si Fil est en danger critique. Présent tout au long du scénario.</p></div>
+        <div class="perso-card"><div class="perso-name">Fil — Polichombr de Kaito <span class="tag tag-edge">Joker allié spécial</span></div><p>Capturé et branché au réacteur au Ch. 9. Survie in extremis au Ch. 10. Communique par touchers codés. Premier à détecter les anomalies.</p></div>
+        <div class="perso-card"><div class="perso-name">Mira Holt — Directrice technique <span class="tag tag-psi">Joker ennemi</span></div><p>Ingénieure idéologue. "Le progrès a toujours un coût. J'ai simplement choisi d'être honnête sur ce qu'il est." N'apparaît pas avant le Ch. 6.</p></div>
+        <div class="perso-card"><div class="perso-name">Directeur Ashford — Ligue Pokémon <span class="tag tag-psi">Joker ennemi / absent</span></div><p>Commanditaire de la mission et de sa propre trahison. N'apparaît jamais en personne. Révélation = pivot central de l'Acte II.</p></div>
+        <div class="perso-card"><div class="perso-name">Yael Ors — Journaliste locale</div><p>Enquête depuis deux mois sans preuves. Relais final de le Groupe pour publier l'affaire. Connue de La Causeuse (PJ #3).</p></div>
+        <div class="perso-card"><div class="perso-name">Garde Torkel — Agent de sécurité <span class="tag tag-gardien" style="background:#051a30;color:#608ec0;">Allié latent</span></div><p>Son Pokémon est mort dans le réacteur. Laissera une porte ouverte au Ch. 9. Déclencheur : un PJ remarque sa Pokéball vide.</p></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div id="actes">
+        <div class="section-title">Structure — 4 Actes</div>
+        <div class="acte-block"><div class="acte-title">ACTE I — L'arrivée (Ch. 1–3)</div><p>Arrivée à Lavanville. Rencontre avec Kaito et Fil. Entretiens avec les habitants. Fil cartographie la ville nuit par nuit. Découverte des registres falsifiés et de la galerie minière.</p></div>
+        <div class="acte-block"><div class="acte-title">ACTE II — La mécanique du complot (Ch. 4–7)</div><p>Descente dans la mine. Découverte du réacteur PSI-B. Trahison d'Ashford révélée. Rencontre de couverture avec Holt. Chambre fouillée — photos sauvegardées dans le corps de Fil. Embuscade Route 8.</p></div>
+        <div class="acte-block"><div class="acte-title">ACTE III — La crise (Ch. 8–10)</div><p>Contact avec Yael Ors. Fil disparaît. Retour d'urgence dans la mine — Fil branché depuis 6h. Extraction sous tension. Kaito veille Fil. À l'aube, Fil reprend conscience.</p></div>
+        <div class="acte-block"><div class="acte-title">ACTE IV — Le dénouement (Ch. 11–12)</div><p>Transmission des preuves à Yael. Publication simultanée. Chute d'Ashford. Arrestation de Holt. Réacteur démantelé. Certains Pokémon ne rentrent pas. Le Groupe repart.</p></div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-title">Trame — 12 Chapitres</div>
+
+      <!-- CH 1 -->
+      <div class="chapter" 
+    </div>
+
+    <div class="sc-tab" id="sc-tab-chapitres">
+      <div class="page-title">Chapitres</div>
+      <div class="page-tagline">La Ville Morte &middot; 12 actes</div>
+      <div class="chapter" id="ch1">
+        <div class="chapter-header" onclick="toggleChapter('ch1')">
+          <span class="chapter-num">CH 01</span>
+          <span class="chapter-title">Le mandat sans badge</span>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="chapter-body">
+          <div class="sub-section"><div class="sub-label">L'enveloppe</div><p>Une enveloppe sans en-tête glissée sous la porte à l'aube. Mission : enquêter sur les disparitions de Pokémon à Lavanville. Aucun contact officiel. Honoraires versés en avance sur un compte anonyme. Instructions rédigées dans un style administratif reconnaissable — Kaito le note, range la pensée pour plus tard.</p></div>
+          <div class="sub-section"><div class="sub-label">Fil examine l'enveloppe</div><p>Fil tourne autour pendant cinq minutes, fils à peine frémissants. La procédure qu'ils ont établie sans jamais la formuler : on n'ouvre pas ce qu'on n'a pas d'abord cerné. Kaito attend. Fil finit par poser une patte dessus. Un toucher court.</p></div>
+          <div class="sub-section"><div class="sub-label">La décision</div><p>Kaito accepte — et le Groupe avec lui. Non pas parce que la mission semble nette, elle ne l'est pas, mais parce que des Pokémon qui disparaissent dans une ville entière, c'est quelque chose que personne d'officiel ne fera semblant d'enquêter. Il boucle son imperméable. Fil saute sur son épaule gauche.</p></div>
+          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Le mandat est flou, l'argent est là, et tout le monde le sait. Le Groupe accepte quand même — par sens du devoir, par incapacité à laisser une injustice sans enquêteur. C'est ce paradoxe qui définit le ton de l'ensemble.</p></div>
+        </div>
+      </div>
+<div class="chapter" id="ch2">
+        <div class="chapter-header" onclick="toggleChapter('ch2')">
+          <span class="chapter-num">CH 02</span><span class="chapter-title">Lavanville la grise</span><span class="chapter-chevron">▶</span>
+        </div>
+        <div class="chapter-body">
+          <div class="sub-section"><div class="sub-label">La ville sous cloche</div><p>Lavanville est silencieuse d'une façon qui n'est pas naturelle. Le silence des villes vidées de quelque chose d'essentiel. Les gens marchent comme des ombres. Des Osselaits errent sans dresseur. Des Fantominus sortent de la Tour Pokémon en plein jour.</p></div>
+          <div class="sub-section"><div class="sub-label">La femme au Marill</div><p>Son Marill a disparu il y a six semaines. Elle pleure sans raison à des heures fixes — comme si son corps gardait les horaires de son Pokémon. Kaito l'écoute sans l'interrompre. <strong>Elle est l'objectif émotionnel de l'Acte III.</strong></p></div>
+          <div class="sub-section"><div class="sub-label">Fil reste</div><p>Quand le Groupe repart, Fil reste près de la femme quelques secondes supplémentaires. Pas pour l'aider — il ne peut rien pour elle. Mais il reste. Kaito l'observe depuis le seuil.</p></div>
+          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Lavanville devient un personnage à part entière — épuisée, pas hostile. Ce chapitre humanise ce que les statistiques de disparitions ne montrent pas : ce que ça fait, concrètement, de perdre son Pokémon partenaire.</p></div>
+        </div>
+      </div>
+<div class="chapter" id="ch3">
+        <div class="chapter-header" onclick="toggleChapter('ch3')">
+          <span class="chapter-num">CH 03</span><span class="chapter-title">La cartographie de Fil</span><span class="chapter-chevron">▶</span>
+        </div>
+        <div class="chapter-body">
+          <div class="sub-section"><div class="sub-label">Trois nuits d'arpentage</div><p>Fil passe trois nuits à parcourir Lavanville seul. Chaque matin, il est là au réveil, fils légèrement chargés d'informations qu'il n'a pas encore transmises.</p></div>
+          <div class="sub-section"><div class="sub-label">La convergence</div><p>Le quatrième matin, Fil guide le Groupe vers la galerie minière abandonnée sous la Tour Pokémon — fermée officiellement depuis deux ans. Les marques au sol : un passage récent, régulier, mécanique.</p></div>
+          <div class="sub-section"><div class="sub-label">Les registres falsifiés</div><p>Fil pose ses fils sur deux documents — l'original et une copie. Les dates ne correspondent pas : l'original indique 18 mois, la copie 2 ans. <strong>Jet d'Investigation diff. 6</strong> pour que le Groupe fasse le lien sans l'aide de Fil.</p></div>
+          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Fil structure l'enquête géographiquement. Là où le Groupe enquête par les mots, Fil enquête par le territoire. Ce chapitre consacre leur complémentarité.</p></div>
+        </div>
+      </div>
+<div class="chapter" id="ch4">
+        <div class="chapter-header" onclick="toggleChapter('ch4')">
+          <span class="chapter-num">CH 04</span><span class="chapter-title">Sous la Tour</span><span class="chapter-chevron">▶</span>
+        </div>
+        <div class="chapter-body">
+          <div class="sub-section"><div class="sub-label">La descente</div><p>Trois niveaux. Au troisième, une porte en acier renforcé, fermée électroniquement. Fil travaille sur le câblage périphérique. <strong>Électronique d6, diff. 6</strong> pour forcer sans déclencher l'alarme.</p></div>
+          <div class="sub-section"><div class="sub-label">Le réacteur</div><p>Une installation industrielle complète dissimulée à 30m sous Lavanville. Des dizaines de Pokémon sauvages captifs dans des harnais bio-énergétiques. Certains encore conscients, yeux tournés vers la lumière. Bourdonnement constant. Chaleur sèche.</p></div>
+          <div class="sub-section"><div class="sub-label">La documentation silencieuse</div><p>Fil coupe les câbles d'alarme. Le Groupe photographie avec l'appareil à mémoire physique de Natsuki. Couper les harnais maintenant tuerait les captifs — il faut partir avec des preuves.</p></div>
+          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Premier tournant majeur. Le Groupe découvre quelque chose qu'elle ne peut pas résoudre immédiatement — et doit choisir de partir sans agir. Ce choix est difficile. C'est voulu.</p></div>
+        </div>
+      </div>
+<div class="chapter" id="ch5">
+        <div class="chapter-header" onclick="toggleChapter('ch5')">
+          <span class="chapter-num">CH 05</span><span class="chapter-title">Première trahison — le faux contact</span><span class="chapter-chevron">▶</span>
+        </div>
+        <div class="chapter-body">
+          <div class="sub-section"><div class="sub-label">La transmission</div><p>Le Groupe transmet ses découvertes au contact de la Ligue. Réponse en une heure : "Ne parlez à personne en dehors de ce canal." Ton différent du premier message — plus directif, moins formel.</p></div>
+          <div class="sub-section"><div class="sub-label">La reconnaissance du style</div><p>Kaito compare les tournures de phrases. Cette formulation — il l'a vue dans un rapport il y a deux ans. Signé Ashford. <strong>Jet d'Investigation diff. 8</strong> pour que le Groupe fasse le lien — succès = Kaito confirme.</p></div>
+          <div class="sub-section"><div class="sub-label">Le signal de Fil</div><p>Fil touche le poignet de Kaito deux fois. En réponse à quelque chose qu'il sent dans sa posture. "Je sais", dit Kaito à voix basse. "Moi aussi."</p></div>
+          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Le Groupe n'est plus une équipe mandatée — elle est un pion placé pour ne pas atteindre le roi. Ce renversement est le pivot central du scénario.</p></div>
+        </div>
+      </div>
+<div class="chapter" id="ch6">
+        <div class="chapter-header" onclick="toggleChapter('ch6')">
+          <span class="chapter-num">CH 06</span><span class="chapter-title">Mira Holt</span><span class="chapter-chevron">▶</span>
+        </div>
+        <div class="chapter-body">
+          <div class="sub-section"><div class="sub-label">La rencontre de couverture</div><p>Le Groupe obtient un accès au site grâce au faux badge de Yuki ou en improvisant. <strong>Persuasion d10, diff. 4.</strong> Mira Holt les reçoit elle-même — pas méfiante, occupée.</p></div>
+          <div class="sub-section"><div class="sub-label">Ce qu'elle dit vraiment</div><p>"Les Pokémon sauvages non liés n'ont pas de dresseur, pas de lien, pas de projet. Ce que nous prélevons, c'est de l'énergie en excès." Kaito ne relève pas. Il observe.</p></div>
+          <div class="sub-section"><div class="sub-label">La contradiction</div><p>Ses propres Pokémon — deux Absol, un Tentacruel — se comportent normalement. Elle les nourrit entre deux phrases. <strong>Perception diff. 6</strong> pour que le Groupe remarque la contradiction d'elle-même.</p></div>
+          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Holt est l'antagoniste la plus complexe parce qu'elle est cohérente. Elle a tort — mais son raisonnement tient debout. Ce chapitre oblige le Groupe à s'engager avec sa logique plutôt qu'à la rejeter d'emblée.</p></div>
+        </div>
+      </div>
+<div class="chapter" id="ch7">
+        <div class="chapter-header" onclick="toggleChapter('ch7')">
+          <span class="chapter-num">CH 07</span><span class="chapter-title">Rebondissement — La surveillance</span><span class="chapter-chevron">▶</span>
+        </div>
+        <div class="chapter-body">
+          <div class="sub-section"><div class="sub-label">Les deux ombres</div><p>Deux agents en civil dans le sillage de le Groupe. <strong>Perception diff. 4</strong> pour les repérer avant l'embuscade Route 8. Échec = agents choisissent le moment — avantage d'initiative.</p></div>
+          <div class="sub-section"><div class="sub-label">La chambre fouillée</div><p>L'appareil photo a été effacé. Toutes les photos du réacteur disparues. Kaito s'assied et ne dit rien pendant trois minutes.</p></div>
+          <div class="sub-section"><div class="sub-label">Le coffre-fort de Fil</div><p>Fil défait une partie de ses propres fils. À l'intérieur : des microfiches photographiques générées par une capacité que personne ne connaissait. Toutes les images du réacteur. Intactes.</p></div>
+          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>L'adversaire est organisé et puissant. Et Fil révèle une capacité insoupçonnée — les meilleurs alliés sont ceux qui anticipent sans qu'on le leur demande.</p></div>
+        </div>
+      </div>
+<div class="chapter" id="ch8">
+        <div class="chapter-header" onclick="toggleChapter('ch8')">
+          <span class="chapter-num">CH 08</span><span class="chapter-title">L'alerte de Yael</span><span class="chapter-chevron">▶</span>
+        </div>
+        <div class="chapter-body">
+          <div class="sub-section"><div class="sub-label">La rencontre</div><p>Yael Ors a les témoignages. Le Groupe a les preuves visuelles. Rendez-vous décidé pour le lendemain soir dans un lieu neutre.</p></div>
+          <div class="sub-section"><div class="sub-label">La disparition de Fil</div><p>Le Groupe rentre. Fil n'est pas là. Une heure. Deux heures. Fil ne revient pas. Kaito s'assied dans le noir, dos au mur. Ses mains sont légèrement crispées.</p></div>
+          <div class="sub-section"><div class="sub-label">L'absence comme signal</div><p>Fil ne disparaît jamais sans prévenir. C'est donc soit un accident, soit une capture. Kaito se lève à 4h. "On y retourne."</p></div>
+          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Préparation émotionnelle au traumatisme suivant. Pour la première fois, le Groupe et Kaito perdent le contrôle sans plan de secours immédiat.</p></div>
+        </div>
+      </div>
+<div class="chapter" id="ch9">
+        <div class="chapter-header" onclick="toggleChapter('ch9')">
+          <span class="chapter-num">CH 09</span><span class="chapter-title">Fil dans le réacteur</span><span class="chapter-chevron">▶</span>
+        </div>
+        <div class="chapter-body">
+          <div class="sub-section"><div class="sub-label">La découverte</div><p>Fil est branché à un harnais bio-énergétique de taille minimum. Ses fils épars, désynchronisés, translucides. Capturé pendant sa reconnaissance nocturne. <strong>Il est là depuis six heures.</strong></p></div>
+          <div class="sub-section"><div class="sub-label">Ce que ça signifie</div><p>Au-delà de huit heures, les fils se désintègrent et ne se régénèrent pas. Deux heures de marge. Kaito attrape le harnais à mains nues. La décharge lui remonte jusqu'à l'épaule. Il continue. <strong>Vigueur ou Électronique diff. 6</strong> — échec = 2d4 dégâts électriques, Fil déconnecté quand même.</p></div>
+          <div class="sub-section"><div class="sub-label">La sortie</div><p>Garde Torkel est là. Il aurait pu appeler des renforts. Il ne l'a pas fait. Il ouvre la porte de sortie sans un mot et repart dans l'autre sens. Kaito ne lui dit pas merci.</p></div>
+          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Le moment le plus intense. L'urgence physique ne laisse pas de place à la réflexion. C'est le seul moment où Kaito agit sans calculer. La menace sur Fil le rend humain d'une façon que rien d'autre ne pourrait faire.</p></div>
+        </div>
+      </div>
+<div class="chapter" id="ch10">
+        <div class="chapter-header" onclick="toggleChapter('ch10')">
+          <span class="chapter-num">CH 10</span><span class="chapter-title">La nuit entre deux</span><span class="chapter-chevron">▶</span>
+        </div>
+        <div class="chapter-body">
+          <div class="sub-section"><div class="sub-label">L'attente</div><p>Kaito s'installe dans une galerie abandonnée, Fil posé sur ses genoux. Il ne fait pas de gestes. Il ne parle pas. Il sait que les interventions extérieures n'accélèrent pas le processus. Il attend.</p></div>
+          <div class="sub-section"><div class="sub-label">L'aube</div><p>Un fil se tend. Puis deux. Toute la structure de Fil frémit. Il ouvre les yeux — différents quelques secondes. Il produit un son qu'il n'a jamais fait : très court, presque inaudible.</p></div>
+          <div class="sub-section"><div class="sub-label">Ce qui ne se dit pas</div><p>Kaito pose sa main sur Fil. Ils restent ainsi un long moment. Dehors, Lavanville s'éveille. Aucun des deux ne bouge jusqu'à ce que le soleil soit complètement levé.</p></div>
+          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Le chapitre le plus calme — et le plus important pour la relation Kaito-Fil. Pas de l'héroïsme, pas de la performance. Juste la présence de l'un pour l'autre dans un moment où les mots ne servent à rien.</p></div>
+        </div>
+      </div>
+<div class="chapter" id="ch11">
+        <div class="chapter-header" onclick="toggleChapter('ch11')">
+          <span class="chapter-num">CH 11</span><span class="chapter-title">La chute d'Ashford</span><span class="chapter-chevron">▶</span>
+        </div>
+        <div class="chapter-body">
+          <div class="sub-section"><div class="sub-label">La transmission à Yael</div><p>Le Groupe remet tout à Yael Ors. <strong>Persuasion d10, diff. 6</strong> pour convaincre Yael de publier immédiatement sur trois supports. Succès = publication en 24h. Échec = Yael exige un délai.</p></div>
+          <div class="sub-section"><div class="sub-label">La démission d'Ashford</div><p>Ashford tente de nier — présente le Groupe comme des agents hors contrôle. Mais le compte anonyme est tracé jusqu'à lui en 24h. Il démissionne avant la convocation officielle. Il ne sera jamais jugé.</p></div>
+          <div class="sub-section"><div class="sub-label">L'arrestation de Holt</div><p>Holt ne demande pas pardon. Elle demande qu'on lise ses notes de recherche avant de la juger. La demande est ignorée. Kaito note que c'était peut-être la seule chose juste qu'elle ait dite.</p></div>
+          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Résolution délibérément imparfaite. Ashford échappe à la justice formelle. La vérité publiée et la justice rendue sont deux choses différentes.</p></div>
+        </div>
+      </div>
+<div class="chapter" id="ch12">
+        <div class="chapter-header" onclick="toggleChapter('ch12')">
+          <span class="chapter-num">CH 12</span><span class="chapter-title">Ce que Lavanville garde</span><span class="chapter-chevron">▶</span>
+        </div>
+        <div class="chapter-body">
+          <div class="sub-section"><div class="sub-label">Les Pokémon qui ne rentrent pas</div><p>Le réacteur est démantelé. Certains Pokémon sont trop affaiblis pour être retracés. Le Marill de la femme du Ch. 2 ne sera pas retrouvé. Kaito l'apprend par Yael. Il ne lui rend pas visite.</p></div>
+          <div class="sub-section"><div class="sub-label">Le départ</div><p>Le Groupe repart sans passer par la Ligue. Fil marche plus lentement qu'avant, ses fils d'un blanc légèrement différent. Kaito ralentit son pas pour s'adapter. Il ne dit rien.</p></div>
+          <div class="sub-section"><div class="sub-label">La cicatrice</div><p>Dans le train, Fil s'endort sur le siège vide. C'est la première fois qu'il dort vraiment. Kaito regarde le paysage de Lavanville qui s'éloigne. Il a sauvé Fil. Pour l'instant, c'est suffisant.</p></div>
+          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Ce dénouement refuse le triomphe. Les dommages sont permanents. Le Groupe repart avec une victoire incomplète et un allié légèrement différent. C'est l'honnêteté du genre noir.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sc-tab" id="sc-tab-pnj">
+      <div class="page-title">Fiches PNJ</div>
+      <div class="page-tagline">La Ville Morte &middot; Allies &middot; Antagonistes &middot; Extras</div>
+      <div class="section-title" style="margin-bottom:16px">Allies &mdash; Jokers</div><div class="pnj-card" id="pnj-kaito">
+        <div class="pnj-header" onclick="togglePnj('pnj-kaito')">
+          <div><div class="pnj-name">Kaito Mura <span class="tag tag-edge">Joker allié</span></div><div class="pnj-role">Inspecteur indépendant — présent tout au long du scénario</div></div>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d10</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div>
+            <div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Bennies <span>3</span></div>
+          </div>
+          <div class="stat-block" style="margin-bottom:12px">
+            <div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d10</span></div>
+            <div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d8</span></div>
+            <div class="stat-row"><span class="stat-name">Discrétion</span><span class="stat-val">d8</span></div>
+            <div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d6</span></div>
+            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d6</span></div>
+          </div>
+          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Enquêteur (+2 Investigation/Perception scènes de crime) · Dur à cuire (+2 soak)</div></div>
+          <div class="hindrance-block"><div class="block-name">Handicap — Loyauté (Fil)</div><div class="block-desc">Majeur : prend des risques disproportionnés si Fil est en danger. Ne prend plus de décisions rationnelles à 2 Blessures de Fil.</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne combat presque jamais. Oriente, n'exécute pas. Équipement : imperméable, radio cryptée, appareil photo à mémoire physique, badge suspendu.</em></p>
+        </div>
+      </div><div class="pnj-card" id="pnj-fil">
+        <div class="pnj-header" onclick="togglePnj('pnj-fil')">
+          <div><div class="pnj-name">Fil — Polichombr <span class="tag tag-edge">Joker allié spécial</span></div><div class="pnj-role">Capturé au Ch. 9 — Survie in extremis au Ch. 10</div></div>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d10</span></div><div class="stat-pill">Ruse <span>d8</span></div><div class="stat-pill">Force <span>d4</span></div><div class="stat-pill">Trempe <span>d6</span></div><div class="stat-pill">Vigueur <span>d4</span></div>
+            <div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>8" (rapide)</span></div><div class="stat-pill">Taille <span>−2</span></div>
+          </div>
+          <div class="stat-block" style="margin-bottom:12px">
+            <div class="stat-row"><span class="stat-name">Discrétion</span><span class="stat-val">d12</span></div>
+            <div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d10</span></div>
+            <div class="stat-row"><span class="stat-name">Électronique</span><span class="stat-val">d6</span></div>
+            <div class="stat-row"><span class="stat-name">Combat (défensif)</span><span class="stat-val">d6</span></div>
+          </div>
+          <ul class="capa-list">
+            <li><span class="capa-name">Taille −2</span> : −2 aux jets pour le cibler. Peut passer sous les portes.</li>
+            <li><span class="capa-name">Sens vibrateurs</span> : Perception +2 sur tout ce qui touche le sol/structures.</li>
+            <li><span class="capa-name">Coffre-fort vivant</span> : stocke des microfiches dans ses fils. Révélé au Ch. 7.</li>
+            <li><span class="capa-name">Section filaire</span> : peut couper des câbles fins ou entraver un humain.</li>
+            <li><span class="capa-name">Blessures max</span> : 2 avant KO. À 2 blessures, perd ses capacités avancées.</li>
+          </ul>
+          <div class="hindrance-block" style="margin-top:10px"><div class="block-name">⚠ Ch. 9 — Harnais réacteur</div><div class="block-desc">Branché depuis 6h. Au-delà de 8h : désintégration permanente des fils. Le Groupe a 2h de marge. Extraction = jet Vigueur ou Électronique diff. 6 (échec = 2d4 dégâts électriques, Fil déconnecté quand même).</div></div>
+        </div>
+      </div><div class="section-title" style="margin-top:24px;margin-bottom:16px">Antagonistes &mdash; Jokers</div><div class="pnj-card" id="pnj-holt">
+        <div class="pnj-header" onclick="togglePnj('pnj-holt')">
+          <div><div class="pnj-name">Mira Holt <span class="tag tag-psi">Joker ennemi</span></div><div class="pnj-role">Directrice technique du réacteur — apparaît Ch. 6</div></div>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d10</span></div><div class="stat-pill">Force <span>d4</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div>
+            <div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Bennies <span>2</span></div>
+          </div>
+          <div class="stat-block" style="margin-bottom:12px">
+            <div class="stat-row"><span class="stat-name">Sciences (Énergie)</span><span class="stat-val">d12</span></div>
+            <div class="stat-row"><span class="stat-name">Électronique</span><span class="stat-val">d10</span></div>
+            <div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d8</span></div>
+            <div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d8</span></div>
+            <div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d8</span></div>
+          </div>
+          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Chercheur (+2 Sciences) · Sang-froid (immunité à l'Intimidation)</div></div>
+          <div class="hindrance-block"><div class="block-name">Handicap — Arrogance (Majeur)</div><div class="block-desc">Sous-estime le Groupe jusqu'au Ch. 9. Ne craque que face à des preuves irréfutables de la souffrance des Pokémon.</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne fuit pas. Si le Groupe la confronte, elle argumente. Pokémon : 2 Absol + Tentacruel personnel (non PSI-B). Badge accès niveau 5. Tablette avec plans PSI-B.</em></p>
+        </div>
+      </div><div class="pnj-card" id="pnj-ashford">
+        <div class="pnj-header" onclick="togglePnj('pnj-ashford')">
+          <div><div class="pnj-name">Directeur Ashford <span class="tag tag-psi">Joker ennemi / absent</span></div><div class="pnj-role">Ligue Pokémon, Cramoisîle — n'apparaît jamais en personne</div></div>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d10</span></div><div class="stat-pill">Force <span>d4</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div>
+            <div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Bennies <span>3</span></div>
+          </div>
+          <div class="stat-block" style="margin-bottom:12px">
+            <div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d10</span></div>
+            <div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d10</span></div>
+            <div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d8</span></div>
+            <div class="stat-row"><span class="stat-name">Connaissances Communes</span><span class="stat-val">d10</span></div>
+          </div>
+          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Connexions (Ligue — peut convoquer des renforts officiels) · Riche (ressources illimitées) · Meneur d'hommes</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne peut pas être confronté directement avant l'Acte IV. Se dérobe toujours avec une couverture légale. Seule une publication médiatique peut le neutraliser.</em></p>
+        </div>
+      </div><div class="section-title" style="margin-top:24px;margin-bottom:16px">Extras</div><div class="pnj-card" id="pnj-agents">
+        <div class="pnj-header" onclick="togglePnj('pnj-agents')">
+          <div><div class="pnj-name">Agent de terrain d'Ashford <span class="tag tag-psi" style="background:#1a0520;color:#c050e0;">Extra</span></div><div class="pnj-role">Ch. 7 et 8 — embuscade, arrestation</div></div>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5 (Armure 1)</span></div>
+          </div>
+          <div class="stat-block" style="margin-bottom:12px">
+            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d6</span></div>
+            <div class="stat-row"><span class="stat-name">Tir</span><span class="stat-val">d6</span></div>
+            <div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d6</span></div>
+          </div>
+          <p style="font-size:12px;color:var(--muted)"><em>Matraque (Str+d4) ou pistolet paralysant (2d6, Secousse). Pokémon : Arcanin (Extra) Combat d8, Str+d6, Parade 5, Robustesse 7. Tactique : un engage en mêlée, l'autre couvre. Fuite si 2 agents au sol.</em></p>
+        </div>
+      </div><div class="pnj-card" id="pnj-techniciens">
+        <div class="pnj-header" onclick="togglePnj('pnj-techniciens')">
+          <div><div class="pnj-name">Technicien du réacteur <span class="tag tag-psi" style="background:#1a0520;color:#c050e0;">Extra</span></div><div class="pnj-role">Ch. 4 et 9 — dans la mine</div></div>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div>
+          </div>
+          <div class="stat-block" style="margin-bottom:12px">
+            <div class="stat-row"><span class="stat-name">Électronique</span><span class="stat-val">d8</span></div>
+            <div class="stat-row"><span class="stat-name">Sciences</span><span class="stat-val">d6</span></div>
+            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d4</span></div>
+          </div>
+          <p style="font-size:12px;color:var(--muted)"><em>Outil électrique improvisé (Str+d4). Pokémon : Voltorbe — Autodestruction (6d6, zone 2", usage unique). Tactique : déclenche les alarmes ou verrouille les accès. À neutraliser vite.</em></p>
+        </div>
+      </div><div class="pnj-card" id="pnj-torkel">
+        <div class="pnj-header" onclick="togglePnj('pnj-torkel')">
+          <div><div class="pnj-name">Garde Torkel <span class="tag tag-gardien" style="background:#051530;color:#6090e0;">Extra allié latent</span></div><div class="pnj-role">Agent de sécurité — laisse une porte ouverte au Ch. 9</div></div>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Force <span>d8</span></div><div class="stat-pill">Vigueur <span>d8</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>6 (Armure 1)</span></div>
+          </div>
+          <div class="stat-block" style="margin-bottom:12px">
+            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d8</span></div>
+            <div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d4</span></div>
+          </div>
+          <p style="font-size:12px;color:var(--muted)"><em>Aucun Pokémon (le sien est mort dans le réacteur — sa Pokéball vide est dans sa poche). N'attaque les PJ que si directement ordonné. Déclencheur : un PJ remarque la Pokéball vide et pose la question. Jet Trempe d6 — succès : il coopère discrètement.</em></p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+
+// ── Navigation principale ────────────────────────────────────────────────
+function showTab(tab, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('#main-nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+  // Switcher le contenu de l'aside
+  document.querySelectorAll('.aside-tab-section').forEach(s => s.style.display = 'none');
+  const asideSection = document.getElementById('aside-' + tab);
+  if (asideSection) asideSection.style.display = 'block';
+}
+
+// ── Sidebar scénario : scroll et chapitres ───────────────────────────────
+function scrollToEl(id) {
+  // Ouvrir la campagne dans la sidebar
+  const asc = document.getElementById('asc-1');
+  if (asc && asc.classList.contains('hidden')) {
+    asc.classList.remove('hidden');
+    const chev = document.getElementById('asc-1-chev');
+    if (chev) chev.classList.remove('closed');
+  }
+  // Ouvrir la campaign-card dans le contenu
+  const c = document.getElementById('camp-1');
+  if (c && !c.classList.contains('open')) c.classList.add('open');
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 120);
+  document.querySelectorAll('aside button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function openChapter(id) {
+  // Ouvrir le sous-menu sidebar
+  const asc = document.getElementById('asc-1');
+  if (asc && asc.classList.contains('hidden')) {
+    asc.classList.remove('hidden');
+    const chev = document.getElementById('asc-1-chev');
+    if (chev) chev.classList.remove('closed');
+  }
+  // Ouvrir la campaign-card dans le contenu
+  const c = document.getElementById('camp-1');
+  if (c && !c.classList.contains('open')) c.classList.add('open');
+  setTimeout(() => {
+    const ch = document.getElementById(id);
+    if (!ch) return;
+    if (!ch.classList.contains('open')) ch.classList.add('open');
+    ch.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 120);
+  document.querySelectorAll('aside button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// ── Accordéons génériques ────────────────────────────────────────────────
+function toggleChapter(id)  { document.getElementById(id).classList.toggle('open'); }
+function togglePnj(id)      { document.getElementById(id).classList.toggle('open'); }
+function toggleBeast(card)  { card.classList.toggle('open'); }
+function toggleCampaign(id) { document.getElementById(id).classList.toggle('open'); }
+function togglePjAcc(id) {
+  const card = document.getElementById(id);
+  if (!card) return;
+  card.classList.toggle('open');
+  const body = card.querySelector('.pnj-body');
+  if (body) body.style.display = card.classList.contains('open') ? 'block' : 'none';
+}
+
+// ── Sidebar sous-menu campagne ───────────────────────────────────────────
+function toggleAsideCampaign(id) {
+  const body = document.getElementById(id);
+  const chev = document.getElementById(id + '-chev');
+  if (!body) return;
+  body.classList.toggle('hidden');
+  if (chev) chev.classList.toggle('closed');
+}
+
+// ── Bestiaire : filtres ──────────────────────────────────────────────────
+function filterBeast(cat, btn) {
+  // "Tous" — afficher tous les groupes
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.beast-cat-group').forEach(g => g.style.display = '');
+}
+
+function filterBeast2(group, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const groups = {
+    'sauvage': 'bgroup-sauvage',
+    'psi':     'bgroup-psi',
+    'allies':  'bgroup-allies',
+    'elites':  'bgroup-elites',
+    'boss':    'bgroup-boss',
+  };
+  const showId = groups[group];
+  document.querySelectorAll('.beast-cat-group').forEach(g => {
+    g.style.display = (g.id === showId) ? '' : 'none';
+  });
+}
+
+// ── Système de notes ─────────────────────────────────────────────────────
+const NK = 'jdr_notes_v2';
+let notes = [], aid = null, stimer = null;
+
+function loadNotes() {
+  try { const r = localStorage.getItem(NK); notes = r ? JSON.parse(r) : []; } catch(e) { notes = []; }
+  if (!notes.length) {
+    notes = [
+      { id: 'n1', title: 'Session 1',      content: '', created: Date.now(), updated: Date.now() },
+      { id: 'n2', title: 'PNJ rencontrés', content: '', created: Date.now(), updated: Date.now() },
+      { id: 'n3', title: 'Indices & pistes',content:'', created: Date.now(), updated: Date.now() },
+    ];
+    saveNotes();
+  }
+  renderTabs();
+}
+
+function saveNotes() { try { localStorage.setItem(NK, JSON.stringify(notes)); } catch(e) {} }
+function genId()     { return 'n' + Date.now() + Math.random().toString(36).slice(2,6); }
+function esc(s)      { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function wc(s)       { return (s||'').trim().split(/\s+/).filter(w=>w).length; }
+
+function renderTabs() {
+  const l = document.getElementById('note-tabs-list');
+  if (!l) return;
+  l.innerHTML = '';
+  notes.forEach(n => {
+    const b = document.createElement('button');
+    b.className = 'note-tab-btn' + (n.id === aid ? ' active' : '') + (n.content.trim() ? ' has-content' : '');
+    b.innerHTML = '<span class="note-tab-dot"></span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(n.title || 'Sans titre') + '</span>';
+    b.onclick = () => openNote(n.id);
+    l.appendChild(b);
+  });
+}
+
+function openNote(id) {
+  aid = id;
+  const note = notes.find(n => n.id === id);
+  if (!note) return;
+  renderTabs();
+  const area = document.getElementById('note-editor-area');
+  if (!area) return;
+  const ts = new Date(note.updated).toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+  area.innerHTML =
+    '<div class="note-editor-header">' +
+      '<input class="note-title-input" id="note-title" value="' + esc(note.title) + '" placeholder="Titre" oninput="updTitle(this.value)">' +
+      '<div class="note-actions">' +
+        '<span class="save-indicator saved" id="save-ind">&#10003; Sauvegardé</span>' +
+        '<button class="note-btn" onclick="exportNote()">Exporter</button>' +
+        '<button class="note-btn danger" onclick="delNote(\'' + id + '\')">Supprimer</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="note-meta" id="note-meta">Dernière modification : ' + ts + '</div>' +
+    '<textarea class="note-textarea" id="note-content" placeholder="Écrire ici — sauvegarde automatique..." oninput="schedSave(this.value)">' + esc(note.content) + '</textarea>' +
+    '<div class="note-word-count" id="note-wc">' + wc(note.content) + ' mots</div>';
+}
+
+function updTitle(v) {
+  const n = notes.find(x => x.id === aid);
+  if (!n) return;
+  n.title   = v;
+  n.updated = Date.now();
+  schedSave();
+}
+
+function schedSave(content) {
+  const ind = document.getElementById('save-ind');
+  if (ind) { ind.className = 'save-indicator unsaved'; ind.textContent = '● Non sauvegardé'; }
+  if (content !== undefined) {
+    const n = notes.find(x => x.id === aid);
+    if (n) {
+      n.content = content;
+      n.updated = Date.now();
+      const w = document.getElementById('note-wc');
+      if (w) w.textContent = wc(content) + ' mots';
+    }
+  }
+  clearTimeout(stimer);
+  stimer = setTimeout(() => {
+    saveNotes();
+    renderTabs();
+    if (ind) { ind.className = 'save-indicator saved'; ind.textContent = '\u2713 Sauvegardé'; }
+    const m = document.getElementById('note-meta');
+    if (m) {
+      const ts = new Date().toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+      m.textContent = 'Dernière modification : ' + ts;
+    }
+  }, 800);
+}
+
+function addNote() {
+  const n = { id: genId(), title: 'Nouveau carnet', content: '', created: Date.now(), updated: Date.now() };
+  notes.push(n);
+  saveNotes();
+  openNote(n.id);
+}
+
+function delNote(id) {
+  if (!confirm('Supprimer ce carnet ?')) return;
+  notes = notes.filter(n => n.id !== id);
+  saveNotes();
+  aid = notes.length ? notes[0].id : null;
+  if (aid) openNote(aid); else renderTabs();
+}
+
+function exportNote() {
+  const n = notes.find(x => x.id === aid);
+  if (!n) return;
+  const b = new Blob([n.title + '\n\n' + n.content], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(b);
+  a.download = (n.title || 'carnet') + '.txt';
+  a.click();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadNotes();
+  if (notes.length) openNote(notes[0].id);
+  // Afficher la sidebar de l'onglet actif au démarrage (scénarios par défaut)
+  document.querySelectorAll('.aside-tab-section').forEach(s => s.style.display = 'none');
+  const startAside = document.getElementById('aside-scenarios');
+  if (startAside) startAside.style.display = 'block';
+});
+
+// ── Scroll + ouverture d'un accordéon ──────────────────────────────────
+function scrollAndOpen(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (!el.classList.contains('open')) el.classList.add('open');
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('aside button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// ── Filtre bestiaire depuis l'aside ────────────────────────────────────
+function filterBeastAside(group) {
+  document.querySelectorAll('aside button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  if (group === 'all') {
+    document.querySelectorAll('.beast-cat-group').forEach(g => g.style.display = '');
+  } else {
+    const showId = 'bgroup-' + group;
+    document.querySelectorAll('.beast-cat-group').forEach(g => {
+      g.style.display = (g.id === showId) ? '' : 'none';
+    });
+    const el = document.getElementById(showId);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+
+// ── JSONBin — lecture des notes joueurs (MJ) ─────────────────────────────
+const JSONBIN_KEY_MJ = '$2a$10$WYyryseWygh/sqmPChGh8.8o5.D26YYtfK8ftu2OIZyiKjcW2pNty';
+const JSONBIN_URL_MJ = 'https://api.jsonbin.io/v3';
+const JOUEURS = ['analyste', 'pistolero', 'causeuse', 'pisteur'];
+const JOUEUR_NAMES = {
+  analyste: "L'Analyste",
+  pistolero: "Le Pistolero",
+  causeuse: "La Causeuse",
+  pisteur: "Le Pisteur",
+};
+
+async 
+
+async 
+
+
+
+/* == NOUVELLES FONCTIONS CANAL CENTRAL == */
+var _K = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
+var _U = 'https://api.jsonbin.io/v3';
+var _C = '6a2f352bf5f4af5e29f21a22';
+var _SL = ['analyste','pistolero','causeuse','pisteur'];
+var _NM = {analyste:'Magdalena Hell',pistolero:'Lidia Fireheart',causeuse:'Rizen Dao',pisteur:'Telera'};
+
+function _central(cb) {
+  fetch(_U+'/b/'+_C+'/latest',{headers:{'X-Master-Key':_K}})
+  .then(function(r){return r.json();})
+  .then(function(d){cb(null,d.record||{});})
+  .catch(function(e){cb(e,null);});
+}
+
+function sendMsg(slug) {
+  var ta=document.getElementById('mj-note-ta-'+slug);
+  var ok=document.getElementById('mj-note-ok-'+slug);
+  if(!ta||!ta.value.trim()) return;
+  var msg=ta.value.trim();
+  _central(function(err,reg){
+    if(err||!reg[slug]){if(ok){ok.textContent=err?'Erreur reseau':'Non connecte';ok.classList.add('on');}return;}
+    fetch(_U+'/b/'+reg[slug]+'/latest',{headers:{'X-Master-Key':_K}})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      var rec=d.record||{};rec.mj_note=msg;
+      return fetch(_U+'/b/'+reg[slug],{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':_K},body:JSON.stringify(rec)});
+    }).then(function(){
+      if(ok){ok.textContent='Envoye !';ok.classList.add('on');setTimeout(function(){ok.classList.remove('on');},3000);}
+      ta.value='';
+    }).catch(function(){if(ok){ok.textContent='Erreur';ok.classList.add('on');}});
+  });
+}
+
+function loadAllPlayersNotes() {
+  var c=document.getElementById('mj-players-notes');
+  if(!c) return;
+  c.innerHTML='<p style="color:var(--muted);font-size:12px">Chargement...</p>';
+  _central(function(err,reg){
+    if(err){c.innerHTML='<p style="color:var(--danger);font-size:12px">Erreur: '+err.message+'</p>';return;}
+    var html='',done=0;
+    function add(slug,name,data){
+      var ts=data&&data.updated?new Date(data.updated).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+      html+='<div style="margin-bottom:18px"><div class="section-title" style="margin-bottom:8px">'+name+(ts?' <span style="font-size:10px;color:var(--muted)">'+ts+'</span>':'')+'</div>';
+      if(!data||!data.notes||!data.notes.length){
+        html+='<p style="color:var(--muted);font-size:12px;font-style:italic">'+(reg[slug]?'Aucune note.':'Non connecte.')+'</p>';
+      }else{
+        data.notes.forEach(function(n){
+          if(!n.content&&!n.title) return;
+          html+='<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;margin-bottom:6px"><div style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--amber);margin-bottom:5px">'+(n.title||'Sans titre')+'</div><div style="font-size:12px;color:var(--muted);white-space:pre-wrap;line-height:1.5">'+(n.content||'')+'</div></div>';
+        });
+      }
+      html+='</div>';done++;
+      if(done===_SL.length) c.innerHTML=html;
+    }
+    _SL.forEach(function(slug){
+      var binId=reg[slug];
+      if(!binId){add(slug,_NM[slug],null);return;}
+      fetch(_U+'/b/'+binId+'/latest',{headers:{'X-Master-Key':_K}})
+      .then(function(r){return r.json();})
+      .then(function(d){add(slug,_NM[slug],d.record);})
+      .catch(function(){add(slug,_NM[slug],null);});
+    });
+  });
+}
+
+function loadAllTeams() {
+  _central(function(err,reg){
+    if(err) return;
+    _SL.forEach(function(slug){
+      var strip=document.getElementById('team-strip-'+slug);
+      if(!strip) return;
+      var binId=reg[slug];
+      if(!binId){strip.innerHTML='<span style="font-size:11px;color:var(--muted);font-style:italic">Non connecte</span>';return;}
+      fetch(_U+'/b/'+binId+'/latest',{headers:{'X-Master-Key':_K}})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        var team=d.record&&d.record.team;
+        if(!team||!team.length){strip.innerHTML='<span style="font-size:11px;color:var(--muted)">Equipe vide</span>';return;}
+        var h='';
+        team.forEach(function(slot){
+          if(!slot) return;
+          var tt='<div class="pj-pk-tt-name">'+_ee(slot.name)+'</div>';
+          if(slot.type) tt+='<div class="pj-pk-tt-type">'+_ee(slot.type)+'</div>';
+          if(slot.talent) tt+='<div class="pj-pk-tt-stat"><span>Talent</span><span>'+_ee(slot.talent)+'</span></div>';
+          if(slot.stats){
+            var s=slot.stats;
+            [['FOR',s.for],['AGI',s.agi],['VIG',s.vig],['RUS',s.rus],['Parade',s.parade],['Rob.',s.robustesse]].forEach(function(kv){
+              if(kv[1]) tt+='<div class="pj-pk-tt-stat"><span>'+kv[0]+'</span><span>'+_ee(kv[1])+'</span></div>';
+            });
+          }
+          h+='<div class="pj-team-pk"><span class="pj-pk-badge">'+_ee(slot.name)+'</span><div class="pj-pk-tooltip">'+tt+'</div></div>';
+        });
+        strip.innerHTML=h;
+      }).catch(function(){strip.innerHTML='';});
+    });
+  });
+}
+
+function _ee(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function refreshAll() {
+  loadAllTeams();
+  loadAllPlayersNotes();
+}
+
+
+/* == SOUS-ONGLETS SCENARIO == */
+function scShowTab(tab, btn) {
+  document.querySelectorAll('.sc-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('#sc-nav button').forEach(function(b) { b.classList.remove('active'); });
+  var el = document.getElementById('sc-tab-' + tab);
+  if (el) el.classList.add('active');
+  if (btn) btn.classList.add('active');
+  else {
+    var navBtns = document.querySelectorAll('#sc-nav button');
+    navBtns.forEach(function(b) { if (b.getAttribute('data-tab') === tab) b.classList.add('active'); });
+  }
+  document.querySelectorAll('.aside-tab-section').forEach(function(s) { s.style.display = 'none'; });
+  var aside = document.getElementById('aside-' + tab);
+  if (aside) aside.style.display = 'block';
+}
+
+</script>
+</body>
+</html>
