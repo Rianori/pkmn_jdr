@@ -38,7 +38,7 @@ body {
 a { color: inherit; }
 
 /* ── LAYOUT FICHE JOUEUR ── */
-.player-shell { display: flex; flex-direction: column; min-height: 100vh; }
+
 
 .player-header {
   padding: 18px 24px 14px;
@@ -524,83 +524,20 @@ a { color: inherit; }
 
 
 
-  /* ── BANNIERE PJ ── */
-  .player-shell { display: flex; flex-direction: column; min-height: 100vh; }
-
+  
   /* Bannière pleine largeur */
-  .pj-banner {
-    position: relative;
-    width: 100%;
-    height: 200px;
-    background: var(--surface);
-    overflow: hidden;
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-  .pj-banner-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    transition: opacity .2s;
-  }
-  .pj-banner-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
-    transition: background .15s;
-  }
-  .pj-banner:hover .pj-banner-placeholder { background: var(--card); color: var(--amber); }
-  .pj-banner-placeholder-icon { font-size: 28px; opacity: .5; }
-  .pj-banner-placeholder-txt { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
-  /* Overlay sur bannière avec nom + rôle */
-  .pj-banner-overlay {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    padding: 10px 20px 12px;
-    background: linear-gradient(to top, rgba(14,14,15,.92) 0%, rgba(14,14,15,.0) 100%);
-    pointer-events: none;
-  }
-  .pj-banner-name {
-    font-family: var(--mono);
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--amber);
-    margin-bottom: 1px;
-  }
-  .pj-banner-role {
-    font-family: var(--sans);
-    font-size: 12px;
-    color: rgba(212,207,197,.7);
-  }
-  /* Bouton changer bannière (top-right au hover) */
-  .pj-banner-change {
-    position: absolute;
-    top: 10px; right: 12px;
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    background: rgba(14,14,15,.75);
-    color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 4px 10px;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity .15s, color .15s, border-color .15s;
-  }
-  .pj-banner:hover .pj-banner-change { opacity: 1; }
-  .pj-banner-change:hover { color: var(--amber); border-color: var(--amber-dim); }
-
-  /* Header réduit (logo + lien portail seulement) */
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   .player-header {
     padding: 10px 20px;
     border-bottom: 1px solid var(--border);
@@ -613,28 +550,85 @@ a { color: inherit; }
     z-index: 100;
   }
 
-  .pj-banner-img { cursor: grab; }
-  .pj-banner-img.dragging { cursor: grabbing; }
-  .pj-banner-drag-hint {
-    position: absolute;
-    bottom: 40px; left: 50%;
-    transform: translateX(-50%);
+  
+  
+  
+  .pj-banner:hover .pj-banner-drag-hint.visible { opacity: 1; }
+
+  /* ── BANNIERE PJ FIXE ── */
+  .player-shell { display: flex; flex-direction: column; min-height: 100vh; }
+
+  .pj-banner {
+    position: relative;
+    width: 280px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+  .pj-banner-img {
+    width: 100%;
+    flex: 1;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    min-height: 200px;
+  }
+  .pj-banner-placeholder {
+    width: 100%;
+    flex: 1;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--muted);
+  }
+  .pj-banner-placeholder-icon { font-size: 28px; opacity: .4; }
+  .pj-banner-placeholder-txt {
     font-family: var(--mono);
     font-size: 9px;
-    letter-spacing: .08em;
+    letter-spacing: .1em;
     text-transform: uppercase;
-    background: rgba(14,14,15,.8);
     color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 3px 10px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity .3s;
-    white-space: nowrap;
+    opacity: .6;
   }
-  .pj-banner:hover .pj-banner-drag-hint.visible { opacity: 1; }
-</style>
+  .pj-banner-overlay {
+    padding: 14px 16px 16px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .pj-banner-name {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--amber);
+    margin-bottom: 3px;
+  }
+  .pj-banner-role {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* Layout principal : bannière latérale + contenu */
+  .player-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+  .player-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .player-content { flex: 1; padding: 28px 24px; overflow-y: auto; }</style>
 </head>
 <body>
 <div class="player-shell">
@@ -647,27 +641,26 @@ a { color: inherit; }
     </div>
     <a href="index.html" class="player-back">Portail</a>
   </header>
-  <div class="pj-banner" id="pj-banner" onclick="triggerBannerUpload()">
-    <input type="file" id="pj-photo-input" accept="image/*" style="display:none" onchange="loadPhoto(event)">
+  <div class="player-body">
+  <div class="pj-banner" id="pj-banner">
     <img class="pj-banner-img" id="pj-photo-img" src="" alt="" style="display:none">
     <div class="pj-banner-placeholder" id="pj-photo-placeholder">
-      <div class="pj-banner-placeholder-icon">&#43;</div>
-      <div class="pj-banner-placeholder-txt">Ajouter une banni&egrave;re</div>
+      <div class="pj-banner-placeholder-icon">&#9670;</div>
+      <div class="pj-banner-placeholder-txt">Illustration</div>
     </div>
-    <div class="pj-banner-overlay" id="pj-banner-overlay" style="display:none">
+    <div class="pj-banner-overlay">
       <div class="pj-banner-name" id="pj-banner-name">Kael Oryn</div>
       <div class="pj-banner-role">Dresseur de circuit libre</div>
     </div>
-    <div class="pj-banner-drag-hint" id="pj-drag-hint">Glisser pour recadrer</div>
-    <button class="pj-banner-change" onclick="event.stopPropagation();triggerBannerUpload()" title="Changer la banni&egrave;re">Changer</button>
   </div>
-  <nav class="player-nav">
+  <div class="player-main">
+    <nav class="player-nav">
     <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
     <button onclick="showPlayerTab('partner',this)">Abra</button>
     <button onclick="showPlayerTab('team',this)">Equipe</button>
     <button onclick="showPlayerTab('notes',this)">Notes</button>
   </nav>
-  <div class="player-content">
+    <div class="player-content">
     
     <div class="player-tab active" id="tab-perso">
         <div class="page-title">Kael Oryn</div>
@@ -820,7 +813,9 @@ a { color: inherit; }
 
     
     <!-- /.content -->
-  </div><!-- /.player-shell -->
+  </div>
+  </div>
+</div><!-- /.player-shell -->
 </div>
 
 <script>
@@ -1393,158 +1388,44 @@ function initPlayerBin() {
 
 
 /* ── BANNIERE PJ ── */
-var _bannerPos = 50; // % vertical, 0=haut 100=bas
-var _dragStartY = 0;
-var _dragStartPos = 0;
-var _isDragging = false;
 
-function triggerBannerUpload() {
-  if (_isDragging) return;
-  document.getElementById('pj-photo-input').click();
-}
 
-function loadPhoto(event) {
-  var file = event.target.files[0];
-  if (!file) return;
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    var img = new Image();
-    img.onload = function() {
-      var canvas = document.createElement('canvas');
-      var MAX_W = 1400, MAX_H = 600;
-      var ratio = Math.min(MAX_W / img.width, MAX_H / img.height, 1);
-      canvas.width  = Math.round(img.width  * ratio);
-      canvas.height = Math.round(img.height * ratio);
-      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-      var dataUrl = canvas.toDataURL('image/jpeg', 0.88);
-      _bannerPos = 50;
-      localStorage.setItem(STORAGE_KEY + '_photo', dataUrl);
-      localStorage.setItem(STORAGE_KEY + '_photo_pos', '50');
-      showPhoto(dataUrl, 50);
-      _savePhotoToCloud(dataUrl, 50);
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
 
-function showPhoto(dataUrl, pos) {
-  if (pos === undefined) pos = _bannerPos;
-  _bannerPos = pos;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ── BANNIERE FIXE ── */
+function showPhoto(dataUrl) {
   var img = document.getElementById('pj-photo-img');
   var ph  = document.getElementById('pj-photo-placeholder');
-  var ov  = document.getElementById('pj-banner-overlay');
-  var hint = document.getElementById('pj-drag-hint');
-  if (img) {
-    img.src = dataUrl;
-    img.style.display = 'block';
-    img.style.objectPosition = 'center ' + pos + '%';
-  }
-  if (ph)   { ph.style.display  = 'none'; }
-  if (ov)   { ov.style.display  = 'block'; }
-  if (hint) { hint.classList.add('visible'); }
-  _initDrag();
-}
-
-function _initDrag() {
-  var img = document.getElementById('pj-photo-img');
-  if (!img || img.dataset.dragInit) return;
-  img.dataset.dragInit = '1';
-
-  // Mouse
-  img.addEventListener('mousedown', function(e) {
-    e.preventDefault();
-    _isDragging = true;
-    _dragStartY   = e.clientY;
-    _dragStartPos = _bannerPos;
-    img.classList.add('dragging');
-  });
-  document.addEventListener('mousemove', function(e) {
-    if (!_isDragging) return;
-    _applyDrag(e.clientY);
-  });
-  document.addEventListener('mouseup', function() {
-    if (!_isDragging) return;
-    _isDragging = false;
-    img.classList.remove('dragging');
-    _saveBannerPos();
-    setTimeout(function() { _isDragging = false; }, 50);
-  });
-
-  // Touch
-  img.addEventListener('touchstart', function(e) {
-    _isDragging = true;
-    _dragStartY   = e.touches[0].clientY;
-    _dragStartPos = _bannerPos;
-  }, { passive: true });
-  document.addEventListener('touchmove', function(e) {
-    if (!_isDragging) return;
-    _applyDrag(e.touches[0].clientY);
-  }, { passive: true });
-  document.addEventListener('touchend', function() {
-    if (!_isDragging) return;
-    _isDragging = false;
-    _saveBannerPos();
-  });
-}
-
-function _applyDrag(clientY) {
-  var banner = document.getElementById('pj-banner');
-  if (!banner) return;
-  var delta = clientY - _dragStartY;
-  var bannerH = banner.offsetHeight;
-  // Sensibilité : 1px de drag = ~0.5% de déplacement
-  var pctDelta = (delta / bannerH) * -80;
-  var newPos = Math.max(0, Math.min(100, _dragStartPos + pctDelta));
-  _bannerPos = newPos;
-  var img = document.getElementById('pj-photo-img');
-  if (img) img.style.objectPosition = 'center ' + newPos + '%';
-}
-
-function _saveBannerPos() {
-  localStorage.setItem(STORAGE_KEY + '_photo_pos', String(Math.round(_bannerPos)));
-  _savePhotoToCloud(localStorage.getItem(STORAGE_KEY + '_photo'), Math.round(_bannerPos));
-}
-
-function _savePhotoToCloud(dataUrl, pos) {
-  if (!dataUrl) return;
-  var binId = localStorage.getItem(BIN_ID_KEY);
-  if (!binId) return;
-  fetch(_JBURL + '/b/' + binId + '/latest', {
-    headers: { 'X-Master-Key': _JBKEY }
-  }).then(function(r) { return r.json(); })
-  .then(function(d) {
-    var rec = d.record || {};
-    rec.photo = dataUrl;
-    rec.photo_pos = pos !== undefined ? pos : _bannerPos;
-    return fetch(_JBURL + '/b/' + binId, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JBKEY },
-      body: JSON.stringify(rec)
-    });
-  }).catch(function() {});
+  if (img) { img.src = dataUrl; img.style.display = 'block'; }
+  if (ph)  { ph.style.display = 'none'; }
 }
 
 function initPhoto() {
-  var local    = localStorage.getItem(STORAGE_KEY + '_photo');
-  var localPos = parseInt(localStorage.getItem(STORAGE_KEY + '_photo_pos') || '50', 10);
-  if (local) showPhoto(local, localPos);
+  var local = localStorage.getItem(STORAGE_KEY + '_photo');
+  if (local) showPhoto(local);
   _getOrCreateBin(function(binId) {
     fetch(_JBURL + '/b/' + binId + '/latest', {
       headers: { 'X-Master-Key': _JBKEY }
     }).then(function(r) { return r.json(); })
     .then(function(d) {
-      if (!d.record) return;
-      var cloudPhoto = d.record.photo;
-      var cloudPos   = d.record.photo_pos !== undefined ? d.record.photo_pos : 50;
-      if (cloudPhoto && cloudPhoto !== local) {
-        localStorage.setItem(STORAGE_KEY + '_photo', cloudPhoto);
-        localStorage.setItem(STORAGE_KEY + '_photo_pos', String(cloudPos));
-        showPhoto(cloudPhoto, cloudPos);
-      } else if (cloudPos !== localPos && local) {
-        _bannerPos = cloudPos;
-        var img = document.getElementById('pj-photo-img');
-        if (img) img.style.objectPosition = 'center ' + cloudPos + '%';
+      if (d.record && d.record.photo) {
+        localStorage.setItem(STORAGE_KEY + '_photo', d.record.photo);
+        showPhoto(d.record.photo);
       }
     }).catch(function() {});
   });
