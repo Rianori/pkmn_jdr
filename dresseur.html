@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kael Oryn</title>
+<style>
+
+:root {
+    --bg:        #0e0e0f;
+    --surface:   #161618;
+    --card:      #1c1c1f;
+    --border:    #2a2a2e;
+    --amber:     #c8922a;
+    --amber-dim: #7a5510;
+    --amber-glow:#c8922a22;
+    --text:      #d4cfc5;
+    --muted:     #6b6660;
+    --danger:    #8b2020;
+    --safe:      #1e5c2e;
+    --blue:      #1e3a6b;
+    --boss:      #4a2800;
+    --radius:    4px;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+/* ── RESET MINIMAL ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+a { color: inherit; }
+
+/* ── LAYOUT FICHE JOUEUR ── */
+.player-shell { display: flex; flex-direction: column; min-height: 100vh; }
+
+.player-header {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.player-logo { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.player-role { font-size: 12px; color: var(--muted); font-style: italic; }
+.player-back {
+  margin-left: auto; font-size: 12px; color: var(--muted);
+  text-decoration: none; border: 1px solid var(--border);
+  border-radius: 4px; padding: 4px 10px;
+  font-family: var(--mono); transition: color .15s, border-color .15s;
+}
+.player-back:hover { color: var(--amber); border-color: var(--amber-dim); }
+
+/* ── NOM ÉDITABLE ── */
+.player-name-wrap { display: flex; align-items: center; gap: 8px; }
+.player-name-display { font-family: var(--mono); font-size: 16px; font-weight: 600; color: var(--amber); cursor: pointer; }
+.player-name-display:hover { text-decoration: underline dotted var(--amber-dim); }
+.player-name-input {
+  font-family: var(--mono); font-size: 16px; font-weight: 600; color: var(--amber);
+  background: var(--surface); border: 1px solid var(--amber-dim); border-radius: 4px;
+  padding: 2px 8px; display: none; width: 200px;
+}
+.edit-name-btn { background: none; border: none; color: var(--muted); font-size: 11px; cursor: pointer; padding: 2px 4px; font-family: var(--mono); transition: color .12s; }
+.edit-name-btn:hover { color: var(--amber); }
+
+/* ── NAVIGATION ONGLETS ── */
+.player-nav {
+  display: flex; gap: 2px; padding: 0 24px;
+  background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto;
+}
+.player-nav button {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--muted); padding: 12px 16px 10px; cursor: pointer; white-space: nowrap;
+  transition: color .12s, border-color .12s;
+}
+.player-nav button.active { color: var(--amber); border-bottom-color: var(--amber); }
+.player-nav button:hover:not(.active) { color: var(--text); }
+
+/* ── ONGLETS CONTENU ── */
+.player-content { flex: 1; padding: 28px 24px; }
+.player-tab { display: none; }
+.player-tab.active { display: block; }
+
+/* ── ÉQUIPE ── */
+.team-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 10px; margin-bottom: 24px; }
+.team-slot {
+  border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface);
+  padding: 12px 8px; text-align: center; cursor: pointer;
+  transition: border-color .12s, background .12s; min-height: 80px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; position: relative;
+}
+.team-slot:hover { border-color: var(--amber-dim); background: var(--card); }
+.team-slot.active { border-color: var(--amber); background: var(--card); }
+.team-slot.empty { border-style: dashed; }
+.team-slot.empty:hover { border-color: var(--amber-dim); }
+.slot-num { font-family: var(--mono); font-size: 9px; color: var(--muted); position: absolute; top: 6px; left: 8px; }
+.slot-name { font-family: var(--mono); font-size: 11px; color: var(--text); line-height: 1.3; }
+.slot-type { font-size: 10px; color: var(--muted); }
+.slot-add { font-size: 20px; color: var(--border); line-height: 1; }
+.team-slot.empty .slot-add { color: var(--muted); }
+.team-slot:hover .slot-add { color: var(--amber-dim); }
+.slot-partner-badge { font-size: 9px; background: var(--amber-glow); color: var(--amber); border-radius: 3px; padding: 1px 5px; font-family: var(--mono); }
+.team-panel { border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); overflow: hidden; }
+.team-panel-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+.team-panel-name { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--amber); }
+.team-panel-body { padding: 18px; }
+.team-empty-state { padding: 40px; text-align: center; color: var(--muted); font-style: italic; }
+
+/* ── FORMULAIRE AJOUT PK ── */
+.pk-add-form { display: none; flex-direction: column; gap: 12px; padding: 20px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; }
+.pk-add-form.open { display: flex; }
+.pk-add-form input, .pk-add-form select, .pk-add-form textarea { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--sans); font-size: 13px; padding: 8px 12px; }
+.pk-add-form textarea { min-height: 80px; resize: vertical; }
+.pk-add-form label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: -8px; }
+.form-row { display: flex; gap: 10px; }
+.form-row > * { flex: 1; }
+.btn-primary { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-dim); border-radius: 4px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 18px; cursor: pointer; transition: background .12s; }
+.btn-primary:hover { background: var(--amber); color: #1a1000; }
+.btn-ghost { background: none; color: var(--muted); border: 1px solid var(--border); border-radius: 4px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 18px; cursor: pointer; }
+.btn-ghost:hover { color: var(--text); border-color: var(--text); }
+.btn-danger { background: none; color: var(--danger); border: 1px solid var(--danger); border-radius: 4px; font-family: var(--mono); font-size: 10px; padding: 4px 10px; cursor: pointer; }
+
+/* ── NOTES ── */
+.notes-layout { display: flex; gap: 16px; height: calc(100vh - 180px); }
+.notes-sidebar { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; }
+.note-list-item { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 12px; transition: border-color .12s; display: flex; align-items: center; gap: 8px; }
+.note-list-item.active { border-color: var(--amber); color: var(--amber); }
+.note-list-item:hover:not(.active) { background: var(--card); }
+.note-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+.note-list-item.active .note-dot { background: var(--amber); }
+.note-editor-wrap { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.note-title-input { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--mono); font-size: 14px; font-weight: 600; padding: 10px 14px; width: 100%; }
+.note-body-textarea { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.7; padding: 14px; resize: none; width: 100%; }
+.note-meta-bar { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--muted); }
+.save-ok { color: var(--safe); }
+.save-pending { color: var(--amber-dim); }
+.note-add-btn { background: none; border: 1px dashed var(--border); border-radius: 4px; color: var(--muted); font-size: 12px; padding: 6px 12px; cursor: pointer; text-align: center; transition: color .12s, border-color .12s; }
+.note-add-btn:hover { color: var(--amber); border-color: var(--amber-dim); }
+.page-title { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--amber); margin-bottom: 4px; }
+.page-tagline { font-size: 13px; color: var(--muted); font-style: italic; margin-bottom: 24px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .team-grid { grid-template-columns: repeat(3,1fr); }
+  .player-content { padding: 16px; }
+  .notes-layout { flex-direction: column; height: auto; }
+  .notes-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; }
+}
+/* ── TYPOGRAPHY ── */
+  .page-title {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--amber);
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+.page-tagline {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+.section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 32px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+.pj-body { padding: 22px; }
+/* Stats grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+.stat-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+  }
+.stat-block-title {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+.stat-row:last-child { border-bottom: none; }
+.stat-name { color: var(--muted); }
+.stat-val  { font-family: var(--mono); font-weight: 600; color: var(--amber); font-size: 13px; }
+/* Tags */
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+.tag-majeur   { background: #3a1010; color: #e07070; }
+.tag-mineur   { background: #1a2a10; color: #80b060; }
+.tag-edge     { background: #102030; color: #5090c0; }
+.tag-background { background: #2a1a00; color: #c08030; }
+.tag-combat   { background: #200010; color: #c040a0; }
+.tag-social   { background: #0a1a30; color: #4090e0; }
+.tag-weird    { background: #1a0a30; color: #9060d0; }
+.tag-psi      { background: #3a0505; color: #e05050; }
+.tag-sauvage  { background: #05200a; color: #50c060; }
+.tag-gardien  { background: #051530; color: #5080e0; }
+.tag-boss     { background: #201000; color: #d08020; }
+.hindrance-block, .edge-block {
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    margin-bottom: 6px;
+  }
+.hindrance-block { background: #1a0a0a; border-left: 2px solid #5a2020; }
+.edge-block      { background: #0a1020; border-left: 2px solid #203050; }
+.block-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.block-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.gear-list { list-style: none; }
+.gear-list li {
+    font-size: 13px;
+    color: #a8a39a;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+.gear-list li::before {
+    content: '·';
+    font-family: var(--mono);
+    color: var(--amber-dim);
+    flex-shrink: 0;
+  }
+.stat-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+.stat-pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 2px 8px;
+    color: var(--text);
+  }
+.stat-pill span { color: var(--amber); font-weight: 600; }
+.atk-table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 12px; }
+.atk-table th {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+.atk-table td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #1e1e22;
+    color: #a8a39a;
+    vertical-align: top;
+  }
+.atk-table tr:last-child td { border-bottom: none; }
+.capa-list { list-style: none; margin-top: 8px; }
+.capa-list li {
+    font-size: 12px;
+    color: #a8a39a;
+    padding: 4px 0 4px 12px;
+    border-bottom: 1px solid #1e1e22;
+    position: relative;
+    line-height: 1.5;
+  }
+.capa-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--amber-dim);
+    font-size: 10px;
+    top: 5px;
+  }
+.capa-list li:last-child { border-bottom: none; }
+.capa-name { color: var(--text); font-weight: 600; }
+.divider { height: 1px; background: var(--border); margin: 28px 0; }
+.pk-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+.pk-card-header {
+    padding: 14px 18px 10px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+.pk-owner {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+.pk-name {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--amber);
+    margin-bottom: 1px;
+  }
+.pk-species {
+    font-size: 11px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+.pk-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 2px;
+  }
+.pk-body { padding: 16px 18px; }
+.pk-lore {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+/* Stats en ligne horizontale */
+  .pk-stats-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+.pk-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 4px 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+.pk-stat .val { color: var(--amber); font-weight: 600; }
+/* Sous-sections compactes */
+  .pk-section-lbl {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 12px 0 5px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+/* Table attaques compacte */
+  .pk-atk-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 4px; }
+.pk-atk-table th {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 3px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+.pk-atk-table td {
+    padding: 4px 6px;
+    border-bottom: 1px solid #1e1e22;
+    color: #a8a39a;
+    vertical-align: top;
+    line-height: 1.4;
+  }
+.pk-atk-table tr:last-child td { border-bottom: none; }
+.pk-atk-name { color: var(--text); font-weight: 600; font-size: 11px; white-space: nowrap; }
+.pk-atk-dmg  { font-family: var(--mono); color: var(--amber); font-size: 10px; white-space: nowrap; }
+/* Capacités */
+  .pk-capa { margin-bottom: 8px; }
+.pk-capa-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+.pk-capa-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+    padding-left: 10px;
+  }
+/* Blessures Pokémon */
+  .pk-wounds {
+    display: flex;
+    gap: 5px;
+    margin: 10px 0 6px;
+  }
+.pk-wound-box {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 6px 4px;
+    text-align: center;
+    font-size: 10px;
+    background: var(--surface);
+  }
+.pk-wound-box.ko { background: #1a0505; border-color: #5a2020; color: #e07070; }
+.pk-wound-lbl { font-family: var(--mono); font-size: 8px; color: var(--muted); display: block; margin-bottom: 3px; }
+.pk-wound-check { font-size: 16px; color: var(--muted); line-height: 1; }
+/* Boite narrative */
+  .pk-note {
+    background: var(--amber-glow);
+    border-left: 2px solid var(--amber-dim);
+    border-radius: 0 2px 2px 0;
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-size: 11px;
+    font-style: italic;
+    color: #8a8278;
+    line-height: 1.5;
+  }
+.pk-note strong { color: var(--amber); font-style: normal; }
+.pokemon-section-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:6px;padding:4px 0;border-bottom:1px solid var(--amber-dim);}
+.pj-acc-stats .stats-grid {
+    gap: 8px;
+    margin-bottom: 0;
+  }
+.pj-acc-stats .stat-block {
+    padding: 7px 10px;
+  }
+.pj-acc-stats .stat-block-title {
+    font-size: 7.5px;
+    margin-bottom: 4px;
+  }
+.pj-acc-stats .stat-row {
+    padding: 2px 0;
+    font-size: 12px;
+  }
+
+  /* == EQUIPEMENT EDITABLE == */
+  .gear-editable { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+  .gear-item { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 7px 10px; font-size: 13px; }
+  .gear-item-text { flex: 1; color: var(--text); }
+  .gear-del-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; line-height: 1; padding: 0 2px; transition: color .12s; flex-shrink: 0; }
+  .gear-del-btn:hover { color: var(--danger); }
+  .gear-add-row { display: flex; gap: 6px; margin-top: 4px; }
+  .gear-add-input { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--sans); font-size: 13px; padding: 7px 10px; }
+  .gear-add-input:focus { outline: none; border-color: var(--amber-dim); }
+  .gear-add-btn { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-dim); border-radius: 4px; font-family: var(--mono); font-size: 11px; padding: 7px 14px; cursor: pointer; white-space: nowrap; transition: background .12s; }
+  .gear-add-btn:hover { background: var(--amber); color: #1a1000; }
+
+  /* == STATS POKEMON DANS FORMULAIRE EQUIPE == */
+  .pk-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+  .pk-stat-field label { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 3px; }
+  .pk-stat-field input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--mono); font-size: 13px; padding: 6px 8px; }
+  .pk-attacks-area { margin-top: 8px; }
+  .pk-attack-row { display: flex; gap: 6px; margin-bottom: 4px; }
+  .pk-attack-row input { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 12px; padding: 5px 8px; }
+  .pk-attack-add { background: none; border: 1px dashed var(--border); border-radius: 4px; color: var(--muted); font-size: 11px; padding: 5px 12px; cursor: pointer; margin-top: 2px; }
+  .pk-attack-add:hover { color: var(--amber); border-color: var(--amber-dim); }
+  .pk-attack-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 0 4px; }
+  .pk-attack-del:hover { color: var(--danger); }
+
+  /* == POP-UP NOTE MJ == */
+  .mj-note-popup {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,.65); z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mj-note-popup.hidden { display: none; }
+  .mj-note-box {
+    background: var(--card); border: 1px solid var(--amber-dim);
+    border-radius: var(--radius); padding: 28px 32px; max-width: 420px; width: 90%;
+    box-shadow: 0 0 40px rgba(200,146,42,.15);
+  }
+  .mj-note-box-title { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+  .mj-note-box-content { font-size: 14px; color: var(--text); line-height: 1.7; white-space: pre-wrap; margin-bottom: 20px; }
+  .mj-note-box-close { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-dim); border-radius: 4px; font-family: var(--mono); font-size: 11px; padding: 8px 18px; cursor: pointer; letter-spacing: .06em; }
+  .mj-note-box-close:hover { background: var(--amber); color: #1a1000; }
+
+
+</style>
+</head>
+<body>
+<div class="player-shell">
+  <header class="player-header">
+    <div>
+      <div class="player-logo">Savage Pokémon</div>
+      <div class="player-name-wrap">
+        <span class="player-name-display" id="pj-name-display" data-default="Kael Oryn" onclick="startEditName()">Kael Oryn</span>
+        <input class="player-name-input" id="pj-name-input" type="text" maxlength="40">
+        <button class="edit-name-btn" id="edit-name-btn" onclick="startEditName()" title="Modifier">Edit</button>
+      </div>
+      <div class="player-role">Dresseur #1 · Technicienne en Capsules Techniques</div>
+    </div>
+    <a href="index.html" class="player-back">Portail</a>
+  </header>
+  <nav class="player-nav">
+    <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
+    <button onclick="showPlayerTab('partner',this)">Métamorph</button>
+    <button onclick="showPlayerTab('team',this)">Equipe</button>
+    <button onclick="showPlayerTab('notes',this)">Notes</button>
+  </nav>
+  <div class="player-content">
+    <div class="player-tab active" 
+
+      <!-- ── ONGLET PERSO ── -->
+      <div class="tab-section active" id="tab-perso">
+        <div class="page-title">Kael Oryn</div>
+        <div class="page-tagline">Dresseur de circuit libre</div>
+        <div class="stats-grid">
+          <div class="stat-block">
+            <div class="stat-block-title">Attributs</div>
+            <div class="stat-row"><span class="stat-name">Agilit&eacute;</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Ruse</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Force</span><span class="stat-val">d4</span></div><div class="stat-row"><span class="stat-name">Trempe</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Vigueur</span><span class="stat-val">d6</span></div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-block-title">Stats d&eacute;riv&eacute;es</div>
+            <div class="stat-row"><span class="stat-name">Parade</span><span class="stat-val">4</span></div><div class="stat-row"><span class="stat-name">Robustesse</span><span class="stat-val">5</span></div><div class="stat-row"><span class="stat-name">Allure</span><span class="stat-val">6&quot;</span></div><div class="stat-row"><span class="stat-name">D&eacute; Joker</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Fate Chips</span><span class="stat-val">3/session</span></div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--muted);font-style:italic;margin-bottom:18px;line-height:1.7">Kael a perdu Voltali lors d'un combat truqu&eacute; &mdash; une &eacute;lectrocution forc&eacute;e, trop intense. Il a r&eacute;cup&eacute;r&eacute; Abra d'un dresseur qui ne pouvait pas le contr&ocirc;ler. Il apprend &agrave; jouer autrement. Ce n'est pas confortable.</p>
+        <div class="section-title">Comp&eacute;tences</div>
+        <div class="stat-block" style="margin-bottom:18px"><div class="stat-row"><span class="stat-name">Athl&eacute;tisme</span><span class="stat-val">d4</span></div><div class="stat-row"><span class="stat-name">Connaissances Communes</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Perception (Notice)</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d12</span></div><div class="stat-row"><span class="stat-name">Conn. Pok&eacute;mon (Types/M&eacute;ta)</span><span class="stat-val">d12</span></div><div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Combat (Fightin')</span><span class="stat-val">d4</span></div><div class="stat-row"><span class="stat-name">Subter&shy;fuge</span><span class="stat-val">d6</span></div></div>
+        <div class="section-title">Handicaps</div>
+        <div class="hindrance-block">
+                <div class="block-name"><span class="tag tag-majeur">Majeur</span> Compte &agrave; R&eacute;gler</div>
+                <div class="block-desc">Cherche l'interm&eacute;diaire qui a fait truquer le combat o&ugrave; Voltali est mort. Ne peut d&eacute;cliner une piste qui y m&egrave;ne. Jet Trempe diff. 6 pour ne pas la suivre imm&eacute;diatement.</div>
+              </div><div class="hindrance-block">
+                <div class="block-name"><span class="tag tag-mineur">Mineur</span> Arrogance</div>
+                <div class="block-desc">Combat sans Pok&eacute;mon : -2 &agrave; tout jet de Combat personnel. Ne demande jamais d'aide &agrave; quelqu'un qu'il n'a pas vu &agrave; l'oeuvre.</div>
+              </div><div class="hindrance-block">
+                <div class="block-name"><span class="tag tag-mineur">Mineur</span> Sans le Sou</div>
+                <div class="block-desc">Commence chaque sc&eacute;nario avec 100&#8377; de moins que la moyenne du groupe apr&egrave;s avoir &laquo;&nbsp;investi&nbsp;&raquo; sur un combat.</div>
+              </div>
+        <div class="section-title">Atouts</div>
+        <div class="edge-block">
+                <div class="block-name"><span class="tag tag-background">Background</span> Maestro</div>
+                <div class="block-desc">Peut donner des ordres &agrave; 2 Pok&eacute;mon simultan&eacute;ment sans malus de multi-action. Jet Dressage d12 diff. 6 : 3 Pok&eacute;mon simultan&eacute;ment.</div>
+              </div><div class="edge-block">
+                <div class="block-name"><span class="tag tag-background">Background</span> Lecteur de Combat</div>
+                <div class="block-desc">D&eacute;but de chaque combat : jet Conn. Pok&eacute;mon diff. 4. Succ&egrave;s : faiblesses de type de tous les adversaires Pok&eacute;mon. Relance : capacit&eacute;s probables aussi.</div>
+              </div><div class="edge-block">
+                <div class="block-name"><span class="tag tag-background">Pok&eacute;mon</span> Lien &Eacute;mergent &mdash; Abra</div>
+                <div class="block-desc">1x/session : Abra s'interpose (hors tour) entre Kael et une attaque, absorbe les d&eacute;g&acirc;ts &agrave; sa place (jet Vigueur d6 ensuite).</div>
+              </div>
+        <div class="section-title">Equipement</div>
+        <ul class="gear-list"><li>Badge de circuit libre (acc&egrave;s tournois non officiels)</li><li>Cahier de strat&eacute;gies (notes de combat personnelles)</li><li>Pok&eacute;balls x3</li><li>Veste de voyage</li><li>100&#8377; (apr&egrave;s &laquo;&nbsp;investissements&nbsp;&raquo;)</li></ul>
+        <button class="note-add-btn" style="margin-top:14px" onclick="addGear()">+ Ajouter</button>
+        <div class="player-tab" id="player-tab-perso" style="display:none"></div>
+      </div>
+
+      <!-- ── ONGLET PARTENAIRE ── -->
+      <div class="tab-section" id="tab-partner">
+        <div class="page-title">Pok&eacute;mon partenaire</div>
+        <div class="page-tagline">Abra</div>
+        <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+          <span style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Blessures</span>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b1" onchange="saveBlessures()"> Blessure 1 (-1)</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b2" onchange="saveBlessures()"> Blessure 2 (-2)</label>
+        </div>
+        <div class="pk-grid">
+          <div class="pk-card">
+            <div class="pk-card-header">
+              <div class="pk-owner">Pok&eacute;mon Partenaire</div>
+              <div class="pk-name">Abra</div>
+              <div class="pk-species">Abra &middot; Psy &middot; N&deg;63</div>
+              <div class="pk-meta-row">
+                <span class="tag tag-weird">Psy</span>
+                <span class="tag tag-background">Petit (-1)</span>
+                <span class="tag tag-edge">Extra sp&eacute;cial</span>
+              </div>
+            </div>
+            <div class="pk-body">
+              <p class="pk-lore">Il n'a pas choisi Kael. Il a juste arr&ecirc;t&eacute; de se t&eacute;l&eacute;porter quand Kael a ouvert la cage. C'est suffisant pour commencer.</p>
+              <div class="pk-stats-row"><div class="pk-stat">AGI&nbsp;<span class="val">d10</span></div><div class="pk-stat">RUS&nbsp;<span class="val">d10</span></div><div class="pk-stat">FOR&nbsp;<span class="val">d4</span></div><div class="pk-stat">VIG&nbsp;<span class="val">d6</span></div><div class="pk-stat">Parade&nbsp;<span class="val">7</span></div><div class="pk-stat">Robustesse&nbsp;<span class="val">5</span></div><div class="pk-stat">Allure&nbsp;<span class="val">4 / T&eacute;l&eacute;port 20&quot;</span></div></div>
+              <div class="pk-section-lbl">Attaques</div>
+              <table class="pk-atk-table">
+                <tr><th>Attaque</th><th>Domm.</th><th>Port&eacute;e</th><th>Effet</th></tr>
+                <tr><td class="pk-atk-name">Choc Mental</td><td class="pk-atk-dmg">2d6</td><td>8&quot;/16&quot;</td><td>Psy &mdash; ignore armure physique. Tir d10.</td></tr><tr><td class="pk-atk-name">T&eacute;l&eacute;portation</td><td class="pk-atk-dmg">&mdash;</td><td>20&quot;</td><td>Mouvement sans attaque d'opportunit&eacute;. Action de mouvement.</td></tr><tr><td class="pk-atk-name">Barri&egrave;re Psy</td><td class="pk-atk-dmg">&mdash;</td><td>Contact</td><td>+3 Parade pour Kael ou Abra ce round.</td></tr>
+              </table>
+              <div class="pk-section-lbl">Capacit&eacute;s sp&eacute;ciales</div>
+              <div class="pk-capa"><div class="pk-capa-name">T&eacute;l&eacute;portation R&eacute;flexe (Passif)</div><div class="pk-capa-desc">Si touch&eacute; par une attaque physique : AGI d10 diff. 4. Succ&egrave;s : se t&eacute;l&eacute;porte hors de port&eacute;e avant impact.</div></div><div class="pk-capa"><div class="pk-capa-name">Sommeil Profond (Contrainte)</div><div class="pk-capa-desc">Dort 18h/24. Utilisable 1x/sc&egrave;ne sauf jet Dressage d12 diff. 6 de Kael pour prolonger.</div></div><div class="pk-capa"><div class="pk-capa-name">Pr&eacute;cognition (Passif)</div><div class="pk-capa-desc">Kael ne peut &ecirc;tre Distrait ou Secouu&eacute; par surprise tant qu'Abra est &eacute;veill&eacute; et adjacent.</div></div><div class="pk-capa"><div class="pk-capa-name">Lien &Eacute;mergent</div><div class="pk-capa-desc">Abra choisit d'ob&eacute;ir. Si l'ordre lui semble inutile, il dort plut&ocirc;t que d'ex&eacute;cuter.</div></div>
+              <div class="pk-note"><strong>Note MJ</strong> : Abra n'est pas encore pleinement fiable. Il repr&eacute;sente le d&eacute;fi accept&eacute; par Kael apr&egrave;s la perte de Voltali &mdash; apprendre &agrave; gagner avec un Pok&eacute;mon qui n'ob&eacute;it pas par instinct.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ONGLET EQUIPE ── -->
+      <div class="tab-section" id="tab-team">
+        <div class="page-title">Equipe Pok&eacute;mon</div>
+        <div class="page-tagline">Gestion de votre &eacute;quipe</div>
+        <div id="team-container"></div>
+        <button class="note-add-btn" onclick="addPokemon()">+ Ajouter un Pok&eacute;mon</button>
+      </div>
+
+      <!-- ── ONGLET NOTES ── -->
+      <div class="tab-section" id="tab-notes">
+        <div class="page-title">Notes</div>
+        <div class="page-tagline">Sauvegarde automatique</div>
+        <div class="notes-layout">
+          <div class="notes-sidebar">
+            <div id="note-list"></div>
+            <button class="note-add-btn" onclick="addNote()">+ Nouveau</button>
+          </div>
+          <div class="note-editor-area" id="note-editor-area">
+            <div class="note-empty-state">S&eacute;lectionnez ou cr&eacute;ez une note.</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.content -->
+  </div><!-- /.player-shell -->
+</div>
+
+<script>
+
+
+var PLAYER_KEY = 'analyste';
+var STORAGE_KEY = 'jdr_player_' + PLAYER_KEY;
+var PARTNER_NAME_ASCII = 'Metamorph';
+var JSONBIN_KEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
+var JSONBIN_URL = 'https://api.jsonbin.io/v3';
+var BIN_ID_KEY = STORAGE_KEY + '_bin_id';
+
+function showPlayerTab(tab, btn) {
+  document.querySelectorAll('.player-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.player-nav button').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+var state = {
+  team: [
+    { name: PARTNER_NAME_ASCII, type: 'Partenaire', notes: '', partner: true },
+    null, null, null, null, null
+  ],
+  activeSlot: 0,
+  notes: [],
+  activeNote: null
+};
+
+function loadState() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      var saved = JSON.parse(raw);
+      if (saved.team) { for (var i=1;i<6;i++) state.team[i]=saved.team[i]||null; }
+      if (saved.notes) state.notes = saved.notes;
+      if (saved.activeNote) state.activeNote = saved.activeNote;
+    }
+  } catch(e) {}
+}
+
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({team:state.team,notes:state.notes,activeNote:state.activeNote})); } catch(e) {}
+}
+
+function renderTeam() {
+  var grid = document.getElementById('team-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  for (var i=0;i<6;i++) {
+    var slot = state.team[i];
+    var div = document.createElement('div');
+    div.className = 'team-slot' + (slot?'':' empty') + (state.activeSlot===i?' active':'');
+    div.onclick = (function(idx){ return function(){ selectSlot(idx); }; })(i);
+    if (slot) {
+      var badge = slot.partner ? '<span class="slot-partner-badge">Partenaire</span>' : '';
+      div.innerHTML = '<span class="slot-num">' + (i===0?'P':'#'+i) + '</span>'
+        + '<span class="slot-name">' + slot.name + '</span>'
+        + '<span class="slot-type">' + slot.type + '</span>' + badge;
+    } else {
+      div.innerHTML = '<span class="slot-num">#'+i+'</span><span class="slot-add">+</span>';
+    }
+    grid.appendChild(div);
+  }
+  renderPanel();
+}
+
+function selectSlot(i) {
+  state.activeSlot = i;
+  renderTeam();
+  if (!state.team[i] && i>0) openAddForm(i); else closeAddForm();
+}
+
+function openAddForm(slot) {
+  document.getElementById('pk-add-form').classList.add('open');
+  document.getElementById('add-slot-num').textContent = 'Slot #' + slot;
+  document.getElementById('add-slot-hidden').value = slot;
+  document.getElementById('pk-add-name').focus();
+}
+
+function closeAddForm() {
+  document.getElementById('pk-add-form').classList.remove('open');
+  document.getElementById('pk-add-name').value = '';
+  document.getElementById('pk-add-type').value = '';
+  document.getElementById('pk-add-notes').value = '';
+}
+
+
+
+function removePokemon(i) {
+  if (i===0) return;
+  if (!confirm('Retirer ce Pokemon ?')) return;
+  state.team[i] = null; state.activeSlot = 0;
+  saveState(); renderTeam();
+}
+
+
+
+function updatePkNotes(val) { state.team[state.activeSlot].notes=val; saveState(); }
+
+var noteTimer = null;
+
+function initNotes() {
+  if (!state.notes.length) {
+    state.notes = [
+      {id:'n1',title:'Session 1',content:'',updated:Date.now()},
+      {id:'n2',title:'Indices et pistes',content:'',updated:Date.now()}
+    ];
+    saveState();
+  }
+  renderNoteList();
+  var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
+  if (id) openNote(id);
+  loadNotesFromCloud();
+}
+
+function renderNoteList() {
+  var list = document.getElementById('note-list');
+  if (!list) return;
+  list.innerHTML = '';
+  state.notes.forEach(function(n) {
+    var div = document.createElement('div');
+    div.className = 'note-list-item' + (n.id===state.activeNote?' active':'');
+    div.innerHTML = '<span class="note-dot"></span>' + (n.title||'Sans titre');
+    div.onclick = (function(id){ return function(){ openNote(id); }; })(n.id);
+    list.appendChild(div);
+  });
+}
+
+function openNote(id) {
+  state.activeNote = id;
+  var note = state.notes.find(function(n){return n.id===id;});
+  if (!note) return;
+  renderNoteList();
+  document.getElementById('note-title').value = note.title||'';
+  document.getElementById('note-body').value = note.content||'';
+  document.getElementById('note-wc').textContent = wordCount(note.content)+' mots';
+  setSaveStatus('saved');
+}
+
+function addNote() {
+  var id = 'n'+Date.now();
+  state.notes.push({id:id,title:'Nouveau carnet',content:'',updated:Date.now()});
+  saveState(); renderNoteList(); openNote(id);
+  setTimeout(function(){ var t=document.getElementById('note-title'); if(t) t.select(); },50);
+}
+
+function deleteNote() {
+  if (!state.activeNote||!confirm('Supprimer ?')) return;
+  state.notes = state.notes.filter(function(n){return n.id!==state.activeNote;});
+  saveState();
+  state.activeNote = state.notes.length ? state.notes[0].id : null;
+  renderNoteList();
+  if (state.activeNote) openNote(state.activeNote);
+  else { document.getElementById('note-title').value=''; document.getElementById('note-body').value=''; }
+}
+
+function onNoteTitle(val) {
+  var note=state.notes.find(function(n){return n.id===state.activeNote;});
+  if (!note) return; note.title=val; note.updated=Date.now(); schedSaveNote();
+}
+
+function onNoteBody(val) {
+  var note=state.notes.find(function(n){return n.id===state.activeNote;});
+  if (!note) return; note.content=val; note.updated=Date.now();
+  document.getElementById('note-wc').textContent=wordCount(val)+' mots';
+  schedSaveNote();
+}
+
+function schedSaveNote() {
+  setSaveStatus('pending'); clearTimeout(noteTimer);
+  noteTimer = setTimeout(function(){ saveState(); renderNoteList(); saveNotesToCloud(); setSaveStatus('saved'); },800);
+}
+
+function setSaveStatus(s) {
+  var el=document.getElementById('save-status');
+  if (!el) return;
+  el.className = s==='saved'?'save-ok':'save-pending';
+  el.textContent = s==='saved'?'Sauvegarde':'En cours...';
+}
+
+function exportNote() {
+  var note=state.notes.find(function(n){return n.id===state.activeNote;});
+  if (!note) return;
+  var blob=new Blob([note.title+'\n\n'+note.content],{type:'text/plain;charset=utf-8'});
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=(note.title||'carnet')+'.txt'; a.click();
+}
+
+function wordCount(s) { return (s||'').trim().split(/\s+/).filter(function(w){return w;}).length; }
+
+function saveBlessures() {
+  var b={b1:document.getElementById('b1').checked,b2:document.getElementById('b2').checked,bko:document.getElementById('bko').checked};
+  localStorage.setItem(STORAGE_KEY+'_blessures',JSON.stringify(b));
+}
+
+function loadBlessures() {
+  try{var b=JSON.parse(localStorage.getItem(STORAGE_KEY+'_blessures')||'{}');
+    document.getElementById('b1').checked=b.b1||false;
+    document.getElementById('b2').checked=b.b2||false;
+    document.getElementById('bko').checked=b.bko||false;
+  }catch(e){}
+}
+
+var DEFAULT_NAME_JS = 'Magdalena Hell';
+
+function loadPlayerName() {
+  var saved=localStorage.getItem(STORAGE_KEY+'_name');
+  var el=document.getElementById('pj-name-display');
+  if (el) el.textContent=saved||document.getElementById('pj-name-display').getAttribute('data-default');
+}
+
+function startEditName() {
+  var disp=document.getElementById('pj-name-display'),input=document.getElementById('pj-name-input'),btn=document.getElementById('edit-name-btn');
+  if(!disp||!input)return;
+  input.value=disp.textContent; disp.style.display='none'; input.style.display='inline-block';
+  btn.textContent='OK'; btn.onclick=confirmEditName; input.focus(); input.select();
+  input.onkeydown=function(e){if(e.key==='Enter')confirmEditName();if(e.key==='Escape')cancelEditName();};
+}
+
+function confirmEditName() {
+  var disp=document.getElementById('pj-name-display'),input=document.getElementById('pj-name-input'),btn=document.getElementById('edit-name-btn');
+  var def=disp.getAttribute('data-default');
+  var val=input.value.trim()||def;
+  disp.textContent=val; disp.style.display='inline'; input.style.display='none';
+  btn.textContent='Edit'; btn.onclick=startEditName;
+  localStorage.setItem(STORAGE_KEY+'_name',val);
+}
+
+function cancelEditName() {
+  var disp=document.getElementById('pj-name-display'),input=document.getElementById('pj-name-input'),btn=document.getElementById('edit-name-btn');
+  disp.style.display='inline'; input.style.display='none';
+  btn.textContent='Edit'; btn.onclick=startEditName;
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  loadState(); state.activeSlot=0; renderTeam(); initNotes(); loadBlessures(); loadPlayerName(); initPlayerBin();
+});
+
+/* ---- EQUIPEMENT EDITABLE ---- */
+var DEFAULT_GEAR = ["Analyseur de CT portable (+2 aux jets de Sciences sur toute CT)", "Carnet de terrain chiffre", "Lampe frontale haute puissance", "Pokedex modifie (acces aux bases de donnees de recherche)", "Marteau d alpiniste (arme improvisee, Str+d4)", "500  en especes"];
+
+function loadGear() {
+  try {
+    var saved = JSON.parse(localStorage.getItem(STORAGE_KEY + '_gear') || 'null');
+    return saved || DEFAULT_GEAR.slice();
+  } catch(e) { return DEFAULT_GEAR.slice(); }
+}
+
+function saveGear(items) {
+  localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(items));
+  _syncCloud();
+}
+
+function renderGear() {
+  var container = document.getElementById('gear-editable');
+  if (!container) return;
+  var items = loadGear();
+  container.innerHTML = '';
+  items.forEach(function(item, idx) {
+    var li = document.createElement('div');
+    li.className = 'gear-item';
+    li.innerHTML = '<span class="gear-item-text">' + escHtml(item) + '</span>'
+      + '<button class="gear-del-btn" onclick="deleteGearItem(' + idx + ')" title="Supprimer">x</button>';
+    container.appendChild(li);
+  });
+}
+
+function escHtml(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function deleteGearItem(idx) {
+  var items = loadGear();
+  items.splice(idx, 1);
+  saveGear(items);
+  renderGear();
+}
+
+function addGearItem() {
+  var input = document.getElementById('gear-new-input');
+  if (!input) return;
+  var val = input.value.trim();
+  if (!val) { input.focus(); return; }
+  var items = loadGear();
+  items.push(val);
+  saveGear(items);
+  input.value = '';
+  renderGear();
+  input.focus();
+}
+
+function gearInputKey(e) {
+  if (e.key === 'Enter') addGearItem();
+}
+
+/* ---- STATS POKEMON FORMULAIRE ---- */
+var pkAttackCount = 1;
+
+function addAttackRow() {
+  pkAttackCount++;
+  var talentEl = document.getElementById('pk-add-talent'); if (talentEl) talentEl.value = '';
+  var container = document.getElementById('pk-attacks-container');
+  if (!container || pkAttackCount > 4) return;
+  var row = document.createElement('div');
+  row.className = 'pk-attack-row';
+  row.id = 'atk-row-' + pkAttackCount;
+  row.innerHTML = '<input type="text" id="pk-atk-name-' + pkAttackCount + '" placeholder="Attaque ' + pkAttackCount + '">'
+    + '<input type="text" id="pk-atk-dmg-' + pkAttackCount + '" placeholder="Degats" style="max-width:90px">'
+    + '<button class="pk-attack-del" onclick="removeAttackRow(' + pkAttackCount + ')">x</button>';
+  container.appendChild(row);
+}
+
+function removeAttackRow(n) {
+  var row = document.getElementById('atk-row-' + n);
+  if (row) row.remove();
+}
+
+function collectPkStats() {
+  var stats = {};
+  ['for','agi','vig','rus','parade','robustesse','allure'].forEach(function(s) {
+    var el = document.getElementById('pk-stat-' + s);
+    if (el) stats[s] = el.value.trim();
+  });
+  var attacks = [];
+  for (var i = 1; i <= 4; i++) {
+    var n = document.getElementById('pk-atk-name-' + i);
+    var d = document.getElementById('pk-atk-dmg-' + i);
+    if (n && n.value.trim()) attacks.push({ name: n.value.trim(), dmg: d ? d.value.trim() : '' });
+  }
+  stats.attacks = attacks;
+  return stats;
+}
+
+function resetPkStatsForm() {
+  ['for','agi','vig','rus','parade','robustesse','allure'].forEach(function(s) {
+    var el = document.getElementById('pk-stat-' + s);
+    if (el) el.value = '';
+  });
+  var container = document.getElementById('pk-attacks-container');
+  if (container) {
+    var rows = container.querySelectorAll('.pk-attack-row:not(#atk-row-1)');
+    rows.forEach(function(r) { r.remove(); });
+    pkAttackCount = 1;
+    var n1 = document.getElementById('pk-atk-name-1');
+    var d1 = document.getElementById('pk-atk-dmg-1');
+    if (n1) n1.value = '';
+    if (d1) d1.value = '';
+  }
+}
+
+/* Override addPokemon pour inclure les stats */
+function addPokemon() {
+  var slot = parseInt(document.getElementById('add-slot-hidden').value);
+  var name = document.getElementById('pk-add-name').value.trim();
+  var type = document.getElementById('pk-add-type').value.trim();
+  var notes = document.getElementById('pk-add-notes').value.trim();
+  if (!name) { document.getElementById('pk-add-name').focus(); return; }
+  var pkStats = collectPkStats();
+  var talent = document.getElementById('pk-add-talent'); var talentVal = talent ? talent.value.trim() : '';
+  state.team[slot] = { name: name, type: type, notes: notes, talent: talentVal, partner: false, stats: pkStats };
+  saveState();
+  closeAddForm();
+  resetPkStatsForm();
+  renderTeam();
+}
+
+/* Override renderPanel pour afficher les stats */
+function renderPanel() {
+  var panel = document.getElementById('team-panel');
+  if (!panel) return;
+  var slot = state.team[state.activeSlot];
+  if (!slot) { selectSlot(0); return; }
+  if (state.activeSlot === 0) {
+    var pk = document.getElementById('partner-pk-card');
+    if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
+    return;
+  }
+  var statsHtml = '';
+  if (slot.talent) { statsHtml += '<div style="margin-bottom:8px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Talent</span> <span style="font-size:13px;color:var(--amber)">' + escHtml(slot.talent) + '</span></div>'; }
+  if (slot.stats) {
+    var s = slot.stats;
+    var statLine = ['for','agi','vig','rus','parade','robustesse','allure']
+      .filter(function(k) { return s[k]; })
+      .map(function(k) { return '<span style="font-family:var(--mono);font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:2px 7px;">' + k.toUpperCase() + ' ' + s[k] + '</span>'; })
+      .join(' ');
+    statsHtml += '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">' + statLine + '</div>';
+    if (s.attacks && s.attacks.length) {
+      statsHtml += '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px">Attaques</div>';
+      s.attacks.forEach(function(a) {
+        statsHtml += '<div style="font-size:12px;color:var(--text);margin-bottom:3px">' + escHtml(a.name) + (a.dmg ? ' <span style="color:var(--muted)">- ' + escHtml(a.dmg) + '</span>' : '') + '</div>';
+      });
+    }
+  }
+  panel.innerHTML = '<div class="team-panel-header">'
+    + '<span class="team-panel-name">' + escHtml(slot.name) + '</span>'
+    + '<span style="font-size:12px;color:var(--muted)">' + escHtml(slot.type) + '</span>'
+    + '<button class="btn-danger" style="margin-left:auto" onclick="removePokemon(' + state.activeSlot + ')">Retirer</button>'
+    + '</div><div class="team-panel-body">'
+    + (statsHtml ? '<div style="margin-bottom:12px">' + statsHtml + '</div>' : '')
+    + '<div class="section-title" style="margin-bottom:8px">Notes de session</div>'
+    + '<textarea style="width:100%;min-height:100px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:13px;padding:10px;resize:vertical" oninput="updatePkNotes(this.value)">' + escHtml(slot.notes || '') + '</textarea>'
+    + '</div>';
+}
+
+/* ---- NOTE DU MJ (pop-up) ---- */
+function checkMjNote() {
+  var binId = localStorage.getItem(BIN_ID_KEY);
+  if (!binId) return;
+  fetch(JSONBIN_URL_EX + '/b/' + binId + '/latest', {
+    headers: { 'X-Master-Key': JSONBIN_KEY_EX }
+  }).then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.record) return;
+      var rec = data.record;
+      var mjNote = rec.mj_note || '';
+      var mjNoteRead = localStorage.getItem(STORAGE_KEY + '_mj_note_read');
+      if (mjNote && mjNote !== mjNoteRead) {
+        showMjNotePopup(mjNote);
+      }
+    }).catch(function() {});
+}
+
+function showMjNotePopup(text) {
+  var popup = document.getElementById('mj-note-popup');
+  var content = document.getElementById('mj-note-content');
+  if (!popup || !content) return;
+  content.textContent = text;
+  popup.classList.remove('hidden');
+}
+
+function closeMjNotePopup() {
+  var popup = document.getElementById('mj-note-popup');
+  var content = document.getElementById('mj-note-content');
+  if (!popup || !content) return;
+  popup.classList.add('hidden');
+  localStorage.setItem(STORAGE_KEY + '_mj_note_read', content.textContent);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  renderGear();
+  setTimeout(checkMjNote, 2000);
+});
+
+/* ---- CANAL CENTRAL (bin fixe) ---- */
+var CENTRAL_BIN_ID = '6a2f352bf5f4af5e29f21a22';
+var JB_KEY  = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
+var JB_URL  = 'https://api.jsonbin.io/v3';
+
+/* Au premier chargement : creer son bin personnel et l'enregistrer dans le canal central */
+
+/* Ecrire son bin_id dans le canal central */
+
+/* == CLOUD UNIFIE == */
+var _JBKEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
+var _JBURL = 'https://api.jsonbin.io/v3';
+var _CTRID = '6a2f352bf5f4af5e29f21a22';
+
+function _getOrCreateBin(cb) {
+  var saved = localStorage.getItem(BIN_ID_KEY);
+  if (saved) { cb(saved); return; }
+  fetch(_JBURL + '/b', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json',
+               'X-Master-Key': _JBKEY,
+               'X-Bin-Name': 'jdr-' + PLAYER_KEY,
+               'X-Bin-Private': 'false' },
+    body: JSON.stringify({ notes: [], joueur: PLAYER_KEY })
+  }).then(function(r) { return r.json(); })
+    .then(function(d) {
+      var id = d.metadata && d.metadata.id;
+      if (!id) return;
+      localStorage.setItem(BIN_ID_KEY, id);
+      _registerInCentral(id);
+      cb(id);
+    }).catch(function() {});
+}
+
+function _registerInCentral(myBinId) {
+  fetch(_JBURL + '/b/' + _CTRID + '/latest', {
+    headers: { 'X-Master-Key': _JBKEY }
+  }).then(function(r) { return r.json(); })
+    .then(function(d) {
+      var rec = d.record || {};
+      if (rec[PLAYER_KEY] === myBinId) return;
+      rec[PLAYER_KEY] = myBinId;
+      return fetch(_JBURL + '/b/' + _CTRID, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JBKEY },
+        body: JSON.stringify(rec)
+      });
+    }).catch(function() {});
+}
+
+function _syncCloud() {
+  var binId = localStorage.getItem(BIN_ID_KEY);
+  if (!binId) return;
+  var gear = loadGear();
+  fetch(_JBURL + '/b/' + binId + '/latest', {
+    headers: { 'X-Master-Key': _JBKEY }
+  }).then(function(r) { return r.json(); })
+    .then(function(d) {
+      var rec = d.record || {};
+      rec.notes   = state.notes;
+      rec.joueur  = PLAYER_KEY;
+      rec.updated = Date.now();
+      rec.gear    = gear;
+      rec.team    = state.team;
+      return fetch(_JBURL + '/b/' + binId, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JBKEY },
+        body: JSON.stringify(rec)
+      });
+    }).catch(function() {});
+}
+
+function saveNotesToCloud() { _syncCloud(); }
+
+function loadNotesFromCloud() {
+  _getOrCreateBin(function(binId) {
+    fetch(_JBURL + '/b/' + binId + '/latest', {
+      headers: { 'X-Master-Key': _JBKEY }
+    }).then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (!d.record) return;
+        var rec = d.record;
+        if (rec.notes && rec.notes.length) {
+          state.notes = rec.notes;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ team: state.team, notes: state.notes }));
+          renderNoteList();
+          var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
+          if (id) openNote(id);
+        }
+        if (rec.mj_note) {
+          var read = localStorage.getItem(STORAGE_KEY + '_mj_note_read');
+          if (rec.mj_note !== read) showMjNotePopup(rec.mj_note);
+        }
+      }).catch(function() {});
+  });
+}
+
+function initPlayerBin() {
+  _getOrCreateBin(function(binId) {
+    loadNotesFromCloud();
+  });
+}
+
+</script>
+</body>
+</html>
