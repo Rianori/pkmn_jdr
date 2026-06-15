@@ -3178,57 +3178,35 @@ function createNewScenario() {
 
   var slug     = _slugify(title);
   var filename = 'scenario-' + slug + '.html';
-  var apiUrl   = 'https://api.github.com/repos/' + _SC_REPO + '/contents/' + filename;
-  var hdrs     = {
-    'Authorization': 'token ' + _tk(),
-    'Accept': 'application/vnd.github.v3+json',
-    'Content-Type': 'application/json'
-  };
 
-  btn.textContent = 'Creation...';
-  btn.disabled = true;
-  status.style.display = 'none';
-
-  // Décoder le template embarqué et remplacer les placeholders
+  // Générer le HTML localement depuis le template embarqué
   var html = _decodeTpl(_SC_TPL_B64)
     .replace(/{{TITRE}}/g, title)
     .replace(/{{SOUS_TITRE}}/g, sub || 'Scenario en cours de redaction')
     .replace(/{{NUM}}/g, num);
 
-  var b64 = btoa(unescape(encodeURIComponent(html)));
+  // Télécharger le fichier HTML directement
+  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href     = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 
-  // Vérifier si le fichier existe déjà (pour avoir son sha)
-  fetch('https://api.github.com/repos/' + _SC_REPO + '/contents/' + filename,
-    { headers: { 'Authorization': 'token ' + _tk(), 'Accept': 'application/vnd.github.v3+json' } })
-  .then(function(r) { return r.ok ? r.json() : null; })
-  .then(function(existing) {
-    var body = { message: 'feat: nouveau scenario ' + title, content: b64, branch: 'main' };
-    if (existing && existing.sha) body.sha = existing.sha;
-    return fetch(apiUrl, { method: 'PUT', headers: hdrs, body: JSON.stringify(body) });
-  })
-  .then(function(r) {
-    if (!r.ok) return r.text().then(function(t) { throw new Error(t.slice(0, 100)); });
-    return r.json();
-  })
-  .then(function() {
-    _addScenarioCard(title, sub, num, filename);
-    status.textContent = 'Cree avec succes ! Ouverture en cours...';
-    status.style.color = 'var(--safe)';
-    status.style.display = 'block';
-    setTimeout(function() {
-      window.open(filename, '_blank');
-      closeNewScenarioModal();
-      btn.textContent = 'Creer';
-      btn.disabled = false;
-    }, 1500);
-  })
-  .catch(function(e) {
-    status.textContent = 'Erreur : ' + e.message;
-    status.style.color = 'var(--danger)';
-    status.style.display = 'block';
-    btn.textContent = 'Creer';
-    btn.disabled = false;
-  });
+  // Ajouter la carte dans le hub (lien local)
+  _addScenarioCard(title, sub, num, filename);
+
+  status.innerHTML = '&#10003; Fichier <strong>' + filename + '</strong> telecharg&eacute; &mdash; ' +
+    'Place-le dans le dossier du repo GitHub pour le rendre accessible.';
+  status.style.color = 'var(--safe)';
+  status.style.display = 'block';
+
+  setTimeout(function() {
+    closeNewScenarioModal();
+  }, 3000);
 }
 
 function _addScenarioCard(title, sub, num, filename) {
