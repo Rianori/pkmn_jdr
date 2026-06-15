@@ -612,6 +612,28 @@ a { color: inherit; }
     top: 0;
     z-index: 100;
   }
+
+  .pj-banner-img { cursor: grab; }
+  .pj-banner-img.dragging { cursor: grabbing; }
+  .pj-banner-drag-hint {
+    position: absolute;
+    bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    background: rgba(14,14,15,.8);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 3px 10px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .3s;
+    white-space: nowrap;
+  }
+  .pj-banner:hover .pj-banner-drag-hint.visible { opacity: 1; }
 </style>
 </head>
 <body>
@@ -636,6 +658,7 @@ a { color: inherit; }
       <div class="pj-banner-name" id="pj-banner-name">Elias Voss</div>
       <div class="pj-banner-role">Chasseur de Ph&eacute;nom&egrave;nes Anomaux</div>
     </div>
+    <div class="pj-banner-drag-hint" id="pj-drag-hint">Glisser pour recadrer</div>
     <button class="pj-banner-change" onclick="event.stopPropagation();triggerBannerUpload()" title="Changer la banni&egrave;re">Changer</button>
   </div>
   <nav class="player-nav">
@@ -1357,7 +1380,26 @@ function initPlayerBin() {
 
 
 /* ── BANNIERE PJ ── */
+
+
+
+
+
+
+
+
+
+
+
+
+/* ── BANNIERE PJ ── */
+var _bannerPos = 50; // % vertical, 0=haut 100=bas
+var _dragStartY = 0;
+var _dragStartPos = 0;
+var _isDragging = false;
+
 function triggerBannerUpload() {
+  if (_isDragging) return;
   document.getElementById('pj-photo-input').click();
 }
 
@@ -1369,32 +1411,103 @@ function loadPhoto(event) {
     var img = new Image();
     img.onload = function() {
       var canvas = document.createElement('canvas');
-      // Format banniere 16:9, max 1200x340
-      var MAX_W = 1200, MAX_H = 340;
+      var MAX_W = 1400, MAX_H = 600;
       var ratio = Math.min(MAX_W / img.width, MAX_H / img.height, 1);
       canvas.width  = Math.round(img.width  * ratio);
       canvas.height = Math.round(img.height * ratio);
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-      var dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+      _bannerPos = 50;
       localStorage.setItem(STORAGE_KEY + '_photo', dataUrl);
-      showPhoto(dataUrl);
-      _savePhotoToCloud(dataUrl);
+      localStorage.setItem(STORAGE_KEY + '_photo_pos', '50');
+      showPhoto(dataUrl, 50);
+      _savePhotoToCloud(dataUrl, 50);
     };
     img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
 
-function showPhoto(dataUrl) {
+function showPhoto(dataUrl, pos) {
+  if (pos === undefined) pos = _bannerPos;
+  _bannerPos = pos;
   var img = document.getElementById('pj-photo-img');
   var ph  = document.getElementById('pj-photo-placeholder');
   var ov  = document.getElementById('pj-banner-overlay');
-  if (img) { img.src = dataUrl; img.style.display = 'block'; }
-  if (ph)  { ph.style.display  = 'none'; }
-  if (ov)  { ov.style.display  = 'block'; }
+  var hint = document.getElementById('pj-drag-hint');
+  if (img) {
+    img.src = dataUrl;
+    img.style.display = 'block';
+    img.style.objectPosition = 'center ' + pos + '%';
+  }
+  if (ph)   { ph.style.display  = 'none'; }
+  if (ov)   { ov.style.display  = 'block'; }
+  if (hint) { hint.classList.add('visible'); }
+  _initDrag();
 }
 
-function _savePhotoToCloud(dataUrl) {
+function _initDrag() {
+  var img = document.getElementById('pj-photo-img');
+  if (!img || img.dataset.dragInit) return;
+  img.dataset.dragInit = '1';
+
+  // Mouse
+  img.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+    _isDragging = true;
+    _dragStartY   = e.clientY;
+    _dragStartPos = _bannerPos;
+    img.classList.add('dragging');
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (!_isDragging) return;
+    _applyDrag(e.clientY);
+  });
+  document.addEventListener('mouseup', function() {
+    if (!_isDragging) return;
+    _isDragging = false;
+    img.classList.remove('dragging');
+    _saveBannerPos();
+    setTimeout(function() { _isDragging = false; }, 50);
+  });
+
+  // Touch
+  img.addEventListener('touchstart', function(e) {
+    _isDragging = true;
+    _dragStartY   = e.touches[0].clientY;
+    _dragStartPos = _bannerPos;
+  }, { passive: true });
+  document.addEventListener('touchmove', function(e) {
+    if (!_isDragging) return;
+    _applyDrag(e.touches[0].clientY);
+  }, { passive: true });
+  document.addEventListener('touchend', function() {
+    if (!_isDragging) return;
+    _isDragging = false;
+    _saveBannerPos();
+  });
+}
+
+function _applyDrag(clientY) {
+  var banner = document.getElementById('pj-banner');
+  if (!banner) return;
+  var delta = clientY - _dragStartY;
+  var bannerH = banner.offsetHeight;
+  // Sensibilité : 1px de drag = ~0.5% de déplacement
+  var pctDelta = (delta / bannerH) * -80;
+  var newPos = Math.max(0, Math.min(100, _dragStartPos + pctDelta));
+  _bannerPos = newPos;
+  var img = document.getElementById('pj-photo-img');
+  if (img) img.style.objectPosition = 'center ' + newPos + '%';
+}
+
+function _saveBannerPos() {
+  localStorage.setItem(STORAGE_KEY + '_photo_pos', String(Math.round(_bannerPos)));
+  _savePhotoToCloud(localStorage.getItem(STORAGE_KEY + '_photo'), Math.round(_bannerPos));
+}
+
+function _savePhotoToCloud(dataUrl, pos) {
+  if (!dataUrl) return;
   var binId = localStorage.getItem(BIN_ID_KEY);
   if (!binId) return;
   fetch(_JBURL + '/b/' + binId + '/latest', {
@@ -1403,6 +1516,7 @@ function _savePhotoToCloud(dataUrl) {
   .then(function(d) {
     var rec = d.record || {};
     rec.photo = dataUrl;
+    rec.photo_pos = pos !== undefined ? pos : _bannerPos;
     return fetch(_JBURL + '/b/' + binId, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JBKEY },
@@ -1412,23 +1526,32 @@ function _savePhotoToCloud(dataUrl) {
 }
 
 function initPhoto() {
-  var local = localStorage.getItem(STORAGE_KEY + '_photo');
-  if (local) showPhoto(local);
+  var local    = localStorage.getItem(STORAGE_KEY + '_photo');
+  var localPos = parseInt(localStorage.getItem(STORAGE_KEY + '_photo_pos') || '50', 10);
+  if (local) showPhoto(local, localPos);
   _getOrCreateBin(function(binId) {
     fetch(_JBURL + '/b/' + binId + '/latest', {
       headers: { 'X-Master-Key': _JBKEY }
     }).then(function(r) { return r.json(); })
     .then(function(d) {
-      if (d.record && d.record.photo && d.record.photo !== local) {
-        localStorage.setItem(STORAGE_KEY + '_photo', d.record.photo);
-        showPhoto(d.record.photo);
+      if (!d.record) return;
+      var cloudPhoto = d.record.photo;
+      var cloudPos   = d.record.photo_pos !== undefined ? d.record.photo_pos : 50;
+      if (cloudPhoto && cloudPhoto !== local) {
+        localStorage.setItem(STORAGE_KEY + '_photo', cloudPhoto);
+        localStorage.setItem(STORAGE_KEY + '_photo_pos', String(cloudPos));
+        showPhoto(cloudPhoto, cloudPos);
+      } else if (cloudPos !== localPos && local) {
+        _bannerPos = cloudPos;
+        var img = document.getElementById('pj-photo-img');
+        if (img) img.style.objectPosition = 'center ' + cloudPos + '%';
       }
     }).catch(function() {});
   });
 }
 
 function _updateBannerName() {
-  var el = document.getElementById('pj-banner-name');
+  var el  = document.getElementById('pj-banner-name');
   var src = document.getElementById('pj-name-display');
   if (el && src) el.textContent = src.textContent;
 }
