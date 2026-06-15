@@ -630,26 +630,73 @@ a { color: inherit; }
 
       <!-- ── ONGLET EQUIPE ── -->
       <div class="player-tab" id="tab-team">
-        <div class="page-title">Equipe Pok&eacute;mon</div>
-        <div class="page-tagline">Gestion de votre &eacute;quipe</div>
-        <div id="team-container"></div>
-        <button class="note-add-btn" onclick="addPokemon()">+ Ajouter un Pok&eacute;mon</button>
+      <div class="page-title">Equipe Pokemon</div>
+      <div class="page-tagline">6 slots - partenaire fixe en slot 0</div>
+      <div class="team-grid" id="team-grid"></div>
+      <div class="pk-add-form" id="pk-add-form">
+        <div class="section-title">Ajouter - <span id="add-slot-num"></span></div>
+        <input type="hidden" id="add-slot-hidden">
+        <div class="form-row">
+          <div><label>Nom</label><input type="text" id="pk-add-name" placeholder="Ex : Racaillou"></div>
+          <div><label>Type(s)</label><input type="text" id="pk-add-type" placeholder="Ex : Roche/Sol"></div>
+        </div>
+        <label>Talent / Capacite speciale</label>
+        <input type="text" id="pk-add-talent" placeholder="Ex : Levitation, Torrent, Intimidation..." style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:13px;padding:8px 12px;margin-bottom:8px">
+        <label>Notes</label>
+        <textarea id="pk-add-notes" placeholder="Statut, PV actuels..."></textarea>
+        <label style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px;display:block">Stats de base</label>
+        <div class="pk-stats-grid">
+          <div class="pk-stat-field"><label>FOR</label><input type="text" id="pk-stat-for" placeholder="d8"></div>
+          <div class="pk-stat-field"><label>AGI</label><input type="text" id="pk-stat-agi" placeholder="d6"></div>
+          <div class="pk-stat-field"><label>VIG</label><input type="text" id="pk-stat-vig" placeholder="d6"></div>
+          <div class="pk-stat-field"><label>RUS</label><input type="text" id="pk-stat-rus" placeholder="d4"></div>
+          <div class="pk-stat-field"><label>Parade</label><input type="text" id="pk-stat-parade" placeholder="5"></div>
+          <div class="pk-stat-field"><label>Robustesse</label><input type="text" id="pk-stat-robustesse" placeholder="5"></div>
+        </div>
+        <div class="pk-stat-field" style="margin-top:6px"><label>Allure</label><input type="text" id="pk-stat-allure" placeholder='6"' style="max-width:120px"></div>
+        <div class="pk-attacks-area">
+          <label style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin:8px 0 5px">Attaques</label>
+          <div id="pk-attacks-container">
+            <div class="pk-attack-row" id="atk-row-1">
+              <input type="text" id="pk-atk-name-1" placeholder="Attaque 1">
+              <input type="text" id="pk-atk-dmg-1" placeholder="Degats" style="max-width:90px">
+            </div>
+          </div>
+          <button class="pk-attack-add" onclick="addAttackRow()">+ Attaque</button>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-primary" onclick="addPokemon()">Ajouter</button>
+          <button class="btn-ghost" onclick="closeAddForm()">Annuler</button>
+        </div>
       </div>
+      <div class="team-panel" id="team-panel"><div class="team-empty-state">Selectionne un slot.</div></div>
+    </div>
+
+    
 
       <!-- ── ONGLET NOTES ── -->
       <div class="player-tab" id="tab-notes">
-        <div class="page-title">Notes</div>
-        <div class="page-tagline">Sauvegarde automatique</div>
-        <div class="notes-layout">
-          <div class="notes-sidebar">
-            <div id="note-list"></div>
-            <button class="note-add-btn" onclick="addNote()">+ Nouveau</button>
-          </div>
-          <div class="note-editor-area" id="note-editor-area">
-            <div class="note-empty-state">S&eacute;lectionnez ou cr&eacute;ez une note.</div>
+      <div class="page-title">Notes</div>
+      <div class="page-tagline">Sauvegarde automatique</div>
+      <div class="notes-layout">
+        <div class="notes-sidebar">
+          <div id="note-list"></div>
+          <button class="note-add-btn" onclick="addNote()">+ Nouveau</button>
+        </div>
+        <div class="note-editor-wrap">
+          <input class="note-title-input" id="note-title" placeholder="Titre" oninput="onNoteTitle(this.value)">
+          <textarea class="note-body-textarea" id="note-body" placeholder="Tes notes ici..." oninput="onNoteBody(this.value)"></textarea>
+          <div class="note-meta-bar">
+            <span id="save-status" class="save-ok">Sauvegarde</span>
+            <span id="note-wc" style="margin-left:auto">0 mots</span>
+            <button class="btn-ghost" onclick="exportNote()">Exporter</button>
+            <button class="btn-danger" onclick="deleteNote()">Supprimer</button>
           </div>
         </div>
       </div>
+    </div>
+
+    
     <!-- /.content -->
   </div><!-- /.player-shell -->
 </div>
