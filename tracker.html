@@ -523,6 +523,46 @@ a { color: inherit; }
   .mj-note-box-close:hover { background: var(--amber); color: #1a1000; }
 
 
+
+  /* ── PHOTO PJ ── */
+  .pj-photo-wrap {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+  .pj-photo {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: border-color .15s;
+    display: block;
+    background: var(--surface);
+  }
+  .pj-photo:hover { border-color: var(--amber-dim); }
+  .pj-photo-placeholder {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    background: var(--surface);
+    flex-shrink: 0;
+    color: var(--muted);
+    font-size: 22px;
+    line-height: 1;
+  }
+  .pj-photo-placeholder:hover {
+    border-color: var(--amber-dim);
+    background: var(--card);
+    color: var(--amber);
+  }
 </style>
 </head>
 <body>
@@ -536,6 +576,11 @@ a { color: inherit; }
         <button class="edit-name-btn" id="edit-name-btn" onclick="startEditName()" title="Modifier">Edit</button>
       </div>
       <div class="player-role">Chasseur de Ph&eacute;nom&egrave;nes Anomaux</div>
+    </div>
+    <div class="pj-photo-wrap">
+      <input type="file" id="pj-photo-input" accept="image/*" style="display:none" onchange="loadPhoto(event)">
+      <div class="pj-photo-placeholder" id="pj-photo-placeholder" onclick="document.getElementById('pj-photo-input').click()" title="Ajouter une photo">&#43;</div>
+      <img class="pj-photo" id="pj-photo-img" src="" alt="Photo" style="display:none" onclick="document.getElementById('pj-photo-input').click()" title="Changer la photo">
     </div>
     <a href="index.html" class="player-back">Portail</a>
   </header>
@@ -1244,6 +1289,35 @@ function initPlayerBin() {
   _getOrCreateBin(function(binId) {
     loadNotesFromCloud();
   });
+}
+
+
+/* ── PHOTO PJ ── */
+function loadPhoto(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var dataUrl = e.target.result;
+    localStorage.setItem(STORAGE_KEY + '_photo', dataUrl);
+    showPhoto(dataUrl);
+  };
+  reader.readAsDataURL(file);
+}
+
+function showPhoto(dataUrl) {
+  var img = document.getElementById('pj-photo-img');
+  var ph  = document.getElementById('pj-photo-placeholder');
+  if (img && ph) {
+    img.src = dataUrl;
+    img.style.display = 'block';
+    ph.style.display  = 'none';
+  }
+}
+
+function initPhoto() {
+  var saved = localStorage.getItem(STORAGE_KEY + '_photo');
+  if (saved) showPhoto(saved);
 }
 
 </script>
