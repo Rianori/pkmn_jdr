@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITRE}} -- Scenario</title>
+<style>
+:root{--bg:#0e0e10;--surface:#141416;--card:#1a1a1e;--border:#2a2a30;--text:#e8e6e0;--muted:#6b6a6a;--amber:#c8922a;--amber-dim:rgba(200,146,42,.25);--amber-glow:rgba(200,146,42,.08);--safe:#2d6e35;--danger:#8B3300;--radius:6px;--mono:'IBM Plex Mono',monospace;--sans:'Inter',system-ui,sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;min-height:100vh;display:flex;flex-direction:column;}
+header{display:flex;align-items:center;gap:16px;padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;position:sticky;top:0;z-index:100;}
+header h1{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--amber);}
+.subtitle{font-size:12px;color:var(--muted);font-style:italic;}
+.sc-shell{display:flex;flex:1;min-height:0;height:calc(100vh - 53px);}
+.sc-aside{width:220px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;padding:12px 0;}
+.sc-aside-group{margin-bottom:16px;padding:0 8px;}
+.sc-aside-label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:4px 8px 6px;display:block;}
+.sc-aside-btn{display:block;width:100%;text-align:left;font-family:var(--mono);font-size:11px;padding:6px 10px;background:none;border:none;border-radius:4px;color:var(--muted);cursor:pointer;transition:background .1s,color .1s;}
+.sc-aside-btn:hover{background:var(--card);color:var(--amber);}
+.sc-main{flex:1;overflow-y:auto;min-width:0;}
+.sc-content{padding:32px 36px 60px;max-width:800px;}
+.page-title{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.page-tagline{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em;margin-bottom:32px;}
+.section-title{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.resume-box{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;font-size:14px;line-height:1.8;color:var(--text);margin-bottom:32px;min-height:80px;outline:none;}
+.resume-box:focus{border-color:var(--amber-dim);}
+.lieux-strip{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;}
+.lieu-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;min-width:140px;flex:1;max-width:200px;}
+.lieu-name{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--amber);margin-bottom:5px;outline:none;}
+.lieu-card p{font-size:12px;color:var(--muted);line-height:1.5;margin:0;outline:none;}
+.chapter{border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;overflow:hidden;}
+.chapter-header{display:flex;align-items:center;gap:14px;padding:12px 18px;background:var(--surface);cursor:pointer;user-select:none;transition:background .1s;}
+.chapter-header:hover{background:var(--card);}
+.chapter-num{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--muted);min-width:36px;}
+.chapter-title-el{flex:1;font-size:14px;font-weight:500;color:var(--text);}
+.chapter-chevron{font-size:11px;color:var(--muted);transition:transform .2s;}
+.chapter.open .chapter-chevron{transform:rotate(90deg);}
+.chapter-body{display:none;padding:16px 20px 20px;border-top:1px solid var(--border);}
+.chapter.open .chapter-body{display:block;}
+.chapter-body p{font-size:13px;line-height:1.75;color:var(--muted);min-height:60px;outline:none;}
+.add-btn{font-family:var(--mono);font-size:10px;letter-spacing:.06em;background:none;border:1px dashed var(--border);border-radius:4px;color:var(--muted);padding:7px 14px;cursor:pointer;transition:border-color .15s,color .15s;margin-top:8px;}
+.add-btn:hover{border-color:var(--amber-dim);color:var(--amber);}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);">Campagne {{NUM}}</div>
+    <h1>{{TITRE}}</h1>
+  </div>
+  <span class="subtitle">{{SOUS_TITRE}}</span>
+  <div style="margin-left:auto;display:flex;gap:10px;align-items:center;">
+    <span style="font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface);border:1px solid var(--border);padding:3px 10px;border-radius:2px;">A VENIR</span>
+    <a href="mj.html" style="font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:2px;padding:6px 14px;transition:color .15s,border-color .15s;" onmouseover="this.style.color='var(--amber)';this.style.borderColor='var(--amber-dim)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border)'">&larr; Compagnon MJ</a>
+  </div>
+</header>
+
+<div class="sc-shell">
+  <nav class="sc-aside">
+    <div class="sc-aside-group">
+      <div class="sc-aside-label">Apercu</div>
+      <button class="sc-aside-btn" onclick="scrollToEl('sc-resume')">Resume</button>
+      <button class="sc-aside-btn" onclick="scrollToEl('sc-lieux')">Lieux</button>
+      <button class="sc-aside-btn" onclick="scrollToEl('sc-histoire')">Chapitres</button>
+    </div>
+    <div class="sc-aside-group" id="aside-chapitres">
+      <div class="sc-aside-label">Chapitres</div>
+    </div>
+  </nav>
+
+  <main class="sc-main">
+    <div class="sc-content">
+
+      <div class="page-title">{{TITRE}}</div>
+      <div class="page-tagline">{{SOUS_TITRE}}</div>
+
+      <div id="sc-resume" style="margin-bottom:36px;">
+        <div class="section-title">Resume</div>
+        <div class="resume-box" contenteditable="true">Resume du scenario...</div>
+      </div>
+
+      <div id="sc-lieux" style="margin-bottom:36px;">
+        <div class="section-title">Lieux</div>
+        <div class="lieux-strip" id="lieux-strip">
+          <div class="lieu-card">
+            <div class="lieu-name" contenteditable="true">Lieu 1</div>
+            <p contenteditable="true">Description.</p>
+          </div>
+          <div class="lieu-card">
+            <div class="lieu-name" contenteditable="true">Lieu 2</div>
+            <p contenteditable="true">Description.</p>
+          </div>
+        </div>
+        <button class="add-btn" onclick="addLieu()">+ Ajouter un lieu</button>
+      </div>
+
+      <div id="sc-histoire">
+        <div class="section-title" style="margin-bottom:16px;">Histoire</div>
+        <div id="chapters-list"></div>
+        <button class="add-btn" onclick="addChapter()">+ Ajouter un chapitre</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+var chapterCount = 0;
+
+function scrollToEl(id) {
+  var el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function toggleChapter(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+}
+
+function addLieu() {
+  var strip = document.getElementById('lieux-strip');
+  var card = document.createElement('div');
+  card.className = 'lieu-card';
+  card.innerHTML = '<div class="lieu-name" contenteditable="true">Nouveau lieu</div><p contenteditable="true">Description.</p>';
+  strip.appendChild(card);
+  card.querySelector('.lieu-name').focus();
+}
+
+function addChapter() {
+  chapterCount++;
+  var id = 'ch' + chapterCount;
+  var num = 'CH ' + (chapterCount < 10 ? '0' + chapterCount : chapterCount);
+  var list = document.getElementById('chapters-list');
+  var ch = document.createElement('div');
+  ch.className = 'chapter open';
+  ch.id = id;
+  var header = document.createElement('div');
+  header.className = 'chapter-header';
+  header.innerHTML =
+    '<span class="chapter-num" contenteditable="true" onclick="event.stopPropagation()">' + num + '</span>' +
+    '<span class="chapter-title-el" contenteditable="true" onclick="event.stopPropagation()">Titre du chapitre</span>' +
+    '<span class="chapter-chevron">&#9654;</span>';
+  header.addEventListener('click', function() { toggleChapter(id); });
+  var body = document.createElement('div');
+  body.className = 'chapter-body';
+  body.innerHTML = '<p contenteditable="true">Contenu du chapitre...</p>';
+  ch.appendChild(header);
+  ch.appendChild(body);
+  list.appendChild(ch);
+  // Sidebar
+  var aside = document.getElementById('aside-chapitres');
+  var btn = document.createElement('button');
+  btn.className = 'sc-aside-btn';
+  btn.textContent = num + ' · Titre du chapitre';
+  btn.addEventListener('click', (function(cid) { return function() { scrollToEl(cid); }; })(id));
+  aside.appendChild(btn);
+  body.querySelector('p').focus();
+}
+</script>
+</body>
+</html>
