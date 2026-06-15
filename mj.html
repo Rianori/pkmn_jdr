@@ -985,7 +985,7 @@
 <nav id="main-nav">
   <button class="active" onclick="showTab('scenarios',this)">Scénarios</button>
   <button onclick="showTab('groupe',this)">Le Groupe</button>
-  <button onclick="showTab('pnj',this)">PNJ</button>
+  
   <button onclick="showTab('bestiaire',this)">Bestiaire</button>
   <button onclick="showTab('notes',this)">Notes</button>
 </nav>
@@ -994,50 +994,13 @@
   <aside id="main-aside">
 
   <!-- ── SCÉNARIOS ── -->
-  <div class="aside-tab-section" id="aside-scenarios">
-    <div class="aside-campaign-block">
-      <div class="aside-campaign-toggle" onclick="toggleAsideCampaign('asc-1')">
-        <span class="aside-campaign-name">La Ville Morte</span>
-        <span class="aside-campaign-chevron" id="asc-1-chev">▼</span>
-      </div>
-      <div class="aside-campaign-body" id="asc-1">
-        <div class="aside-group"><div class="aside-label">Introduction</div>
-          <button onclick="scrollToEl('resume')">Résumé</button>
-          <button onclick="scrollToEl('lieux')">Lieux de Kanto</button>
-          <button onclick="scrollToEl('personnages')">Personnages</button>
-        </div>
-        <div class="aside-group"><div class="aside-label">Structure</div>
-          <button onclick="scrollToEl('actes')">Les 4 Actes</button>
-        </div>
-        <div class="aside-group"><div class="aside-label">Acte I</div>
-          <button onclick="openChapter('ch1')">1 · Le mandat</button>
-          <button onclick="openChapter('ch2')">2 · Lavanville</button>
-          <button onclick="openChapter('ch3')">3 · Cartographie</button>
-        </div>
-        <div class="aside-group"><div class="aside-label">Acte II</div>
-          <button onclick="openChapter('ch4')">4 · Sous la Tour</button>
-          <button onclick="openChapter('ch5')">5 · Trahison</button>
-          <button onclick="openChapter('ch6')">6 · Mira Holt</button>
-          <button onclick="openChapter('ch7')">7 · Surveillance</button>
-        </div>
-        <div class="aside-group"><div class="aside-label">Acte III</div>
-          <button onclick="openChapter('ch8')">8 · Yael Ors</button>
-          <button onclick="openChapter('ch9')">9 · Fil branché</button>
-          <button onclick="openChapter('ch10')">10 · La nuit</button>
-        </div>
-        <div class="aside-group"><div class="aside-label">Acte IV</div>
-          <button onclick="openChapter('ch11')">11 · Chute Ashford</button>
-          <button onclick="openChapter('ch12')">12 · Ce que garde</button>
-        </div>
-        <div class="aside-group"><div class="aside-label">Dénouement</div>
-          <button onclick="scrollToEl('fins')">Fins alternatives</button>
-        </div>
+  <div class="aside-tab-section" id="aside-scenarios" style="display:block;">
+      <div class="aside-group">
+        <div class="aside-label">Scenarios</div>
+        <button onclick="window.open('scenario-ville-morte.html','_blank')">La Ville Morte</button>
       </div>
     </div>
-  </div>
-
-  <!-- ── GROUPE ── -->
-  <div class="aside-tab-section" id="aside-groupe" style="display:none">
+    <div class="aside-tab-section" id="aside-groupe" style="display:none">
     <div class="aside-group"><div class="aside-label">Dresseurs</div>
       
       <button onclick="scrollAndOpen('pj-acc-1')">L'Analyste</button>
@@ -1048,23 +1011,6 @@
   </div>
 
   <!-- ── PNJ ── -->
-  <div class="aside-tab-section" id="aside-pnj" style="display:none">
-    <div class="aside-group"><div class="aside-label">Alliés</div>
-      <button onclick="scrollAndOpen('pnj-kaito')">Kaito Mura</button>
-      <button onclick="scrollAndOpen('pnj-fil')">Fil — Polichombr</button>
-    </div>
-    <div class="aside-group"><div class="aside-label">Antagonistes</div>
-      <button onclick="scrollAndOpen('pnj-holt')">Mira Holt</button>
-      <button onclick="scrollAndOpen('pnj-ashford')">Directeur Ashford</button>
-    </div>
-    <div class="aside-group"><div class="aside-label">Extras</div>
-      <button onclick="scrollAndOpen('pnj-agents')">Agents Ashford</button>
-      <button onclick="scrollAndOpen('pnj-techniciens')">Techniciens</button>
-      <button onclick="scrollAndOpen('pnj-torkel')">Garde Torkel</button>
-    </div>
-  </div>
-
-  <!-- ── BESTIAIRE ── -->
   <div class="aside-tab-section" id="aside-bestiaire" style="display:none">
     <div class="aside-group"><div class="aside-label">Catégories</div>
       <button onclick="filterBeastAside('all')">Tous (65)</button>
@@ -1100,233 +1046,26 @@
 
     <!-- SCÉNARIOS -->
     <div class="section active" id="tab-scenarios">
-      <div class="page-title">Scénarios</div>
-      <div class="page-tagline">Archive des campagnes — cliquer pour déplier</div>
-      <div class="campaign-list">
-        <div class="campaign-card open" id="camp-1">
-          <div class="campaign-header" onclick="toggleCampaign('camp-1')">
-            <span class="campaign-num">01</span>
-            <span class="campaign-name">La Ville Morte</span>
-            <span class="campaign-status status-active">EN COURS</span>
-            <span class="chapter-chevron">▶</span>
-          </div>
-          <div class="campaign-body">
-            <div class="page-title">La Ville Morte</div>
-      <div class="page-tagline">"Ce qu'on ne peut pas voir peut quand même mourir."</div>
-
-      <div id="resume">
-        <div class="section-title">Résumé</div>
-        <div class="resume-box">
-          <p>Le Groupe est mandatée par la Ligue Pokémon pour enquêter sur les disparitions inexpliquées de Pokémon à Lavanville. La Ligue les choisit précisément parce qu'ils sont des électrons libres — mais la vraie raison est plus sombre : elle veut une enquête qui s'enlise, pas une qui aboutit. Derrière les disparitions se cache un réacteur bio-énergétique clandestin dissimulé sous la Tour Pokémon, qui aspire la force vitale des Pokémon sauvages. Le Groupe remonte jusqu'au Directeur Ashford, commanditaire de leur propre mission. Au cœur de la révélation, Fil est capturé et branché au réacteur. L'enquête se conclut par une vérité rendue publique au prix du silence officiel.</p>
-        </div>
+  <div class="page-title">Scenarios</div>
+  <div class="page-tagline">Selectionnez un scenario pour l'ouvrir</div>
+  <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px;max-width:600px;">
+    <a href="scenario-ville-morte.html" style="display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;text-decoration:none;transition:border-color .15s,background .15s;" onmouseover="this.style.borderColor='var(--amber-dim)';this.style.background='var(--surface)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--card)'">
+      <div style="flex:1;">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Campagne 01</div>
+        <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;">La Ville Morte</div>
+        <div style="font-size:12px;color:var(--muted);">12 chapitres &middot; 7 PNJ &middot; Lavanville</div>
       </div>
-
-      <div id="lieux">
-        <div class="section-title">Lieux de Kanto</div>
-        <div class="lieux-grid">
-          <div class="lieu-card"><div class="lieu-name">Lavanville</div><p>Ville principale. Silencieuse, hantée. La Tour Pokémon cache le réacteur en sous-sol.</p></div>
-          <div class="lieu-card"><div class="lieu-name">Tour Pokémon (−1 à −3)</div><p>Façade historique. Sous-sol = réacteur PSI-B. Point final du scénario.</p></div>
-          <div class="lieu-card"><div class="lieu-name">Réacteur (Niveau −3)</div><p>Installation industrielle clandestine. Pokémon captifs sous harnais. Fil y est branché au Ch. 9.</p></div>
-          <div class="lieu-card"><div class="lieu-name">Route 8</div><p>Chemin d'approche. Embuscade des agents d'Ashford au Chapitre 7.</p></div>
-          <div class="lieu-card"><div class="lieu-name">Céladopole</div><p>Ville d'origine de le Groupe. Source d'informations sur les disparitions.</p></div>
-          <div class="lieu-card"><div class="lieu-name">Cramoisîle</div><p>QG régional de la Ligue — bureau du Directeur Ashford.</p></div>
-        </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+        <span style="font-family:var(--mono);font-size:10px;color:var(--safe);background:rgba(30,92,46,.15);border:1px solid rgba(30,92,46,.3);padding:2px 8px;border-radius:2px;">EN COURS</span>
+        <span style="font-family:var(--mono);font-size:11px;color:var(--amber);">Ouvrir &#8594;</span>
       </div>
-
-      <div id="personnages">
-        <div class="section-title">Personnages</div>
-        <div class="perso-card"><div class="perso-name">Kaito Mura — Inspecteur indépendant <span class="tag tag-edge">Joker allié</span></div><p>Mandaté officiellement, manipulé structurellement. Sa priorité absolue est Fil. Ne perd ses moyens que si Fil est en danger critique. Présent tout au long du scénario.</p></div>
-        <div class="perso-card"><div class="perso-name">Fil — Polichombr de Kaito <span class="tag tag-edge">Joker allié spécial</span></div><p>Capturé et branché au réacteur au Ch. 9. Survie in extremis au Ch. 10. Communique par touchers codés. Premier à détecter les anomalies.</p></div>
-        <div class="perso-card"><div class="perso-name">Mira Holt — Directrice technique <span class="tag tag-psi">Joker ennemi</span></div><p>Ingénieure idéologue. "Le progrès a toujours un coût. J'ai simplement choisi d'être honnête sur ce qu'il est." N'apparaît pas avant le Ch. 6.</p></div>
-        <div class="perso-card"><div class="perso-name">Directeur Ashford — Ligue Pokémon <span class="tag tag-psi">Joker ennemi / absent</span></div><p>Commanditaire de la mission et de sa propre trahison. N'apparaît jamais en personne. Révélation = pivot central de l'Acte II.</p></div>
-        <div class="perso-card"><div class="perso-name">Yael Ors — Journaliste locale</div><p>Enquête depuis deux mois sans preuves. Relais final de le Groupe pour publier l'affaire. Connue de La Causeuse (PJ #3).</p></div>
-        <div class="perso-card"><div class="perso-name">Garde Torkel — Agent de sécurité <span class="tag tag-gardien" style="background:#051a30;color:#608ec0;">Allié latent</span></div><p>Son Pokémon est mort dans le réacteur. Laissera une porte ouverte au Ch. 9. Déclencheur : un PJ remarque sa Pokéball vide.</p></div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div id="actes">
-        <div class="section-title">Structure — 4 Actes</div>
-        <div class="acte-block"><div class="acte-title">ACTE I — L'arrivée (Ch. 1–3)</div><p>Arrivée à Lavanville. Rencontre avec Kaito et Fil. Entretiens avec les habitants. Fil cartographie la ville nuit par nuit. Découverte des registres falsifiés et de la galerie minière.</p></div>
-        <div class="acte-block"><div class="acte-title">ACTE II — La mécanique du complot (Ch. 4–7)</div><p>Descente dans la mine. Découverte du réacteur PSI-B. Trahison d'Ashford révélée. Rencontre de couverture avec Holt. Chambre fouillée — photos sauvegardées dans le corps de Fil. Embuscade Route 8.</p></div>
-        <div class="acte-block"><div class="acte-title">ACTE III — La crise (Ch. 8–10)</div><p>Contact avec Yael Ors. Fil disparaît. Retour d'urgence dans la mine — Fil branché depuis 6h. Extraction sous tension. Kaito veille Fil. À l'aube, Fil reprend conscience.</p></div>
-        <div class="acte-block"><div class="acte-title">ACTE IV — Le dénouement (Ch. 11–12)</div><p>Transmission des preuves à Yael. Publication simultanée. Chute d'Ashford. Arrestation de Holt. Réacteur démantelé. Certains Pokémon ne rentrent pas. Le Groupe repart.</p></div>
-      </div>
-
-      <div class="divider"></div>
-      <div class="section-title">Trame — 12 Chapitres</div>
-
-      <!-- CH 1 -->
-      <div class="chapter" id="ch1">
-        <div class="chapter-header" onclick="toggleChapter('ch1')">
-          <span class="chapter-num">CH 01</span>
-          <span class="chapter-title">Le mandat sans badge</span>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="chapter-body">
-          <div class="sub-section"><div class="sub-label">L'enveloppe</div><p>Une enveloppe sans en-tête glissée sous la porte à l'aube. Mission : enquêter sur les disparitions de Pokémon à Lavanville. Aucun contact officiel. Honoraires versés en avance sur un compte anonyme. Instructions rédigées dans un style administratif reconnaissable — Kaito le note, range la pensée pour plus tard.</p></div>
-          <div class="sub-section"><div class="sub-label">Fil examine l'enveloppe</div><p>Fil tourne autour pendant cinq minutes, fils à peine frémissants. La procédure qu'ils ont établie sans jamais la formuler : on n'ouvre pas ce qu'on n'a pas d'abord cerné. Kaito attend. Fil finit par poser une patte dessus. Un toucher court.</p></div>
-          <div class="sub-section"><div class="sub-label">La décision</div><p>Kaito accepte — et le Groupe avec lui. Non pas parce que la mission semble nette, elle ne l'est pas, mais parce que des Pokémon qui disparaissent dans une ville entière, c'est quelque chose que personne d'officiel ne fera semblant d'enquêter. Il boucle son imperméable. Fil saute sur son épaule gauche.</p></div>
-          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Le mandat est flou, l'argent est là, et tout le monde le sait. Le Groupe accepte quand même — par sens du devoir, par incapacité à laisser une injustice sans enquêteur. C'est ce paradoxe qui définit le ton de l'ensemble.</p></div>
-        </div>
-      </div>
-
-      <!-- CH 2 -->
-      <div class="chapter" id="ch2">
-        <div class="chapter-header" onclick="toggleChapter('ch2')">
-          <span class="chapter-num">CH 02</span><span class="chapter-title">Lavanville la grise</span><span class="chapter-chevron">▶</span>
-        </div>
-        <div class="chapter-body">
-          <div class="sub-section"><div class="sub-label">La ville sous cloche</div><p>Lavanville est silencieuse d'une façon qui n'est pas naturelle. Le silence des villes vidées de quelque chose d'essentiel. Les gens marchent comme des ombres. Des Osselaits errent sans dresseur. Des Fantominus sortent de la Tour Pokémon en plein jour.</p></div>
-          <div class="sub-section"><div class="sub-label">La femme au Marill</div><p>Son Marill a disparu il y a six semaines. Elle pleure sans raison à des heures fixes — comme si son corps gardait les horaires de son Pokémon. Kaito l'écoute sans l'interrompre. <strong>Elle est l'objectif émotionnel de l'Acte III.</strong></p></div>
-          <div class="sub-section"><div class="sub-label">Fil reste</div><p>Quand le Groupe repart, Fil reste près de la femme quelques secondes supplémentaires. Pas pour l'aider — il ne peut rien pour elle. Mais il reste. Kaito l'observe depuis le seuil.</p></div>
-          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Lavanville devient un personnage à part entière — épuisée, pas hostile. Ce chapitre humanise ce que les statistiques de disparitions ne montrent pas : ce que ça fait, concrètement, de perdre son Pokémon partenaire.</p></div>
-        </div>
-      </div>
-
-      <!-- CH 3 -->
-      <div class="chapter" id="ch3">
-        <div class="chapter-header" onclick="toggleChapter('ch3')">
-          <span class="chapter-num">CH 03</span><span class="chapter-title">La cartographie de Fil</span><span class="chapter-chevron">▶</span>
-        </div>
-        <div class="chapter-body">
-          <div class="sub-section"><div class="sub-label">Trois nuits d'arpentage</div><p>Fil passe trois nuits à parcourir Lavanville seul. Chaque matin, il est là au réveil, fils légèrement chargés d'informations qu'il n'a pas encore transmises.</p></div>
-          <div class="sub-section"><div class="sub-label">La convergence</div><p>Le quatrième matin, Fil guide le Groupe vers la galerie minière abandonnée sous la Tour Pokémon — fermée officiellement depuis deux ans. Les marques au sol : un passage récent, régulier, mécanique.</p></div>
-          <div class="sub-section"><div class="sub-label">Les registres falsifiés</div><p>Fil pose ses fils sur deux documents — l'original et une copie. Les dates ne correspondent pas : l'original indique 18 mois, la copie 2 ans. <strong>Jet d'Investigation diff. 6</strong> pour que le Groupe fasse le lien sans l'aide de Fil.</p></div>
-          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Fil structure l'enquête géographiquement. Là où le Groupe enquête par les mots, Fil enquête par le territoire. Ce chapitre consacre leur complémentarité.</p></div>
-        </div>
-      </div>
-
-      <!-- CH 4 -->
-      <div class="chapter" id="ch4">
-        <div class="chapter-header" onclick="toggleChapter('ch4')">
-          <span class="chapter-num">CH 04</span><span class="chapter-title">Sous la Tour</span><span class="chapter-chevron">▶</span>
-        </div>
-        <div class="chapter-body">
-          <div class="sub-section"><div class="sub-label">La descente</div><p>Trois niveaux. Au troisième, une porte en acier renforcé, fermée électroniquement. Fil travaille sur le câblage périphérique. <strong>Électronique d6, diff. 6</strong> pour forcer sans déclencher l'alarme.</p></div>
-          <div class="sub-section"><div class="sub-label">Le réacteur</div><p>Une installation industrielle complète dissimulée à 30m sous Lavanville. Des dizaines de Pokémon sauvages captifs dans des harnais bio-énergétiques. Certains encore conscients, yeux tournés vers la lumière. Bourdonnement constant. Chaleur sèche.</p></div>
-          <div class="sub-section"><div class="sub-label">La documentation silencieuse</div><p>Fil coupe les câbles d'alarme. Le Groupe photographie avec l'appareil à mémoire physique de Natsuki. Couper les harnais maintenant tuerait les captifs — il faut partir avec des preuves.</p></div>
-          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Premier tournant majeur. Le Groupe découvre quelque chose qu'elle ne peut pas résoudre immédiatement — et doit choisir de partir sans agir. Ce choix est difficile. C'est voulu.</p></div>
-        </div>
-      </div>
-
-      <!-- CH 5 -->
-      <div class="chapter" id="ch5">
-        <div class="chapter-header" onclick="toggleChapter('ch5')">
-          <span class="chapter-num">CH 05</span><span class="chapter-title">Première trahison — le faux contact</span><span class="chapter-chevron">▶</span>
-        </div>
-        <div class="chapter-body">
-          <div class="sub-section"><div class="sub-label">La transmission</div><p>Le Groupe transmet ses découvertes au contact de la Ligue. Réponse en une heure : "Ne parlez à personne en dehors de ce canal." Ton différent du premier message — plus directif, moins formel.</p></div>
-          <div class="sub-section"><div class="sub-label">La reconnaissance du style</div><p>Kaito compare les tournures de phrases. Cette formulation — il l'a vue dans un rapport il y a deux ans. Signé Ashford. <strong>Jet d'Investigation diff. 8</strong> pour que le Groupe fasse le lien — succès = Kaito confirme.</p></div>
-          <div class="sub-section"><div class="sub-label">Le signal de Fil</div><p>Fil touche le poignet de Kaito deux fois. En réponse à quelque chose qu'il sent dans sa posture. "Je sais", dit Kaito à voix basse. "Moi aussi."</p></div>
-          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Le Groupe n'est plus une équipe mandatée — elle est un pion placé pour ne pas atteindre le roi. Ce renversement est le pivot central du scénario.</p></div>
-        </div>
-      </div>
-
-      <!-- CH 6 -->
-      <div class="chapter" id="ch6">
-        <div class="chapter-header" onclick="toggleChapter('ch6')">
-          <span class="chapter-num">CH 06</span><span class="chapter-title">Mira Holt</span><span class="chapter-chevron">▶</span>
-        </div>
-        <div class="chapter-body">
-          <div class="sub-section"><div class="sub-label">La rencontre de couverture</div><p>Le Groupe obtient un accès au site grâce au faux badge de Yuki ou en improvisant. <strong>Persuasion d10, diff. 4.</strong> Mira Holt les reçoit elle-même — pas méfiante, occupée.</p></div>
-          <div class="sub-section"><div class="sub-label">Ce qu'elle dit vraiment</div><p>"Les Pokémon sauvages non liés n'ont pas de dresseur, pas de lien, pas de projet. Ce que nous prélevons, c'est de l'énergie en excès." Kaito ne relève pas. Il observe.</p></div>
-          <div class="sub-section"><div class="sub-label">La contradiction</div><p>Ses propres Pokémon — deux Absol, un Tentacruel — se comportent normalement. Elle les nourrit entre deux phrases. <strong>Perception diff. 6</strong> pour que le Groupe remarque la contradiction d'elle-même.</p></div>
-          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Holt est l'antagoniste la plus complexe parce qu'elle est cohérente. Elle a tort — mais son raisonnement tient debout. Ce chapitre oblige le Groupe à s'engager avec sa logique plutôt qu'à la rejeter d'emblée.</p></div>
-        </div>
-      </div>
-
-      <!-- CH 7 -->
-      <div class="chapter" id="ch7">
-        <div class="chapter-header" onclick="toggleChapter('ch7')">
-          <span class="chapter-num">CH 07</span><span class="chapter-title">Rebondissement — La surveillance</span><span class="chapter-chevron">▶</span>
-        </div>
-        <div class="chapter-body">
-          <div class="sub-section"><div class="sub-label">Les deux ombres</div><p>Deux agents en civil dans le sillage de le Groupe. <strong>Perception diff. 4</strong> pour les repérer avant l'embuscade Route 8. Échec = agents choisissent le moment — avantage d'initiative.</p></div>
-          <div class="sub-section"><div class="sub-label">La chambre fouillée</div><p>L'appareil photo a été effacé. Toutes les photos du réacteur disparues. Kaito s'assied et ne dit rien pendant trois minutes.</p></div>
-          <div class="sub-section"><div class="sub-label">Le coffre-fort de Fil</div><p>Fil défait une partie de ses propres fils. À l'intérieur : des microfiches photographiques générées par une capacité que personne ne connaissait. Toutes les images du réacteur. Intactes.</p></div>
-          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>L'adversaire est organisé et puissant. Et Fil révèle une capacité insoupçonnée — les meilleurs alliés sont ceux qui anticipent sans qu'on le leur demande.</p></div>
-        </div>
-      </div>
-
-      <!-- CH 8 -->
-      <div class="chapter" id="ch8">
-        <div class="chapter-header" onclick="toggleChapter('ch8')">
-          <span class="chapter-num">CH 08</span><span class="chapter-title">L'alerte de Yael</span><span class="chapter-chevron">▶</span>
-        </div>
-        <div class="chapter-body">
-          <div class="sub-section"><div class="sub-label">La rencontre</div><p>Yael Ors a les témoignages. Le Groupe a les preuves visuelles. Rendez-vous décidé pour le lendemain soir dans un lieu neutre.</p></div>
-          <div class="sub-section"><div class="sub-label">La disparition de Fil</div><p>Le Groupe rentre. Fil n'est pas là. Une heure. Deux heures. Fil ne revient pas. Kaito s'assied dans le noir, dos au mur. Ses mains sont légèrement crispées.</p></div>
-          <div class="sub-section"><div class="sub-label">L'absence comme signal</div><p>Fil ne disparaît jamais sans prévenir. C'est donc soit un accident, soit une capture. Kaito se lève à 4h. "On y retourne."</p></div>
-          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Préparation émotionnelle au traumatisme suivant. Pour la première fois, le Groupe et Kaito perdent le contrôle sans plan de secours immédiat.</p></div>
-        </div>
-      </div>
-
-      <!-- CH 9 -->
-      <div class="chapter" id="ch9">
-        <div class="chapter-header" onclick="toggleChapter('ch9')">
-          <span class="chapter-num">CH 09</span><span class="chapter-title">Fil dans le réacteur</span><span class="chapter-chevron">▶</span>
-        </div>
-        <div class="chapter-body">
-          <div class="sub-section"><div class="sub-label">La découverte</div><p>Fil est branché à un harnais bio-énergétique de taille minimum. Ses fils épars, désynchronisés, translucides. Capturé pendant sa reconnaissance nocturne. <strong>Il est là depuis six heures.</strong></p></div>
-          <div class="sub-section"><div class="sub-label">Ce que ça signifie</div><p>Au-delà de huit heures, les fils se désintègrent et ne se régénèrent pas. Deux heures de marge. Kaito attrape le harnais à mains nues. La décharge lui remonte jusqu'à l'épaule. Il continue. <strong>Vigueur ou Électronique diff. 6</strong> — échec = 2d4 dégâts électriques, Fil déconnecté quand même.</p></div>
-          <div class="sub-section"><div class="sub-label">La sortie</div><p>Garde Torkel est là. Il aurait pu appeler des renforts. Il ne l'a pas fait. Il ouvre la porte de sortie sans un mot et repart dans l'autre sens. Kaito ne lui dit pas merci.</p></div>
-          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Le moment le plus intense. L'urgence physique ne laisse pas de place à la réflexion. C'est le seul moment où Kaito agit sans calculer. La menace sur Fil le rend humain d'une façon que rien d'autre ne pourrait faire.</p></div>
-        </div>
-      </div>
-
-      <!-- CH 10 -->
-      <div class="chapter" id="ch10">
-        <div class="chapter-header" onclick="toggleChapter('ch10')">
-          <span class="chapter-num">CH 10</span><span class="chapter-title">La nuit entre deux</span><span class="chapter-chevron">▶</span>
-        </div>
-        <div class="chapter-body">
-          <div class="sub-section"><div class="sub-label">L'attente</div><p>Kaito s'installe dans une galerie abandonnée, Fil posé sur ses genoux. Il ne fait pas de gestes. Il ne parle pas. Il sait que les interventions extérieures n'accélèrent pas le processus. Il attend.</p></div>
-          <div class="sub-section"><div class="sub-label">L'aube</div><p>Un fil se tend. Puis deux. Toute la structure de Fil frémit. Il ouvre les yeux — différents quelques secondes. Il produit un son qu'il n'a jamais fait : très court, presque inaudible.</p></div>
-          <div class="sub-section"><div class="sub-label">Ce qui ne se dit pas</div><p>Kaito pose sa main sur Fil. Ils restent ainsi un long moment. Dehors, Lavanville s'éveille. Aucun des deux ne bouge jusqu'à ce que le soleil soit complètement levé.</p></div>
-          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Le chapitre le plus calme — et le plus important pour la relation Kaito-Fil. Pas de l'héroïsme, pas de la performance. Juste la présence de l'un pour l'autre dans un moment où les mots ne servent à rien.</p></div>
-        </div>
-      </div>
-
-      <!-- CH 11 -->
-      <div class="chapter" id="ch11">
-        <div class="chapter-header" onclick="toggleChapter('ch11')">
-          <span class="chapter-num">CH 11</span><span class="chapter-title">La chute d'Ashford</span><span class="chapter-chevron">▶</span>
-        </div>
-        <div class="chapter-body">
-          <div class="sub-section"><div class="sub-label">La transmission à Yael</div><p>Le Groupe remet tout à Yael Ors. <strong>Persuasion d10, diff. 6</strong> pour convaincre Yael de publier immédiatement sur trois supports. Succès = publication en 24h. Échec = Yael exige un délai.</p></div>
-          <div class="sub-section"><div class="sub-label">La démission d'Ashford</div><p>Ashford tente de nier — présente le Groupe comme des agents hors contrôle. Mais le compte anonyme est tracé jusqu'à lui en 24h. Il démissionne avant la convocation officielle. Il ne sera jamais jugé.</p></div>
-          <div class="sub-section"><div class="sub-label">L'arrestation de Holt</div><p>Holt ne demande pas pardon. Elle demande qu'on lise ses notes de recherche avant de la juger. La demande est ignorée. Kaito note que c'était peut-être la seule chose juste qu'elle ait dite.</p></div>
-          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Résolution délibérément imparfaite. Ashford échappe à la justice formelle. La vérité publiée et la justice rendue sont deux choses différentes.</p></div>
-        </div>
-      </div>
-
-      <!-- CH 12 -->
-      <div class="chapter" id="ch12">
-        <div class="chapter-header" onclick="toggleChapter('ch12')">
-          <span class="chapter-num">CH 12</span><span class="chapter-title">Ce que Lavanville garde</span><span class="chapter-chevron">▶</span>
-        </div>
-        <div class="chapter-body">
-          <div class="sub-section"><div class="sub-label">Les Pokémon qui ne rentrent pas</div><p>Le réacteur est démantelé. Certains Pokémon sont trop affaiblis pour être retracés. Le Marill de la femme du Ch. 2 ne sera pas retrouvé. Kaito l'apprend par Yael. Il ne lui rend pas visite.</p></div>
-          <div class="sub-section"><div class="sub-label">Le départ</div><p>Le Groupe repart sans passer par la Ligue. Fil marche plus lentement qu'avant, ses fils d'un blanc légèrement différent. Kaito ralentit son pas pour s'adapter. Il ne dit rien.</p></div>
-          <div class="sub-section"><div class="sub-label">La cicatrice</div><p>Dans le train, Fil s'endort sur le siège vide. C'est la première fois qu'il dort vraiment. Kaito regarde le paysage de Lavanville qui s'éloigne. Il a sauvé Fil. Pour l'instant, c'est suffisant.</p></div>
-          <div class="enjeu"><div class="enjeu-label">Enjeu narratif</div><p>Ce dénouement refuse le triomphe. Les dommages sont permanents. Le Groupe repart avec une victoire incomplète et un allié légèrement différent. C'est l'honnêteté du genre noir.</p></div>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-      <div id="fins">
-        <div class="section-title">Fins alternatives</div>
-        <div class="fin-block"><div class="fin-title">Fin A — Publication immédiate <span class="tag tag-mineur">Victoire partielle</span></div><p>Yuki publie seule avant la coordination. Ashford détruit des preuves. Il est sanctionné mais pas jugé. Holt arrêtée.</p></div>
-        <div class="fin-block"><div class="fin-title">Fin B — Publication coordonnée <span class="tag tag-edge">Fin optimale</span></div><p>Yael et Yuki publient simultanément sur trois supports. Ashford démissionne sous pression. Holt arrêtée. Les preuves sont trop nombreuses pour être étouffées.</p></div>
-        <div class="fin-block"><div class="fin-title">Fin C — Preuves perdues <span class="tag tag-psi">Fin noire</span></div><p>Fil n'a pas pu sauvegarder les images. Seulement des témoignages. Ashford s'en sort légalement. Holt arrêtée. Le Groupe a sauvé Fil mais pas vaincu le système.</p></div>
-      </div>
+    </a>
+    <div style="border:1px dashed var(--border);border-radius:var(--radius);padding:18px 22px;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-align:center;">
+      + Nouveau scenario
     </div>
+  </div>
+</div>
 
-    
-        </div>
-      </div>
-    </div>
     <div class="section" id="tab-groupe">
   <div class="page-title">Le Groupe</div>
   <div class="page-tagline">4 Dresseurs · Pokémon partenaires · Style Deadlands</div>
@@ -1567,172 +1306,7 @@
           <p style="font-size:12px;color:var(--muted);margin-top:10px"><em>Ce n'est pas un Pokémon de combat par nature. C'est un Pokémon de présence. Dans les galeries sous la Tour Pokémon, cette qualité vaut de l'or.</em></p>
         </div>
       </div>
-    </div><div class="section" id="tab-pnj">
-      <div class="page-title">Fiches PNJ</div>
-      <div class="page-tagline">Organisés par campagne</div>
-      <div class="pnj-campaign-header">
-        La Ville Morte
-        <span class="pnj-campaign-badge">CAMPAGNE 01</span>
-      </div>
-      <div class="page-title">Fiches PNJ</div>
-      <div class="page-tagline">Alliés · Antagonistes · Jokers & Extras</div>
-
-      <div class="section-title">Alliés — Jokers</div>
-
-      <div class="pnj-card" id="pnj-kaito">
-        <div class="pnj-header" onclick="togglePnj('pnj-kaito')">
-          <div><div class="pnj-name">Kaito Mura <span class="tag tag-edge">Joker allié</span></div><div class="pnj-role">Inspecteur indépendant — présent tout au long du scénario</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d10</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div>
-            <div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Bennies <span>3</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d10</span></div>
-            <div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Discrétion</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d6</span></div>
-          </div>
-          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Enquêteur (+2 Investigation/Perception scènes de crime) · Dur à cuire (+2 soak)</div></div>
-          <div class="hindrance-block"><div class="block-name">Handicap — Loyauté (Fil)</div><div class="block-desc">Majeur : prend des risques disproportionnés si Fil est en danger. Ne prend plus de décisions rationnelles à 2 Blessures de Fil.</div></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne combat presque jamais. Oriente, n'exécute pas. Équipement : imperméable, radio cryptée, appareil photo à mémoire physique, badge suspendu.</em></p>
-        </div>
-      </div>
-
-      <div class="pnj-card" id="pnj-fil">
-        <div class="pnj-header" onclick="togglePnj('pnj-fil')">
-          <div><div class="pnj-name">Fil — Polichombr <span class="tag tag-edge">Joker allié spécial</span></div><div class="pnj-role">Capturé au Ch. 9 — Survie in extremis au Ch. 10</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d10</span></div><div class="stat-pill">Ruse <span>d8</span></div><div class="stat-pill">Force <span>d4</span></div><div class="stat-pill">Trempe <span>d6</span></div><div class="stat-pill">Vigueur <span>d4</span></div>
-            <div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>8" (rapide)</span></div><div class="stat-pill">Taille <span>−2</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Discrétion</span><span class="stat-val">d12</span></div>
-            <div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d10</span></div>
-            <div class="stat-row"><span class="stat-name">Électronique</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Combat (défensif)</span><span class="stat-val">d6</span></div>
-          </div>
-          <ul class="capa-list">
-            <li><span class="capa-name">Taille −2</span> : −2 aux jets pour le cibler. Peut passer sous les portes.</li>
-            <li><span class="capa-name">Sens vibrateurs</span> : Perception +2 sur tout ce qui touche le sol/structures.</li>
-            <li><span class="capa-name">Coffre-fort vivant</span> : stocke des microfiches dans ses fils. Révélé au Ch. 7.</li>
-            <li><span class="capa-name">Section filaire</span> : peut couper des câbles fins ou entraver un humain.</li>
-            <li><span class="capa-name">Blessures max</span> : 2 avant KO. À 2 blessures, perd ses capacités avancées.</li>
-          </ul>
-          <div class="hindrance-block" style="margin-top:10px"><div class="block-name">⚠ Ch. 9 — Harnais réacteur</div><div class="block-desc">Branché depuis 6h. Au-delà de 8h : désintégration permanente des fils. Le Groupe a 2h de marge. Extraction = jet Vigueur ou Électronique diff. 6 (échec = 2d4 dégâts électriques, Fil déconnecté quand même).</div></div>
-        </div>
-      </div>
-
-      <div class="section-title">Antagonistes — Jokers</div>
-
-      <div class="pnj-card" id="pnj-holt">
-        <div class="pnj-header" onclick="togglePnj('pnj-holt')">
-          <div><div class="pnj-name">Mira Holt <span class="tag tag-psi">Joker ennemi</span></div><div class="pnj-role">Directrice technique du réacteur — apparaît Ch. 6</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d10</span></div><div class="stat-pill">Force <span>d4</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div>
-            <div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Bennies <span>2</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Sciences (Énergie)</span><span class="stat-val">d12</span></div>
-            <div class="stat-row"><span class="stat-name">Électronique</span><span class="stat-val">d10</span></div>
-            <div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d8</span></div>
-          </div>
-          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Chercheur (+2 Sciences) · Sang-froid (immunité à l'Intimidation)</div></div>
-          <div class="hindrance-block"><div class="block-name">Handicap — Arrogance (Majeur)</div><div class="block-desc">Sous-estime le Groupe jusqu'au Ch. 9. Ne craque que face à des preuves irréfutables de la souffrance des Pokémon.</div></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne fuit pas. Si le Groupe la confronte, elle argumente. Pokémon : 2 Absol + Tentacruel personnel (non PSI-B). Badge accès niveau 5. Tablette avec plans PSI-B.</em></p>
-        </div>
-      </div>
-
-      <div class="pnj-card" id="pnj-ashford">
-        <div class="pnj-header" onclick="togglePnj('pnj-ashford')">
-          <div><div class="pnj-name">Directeur Ashford <span class="tag tag-psi">Joker ennemi / absent</span></div><div class="pnj-role">Ligue Pokémon, Cramoisîle — n'apparaît jamais en personne</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d10</span></div><div class="stat-pill">Force <span>d4</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div>
-            <div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Bennies <span>3</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d10</span></div>
-            <div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d10</span></div>
-            <div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Connaissances Communes</span><span class="stat-val">d10</span></div>
-          </div>
-          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Connexions (Ligue — peut convoquer des renforts officiels) · Riche (ressources illimitées) · Meneur d'hommes</div></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne peut pas être confronté directement avant l'Acte IV. Se dérobe toujours avec une couverture légale. Seule une publication médiatique peut le neutraliser.</em></p>
-        </div>
-      </div>
-
-      <div class="section-title">Extras</div>
-
-      <div class="pnj-card" id="pnj-agents">
-        <div class="pnj-header" onclick="togglePnj('pnj-agents')">
-          <div><div class="pnj-name">Agent de terrain d'Ashford <span class="tag tag-psi" style="background:#1a0520;color:#c050e0;">Extra</span></div><div class="pnj-role">Ch. 7 et 8 — embuscade, arrestation</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5 (Armure 1)</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Tir</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d6</span></div>
-          </div>
-          <p style="font-size:12px;color:var(--muted)"><em>Matraque (Str+d4) ou pistolet paralysant (2d6, Secousse). Pokémon : Arcanin (Extra) Combat d8, Str+d6, Parade 5, Robustesse 7. Tactique : un engage en mêlée, l'autre couvre. Fuite si 2 agents au sol.</em></p>
-        </div>
-      </div>
-
-      <div class="pnj-card" id="pnj-techniciens">
-        <div class="pnj-header" onclick="togglePnj('pnj-techniciens')">
-          <div><div class="pnj-name">Technicien du réacteur <span class="tag tag-psi" style="background:#1a0520;color:#c050e0;">Extra</span></div><div class="pnj-role">Ch. 4 et 9 — dans la mine</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Électronique</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Sciences</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d4</span></div>
-          </div>
-          <p style="font-size:12px;color:var(--muted)"><em>Outil électrique improvisé (Str+d4). Pokémon : Voltorbe — Autodestruction (6d6, zone 2", usage unique). Tactique : déclenche les alarmes ou verrouille les accès. À neutraliser vite.</em></p>
-        </div>
-      </div>
-
-      <div class="pnj-card" id="pnj-torkel">
-        <div class="pnj-header" onclick="togglePnj('pnj-torkel')">
-          <div><div class="pnj-name">Garde Torkel <span class="tag tag-gardien" style="background:#051530;color:#6090e0;">Extra allié latent</span></div><div class="pnj-role">Agent de sécurité — laisse une porte ouverte au Ch. 9</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Force <span>d8</span></div><div class="stat-pill">Vigueur <span>d8</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>6 (Armure 1)</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d4</span></div>
-          </div>
-          <p style="font-size:12px;color:var(--muted)"><em>Aucun Pokémon (le sien est mort dans le réacteur — sa Pokéball vide est dans sa poche). N'attaque les PJ que si directement ordonné. Déclencheur : un PJ remarque la Pokéball vide et pose la question. Jet Trempe d6 — succès : il coopère discrètement.</em></p>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="section" id="tab-bestiaire">
+    </div><div class="section" id="tab-bestiaire">
   <div class="page-title">Bestiaire</div>
   <div class="page-tagline">65 entrées · Pokémon Kanto</div>
 
