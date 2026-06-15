@@ -628,7 +628,36 @@ a { color: inherit; }
     overflow: hidden;
     min-width: 0;
   }
-  .player-content { flex: 1; padding: 28px 24px; overflow-y: auto; }</style>
+  .player-content { flex: 1; padding: 28px 24px; overflow-y: auto; }
+  /* ── BOUTON SAUVEGARDE JSON ── */
+  .save-json-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--muted);
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: color .15s, border-color .15s, background .15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .save-json-btn:hover {
+    color: var(--amber);
+    border-color: var(--amber-dim);
+    background: var(--amber-glow);
+  }
+  .save-json-btn.saved {
+    color: var(--safe);
+    border-color: rgba(30,92,46,.4);
+    background: rgba(30,92,46,.08);
+  }
+</style>
 </head>
 <body>
 <div class="player-shell">
@@ -639,7 +668,12 @@ a { color: inherit; }
       <input class="player-name-input" id="pj-name-input" type="text" maxlength="40">
       <button class="edit-name-btn" id="edit-name-btn" onclick="startEditName()" title="Modifier">Edit</button>
     </div>
-    <a href="index.html" class="player-back">Portail</a>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="save-json-btn" id="save-json-btn" onclick="exportJSON()" title="T&eacute;l&eacute;charger une sauvegarde JSON">
+        &#8659; Sauvegarder
+      </button>
+      <a href="index.html" class="player-back">Portail</a>
+    </div>
   </header>
   <div class="player-body">
   <div class="pj-banner" id="pj-banner">
@@ -1419,6 +1453,44 @@ function _updateBannerName() {
   var src = document.getElementById('pj-name-display');
   if (el && src) el.textContent = src.textContent;
 }
+
+/* ── EXPORT JSON ── */
+function exportJSON() {
+  var nom    = (document.getElementById('pj-name-display') || {}).textContent || PLAYER_KEY;
+  var gear   = loadGear();
+  var date   = new Date().toISOString().slice(0,10);
+
+  var data = {
+    joueur:    PLAYER_KEY,
+    nom:       nom,
+    date:      date,
+    equipe:    state.team,
+    notes:     state.notes,
+    equipement: gear
+  };
+
+  var json   = JSON.stringify(data, null, 2);
+  var blob   = new Blob([json], { type: 'application/json' });
+  var url    = URL.createObjectURL(blob);
+  var a      = document.createElement('a');
+  a.href     = url;
+  a.download = 'sauvegarde_' + PLAYER_KEY + '_' + date + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  var btn = document.getElementById('save-json-btn');
+  if (btn) {
+    btn.classList.add('saved');
+    btn.innerHTML = '&#10003; Sauvegard&eacute;';
+    setTimeout(function() {
+      btn.classList.remove('saved');
+      btn.innerHTML = '&#8659; Sauvegarder';
+    }, 2000);
+  }
+}
+
 </script>
 </body>
 </html>
