@@ -564,7 +564,6 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
 
 <nav style="display:flex;gap:0;background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;position:sticky;top:53px;z-index:90;">
   <button class="sc-tab-btn active" data-tab="scenario" onclick="scShowTab('scenario')" style="font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:12px 20px;background:none;border:none;border-bottom:2px solid var(--amber);color:var(--amber);cursor:pointer;">Sc&eacute;nario</button>
-  <button class="sc-tab-btn" data-tab="pnj" onclick="scShowTab('pnj')" style="font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:12px 20px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);cursor:pointer;">PNJ</button>
 </nav>
 
 <div class="sc-shell">
@@ -576,24 +575,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
       <div class="sc-aside-panel" id="sc-panel-scenario">
 <div class="sc-aside-group"><div class="sc-aside-label">Aper&ccedil;u</div><button class="sc-aside-btn" onclick="scrollToEl('sc-resume')">R&eacute;sum&eacute;</button><button class="sc-aside-btn" onclick="scrollToEl('sc-lieux')">Lieux</button><button class="sc-aside-btn" onclick="scrollToEl('sc-histoire')">Histoire</button></div><div class="sc-aside-group"><div class="sc-aside-label">Acte I &mdash; L'arrivée</div><button class="sc-aside-btn" onclick="openPartie('acte1');scrollToEl('ch1')">CH1 &middot; Le mandat sans badge</button><button class="sc-aside-btn" onclick="openPartie('acte1');scrollToEl('ch2')">CH2 &middot; Lavanville la grise</button><button class="sc-aside-btn" onclick="openPartie('acte1');scrollToEl('ch3')">CH3 &middot; La cartographie de Fil</button></div><div class="sc-aside-group"><div class="sc-aside-label">Acte II &mdash; La descente</div><button class="sc-aside-btn" onclick="openPartie('acte2');scrollToEl('ch4')">CH4 &middot; Sous la Tour</button><button class="sc-aside-btn" onclick="openPartie('acte2');scrollToEl('ch5')">CH5 &middot; Premiere trahison</button><button class="sc-aside-btn" onclick="openPartie('acte2');scrollToEl('ch6')">CH6 &middot; Mira Holt</button></div><div class="sc-aside-group"><div class="sc-aside-label">Acte III &mdash; Le basculement</div><button class="sc-aside-btn" onclick="openPartie('acte3');scrollToEl('ch7')">CH7 &middot; La surveillance</button><button class="sc-aside-btn" onclick="openPartie('acte3');scrollToEl('ch8')">CH8 &middot; L'alerte de Yael</button><button class="sc-aside-btn" onclick="openPartie('acte3');scrollToEl('ch9')">CH9 &middot; Fil dans le reacteur</button></div><div class="sc-aside-group"><div class="sc-aside-label">Acte IV &mdash; La résolution</div><button class="sc-aside-btn" onclick="openPartie('acte4');scrollToEl('ch10')">CH10 &middot; La nuit entre deux</button><button class="sc-aside-btn" onclick="openPartie('acte4');scrollToEl('ch11')">CH11 &middot; La chute d'Ashford</button><button class="sc-aside-btn" onclick="openPartie('acte4');scrollToEl('ch12')">CH12 &middot; Ce que Lavanville garde</button></div>
       </div>
-      <div class="sc-aside-panel" id="sc-panel-pnj" style="display:none;">
-        <div class="sc-aside-group">
-          <div class="sc-aside-label">Alliés</div>
-          <button class="sc-aside-btn" onclick="scrollToEl('pnj-kaito')">Kaito Mura</button>
-          <button class="sc-aside-btn" onclick="scrollToEl('pnj-fil')">Fil — Polichombr</button>
-        </div>
-        <div class="sc-aside-group">
-          <div class="sc-aside-label">Antagonistes</div>
-          <button class="sc-aside-btn" onclick="scrollToEl('pnj-holt')">Mira Holt</button>
-          <button class="sc-aside-btn" onclick="scrollToEl('pnj-ashford')">Directeur Ashford</button>
-        </div>
-        <div class="sc-aside-group">
-          <div class="sc-aside-label">Extras</div>
-          <button class="sc-aside-btn" onclick="scrollToEl('pnj-agents')">Agents Ashford</button>
-          <button class="sc-aside-btn" onclick="scrollToEl('pnj-techniciens')">Techniciens</button>
-          <button class="sc-aside-btn" onclick="scrollToEl('pnj-torkel')">Garde Torkel</button>
-        </div>
-      </div>
+      
     </div>
   </nav>
 
@@ -784,157 +766,7 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
       </div>
 
       <!-- ONGLET PNJ -->
-      <div class="sc-tab" id="sc-tab-pnj" class="sc-tab">
-      <div class="page-title">Fiches PNJ</div>
-      <div class="page-tagline">La Ville Morte &middot; 7 personnages</div>
-      <div style="margin-top:20px;">
-        <div class="section-title" style="margin-bottom:12px">Alli&eacute;s &mdash; Jokers</div>
-        <div class="pnj-card" id="pnj-kaito">
-        <div class="pnj-header" onclick="togglePnj('pnj-kaito')">
-          <div><div class="pnj-name">Kaito Mura <span class="tag tag-edge">Joker allié</span></div><div class="pnj-role">Inspecteur indépendant — présent tout au long du scénario</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d10</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div>
-            <div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Bennies <span>3</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d10</span></div>
-            <div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Discrétion</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d6</span></div>
-          </div>
-          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Enquêteur (+2 Investigation/Perception scènes de crime) · Dur à cuire (+2 soak)</div></div>
-          <div class="hindrance-block"><div class="block-name">Handicap — Loyauté (Fil)</div><div class="block-desc">Majeur : prend des risques disproportionnés si Fil est en danger. Ne prend plus de décisions rationnelles à 2 Blessures de Fil.</div></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne combat presque jamais. Oriente, n'exécute pas. Équipement : imperméable, radio cryptée, appareil photo à mémoire physique, badge suspendu.</em></p>
-        </div>
-      </div>
-      <div class="pnj-card" id="pnj-fil">
-        <div class="pnj-header" onclick="togglePnj('pnj-fil')">
-          <div><div class="pnj-name">Fil — Polichombr <span class="tag tag-edge">Joker allié spécial</span></div><div class="pnj-role">Capturé au Ch. 9 — Survie in extremis au Ch. 10</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d10</span></div><div class="stat-pill">Ruse <span>d8</span></div><div class="stat-pill">Force <span>d4</span></div><div class="stat-pill">Trempe <span>d6</span></div><div class="stat-pill">Vigueur <span>d4</span></div>
-            <div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>8" (rapide)</span></div><div class="stat-pill">Taille <span>−2</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Discrétion</span><span class="stat-val">d12</span></div>
-            <div class="stat-row"><span class="stat-name">Perception</span><span class="stat-val">d10</span></div>
-            <div class="stat-row"><span class="stat-name">Électronique</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Combat (défensif)</span><span class="stat-val">d6</span></div>
-          </div>
-          <ul class="capa-list">
-            <li><span class="capa-name">Taille −2</span> : −2 aux jets pour le cibler. Peut passer sous les portes.</li>
-            <li><span class="capa-name">Sens vibrateurs</span> : Perception +2 sur tout ce qui touche le sol/structures.</li>
-            <li><span class="capa-name">Coffre-fort vivant</span> : stocke des microfiches dans ses fils. Révélé au Ch. 7.</li>
-            <li><span class="capa-name">Section filaire</span> : peut couper des câbles fins ou entraver un humain.</li>
-            <li><span class="capa-name">Blessures max</span> : 2 avant KO. À 2 blessures, perd ses capacités avancées.</li>
-          </ul>
-          <div class="hindrance-block" style="margin-top:10px"><div class="block-name">⚠ Ch. 9 — Harnais réacteur</div><div class="block-desc">Branché depuis 6h. Au-delà de 8h : désintégration permanente des fils. Le Groupe a 2h de marge. Extraction = jet Vigueur ou Électronique diff. 6 (échec = 2d4 dégâts électriques, Fil déconnecté quand même).</div></div>
-        </div>
-      </div>
-
-      <div class="section-title" style="margin:20px 0 12px">Antagonistes &mdash; Jokers</div>
-      <div class="pnj-card" id="pnj-holt">
-        <div class="pnj-header" onclick="togglePnj('pnj-holt')">
-          <div><div class="pnj-name">Mira Holt <span class="tag tag-psi">Joker ennemi</span></div><div class="pnj-role">Directrice technique du réacteur — apparaît Ch. 6</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d10</span></div><div class="stat-pill">Force <span>d4</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div>
-            <div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Bennies <span>2</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Sciences (Énergie)</span><span class="stat-val">d12</span></div>
-            <div class="stat-row"><span class="stat-name">Électronique</span><span class="stat-val">d10</span></div>
-            <div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d8</span></div>
-          </div>
-          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Chercheur (+2 Sciences) · Sang-froid (immunité à l'Intimidation)</div></div>
-          <div class="hindrance-block"><div class="block-name">Handicap — Arrogance (Majeur)</div><div class="block-desc">Sous-estime le Groupe jusqu'au Ch. 9. Ne craque que face à des preuves irréfutables de la souffrance des Pokémon.</div></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne fuit pas. Si le Groupe la confronte, elle argumente. Pokémon : 2 Absol + Tentacruel personnel (non PSI-B). Badge accès niveau 5. Tablette avec plans PSI-B.</em></p>
-        </div>
-      </div>
-      <div class="pnj-card" id="pnj-ashford">
-        <div class="pnj-header" onclick="togglePnj('pnj-ashford')">
-          <div><div class="pnj-name">Directeur Ashford <span class="tag tag-psi">Joker ennemi / absent</span></div><div class="pnj-role">Ligue Pokémon, Cramoisîle — n'apparaît jamais en personne</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d10</span></div><div class="stat-pill">Force <span>d4</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div>
-            <div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Bennies <span>3</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d10</span></div>
-            <div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d10</span></div>
-            <div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Connaissances Communes</span><span class="stat-val">d10</span></div>
-          </div>
-          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Connexions (Ligue — peut convoquer des renforts officiels) · Riche (ressources illimitées) · Meneur d'hommes</div></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne peut pas être confronté directement avant l'Acte IV. Se dérobe toujours avec une couverture légale. Seule une publication médiatique peut le neutraliser.</em></p>
-        </div>
-      </div>
-
-      <div class="section-title" style="margin:20px 0 12px">Extras</div>
-      <div class="pnj-card" id="pnj-agents">
-        <div class="pnj-header" onclick="togglePnj('pnj-agents')">
-          <div><div class="pnj-name">Agent de terrain d'Ashford <span class="tag tag-psi" style="background:#1a0520;color:#c050e0;">Extra</span></div><div class="pnj-role">Ch. 7 et 8 — embuscade, arrestation</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5 (Armure 1)</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Tir</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d6</span></div>
-          </div>
-          <p style="font-size:12px;color:var(--muted)"><em>Matraque (Str+d4) ou pistolet paralysant (2d6, Secousse). Pokémon : Arcanin (Extra) Combat d8, Str+d6, Parade 5, Robustesse 7. Tactique : un engage en mêlée, l'autre couvre. Fuite si 2 agents au sol.</em></p>
-        </div>
-      </div>
-      <div class="pnj-card" id="pnj-techniciens">
-        <div class="pnj-header" onclick="togglePnj('pnj-techniciens')">
-          <div><div class="pnj-name">Technicien du réacteur <span class="tag tag-psi" style="background:#1a0520;color:#c050e0;">Extra</span></div><div class="pnj-role">Ch. 4 et 9 — dans la mine</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>5</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Électronique</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Sciences</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d4</span></div>
-          </div>
-          <p style="font-size:12px;color:var(--muted)"><em>Outil électrique improvisé (Str+d4). Pokémon : Voltorbe — Autodestruction (6d6, zone 2", usage unique). Tactique : déclenche les alarmes ou verrouille les accès. À neutraliser vite.</em></p>
-        </div>
-      </div>
-      <div class="pnj-card" id="pnj-torkel">
-        <div class="pnj-header" onclick="togglePnj('pnj-torkel')">
-          <div><div class="pnj-name">Garde Torkel <span class="tag tag-gardien" style="background:#051530;color:#6090e0;">Extra allié latent</span></div><div class="pnj-role">Agent de sécurité — laisse une porte ouverte au Ch. 9</div></div>
-          <span class="chapter-chevron">▶</span>
-        </div>
-        <div class="pnj-body">
-          <div class="stat-inline">
-            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Force <span>d8</span></div><div class="stat-pill">Vigueur <span>d8</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>6 (Armure 1)</span></div>
-          </div>
-          <div class="stat-block" style="margin-bottom:12px">
-            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d4</span></div>
-          </div>
-          <p style="font-size:12px;color:var(--muted)"><em>Aucun Pokémon (le sien est mort dans le réacteur — sa Pokéball vide est dans sa poche). N'attaque les PJ que si directement ordonné. Déclencheur : un PJ remarque la Pokéball vide et pose la question. Jet Trempe d6 — succès : il coopère discrètement.</em></p>
-        </div>
-      </div>
-      </div>
-    </div>
+      
 
     
 
