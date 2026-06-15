@@ -641,9 +641,7 @@ a { color: inherit; }
   </header>
   <div class="player-body">
   <div class="pj-banner" id="pj-banner">
-    <img class="pj-banner-img" id="pj-photo-img" src="" alt="" style="display:none">
-    <div class="pj-banner-placeholder" id="pj-photo-placeholder">
-      <div class="pj-banner-placeholder-icon">&#9670;</div>
+    <img class="pj-banner-img" id="pj-photo-img" src="https://rianori.github.io/pkmn_jdr/img/pisteur.png" alt="">
       <div class="pj-banner-placeholder-txt">Illustration</div>
     </div>
     <div class="pj-banner-overlay">
@@ -1548,21 +1546,7 @@ function showPhoto(dataUrl) {
   if (ph)  { ph.style.display = 'none'; }
 }
 
-function initPhoto() {
-  var local = localStorage.getItem(STORAGE_KEY + '_photo');
-  if (local) showPhoto(local);
-  _getOrCreateBin(function(binId) {
-    fetch(_JBURL + '/b/' + binId + '/latest', {
-      headers: { 'X-Master-Key': _JBKEY }
-    }).then(function(r) { return r.json(); })
-    .then(function(d) {
-      if (d.record && d.record.photo) {
-        localStorage.setItem(STORAGE_KEY + '_photo', d.record.photo);
-        showPhoto(d.record.photo);
-      }
-    }).catch(function() {});
-  });
-}
+
 
 function _updateBannerName() {
   var el  = document.getElementById('pj-banner-name');
