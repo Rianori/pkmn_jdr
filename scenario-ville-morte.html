@@ -245,19 +245,13 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
 .chapter-enjeu strong { color: var(--amber); font-family: var(--mono); font-size: 10px; letter-spacing: .08em; }
 
 /* PNJ */
-.pnj-card { border: 1px solid var(--border); border-radius: 6px; margin-bottom: 12px; overflow: hidden; }
-.pnj-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 18px;
-  background: var(--surface);
-}
-.pnj-header:hover { background: var(--card); }
-.pnj-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-.pnj-role { font-size: 12px; color: var(--muted); }
-.pnj-body { display: block; padding: 16px 18px; border-top: 1px solid var(--border); }
-.pnj-card.open .pnj-body { display: block; }
+
+
+
+
+
+
+
 .stat-inline { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .stat-pill {
   font-family: var(--mono);
@@ -288,33 +282,17 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
 .tag-mineur { background: rgba(60,80,120,.2); color: #8090c0; border: 1px solid rgba(60,80,120,.4); }
 .tag-background { background: rgba(40,100,60,.2); color: #70b080; border: 1px solid rgba(40,100,60,.4); }
 .tag-combat { background: rgba(150,60,40,.2); color: #d08060; border: 1px solid rgba(150,60,40,.4); }
-.pnj-card {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 12px;
-    overflow: hidden;
-    width: 100%;
-  }
-.pnj-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 13px 18px;
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    user-select: none;
-    transition: background .12s;
-  }
-.pnj-header:hover { background: #202024; }
-.pnj-name { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--text); }
-.pnj-role { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 2px; }
-.pnj-body { display: none; padding: 18px; }
-.pnj-card.open .pnj-body { display: block; }
-.pnj-card.open .chapter-chevron { transform: rotate(90deg); }
-.pnj-campaign-header{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);padding:10px 0 6px;border-bottom:1px solid var(--amber-dim);margin:20px 0 12px;display:flex;align-items:center;gap:10px;}
-.pnj-campaign-badge{font-size:8px;background:var(--amber-glow);border:1px solid var(--amber-dim);border-radius:2px;padding:2px 6px;color:var(--amber);}
-.pnj-add-slot{border:2px dashed var(--border);border-radius:var(--radius);padding:20px;text-align:center;color:var(--muted);font-family:var(--mono);font-size:11px;margin-top:16px;}
+
+
+
+
+
+
+
+
+
+
+
 .chapter {
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -559,7 +537,16 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
   nav .sc-tab-btn { transition: color .15s, border-bottom-color .15s; }
   nav .sc-tab-btn:hover:not(.active) { color: var(--text) !important; }
   nav .sc-tab-btn.active { color: var(--amber) !important; border-bottom-color: var(--amber) !important; }
-</style>
+
+  /* == PNJ CARDS (original MJ) == */
+  .pnj-card { border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden; }
+  .pnj-header { display:flex;align-items:center;justify-content:space-between;padding:13px 18px;background:var(--card);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:background .12s; }
+  .pnj-header:hover { background:#202024; }
+  .pnj-name { font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px; }
+  .pnj-role { font-size:12px;color:var(--muted);font-style:italic; }
+  .pnj-body { display:none;padding:18px;border-top:1px solid var(--border); }
+  .pnj-card.open .pnj-body { display:block; }
+  .pnj-card.open .chapter-chevron { transform:rotate(90deg); }</style>
 </head>
 <body>
 
@@ -798,12 +785,14 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
 
       <!-- ONGLET PNJ -->
       <div class="sc-tab" id="sc-tab-pnj">
-        <div class="page-title">Fiches PNJ</div>
-        <div class="page-tagline">La Ville Morte &middot; 7 personnages</div>
-        <div class="section-title" style="margin-bottom:16px">Alli&eacute;s &mdash; Jokers</div>
-<div class="pnj-card" id="pnj-kaito">
-        <div class="pnj-header">
+      <div class="page-title">Fiches PNJ</div>
+      <div class="page-tagline">La Ville Morte &middot; 7 personnages &middot; Cliquer pour d&eacute;plier</div>
+      <div style="margin-top:20px;">
+        <div class="section-title" style="margin-bottom:12px">Alli&eacute;s &mdash; Jokers</div>
+        <div class="pnj-card" id="pnj-kaito">
+        <div class="pnj-header" onclick="togglePnj('pnj-kaito')">
           <div><div class="pnj-name">Kaito Mura <span class="tag tag-edge">Joker allié</span></div><div class="pnj-role">Inspecteur indépendant — présent tout au long du scénario</div></div>
+          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
@@ -822,9 +811,10 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne combat presque jamais. Oriente, n'exécute pas. Équipement : imperméable, radio cryptée, appareil photo à mémoire physique, badge suspendu.</em></p>
         </div>
       </div>
-<div class="pnj-card" id="pnj-fil">
-        <div class="pnj-header">
+      <div class="pnj-card" id="pnj-fil">
+        <div class="pnj-header" onclick="togglePnj('pnj-fil')">
           <div><div class="pnj-name">Fil — Polichombr <span class="tag tag-edge">Joker allié spécial</span></div><div class="pnj-role">Capturé au Ch. 9 — Survie in extremis au Ch. 10</div></div>
+          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
@@ -847,10 +837,12 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <div class="hindrance-block" style="margin-top:10px"><div class="block-name">⚠ Ch. 9 — Harnais réacteur</div><div class="block-desc">Branché depuis 6h. Au-delà de 8h : désintégration permanente des fils. Le Groupe a 2h de marge. Extraction = jet Vigueur ou Électronique diff. 6 (échec = 2d4 dégâts électriques, Fil déconnecté quand même).</div></div>
         </div>
       </div>
-<div class="section-title" style="margin:28px 0 16px">Antagonistes &mdash; Jokers</div>
-<div class="pnj-card" id="pnj-holt">
-        <div class="pnj-header">
+
+      <div class="section-title" style="margin:20px 0 12px">Antagonistes &mdash; Jokers</div>
+      <div class="pnj-card" id="pnj-holt">
+        <div class="pnj-header" onclick="togglePnj('pnj-holt')">
           <div><div class="pnj-name">Mira Holt <span class="tag tag-psi">Joker ennemi</span></div><div class="pnj-role">Directrice technique du réacteur — apparaît Ch. 6</div></div>
+          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
@@ -869,9 +861,10 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne fuit pas. Si le Groupe la confronte, elle argumente. Pokémon : 2 Absol + Tentacruel personnel (non PSI-B). Badge accès niveau 5. Tablette avec plans PSI-B.</em></p>
         </div>
       </div>
-<div class="pnj-card" id="pnj-ashford">
-        <div class="pnj-header">
+      <div class="pnj-card" id="pnj-ashford">
+        <div class="pnj-header" onclick="togglePnj('pnj-ashford')">
           <div><div class="pnj-name">Directeur Ashford <span class="tag tag-psi">Joker ennemi / absent</span></div><div class="pnj-role">Ligue Pokémon, Cramoisîle — n'apparaît jamais en personne</div></div>
+          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
@@ -888,10 +881,12 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ne peut pas être confronté directement avant l'Acte IV. Se dérobe toujours avec une couverture légale. Seule une publication médiatique peut le neutraliser.</em></p>
         </div>
       </div>
-<div class="section-title" style="margin:28px 0 16px">Extras</div>
-<div class="pnj-card" id="pnj-agents">
-        <div class="pnj-header">
+
+      <div class="section-title" style="margin:20px 0 12px">Extras</div>
+      <div class="pnj-card" id="pnj-agents">
+        <div class="pnj-header" onclick="togglePnj('pnj-agents')">
           <div><div class="pnj-name">Agent de terrain d'Ashford <span class="tag tag-psi" style="background:#1a0520;color:#c050e0;">Extra</span></div><div class="pnj-role">Ch. 7 et 8 — embuscade, arrestation</div></div>
+          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
@@ -905,9 +900,10 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted)"><em>Matraque (Str+d4) ou pistolet paralysant (2d6, Secousse). Pokémon : Arcanin (Extra) Combat d8, Str+d6, Parade 5, Robustesse 7. Tactique : un engage en mêlée, l'autre couvre. Fuite si 2 agents au sol.</em></p>
         </div>
       </div>
-<div class="pnj-card" id="pnj-techniciens">
-        <div class="pnj-header">
+      <div class="pnj-card" id="pnj-techniciens">
+        <div class="pnj-header" onclick="togglePnj('pnj-techniciens')">
           <div><div class="pnj-name">Technicien du réacteur <span class="tag tag-psi" style="background:#1a0520;color:#c050e0;">Extra</span></div><div class="pnj-role">Ch. 4 et 9 — dans la mine</div></div>
+          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
@@ -921,9 +917,10 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted)"><em>Outil électrique improvisé (Str+d4). Pokémon : Voltorbe — Autodestruction (6d6, zone 2", usage unique). Tactique : déclenche les alarmes ou verrouille les accès. À neutraliser vite.</em></p>
         </div>
       </div>
-<div class="pnj-card" id="pnj-torkel">
-        <div class="pnj-header">
+      <div class="pnj-card" id="pnj-torkel">
+        <div class="pnj-header" onclick="togglePnj('pnj-torkel')">
           <div><div class="pnj-name">Garde Torkel <span class="tag tag-gardien" style="background:#051530;color:#6090e0;">Extra allié latent</span></div><div class="pnj-role">Agent de sécurité — laisse une porte ouverte au Ch. 9</div></div>
+          <span class="chapter-chevron">▶</span>
         </div>
         <div class="pnj-body">
           <div class="stat-inline">
@@ -936,8 +933,10 @@ header h1 { font-family: var(--mono); font-size: 16px; font-weight: 700; color: 
           <p style="font-size:12px;color:var(--muted)"><em>Aucun Pokémon (le sien est mort dans le réacteur — sa Pokéball vide est dans sa poche). N'attaque les PJ que si directement ordonné. Déclencheur : un PJ remarque la Pokéball vide et pose la question. Jet Trempe d6 — succès : il coopère discrètement.</em></p>
         </div>
       </div>
-
       </div>
+    </div>
+
+    
 
     </div>
   </main>
