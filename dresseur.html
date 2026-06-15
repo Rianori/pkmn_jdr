@@ -535,21 +535,19 @@ a { color: inherit; }
         <input class="player-name-input" id="pj-name-input" type="text" maxlength="40">
         <button class="edit-name-btn" id="edit-name-btn" onclick="startEditName()" title="Modifier">Edit</button>
       </div>
-      <div class="player-role">Dresseur #1 · Technicienne en Capsules Techniques</div>
+      <div class="player-role">Dresseur de circuit libre</div>
     </div>
     <a href="index.html" class="player-back">Portail</a>
   </header>
   <nav class="player-nav">
     <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
-    <button onclick="showPlayerTab('partner',this)">Métamorph</button>
+    <button onclick="showPlayerTab('partner',this)">Abra</button>
     <button onclick="showPlayerTab('team',this)">Equipe</button>
     <button onclick="showPlayerTab('notes',this)">Notes</button>
   </nav>
   <div class="player-content">
-    <div class="player-tab active" 
-
-      <!-- ── ONGLET PERSO ── -->
-      <div class="tab-section active" id="tab-perso">
+    
+    <div class="player-tab active" id="tab-perso">
         <div class="page-title">Kael Oryn</div>
         <div class="page-tagline">Dresseur de circuit libre</div>
         <div class="stats-grid">
@@ -594,7 +592,7 @@ a { color: inherit; }
       </div>
 
       <!-- ── ONGLET PARTENAIRE ── -->
-      <div class="tab-section" id="tab-partner">
+      <div class="player-tab" id="tab-partner">
         <div class="page-title">Pok&eacute;mon partenaire</div>
         <div class="page-tagline">Abra</div>
         <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
@@ -631,7 +629,7 @@ a { color: inherit; }
       </div>
 
       <!-- ── ONGLET EQUIPE ── -->
-      <div class="tab-section" id="tab-team">
+      <div class="player-tab" id="tab-team">
         <div class="page-title">Equipe Pok&eacute;mon</div>
         <div class="page-tagline">Gestion de votre &eacute;quipe</div>
         <div id="team-container"></div>
@@ -639,7 +637,7 @@ a { color: inherit; }
       </div>
 
       <!-- ── ONGLET NOTES ── -->
-      <div class="tab-section" id="tab-notes">
+      <div class="player-tab" id="tab-notes">
         <div class="page-title">Notes</div>
         <div class="page-tagline">Sauvegarde automatique</div>
         <div class="notes-layout">
@@ -652,8 +650,7 @@ a { color: inherit; }
           </div>
         </div>
       </div>
-
-    </div><!-- /.content -->
+    <!-- /.content -->
   </div><!-- /.player-shell -->
 </div>
 
