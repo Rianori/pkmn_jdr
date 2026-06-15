@@ -3100,8 +3100,7 @@
 function showTab(tab, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('#main-nav button').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  btn.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active'
   // Switcher le contenu de l'aside
   document.querySelectorAll('.aside-tab-section').forEach(s => s.style.display = 'none');
   const asideSection = document.getElementById('aside-' + tab);
@@ -3175,8 +3174,7 @@ function toggleAsideCampaign(id) {
 
 
 function filterBeast2(group, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')
   const groups = {
     'sauvage': 'bgroup-sauvage',
     'psi':     'bgroup-psi',
@@ -3561,30 +3559,24 @@ function _addScenarioCard(title, sub, num, filename) {
 
 function filterBeast(cat, btn) {
   document.querySelectorAll('.filter-bar .filter-btn').forEach(function(b) { b.classList.remove('active'); });
-  btn.classList.add('active');
-  var pnjBar = document.getElementById('filter-pnj-bar');
+  if (btn) btn.classList.add('active');
   if (cat === 'all') {
     document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = ''; });
     document.querySelectorAll('.beast-card').forEach(function(c) { c.style.display = ''; });
-    if (pnjBar) pnjBar.classList.remove('active');
-   } else if (cat === 'sc02') {
-    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = g.id === 'bgroup-sc02' ? '' : 'none'; });
-    if (pnjBar) pnjBar.classList.add('active');
-    filterByPnj('all', pnjBar ? pnjBar.querySelector('button') : null););
-    if (pnjBar) pnjBar.classList.remove('active'););
-    if (pnjBar) pnjBar.classList.add('active');
-    filterByPnj('all', pnjBar ? pnjBar.querySelector('button') : null);
+  } else if (cat === 'sc02') {
+    document.querySelectorAll('.beast-cat-group').forEach(function(g) {
+      g.style.display = g.id === 'bgroup-sc02' ? '' : 'none';
+    });
   } else {
-    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = g.id === 'bgroup-sc02' ? 'none' : ''; });
+    document.querySelectorAll('.beast-cat-group').forEach(function(g) {
+      g.style.display = (g.id === 'bgroup-sc02' || g.id === 'bgroup-alpha9') ? 'none' : '';
+    });
     document.querySelectorAll('.beast-card').forEach(function(c) {
       c.style.display = (c.dataset.cat === cat) ? '' : 'none';
     });
-    if (pnjBar) pnjBar.classList.remove('active');
   }
 }
-);
-    btn.classList.add('active');
-  
+
   document.querySelectorAll('.beast-pnj-sub').forEach(function(s) {
     s.style.display = (slug === 'all' || s.id === 'bpnj-' + slug) ? '' : 'none';
   });
