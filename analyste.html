@@ -704,6 +704,29 @@ a { color: inherit; }
   }
   .gear-item-input:hover { border-bottom-color: var(--border); }
   .gear-item-input:focus { border-bottom-color: var(--amber-dim); }
+
+  /* Edition inline stats Pokemon */
+  .pk-edit-row { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+  .pk-edit-label { font-family:var(--mono); font-size:9px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--muted); width:80px; flex-shrink:0; }
+  .pk-edit-input { flex:1; background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-family:var(--mono); font-size:12px;
+    padding:3px 7px; outline:none; transition:border-color .12s; }
+  .pk-edit-input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit { display:flex; gap:6px; margin-bottom:4px; }
+  .pk-atk-edit input { background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-size:11px; padding:3px 7px;
+    outline:none; transition:border-color .12s; }
+  .pk-atk-edit input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit .atk-name { flex:2; }
+  .pk-atk-edit .atk-dmg  { flex:1; }
+  .pk-atk-add { font-family:var(--mono); font-size:10px; background:none;
+    border:1px dashed var(--border); border-radius:3px; color:var(--muted);
+    padding:3px 10px; cursor:pointer; margin-top:3px; transition:color .12s,border-color .12s; }
+  .pk-atk-add:hover { color:var(--amber); border-color:var(--amber-dim); }
+  .pk-atk-del { background:none; border:none; color:var(--muted); cursor:pointer;
+    font-size:14px; padding:0 3px; flex-shrink:0; transition:color .12s; }
+  .pk-atk-del:hover { color:var(--danger); }
 </style>
 </head>
 <body>
@@ -1444,42 +1467,7 @@ function addPokemon() {
 }
 
 /* Override renderPanel pour afficher les stats */
-function renderPanel() {
-  var panel = document.getElementById('team-panel');
-  if (!panel) return;
-  var slot = state.team[state.activeSlot];
-  if (!slot) { selectSlot(0); return; }
-  if (state.activeSlot === 0) {
-    var pk = document.getElementById('partner-pk-card');
-    if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
-    return;
-  }
-  var statsHtml = '';
-  if (slot.talent) { statsHtml += '<div style="margin-bottom:8px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Talent</span> <span style="font-size:13px;color:var(--amber)">' + escHtml(slot.talent) + '</span></div>'; }
-  if (slot.stats) {
-    var s = slot.stats;
-    var statLine = ['for','agi','vig','rus','parade','robustesse','allure']
-      .filter(function(k) { return s[k]; })
-      .map(function(k) { return '<span style="font-family:var(--mono);font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:2px 7px;">' + k.toUpperCase() + ' ' + s[k] + '</span>'; })
-      .join(' ');
-    statsHtml += '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">' + statLine + '</div>';
-    if (s.attacks && s.attacks.length) {
-      statsHtml += '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px">Attaques</div>';
-      s.attacks.forEach(function(a) {
-        statsHtml += '<div style="font-size:12px;color:var(--text);margin-bottom:3px">' + escHtml(a.name) + (a.dmg ? ' <span style="color:var(--muted)">- ' + escHtml(a.dmg) + '</span>' : '') + '</div>';
-      });
-    }
-  }
-  panel.innerHTML = '<div class="team-panel-header">'
-    + '<span class="team-panel-name">' + escHtml(slot.name) + '</span>'
-    + '<span style="font-size:12px;color:var(--muted)">' + escHtml(slot.type) + '</span>'
-    + '<button class="btn-danger" style="margin-left:auto" onclick="removePokemon(' + state.activeSlot + ')">Retirer</button>'
-    + '</div><div class="team-panel-body">'
-    + (statsHtml ? '<div style="margin-bottom:12px">' + statsHtml + '</div>' : '')
-    + '<div class="section-title" style="margin-bottom:8px">Notes de session</div>'
-    + '<textarea style="width:100%;min-height:100px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:13px;padding:10px;resize:vertical" oninput="updatePkNotes(this.value)">' + escHtml(slot.notes || '') + '</textarea>'
-    + '</div>';
-}
+
 
 /* ---- NOTE DU MJ (pop-up) ---- */
 function checkMjNote() {
@@ -1695,6 +1683,85 @@ function renderGear() {
     li.appendChild(del);
     container.appendChild(li);
   });
+}
+function renderPanel() {
+  var panel = document.getElementById('team-panel');
+  if (!panel) return;
+  var slot = state.team[state.activeSlot];
+  if (!slot) { selectSlot(0); return; }
+
+  // Slot 0 = partenaire fixe (fiche dédiée)
+  if (state.activeSlot === 0) {
+    var pk = document.getElementById('partner-pk-card');
+    if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
+    return;
+  }
+
+  var idx = state.activeSlot;
+  var s = slot.stats || {};
+  var attacks = s.attacks || [];
+  if (!Array.isArray(attacks)) attacks = Object.values(attacks);
+
+  // Helper input stat
+  function statInput(key, label) {
+    return '<div class="pk-edit-row">'
+      + '<span class="pk-edit-label">' + label + '</span>'
+      + '<input class="pk-edit-input" type="text" value="' + escHtml(s[key]||'') + '"'
+      + ' oninput="updatePkStat(' + idx + ','' + key + '',this.value)" maxlength="20">'
+      + '</div>';
+  }
+
+  // Attaques
+  var atksHtml = '';
+  for (var ai = 0; ai < Math.max(attacks.length, 4); ai++) {
+    var atk = attacks[ai] || {name:'', dmg:''};
+    atksHtml += '<div class="pk-atk-edit" id="atk-row-' + ai + '">'
+      + '<input class="atk-name" type="text" placeholder="Nom attaque" value="' + escHtml(atk.name||'') + '"'
+      + ' oninput="updatePkAtk(' + idx + ',' + ai + ','name',this.value)" maxlength="50">'
+      + '<input class="atk-dmg" type="text" placeholder="Dmg" value="' + escHtml(atk.dmg||'') + '"'
+      + ' oninput="updatePkAtk(' + idx + ',' + ai + ','dmg',this.value)" maxlength="20">'
+      + '</div>';
+  }
+
+  panel.innerHTML =
+    '<div class="team-panel-header">'
+    + '<span class="team-panel-name">' + escHtml(slot.name) + '</span>'
+    + '<span style="font-size:12px;color:var(--muted)">' + escHtml(slot.type) + '</span>'
+    + '<button class="btn-danger" style="margin-left:auto" onclick="removePokemon(' + idx + ')">Retirer</button>'
+    + '</div>'
+    + '<div class="team-panel-body">'
+    + '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Attributs</div>'
+    + statInput('for',  'Force')
+    + statInput('agi',  'Agilite')
+    + statInput('vig',  'Vigueur')
+    + statInput('rus',  'Ruse')
+    + statInput('parade','Parade')
+    + statInput('robustesse','Robust.')
+    + statInput('allure','Allure')
+    + '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px">Attaques</div>'
+    + atksHtml
+    + '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px">Notes de session</div>'
+    + '<textarea style="width:100%;min-height:80px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:13px;padding:10px;resize:vertical;outline:none" oninput="updatePkNotes(this.value)">' + escHtml(slot.notes || '') + '</textarea>'
+    + '</div>';
+}
+
+function updatePkStat(idx, key, val) {
+  if (!state.team[idx]) return;
+  if (!state.team[idx].stats) state.team[idx].stats = {};
+  state.team[idx].stats[key] = val;
+  saveState();
+}
+
+function updatePkAtk(idx, atkIdx, field, val) {
+  if (!state.team[idx]) return;
+  if (!state.team[idx].stats) state.team[idx].stats = {};
+  var attacks = state.team[idx].stats.attacks || [];
+  if (!Array.isArray(attacks)) attacks = Object.values(attacks);
+  while (attacks.length <= atkIdx) attacks.push({name:'', dmg:''});
+  attacks[atkIdx][field] = val;
+  // Nettoyer les attaques vides en fin de tableau (sauf si en cours d'édition)
+  state.team[idx].stats.attacks = attacks;
+  saveState();
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
