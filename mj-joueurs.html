@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MJ — Vue Joueurs (temps réel)</title>
+<title>MJ — Vue Joueurs</title>
 <style>
 :root {
   --bg:#0e0e10;--surface:#141416;--card:#1a1a1e;--border:#2a2a30;
@@ -13,36 +13,46 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;}
+
 header{display:flex;align-items:center;justify-content:space-between;
   padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--border);
   position:sticky;top:0;z-index:100;}
 .hd-title{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--amber);}
 .hd-sub{font-size:11px;color:var(--muted);margin-left:10px;}
-.hd-right{display:flex;align-items:center;gap:12px;}
+.live-pill{font-family:var(--mono);font-size:9px;color:var(--amber);
+  border:1px solid var(--amber-dim);border-radius:2px;padding:1px 7px;
+  animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 .back-link{font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;
   border:1px solid var(--border);border-radius:2px;padding:5px 12px;
   transition:color .15s,border-color .15s;}
 .back-link:hover{color:var(--amber);border-color:var(--amber-dim);}
-#status-bar{padding:7px 24px;font-family:var(--mono);font-size:10px;
+
+#status-bar{padding:6px 24px;font-family:var(--mono);font-size:10px;
   background:var(--surface);border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:8px;color:var(--muted);}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;}
-.dot.ok{background:#4caf6e;box-shadow:0 0 5px rgba(76,175,110,.5);}
+.dot.ok{background:#4caf6e;box-shadow:0 0 5px rgba(76,175,110,.4);}
 .dot.loading{background:var(--amber);animation:pulse .9s infinite;}
 .dot.err{background:#e57373;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
-.main{padding:22px;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px;}
+
+.main{padding:20px 24px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:18px;}
+
+/* Carte joueur */
 .player-card{background:var(--card);border:1px solid var(--border);
-  border-radius:var(--radius);overflow:hidden;transition:border-color .2s;}
-.player-card.updated{border-color:var(--amber-dim);animation:flash .6s ease;}
-@keyframes flash{0%,100%{border-color:var(--amber-dim)}50%{border-color:var(--amber)}}
-.card-head{display:flex;border-bottom:1px solid var(--border);}
-.card-avatar{width:64px;flex-shrink:0;background:var(--surface);}
+  border-radius:var(--radius);overflow:hidden;transition:border-color .3s;}
+.player-card.flash{border-color:var(--amber);animation:card-flash .7s ease;}
+@keyframes card-flash{0%,100%{border-color:var(--amber-dim)}50%{border-color:var(--amber)}}
+
+/* Header carte */
+.card-head{display:flex;align-items:stretch;border-bottom:1px solid var(--border);}
+.card-avatar{width:60px;flex-shrink:0;background:var(--surface);}
 .card-avatar img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
-.card-avatar-ph{width:100%;min-height:64px;display:flex;align-items:center;
-  justify-content:center;color:var(--muted);font-size:20px;}
-.card-identity{padding:11px 14px;flex:1;}
+.card-avatar-ph{width:100%;min-height:60px;display:flex;align-items:center;
+  justify-content:center;color:var(--muted);font-size:18px;}
+.card-identity{padding:10px 14px;flex:1;}
 .card-slug{font-family:var(--mono);font-size:9px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
 .card-nom{font-size:14px;font-weight:600;color:var(--text);margin-bottom:1px;}
@@ -55,22 +65,37 @@ header{display:flex;align-items:center;justify-content:space-between;
 .badge-old{background:rgba(139,51,0,.15);color:#d4835a;border:1px solid rgba(139,51,0,.3);}
 .badge-none{background:var(--surface);color:var(--muted);border:1px solid var(--border);}
 .card-upd{margin-left:auto;color:var(--muted);}
-.card-body{padding:12px 14px;}
+
+/* Équipe */
+.card-body{padding:14px;}
 .sec-lbl{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:5px;padding-bottom:4px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:5px;
   border-bottom:1px solid var(--border);}
-.team-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;}
-.pk-chip{font-family:var(--mono);font-size:10px;background:var(--surface);
-  border:1px solid var(--border);border-radius:3px;padding:2px 7px;color:var(--muted);}
-.pk-chip.on{color:var(--amber);border-color:var(--amber-dim);background:var(--amber-glow);}
-.gear-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;}
-.gear-chip{font-size:11px;background:var(--surface);border:1px solid var(--border);
-  border-radius:3px;padding:2px 7px;color:var(--muted);}
-.note-preview{padding:6px 10px;border-left:2px solid var(--border);margin-bottom:5px;}
-.note-title{font-family:var(--mono);font-size:10px;font-weight:600;
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.pk-slot{background:var(--surface);border:1px solid var(--border);border-radius:4px;
+  padding:8px 10px;min-height:56px;}
+.pk-slot.empty{opacity:.4;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:10px;color:var(--muted);}
+.pk-slot.partner{border-color:var(--amber-dim);background:var(--amber-glow);}
+.pk-badge{font-family:var(--mono);font-size:8px;color:var(--amber);
+  text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px;}
+.pk-name{font-family:var(--mono);font-size:12px;font-weight:700;
   color:var(--text);margin-bottom:2px;}
-.note-body{font-size:11px;color:var(--muted);line-height:1.5;}
-.note-empty{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:12px;}
+.pk-type{font-size:10px;color:var(--muted);margin-bottom:5px;}
+.pk-stats-row{display:flex;flex-wrap:wrap;gap:3px;}
+.pk-stat{font-family:var(--mono);font-size:9px;background:var(--card);
+  border:1px solid var(--border);border-radius:2px;padding:1px 5px;color:var(--muted);}
+.pk-stat span{color:var(--text);}
+.pk-attacks{margin-top:5px;}
+.pk-atk{font-size:10px;color:var(--muted);line-height:1.4;}
+.pk-atk strong{color:var(--text);font-weight:600;}
+
+/* Équipement */
+.gear-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
+.gear-chip{font-size:11px;background:var(--surface);border:1px solid var(--border);
+  border-radius:3px;padding:2px 8px;color:var(--muted);}
+
+/* Message MJ */
 .mj-zone{border-top:1px solid var(--border);padding:10px 14px;}
 .mj-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px;}
@@ -80,26 +105,20 @@ header{display:flex;align-items:center;justify-content:space-between;
 .mj-ta:focus{border-color:var(--amber-dim);}
 .mj-row{display:flex;justify-content:flex-end;margin-top:5px;}
 .mj-btn{font-family:var(--mono);font-size:10px;background:var(--amber-dim);border:none;
-  border-radius:3px;color:var(--amber);padding:5px 12px;cursor:pointer;}
+  border-radius:3px;color:var(--amber);padding:5px 14px;cursor:pointer;transition:background .15s;}
 .mj-btn:hover{background:rgba(200,146,42,.4);}
 .mj-btn:disabled{opacity:.4;cursor:default;}
-.live-badge{font-family:var(--mono);font-size:9px;color:var(--amber);
-  border:1px solid var(--amber-dim);border-radius:2px;padding:1px 6px;
-  animation:pulse-live 2s infinite;}
-@keyframes pulse-live{0%,100%{opacity:1}50%{opacity:.5}}
 </style>
 </head>
 <body>
 
 <header>
-  <div style="display:flex;align-items:center;gap:8px;">
+  <div style="display:flex;align-items:center;gap:10px;">
     <span class="hd-title">Compagnon MJ</span>
-    <span class="hd-sub">— Vue Joueurs</span>
-    <span class="live-badge">LIVE</span>
+    <span class="hd-sub">Vue Joueurs</span>
+    <span class="live-pill">LIVE</span>
   </div>
-  <div class="hd-right">
-    <a href="mj.html" class="back-link">&#8592; MJ</a>
-  </div>
+  <a href="mj.html" class="back-link">&#8592; MJ</a>
 </header>
 
 <div id="status-bar">
@@ -112,19 +131,18 @@ header{display:flex;align-items:center;justify-content:space-between;
 </div>
 
 <script>
-var FB_URL = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
 
 var PLAYERS = [
-  {slug:'analyste',  nom:'Magdalena Hell',  role:'Technicienne CT',             img:'img/analyste.png'},
-  {slug:'pistolero', nom:'Lidia Fireheart', role:'Ancien agent Ligue',          img:'img/pistolero.png'},
-  {slug:'causeuse',  nom:'Rizen Dao',       role:'Journaliste investigation',   img:'img/causeuse.png'},
-  {slug:'pisteur',   nom:'Teleera',         role:'Veterinaire Pokemon',         img:'img/pisteur.png'},
-  {slug:'tracker',   nom:'Elias Voss',      role:'Chasseur Phenomenes Anomaux', img:'img/tracker.png'},
-  {slug:'dresseur',  nom:'Kael Oryn',       role:'Dresseur circuit libre',      img:''}
+  {slug:'analyste',  nom:'Magdalena Hell',  role:'Technicienne CT',            img:'img/analyste.png'},
+  {slug:'pistolero', nom:'Lidia Fireheart', role:'Ancien agent Ligue',         img:'img/pistolero.png'},
+  {slug:'causeuse',  nom:'Rizen Dao',       role:'Journaliste investigation',  img:'img/causeuse.png'},
+  {slug:'pisteur',   nom:'Teleera',         role:'Veterinaire Pokemon',        img:'img/pisteur.png'},
+  {slug:'tracker',   nom:'Elias Voss',      role:'Chasseur Anomaux',           img:'img/tracker.png'},
+  {slug:'dresseur',  nom:'Kael Oryn',       role:'Dresseur circuit libre',     img:''}
 ];
 
 var data = {};
-var sources = {};
 var connCount = 0;
 
 function setStatus(cls, txt) {
@@ -132,48 +150,37 @@ function setStatus(cls, txt) {
   document.getElementById('status-txt').textContent = txt;
 }
 
-/* ── Écoute temps réel via SSE Firebase ─────────────────────────────────── */
+/* ── SSE par joueur ─────────────────────────────────────────────────────── */
 function listenPlayer(p) {
-  var url = FB_URL + '/joueurs/' + p.slug + '.json';
-  var src = new EventSource(url);
-
+  var src = new EventSource(FB + '/joueurs/' + p.slug + '.json');
   src.addEventListener('put', function(e) {
     try {
-      var payload = JSON.parse(e.data);
-      var rec = payload.data;
-      var isFirst = !data[p.slug];
+      var rec = JSON.parse(e.data).data;
+      var isFirst = !(p.slug in data);
       data[p.slug] = rec;
-
       if (isFirst) {
         connCount++;
         if (connCount === PLAYERS.length) {
-          setStatus('ok', 'Connecte a ' + connCount + ' joueurs — mises a jour en temps reel');
+          setStatus('ok', 'Connecte — ' + connCount + ' joueurs en temps reel');
         }
       }
-
       renderCard(p, rec, !isFirst);
     } catch(ex) {}
   });
-
   src.addEventListener('error', function() {
-    /* SSE déconnecté — Firebase reconnecte automatiquement */
+    setStatus('err', 'Erreur Firebase — reconnexion automatique...');
   });
-
-  sources[p.slug] = src;
 }
 
-/* ── Rendu d'une carte ───────────────────────────────────────────────────── */
+/* ── Rendu ──────────────────────────────────────────────────────────────── */
 function renderCard(p, rec, flash) {
-  var existing = document.getElementById('card-' + p.slug);
+  var old = document.getElementById('card-' + p.slug);
   var card = buildCard(p, rec);
-  if (existing) {
-    existing.replaceWith(card);
-  } else {
-    document.getElementById('grid').appendChild(card);
-  }
+  if (old) { old.replaceWith(card); }
+  else { document.getElementById('grid').appendChild(card); }
   if (flash) {
-    setTimeout(function() { card.classList.add('updated'); }, 10);
-    setTimeout(function() { card.classList.remove('updated'); }, 700);
+    setTimeout(function() { card.classList.add('flash'); }, 10);
+    setTimeout(function() { card.classList.remove('flash'); }, 800);
   }
 }
 
@@ -185,12 +192,12 @@ function buildCard(p, rec) {
   var upd = rec && rec.updated ? rec.updated : null;
   var age = upd ? Date.now() - upd : null;
   var badge = !rec ? '<span class="badge badge-none">En attente</span>'
-    : age < 300000   ? '<span class="badge badge-ok">Actif</span>'
-    : age < 3600000  ? '<span class="badge badge-ok">Recemment</span>'
+    : age < 300000  ? '<span class="badge badge-ok">Actif</span>'
+    : age < 3600000 ? '<span class="badge badge-ok">Recemment</span>'
     : age < 86400000 ? '<span class="badge badge-old">Hier</span>'
     : '<span class="badge badge-none">Inactif</span>';
   var updStr = upd
-    ? new Date(upd).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})
+    ? new Date(upd).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})
     : '';
 
   el.innerHTML =
@@ -206,60 +213,91 @@ function buildCard(p, rec) {
     + '<div class="card-meta">' + badge
     + (updStr ? '<span class="card-upd">' + updStr + '</span>' : '') + '</div>'
     + '<div class="card-body">'
+    + '<div class="sec-lbl">Equipe Pokemon</div>'
     + buildTeam(rec)
     + buildGear(rec)
-    + buildNotes(rec)
     + '</div>'
     + '<div class="mj-zone">'
     + '<span class="mj-lbl">Message au joueur</span>'
     + '<textarea class="mj-ta" id="ta-' + p.slug + '" rows="2"'
     + ' placeholder="Apparait en popup sur sa fiche...">'
-    + (rec && rec.mj_note ? rec.mj_note : '')
-    + '</textarea>'
-    + '<div class="mj-row">'
-    + '<button class="mj-btn" id="btn-' + p.slug + '" onclick="sendNote(\'' + p.slug + '\')">Envoyer &#9654;</button>'
-    + '</div></div>';
+    + (rec && rec.mj_note ? rec.mj_note : '') + '</textarea>'
+    + '<div class="mj-row"><button class="mj-btn" id="btn-' + p.slug
+    + '" onclick="sendNote(\'' + p.slug + '\')">Envoyer &#9654;</button></div>'
+    + '</div>';
 
   return el;
 }
 
+/* ── Rendu équipe détaillée ─────────────────────────────────────────────── */
 function buildTeam(rec) {
-  var h = '<div class="sec-lbl">Equipe</div><div class="team-row">';
-  if (!rec || !rec.team) {
-    for (var i = 0; i < 6; i++) h += '<span class="pk-chip">vide</span>';
-    return h + '</div>';
-  }
+  var team = rec && rec.team ? rec.team : [];
+  var h = '<div class="team-grid">';
+
   for (var i = 0; i < 6; i++) {
-    var pk = rec.team && rec.team[i];
-    h += pk && pk.name
-      ? '<span class="pk-chip on">' + pk.name + (pk.level ? ' Lv.' + pk.level : '') + '</span>'
-      : '<span class="pk-chip">vide</span>';
+    var pk = team[i];
+    if (!pk || !pk.name) {
+      h += '<div class="pk-slot empty">' + (i === 0 ? 'Partenaire' : 'Vide') + '</div>';
+      continue;
+    }
+
+    var cls = 'pk-slot' + (pk.partner ? ' partner' : '');
+    h += '<div class="' + cls + '">';
+
+    if (pk.partner) {
+      h += '<span class="pk-badge">Partenaire</span>';
+    }
+
+    h += '<div class="pk-name">' + pk.name + '</div>';
+
+    if (pk.type) {
+      h += '<div class="pk-type">' + pk.type;
+      if (pk.talent) h += ' · ' + pk.talent;
+      h += '</div>';
+    }
+
+    /* Stats */
+    if (pk.stats) {
+      h += '<div class="pk-stats-row">';
+      var statLabels = {for:'FOR',agi:'AGI',vig:'VIG',rus:'RUS',parade:'PAR',robustesse:'ROB',allure:'ALL'};
+      Object.keys(statLabels).forEach(function(k) {
+        if (pk.stats[k]) {
+          h += '<div class="pk-stat">' + statLabels[k] + ' <span>' + pk.stats[k] + '</span></div>';
+        }
+      });
+      h += '</div>';
+
+      /* Attaques */
+      if (pk.stats.attacks && pk.stats.attacks.length) {
+        h += '<div class="pk-attacks">';
+        pk.stats.attacks.forEach(function(a) {
+          h += '<div class="pk-atk"><strong>' + a.name + '</strong>';
+          if (a.dmg) h += ' — ' + a.dmg;
+          h += '</div>';
+        });
+        h += '</div>';
+      }
+    }
+
+    /* Notes du Pokémon */
+    if (pk.notes) {
+      h += '<div style="font-size:10px;color:var(--muted);margin-top:4px;font-style:italic">' + pk.notes + '</div>';
+    }
+
+    h += '</div>';
   }
+
   return h + '</div>';
 }
 
+/* ── Équipement ─────────────────────────────────────────────────────────── */
 function buildGear(rec) {
   if (!rec || !rec.gear) return '';
   var items = rec.gear.filter(function(g) { return g && g.trim(); });
   if (!items.length) return '';
-  var h = '<div class="sec-lbl">Equipement</div><div class="gear-row">';
+  var h = '<div class="sec-lbl" style="margin-top:10px">Equipement</div><div class="gear-row">';
   items.forEach(function(g) { h += '<span class="gear-chip">' + g + '</span>'; });
   return h + '</div>';
-}
-
-function buildNotes(rec) {
-  var count = rec && rec.notes ? rec.notes.length : 0;
-  var h = '<div class="sec-lbl">Notes (' + count + ')</div>';
-  if (!count) return h + '<div class="note-empty">Aucune note.</div>';
-  var sorted = rec.notes.slice().sort(function(a,b) { return (b.updated||0)-(a.updated||0); });
-  sorted.slice(0, 2).forEach(function(n) {
-    var preview = (n.content || '').replace(/<[^>]+>/g, '').slice(0, 90);
-    if ((n.content||'').length > 90) preview += '...';
-    h += '<div class="note-preview"><div class="note-title">' + (n.title || 'Sans titre') + '</div>'
-       + '<div class="note-body">' + preview + '</div></div>';
-  });
-  if (count > 2) h += '<div style="font-size:11px;color:var(--muted);margin-top:3px">+ ' + (count-2) + ' autre(s)</div>';
-  return h;
 }
 
 /* ── Envoi message MJ ────────────────────────────────────────────────────── */
@@ -271,7 +309,7 @@ function sendNote(slug) {
   btn.disabled = true;
   btn.textContent = 'Envoi...';
 
-  fetch(FB_URL + '/joueurs/' + slug + '/mj_note.json', {
+  fetch(FB + '/joueurs/' + slug + '/mj_note.json', {
     method: 'PUT',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(msg || null)
@@ -283,7 +321,7 @@ function sendNote(slug) {
     btn.style.color = '#4caf6e';
     setTimeout(function() {
       btn.disabled = false;
-      btn.textContent = 'Envoyer ▶';
+      btn.textContent = 'Envoyer \u25b6';
       btn.style.background = '';
       btn.style.color = '';
     }, 2500);
@@ -294,16 +332,10 @@ function sendNote(slug) {
   });
 }
 
-/* ── Init : ouvrir un SSE par joueur ────────────────────────────────────── */
+/* ── Init ────────────────────────────────────────────────────────────────── */
 setStatus('loading', 'Connexion Firebase...');
-
-/* Afficher les cartes vides immédiatement */
 PLAYERS.forEach(function(p) {
   document.getElementById('grid').appendChild(buildCard(p, null));
-});
-
-/* Ouvrir les écouteurs temps réel */
-PLAYERS.forEach(function(p) {
   listenPlayer(p);
 });
 </script>
