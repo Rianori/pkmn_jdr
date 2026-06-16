@@ -948,11 +948,106 @@ a { color: inherit; }
 <script>
 
 var PLAYER_KEY = 'analyste';
+
+/* ══════════════════════════════════════════════════════
+   FIREBASE — remplace JSONBin
+   Données en temps réel via Realtime Database
+   Nœud : /joueurs/[PLAYER_KEY]/
+   ══════════════════════════════════════════════════════ */
+
+var FB_URL = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+var FB_PATH = FB_URL + '/joueurs/' + PLAYER_KEY;
+
+/* Écriture d'un champ → Firebase */
+function fbSet(path, data) {
+  return fetch(FB_PATH + '/' + path + '.json', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).catch(function() {});
+}
+
+/* Lecture unique d'un champ */
+function fbGet(path) {
+  return fetch(FB_PATH + '/' + path + '.json')
+    .then(function(r) { return r.json(); })
+    .catch(function() { return null; });
+}
+
+/* Écoute en temps réel via Server-Sent Events (Firebase SSE) */
+function fbListen(path, cb) {
+  var src = new EventSource(FB_PATH + '/' + path + '.json');
+  src.addEventListener('put', function(e) {
+    try { cb(JSON.parse(e.data).data); } catch(e2) {}
+  });
+  return src;
+}
+
+/* ── Sync cloud : remplace _syncCloud() ── */
+function _syncCloud() {
+  var gear = loadGear();
+  fbSet('notes',   state.notes);
+  fbSet('team',    state.team);
+  fbSet('gear',    gear);
+  fbSet('updated', Date.now());
+}
+
+/* ── Chargement initial depuis Firebase : remplace loadNotesFromCloud() ── */
+function loadNotesFromCloud() {
+  fbGet('').then(function(rec) {
+    if (!rec) return;
+    if (rec.notes && rec.notes.length) {
+      state.notes = rec.notes;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        team: state.team, notes: state.notes
+      }));
+      renderNoteList();
+      var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
+      if (id) openNote(id);
+    }
+    if (rec.team) {
+      for (var i = 1; i < 6; i++) {
+        state.team[i] = rec.team[i] || null;
+      }
+      renderTeam();
+    }
+    if (rec.gear) {
+      localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(rec.gear));
+      renderGear();
+    }
+    /* Message MJ */
+    if (rec.mj_note) {
+      var read = localStorage.getItem(STORAGE_KEY + '_mj_note_read');
+      if (rec.mj_note !== read) showMjNotePopup(rec.mj_note);
+    }
+  });
+}
+
+/* ── Écoute temps réel : si le MJ envoie un message ── */
+function listenMjNote() {
+  fbListen('mj_note', function(val) {
+    if (!val) return;
+    var read = localStorage.getItem(STORAGE_KEY + '_mj_note_read');
+    if (val !== read) showMjNotePopup(val);
+  });
+}
+
+/* ── Init : remplace initPlayerBin() ── */
+function initPlayerBin() {
+  loadNotesFromCloud();
+  listenMjNote();
+  /* Enregistrer la présence du joueur */
+  fbSet('slug', PLAYER_KEY);
+}
+
+/* Fonctions JSONBin devenues inutiles — stubs vides */
+function _getOrCreateBin(cb) { if (cb) cb('firebase'); }
+function _registerInCentral() {}
+
 var STORAGE_KEY = 'jdr_player_' + PLAYER_KEY;
 var PARTNER_NAME_ASCII = 'Metamorph';
 var JSONBIN_KEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
 var JSONBIN_URL = 'https://api.jsonbin.io/v3';
-var BIN_ID_KEY = STORAGE_KEY + '_bin_id';
 
 function showPlayerTab(tab, btn) {
   document.querySelectorAll('.player-tab').forEach(function(t) { t.classList.remove('active'); });
@@ -1396,98 +1491,18 @@ var JB_URL  = 'https://api.jsonbin.io/v3';
 /* Ecrire son bin_id dans le canal central */
 
 /* == CLOUD UNIFIE == */
-var _JBKEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
-var _JBURL = 'https://api.jsonbin.io/v3';
-var _CTRID = '6a2f352bf5f4af5e29f21a22';
 
-function _getOrCreateBin(cb) {
-  var saved = localStorage.getItem(BIN_ID_KEY);
-  if (saved) { cb(saved); return; }
-  fetch(_JBURL + '/b', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json',
-               'X-Master-Key': _JBKEY,
-               'X-Bin-Name': 'jdr-' + PLAYER_KEY,
-               'X-Bin-Private': 'false' },
-    body: JSON.stringify({ notes: [], joueur: PLAYER_KEY })
-  }).then(function(r) { return r.json(); })
-    .then(function(d) {
-      var id = d.metadata && d.metadata.id;
-      if (!id) return;
-      localStorage.setItem(BIN_ID_KEY, id);
-      _registerInCentral(id);
-      cb(id);
-    }).catch(function() {});
-}
 
-function _registerInCentral(myBinId) {
-  fetch(_JBURL + '/b/' + _CTRID + '/latest', {
-    headers: { 'X-Master-Key': _JBKEY }
-  }).then(function(r) { return r.json(); })
-    .then(function(d) {
-      var rec = d.record || {};
-      if (rec[PLAYER_KEY] === myBinId) return;
-      rec[PLAYER_KEY] = myBinId;
-      return fetch(_JBURL + '/b/' + _CTRID, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JBKEY },
-        body: JSON.stringify(rec)
-      });
-    }).catch(function() {});
-}
 
-function _syncCloud() {
-  var binId = localStorage.getItem(BIN_ID_KEY);
-  if (!binId) return;
-  var gear = loadGear();
-  fetch(_JBURL + '/b/' + binId + '/latest', {
-    headers: { 'X-Master-Key': _JBKEY }
-  }).then(function(r) { return r.json(); })
-    .then(function(d) {
-      var rec = d.record || {};
-      rec.notes   = state.notes;
-      rec.joueur  = PLAYER_KEY;
-      rec.updated = Date.now();
-      rec.gear    = gear;
-      rec.team    = state.team;
-      return fetch(_JBURL + '/b/' + binId, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JBKEY },
-        body: JSON.stringify(rec)
-      });
-    }).catch(function() {});
-}
+
+
+
 
 function saveNotesToCloud() { _syncCloud(); }
 
-function loadNotesFromCloud() {
-  _getOrCreateBin(function(binId) {
-    fetch(_JBURL + '/b/' + binId + '/latest', {
-      headers: { 'X-Master-Key': _JBKEY }
-    }).then(function(r) { return r.json(); })
-      .then(function(d) {
-        if (!d.record) return;
-        var rec = d.record;
-        if (rec.notes && rec.notes.length) {
-          state.notes = rec.notes;
-          localStorage.setItem(STORAGE_KEY, JSON.stringify({ team: state.team, notes: state.notes }));
-          renderNoteList();
-          var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
-          if (id) openNote(id);
-        }
-        if (rec.mj_note) {
-          var read = localStorage.getItem(STORAGE_KEY + '_mj_note_read');
-          if (rec.mj_note !== read) showMjNotePopup(rec.mj_note);
-        }
-      }).catch(function() {});
-  });
-}
 
-function initPlayerBin() {
-  _getOrCreateBin(function(binId) {
-    loadNotesFromCloud();
-  });
-}
+
+
 
 /* ── PHOTO PJ ── */
 
