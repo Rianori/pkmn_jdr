@@ -152,24 +152,37 @@ function setStatus(cls, txt) {
 
 /* ── SSE par joueur ─────────────────────────────────────────────────────── */
 function listenPlayer(p) {
+  // Écouter le nœud joueur complet (données initiales)
   var src = new EventSource(FB + '/joueurs/' + p.slug + '.json');
   src.addEventListener('put', function(e) {
     try {
       var rec = JSON.parse(e.data).data;
       var isFirst = !(p.slug in data);
-      data[p.slug] = rec;
+      data[p.slug] = rec || {};
       if (isFirst) {
         connCount++;
         if (connCount === PLAYERS.length) {
           setStatus('ok', 'Connecte — ' + connCount + ' joueurs en temps reel');
         }
       }
-      renderCard(p, rec, !isFirst);
+      renderCard(p, data[p.slug], !isFirst);
     } catch(ex) {}
   });
-  src.addEventListener('error', function() {
-    setStatus('err', 'Erreur Firebase — reconnexion automatique...');
+
+  // Écouter /team séparément pour les mises à jour en temps réel
+  var srcTeam = new EventSource(FB + '/joueurs/' + p.slug + '/team.json');
+  srcTeam.addEventListener('put', function(e) {
+    try {
+      var teamRaw = JSON.parse(e.data).data;
+      if (!data[p.slug]) data[p.slug] = {};
+      data[p.slug].team = teamRaw;
+      data[p.slug].updated = Date.now();
+      renderCard(p, data[p.slug], true);
+    } catch(ex) {}
   });
+
+  src.addEventListener('error', function() {});
+  srcTeam.addEventListener('error', function() {});
 }
 
 /* ── Rendu ──────────────────────────────────────────────────────────────── */
@@ -230,8 +243,24 @@ function buildCard(p, rec) {
 }
 
 /* ── Rendu équipe détaillée ─────────────────────────────────────────────── */
+function normalizeTeam(raw) {
+  // Firebase renvoie un objet {0:{...}, 1:null} ou un tableau — normaliser en tableau de 6
+  var arr = [null, null, null, null, null, null];
+  if (!raw) return arr;
+  if (Array.isArray(raw)) {
+    for (var i = 0; i < 6; i++) arr[i] = raw[i] || null;
+  } else {
+    // objet Firebase : clés "0" à "5"
+    for (var k in raw) {
+      var idx = parseInt(k, 10);
+      if (idx >= 0 && idx < 6) arr[idx] = raw[k] || null;
+    }
+  }
+  return arr;
+}
+
 function buildTeam(rec) {
-  var team = rec && rec.team ? rec.team : [];
+  var team = normalizeTeam(rec ? rec.team : null);
   var h = '<div class="team-grid">';
 
   for (var i = 0; i < 6; i++) {
@@ -244,42 +273,40 @@ function buildTeam(rec) {
     var cls = 'pk-slot' + (pk.partner ? ' partner' : '');
     h += '<div class="' + cls + '">';
 
-    if (pk.partner) {
-      h += '<span class="pk-badge">Partenaire</span>';
-    }
+    if (pk.partner) h += '<span class="pk-badge">Partenaire</span>';
 
     h += '<div class="pk-name">' + pk.name + '</div>';
 
     if (pk.type) {
       h += '<div class="pk-type">' + pk.type;
-      if (pk.talent) h += ' · ' + pk.talent;
+      if (pk.talent) h += ' &middot; ' + pk.talent;
       h += '</div>';
     }
 
-    /* Stats */
     if (pk.stats) {
       h += '<div class="pk-stats-row">';
-      var statLabels = {for:'FOR',agi:'AGI',vig:'VIG',rus:'RUS',parade:'PAR',robustesse:'ROB',allure:'ALL'};
-      Object.keys(statLabels).forEach(function(k) {
-        if (pk.stats[k]) {
-          h += '<div class="pk-stat">' + statLabels[k] + ' <span>' + pk.stats[k] + '</span></div>';
-        }
+      var labels = {for:'FOR',agi:'AGI',vig:'VIG',rus:'RUS',parade:'PAR',robustesse:'ROB',allure:'ALL'};
+      Object.keys(labels).forEach(function(k) {
+        if (pk.stats[k]) h += '<div class="pk-stat">' + labels[k] + ' <span>' + pk.stats[k] + '</span></div>';
       });
       h += '</div>';
-
-      /* Attaques */
-      if (pk.stats.attacks && pk.stats.attacks.length) {
-        h += '<div class="pk-attacks">';
-        pk.stats.attacks.forEach(function(a) {
-          h += '<div class="pk-atk"><strong>' + a.name + '</strong>';
-          if (a.dmg) h += ' — ' + a.dmg;
+      var attacks = pk.stats.attacks;
+      if (attacks) {
+        // Firebase peut renvoyer attacks comme objet ou tableau
+        var atk_arr = Array.isArray(attacks) ? attacks : Object.values(attacks);
+        if (atk_arr.length) {
+          h += '<div class="pk-attacks">';
+          atk_arr.forEach(function(a) {
+            if (!a || !a.name) return;
+            h += '<div class="pk-atk"><strong>' + a.name + '</strong>';
+            if (a.dmg) h += ' &mdash; ' + a.dmg;
+            h += '</div>';
+          });
           h += '</div>';
-        });
-        h += '</div>';
+        }
       }
     }
 
-    /* Notes du Pokémon */
     if (pk.notes) {
       h += '<div style="font-size:10px;color:var(--muted);margin-top:4px;font-style:italic">' + pk.notes + '</div>';
     }
