@@ -789,8 +789,11 @@ a { color: inherit; }
                 <div class="block-desc">1x/session : Abra s'interpose (hors tour) entre Kael et une attaque, absorbe les d&eacute;g&acirc;ts &agrave; sa place (jet Vigueur d6 ensuite).</div>
               </div>
         <div class="section-title">Equipement</div>
-        <ul class="gear-list"><li>Badge de circuit libre (acc&egrave;s tournois non officiels)</li><li>Cahier de strat&eacute;gies (notes de combat personnelles)</li><li>Pok&eacute;balls x3</li><li>Veste de voyage</li><li>100&#8377; (apr&egrave;s &laquo;&nbsp;investissements&nbsp;&raquo;)</li></ul>
-        <button class="note-add-btn" style="margin-top:14px" onclick="addGear()">+ Ajouter</button>
+          <div class="gear-editable" id="gear-editable"></div>
+          <div class="gear-add-row">
+            <input class="gear-add-input" id="gear-new-input" type="text" placeholder="Ajouter un item..." onkeydown="gearInputKey(event)" maxlength="100">
+            <button class="gear-add-btn" onclick="addGearItem()">+ Ajouter</button>
+          </div>
         <div class="player-tab" id="player-tab-perso" style="display:none"></div>
       </div>
 
@@ -1235,7 +1238,7 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 /* ---- EQUIPEMENT EDITABLE ---- */
-var DEFAULT_GEAR = ["Analyseur de CT portable (+2 aux jets de Sciences sur toute CT)", "Carnet de terrain chiffre", "Lampe frontale haute puissance", "Pokedex modifie (acces aux bases de donnees de recherche)", "Marteau d alpiniste (arme improvisee, Str+d4)", "500  en especes"];
+var DEFAULT_GEAR = ["Badge de circuit libre (acc\u00e8s tournois non officiels)","Cahier de strat\u00e9gies (notes de combat personnelles)","Pok\u00e9balls x3","Veste de voyage","100\u20a8 (apr\u00e8s investissements)"];
 
 function loadGear() {
   try {
