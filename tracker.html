@@ -778,40 +778,147 @@ a { color: inherit; }
 
       <!-- ── ONGLET PARTENAIRE ── -->
       <div class="player-tab" id="tab-partner">
-        <div class="page-title">Pok&eacute;mon partenaire</div>
-        <div class="page-tagline">Kaiminus</div>
-        <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
-          <span style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Blessures</span>
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b1" onchange="saveBlessures()"> Blessure 1 (-1)</label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b2" onchange="saveBlessures()"> Blessure 2 (-2)</label>
-        </div>
-        <div class="pk-grid">
-          <div class="pk-card">
-            <div class="pk-card-header">
-              <div class="pk-owner">Pok&eacute;mon Partenaire</div>
-              <div class="pk-name">Kaiminus</div>
-              <div class="pk-species">Totodile &middot; Eau &middot; N&deg;158</div>
-              <div class="pk-meta-row">
-                <span class="tag tag-weird">Eau</span>
-                <span class="tag tag-background">Moyen</span>
-                <span class="tag tag-edge">Extra sp&eacute;cial</span>
-              </div>
-            </div>
-            <div class="pk-body">
-              <p class="pk-lore">Trouv&eacute; seul dans des tunnels inond&eacute;s. Il survivait d&eacute;j&agrave; tr&egrave;s bien sans personne. Sa gueule est toujours l&eacute;g&egrave;rement entrouverte.</p>
-              <div class="pk-stats-row"><div class="pk-stat">AGI&nbsp;<span class="val">d8</span></div><div class="pk-stat">FOR&nbsp;<span class="val">d8</span></div><div class="pk-stat">VIG&nbsp;<span class="val">d10</span></div><div class="pk-stat">Parade&nbsp;<span class="val">6</span></div><div class="pk-stat">Robustesse&nbsp;<span class="val">8</span></div><div class="pk-stat">Allure&nbsp;<span class="val">4 / 8 eau</span></div></div>
-              <div class="pk-section-lbl">Attaques</div>
-              <table class="pk-atk-table">
-                <tr><th>Attaque</th><th>Domm.</th><th>Port&eacute;e</th><th>Effet</th></tr>
-                <tr><td class="pk-atk-name">Morsure</td><td class="pk-atk-dmg">FOR+d8</td><td>M&ecirc;l&eacute;e</td><td>Combat d8 &mdash; chance de Secousse</td></tr><tr><td class="pk-atk-name">Jet d'Eau</td><td class="pk-atk-dmg">2d6</td><td>8&quot;/16&quot;</td><td>Pousse la cible d'1 case</td></tr><tr><td class="pk-atk-name">Charge</td><td class="pk-atk-dmg">FOR+d6</td><td>M&ecirc;l&eacute;e</td><td>Initiative +2 si charge 4&quot;+</td></tr>
-              </table>
-              <div class="pk-section-lbl">Capacit&eacute;s sp&eacute;ciales</div>
-              <div class="pk-capa"><div class="pk-capa-name">Intimidation Naturelle</div><div class="pk-capa-desc">Intimidation d8 gratuite en d&eacute;but de sc&egrave;ne. Cibles Petites ou Moyennes : -1 Parade ce round.</div></div><div class="pk-capa"><div class="pk-capa-name">Gardien (Passif)</div><div class="pk-capa-desc">Si Elias est Secouu&eacute;, s'interpose automatiquement. Robustesse 8 absorbe le prochain coup. 1x/round.</div></div><div class="pk-capa"><div class="pk-capa-name">Instinct de Traqueur (Passif)</div><div class="pk-capa-desc">Peut pister &agrave; l'odorat et aux traces jusqu'&agrave; 12h. +2 Perception en milieu aquatique ou humide.</div></div>
-              <div class="pk-note">Kaiminus ne montre aucune affection visible. Il suit Elias comme un fait &eacute;tabli. Les autres PJ le trouvent inqui&eacute;tant. Elias lui fait confiance pr&eacute;cis&eacute;ment parce qu'il ne cherche pas &agrave; plaire.</div>
-            </div>
-          </div>
-        </div>
+      <div class="page-title">Pokemon partenaire</div>
+      <div class="page-tagline">Kaiminus</div>
+      <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+        <span style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Blessures</span>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b1" onchange="saveBlessures()"> Blessure 1 (-1)</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b2" onchange="saveBlessures()"> Blessure 2 (-2)</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--danger);cursor:pointer"><input type="checkbox" id="bko" onchange="saveBlessures()"> Hors combat</label>
       </div>
+      <div id="partner-pk-card" style="display:none"><div class="pk-card">
+    <div class="pk-card-header">
+      <div class="pk-owner">Partenaire de · Dresseur #5 · Elias Voss</div>
+      <div class="pk-name">Kaiminus</div>
+      <div class="pk-species">Arcanin — Loyauté sans condition, puissance sans retenue</div>
+      <div class="pk-meta-row">
+        <span class="tag tag-psi" style="background:#1a0808;color:#d06040;">Feu</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Grand (+1)</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° 59</span>
+        <span class="tag tag-edge">Extra spécial · 2 Blessures</span>
+      </div>
+    </div>
+    <div class="pk-body">
+      <div class="pk-lore">Arcanin était blessé sur le bord d'une route quand Lidia est apparue. Contre sa nature, Arcanin n'a pas fui quand Lidia s'est approchée de lui. 
+          Depuis, ils ne se quittent plus. Arcanin ne comprend pas les nuances morales de son dresseur — mais il comprend à qui il fait confiance. Et il protège cette personne comme si sa vie en dépendait. Elle en dépend souvent.</div>
+
+      <div class="pk-section-lbl">Attributs & Stats</div>
+      <div class="pk-stats-row">
+        <div class="pk-stat">Agilité <span class="val">d10</span></div>
+        <div class="pk-stat">Ruse <span class="val">d4</span></div>
+        <div class="pk-stat">Force <span class="val">d10</span></div>
+        <div class="pk-stat">Trempe <span class="val">d8</span></div>
+        <div class="pk-stat">Vigueur <span class="val">d10</span></div>
+        <div class="pk-stat">Parade <span class="val">7</span></div>
+        <div class="pk-stat">Robustesse <span class="val">8</span></div>
+        <div class="pk-stat">Allure <span class="val">10"</span></div>
+      </div>
+
+      <div class="pk-section-lbl">Attaques</div>
+      <table class="pk-atk-table">
+        <tr><th>Attaque</th><th>Domm.</th><th>Portée</th><th>Effet</th></tr>
+        <tr><td class="pk-atk-name">Morsure ardente</td><td class="pk-atk-dmg">Str+d8 🔥</td><td>Mêlée</td><td>Armure ordinaire ignorée. En Feu si Relance (d6/round)</td></tr>
+        <tr><td class="pk-atk-name">Lance-Flamme</td><td class="pk-atk-dmg">3d6</td><td>12"/24"</td><td>Zone cône optionnelle. Barrage de feu possible au sol</td></tr>
+        <tr><td class="pk-atk-name">Charge éclair</td><td class="pk-atk-dmg">Str+d10</td><td>Charge 4"+</td><td>Renversé si Robustesse non atteinte. +2 domm. si charge 8"+</td></tr>
+        <tr><td class="pk-atk-name">Rugissement</td><td class="pk-atk-dmg">Trempe d8 opp.</td><td>Zone 4"</td><td>Échec : Secoué. Relance : Secoué + Vulnérable ce round</td></tr>
+      </table>
+
+      <div class="pk-section-lbl">Capacités spéciales</div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Flair de traqueur (Passif)</div>
+        <div class="pk-capa-desc">Piste une cible par odeur sur 2km si piste &lt; 24h. Perception d8 diff. 4. Relance : sait depuis combien de temps et si la cible était seule. En sous-sol : ventilation artificielle −2 au jet.</div>
+      </div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Loyauté absolue (Passif — miroir du Pistolero)</div>
+        <div class="pk-capa-desc">Quand Lidia Fireheart est Secoué ou Blessé, Arcanin peut s'interposer (action gratuite, sa Parade utilisée). S'il reçoit l'attaque à la place, Arcanin absorbe les dégâts. Une fois par round.</div>
+      </div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Crinière ardente (Passif)</div>
+        <div class="pk-capa-desc">Toute attaque en mêlée sans protection thermique inflige d4 dégâts de feu réflexifs à l'attaquant. Les agents d'Ashford en équipement standard ne sont pas protégés.</div>
+      </div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Sprint légendaire (1 fois / combat)</div>
+        <div class="pk-capa-desc">Se déplace de 20" en ligne droite, traversant obstacles mineurs. Peut enchaîner une Charge éclair en bonus à l'arrivée. Allure réduite à 6" le round suivant.</div>
+      </div>
+
+      <div class="pk-section-lbl">Blessures</div>
+      <div class="pk-wounds">
+        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 1</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Légère −1</div></div>
+        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 2</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Grave −2</div></div>
+        <div class="pk-wound-box ko"><span class="pk-wound-lbl">Hors combat</span><span class="pk-wound-check">○</span></div>
+        <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check"></span></div>
+      </div>
+
+      
+    </div>
+  </div></div>
+      <div class="pk-card">
+    <div class="pk-card-header">
+      <div class="pk-owner">Partenaire de · Dresseur #2 · Lidia Fireheart</div>
+      <div class="pk-name">Arcanin</div>
+      <div class="pk-species">Arcanin — Loyauté sans condition, puissance sans retenue</div>
+      <div class="pk-meta-row">
+        <span class="tag tag-psi" style="background:#1a0808;color:#d06040;">Feu</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Grand (+1)</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° 59</span>
+        <span class="tag tag-edge">Extra spécial · 2 Blessures</span>
+      </div>
+    </div>
+    <div class="pk-body">
+      <div class="pk-lore">Arcanin était blessé sur le bord d'une route quand Lidia est apparue. Contre sa nature, Arcanin n'a pas fui quand Lidia s'est approchée de lui. 
+          Depuis, ils ne se quittent plus. Arcanin ne comprend pas les nuances morales de son dresseur — mais il comprend à qui il fait confiance. Et il protège cette personne comme si sa vie en dépendait. Elle en dépend souvent.</div>
+
+      <div class="pk-section-lbl">Attributs & Stats</div>
+      <div class="pk-stats-row">
+        <div class="pk-stat">Agilité <span class="val">d10</span></div>
+        <div class="pk-stat">Ruse <span class="val">d4</span></div>
+        <div class="pk-stat">Force <span class="val">d10</span></div>
+        <div class="pk-stat">Trempe <span class="val">d8</span></div>
+        <div class="pk-stat">Vigueur <span class="val">d10</span></div>
+        <div class="pk-stat">Parade <span class="val">7</span></div>
+        <div class="pk-stat">Robustesse <span class="val">8</span></div>
+        <div class="pk-stat">Allure <span class="val">10"</span></div>
+      </div>
+
+      <div class="pk-section-lbl">Attaques</div>
+      <table class="pk-atk-table">
+        <tr><th>Attaque</th><th>Domm.</th><th>Portée</th><th>Effet</th></tr>
+        <tr><td class="pk-atk-name">Morsure ardente</td><td class="pk-atk-dmg">Str+d8 🔥</td><td>Mêlée</td><td>Armure ordinaire ignorée. En Feu si Relance (d6/round)</td></tr>
+        <tr><td class="pk-atk-name">Lance-Flamme</td><td class="pk-atk-dmg">3d6</td><td>12"/24"</td><td>Zone cône optionnelle. Barrage de feu possible au sol</td></tr>
+        <tr><td class="pk-atk-name">Charge éclair</td><td class="pk-atk-dmg">Str+d10</td><td>Charge 4"+</td><td>Renversé si Robustesse non atteinte. +2 domm. si charge 8"+</td></tr>
+        <tr><td class="pk-atk-name">Rugissement</td><td class="pk-atk-dmg">Trempe d8 opp.</td><td>Zone 4"</td><td>Échec : Secoué. Relance : Secoué + Vulnérable ce round</td></tr>
+      </table>
+
+      <div class="pk-section-lbl">Capacités spéciales</div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Flair de traqueur (Passif)</div>
+        <div class="pk-capa-desc">Piste une cible par odeur sur 2km si piste &lt; 24h. Perception d8 diff. 4. Relance : sait depuis combien de temps et si la cible était seule. En sous-sol : ventilation artificielle −2 au jet.</div>
+      </div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Loyauté absolue (Passif — miroir du Pistolero)</div>
+        <div class="pk-capa-desc">Quand Lidia Fireheart est Secoué ou Blessé, Arcanin peut s'interposer (action gratuite, sa Parade utilisée). S'il reçoit l'attaque à la place, Arcanin absorbe les dégâts. Une fois par round.</div>
+      </div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Crinière ardente (Passif)</div>
+        <div class="pk-capa-desc">Toute attaque en mêlée sans protection thermique inflige d4 dégâts de feu réflexifs à l'attaquant. Les agents d'Ashford en équipement standard ne sont pas protégés.</div>
+      </div>
+      <div class="pk-capa">
+        <div class="pk-capa-name">Sprint légendaire (1 fois / combat)</div>
+        <div class="pk-capa-desc">Se déplace de 20" en ligne droite, traversant obstacles mineurs. Peut enchaîner une Charge éclair en bonus à l'arrivée. Allure réduite à 6" le round suivant.</div>
+      </div>
+
+      <div class="pk-section-lbl">Blessures</div>
+      <div class="pk-wounds">
+        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 1</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Légère −1</div></div>
+        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 2</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Grave −2</div></div>
+        <div class="pk-wound-box ko"><span class="pk-wound-lbl">Hors combat</span><span class="pk-wound-check">○</span></div>
+        <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check"></span></div>
+      </div>
+
+      
+    </div>
+  </div>
+    </div>
 
       <!-- ── ONGLET EQUIPE ── -->
       <div class="player-tab" id="tab-team">
