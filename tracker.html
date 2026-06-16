@@ -38,7 +38,7 @@ body {
 a { color: inherit; }
 
 /* ── LAYOUT FICHE JOUEUR ── */
-
+.player-shell { display: flex; flex-direction: column; min-height: 100vh; }
 
 .player-header {
   padding: 18px 24px 14px;
@@ -523,171 +523,76 @@ a { color: inherit; }
   .mj-note-box-close:hover { background: var(--amber); color: #1a1000; }
 
 
-  
-  /* Bannière pleine largeur */
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  .player-header {
-    padding: 10px 20px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
+
+  /* ── PHOTO PJ ── */
+  .pj-photo-wrap {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
   }
-
-  
-  
-  
-  .pj-banner:hover .pj-banner-drag-hint.visible { opacity: 1; }
-
-  /* ── BANNIERE PJ FIXE ── */
-  .player-shell { display: flex; flex-direction: column; min-height: 100vh; }
-
-  .pj-banner {
-    position: relative;
-    width: 220px;
-    flex-shrink: 0;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-  }
-  .pj-banner-img {
-    width: 100%;
-    flex: 1;
+  .pj-photo {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
     object-fit: cover;
-    object-position: center top;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: border-color .15s;
     display: block;
-    min-height: 200px;
+    background: var(--surface);
   }
-  .pj-banner-placeholder {
-    width: 100%;
-    flex: 1;
-    min-height: 200px;
+  .pj-photo:hover { border-color: var(--amber-dim); }
+  .pj-photo-placeholder {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px dashed var(--border);
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    color: var(--muted);
-  }
-  .pj-banner-placeholder-icon { font-size: 28px; opacity: .4; }
-  .pj-banner-placeholder-txt {
-    font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    opacity: .6;
-  }
-  .pj-banner-overlay {
-    padding: 14px 16px 16px;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-  .pj-banner-name {
-    font-family: var(--mono);
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--amber);
-    margin-bottom: 3px;
-  }
-  .pj-banner-role {
-    font-family: var(--sans);
-    font-size: 11px;
-    color: var(--muted);
-    line-height: 1.4;
-  }
-
-  /* Layout principal : bannière latérale + contenu */
-  .player-body {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
-  .player-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    min-width: 0;
-  }
-  .player-content { flex: 1; padding: 28px 24px; overflow-y: auto; }
-  /* ── BOUTON SAUVEGARDE JSON ── */
-  .save-json-btn {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    color: var(--muted);
-    padding: 5px 12px;
     cursor: pointer;
-    transition: color .15s, border-color .15s, background .15s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    transition: border-color .15s, background .15s;
+    background: var(--surface);
+    flex-shrink: 0;
+    color: var(--muted);
+    font-size: 22px;
+    line-height: 1;
   }
-  .save-json-btn:hover {
-    color: var(--amber);
+  .pj-photo-placeholder:hover {
     border-color: var(--amber-dim);
-    background: var(--amber-glow);
+    background: var(--card);
+    color: var(--amber);
   }
-  .save-json-btn.saved {
-    color: var(--safe);
-    border-color: rgba(30,92,46,.4);
-    background: rgba(30,92,46,.08);
-  }
-
 </style>
 </head>
 <body>
 <div class="player-shell">
   <header class="player-header">
-    <div class="player-logo">Savage Pok&eacute;mon</div>
-    <div class="player-name-wrap" style="display:none">
-      <span class="player-name-display" id="pj-name-display" data-default="Elias Voss" onclick="startEditName()">Elias Voss</span>
-      <input class="player-name-input" id="pj-name-input" type="text" maxlength="40">
-      <button class="edit-name-btn" id="edit-name-btn" onclick="startEditName()" title="Modifier">Edit</button>
+    <div>
+      <div class="player-logo">Savage Pokémon</div>
+      <div class="player-name-wrap">
+        <span class="player-name-display" id="pj-name-display" data-default="Elias Voss" onclick="startEditName()">Elias Voss</span>
+        <input class="player-name-input" id="pj-name-input" type="text" maxlength="40">
+        <button class="edit-name-btn" id="edit-name-btn" onclick="startEditName()" title="Modifier">Edit</button>
+      </div>
+      <div class="player-role">Chasseur de Ph&eacute;nom&egrave;nes Anomaux</div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <button class="save-json-btn" id="save-json-btn" onclick="exportJSON()" title="T&eacute;l&eacute;charger une sauvegarde JSON">&#8659; Sauvegarder</button>
-      <a href="index.html" class="player-back">Portail</a>
+    <div class="pj-photo-wrap">
+      <input type="file" id="pj-photo-input" accept="image/*" style="display:none" onchange="loadPhoto(event)">
+      <div class="pj-photo-placeholder" id="pj-photo-placeholder" onclick="document.getElementById('pj-photo-input').click()" title="Ajouter une photo">&#43;</div>
+      <img class="pj-photo" id="pj-photo-img" src="" alt="Photo" style="display:none" onclick="document.getElementById('pj-photo-input').click()" title="Changer la photo">
     </div>
+    <a href="index.html" class="player-back">Portail</a>
   </header>
-
-  <div class="player-body">
-    <div class="pj-banner" id="pj-banner">
-    <img class="pj-banner-img" id="pj-photo-img" src="img/tracker.png" alt="">
-    </div>
-    <div class="player-main">
-      <nav class="player-nav">
-        <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
-        <button onclick="showPlayerTab('partner',this)">Kaiminus</button>
-        <button onclick="showPlayerTab('team',this)">Equipe</button>
-        <button onclick="showPlayerTab('notes',this)">Notes</button>
-      </nav>
-      <div class="player-content">
-
-<div class="player-tab active" id="tab-perso">
+  <nav class="player-nav">
+    <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
+    <button onclick="showPlayerTab('partner',this)">Kaiminus</button>
+    <button onclick="showPlayerTab('team',this)">Equipe</button>
+    <button onclick="showPlayerTab('notes',this)">Notes</button>
+  </nav>
+  <div class="player-content">
+    
+    <div class="player-tab active" id="tab-perso">
         <div class="page-title">Elias Voss</div>
         <div class="page-tagline">Chasseur de Ph&eacute;nom&egrave;nes Anomaux</div>
         <div class="stats-grid">
@@ -731,7 +636,8 @@ a { color: inherit; }
         <div class="player-tab" id="player-tab-perso" style="display:none"></div>
       </div>
 
-<div class="player-tab" id="tab-partner">
+      <!-- ── ONGLET PARTENAIRE ── -->
+      <div class="player-tab" id="tab-partner">
         <div class="page-title">Pok&eacute;mon partenaire</div>
         <div class="page-tagline">Kaiminus</div>
         <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
@@ -767,7 +673,8 @@ a { color: inherit; }
         </div>
       </div>
 
-<div class="player-tab" id="tab-team">
+      <!-- ── ONGLET EQUIPE ── -->
+      <div class="player-tab" id="tab-team">
       <div class="page-title">Equipe Pokemon</div>
       <div class="page-tagline">6 slots - partenaire fixe en slot 0</div>
       <div class="team-grid" id="team-grid"></div>
@@ -810,7 +717,10 @@ a { color: inherit; }
       <div class="team-panel" id="team-panel"><div class="team-empty-state">Selectionne un slot.</div></div>
     </div>
 
-<div class="player-tab" id="tab-notes">
+    
+
+      <!-- ── ONGLET NOTES ── -->
+      <div class="player-tab" id="tab-notes">
       <div class="page-title">Notes</div>
       <div class="page-tagline">Sauvegarde automatique</div>
       <div class="notes-layout">
@@ -831,107 +741,20 @@ a { color: inherit; }
       </div>
     </div>
 
+    
+    <!-- /.content -->
+  </div><!-- /.player-shell -->
 </div>
-</div>
-</div>
+
 <script>
 
 
 var PLAYER_KEY = 'tracker';
-
-/* ══════════════════════════════════════════════════════
-   FIREBASE — remplace JSONBin
-   Données en temps réel via Realtime Database
-   Nœud : /joueurs/[PLAYER_KEY]/
-   ══════════════════════════════════════════════════════ */
-
-var FB_URL = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
-var FB_PATH = FB_URL + '/joueurs/' + PLAYER_KEY;
-
-/* Écriture d'un champ → Firebase */
-function fbSet(path, data) {
-  return fetch(FB_PATH + '/' + path + '.json', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  }).catch(function() {});
-}
-
-/* Lecture unique d'un champ */
-function fbGet(path) {
-  return fetch(FB_PATH + '/' + path + '.json')
-    .then(function(r) { return r.json(); })
-    .catch(function() { return null; });
-}
-
-/* Écoute en temps réel via Server-Sent Events (Firebase SSE) */
-function fbListen(path, cb) {
-  var src = new EventSource(FB_PATH + '/' + path + '.json');
-  src.addEventListener('put', function(e) {
-    try { cb(JSON.parse(e.data).data); } catch(e2) {}
-  });
-  return src;
-}
-
-/* ── Sync cloud : remplace _syncCloud() ── */
-function _syncCloud() {
-  var gear = loadGear();
-  fbSet('notes',   state.notes);
-  fbSet('team',    state.team);
-  fbSet('gear',    gear);
-  fbSet('updated', Date.now());
-}
-
-/* ── Chargement initial depuis Firebase : remplace loadNotesFromCloud() ── */
-function loadNotesFromCloud() {
-  fbGet('').then(function(rec) {
-    if (!rec) return;
-    if (rec.notes && rec.notes.length) {
-      state.notes = rec.notes;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        team: state.team, notes: state.notes
-      }));
-      renderNoteList();
-      var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
-      if (id) openNote(id);
-    }
-    if (rec.team) {
-      for (var i = 1; i < 6; i++) {
-        state.team[i] = rec.team[i] || null;
-      }
-      renderTeam();
-    }
-    if (rec.gear) {
-      localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(rec.gear));
-      renderGear();
-    }
-    /* Message MJ */
-    if (rec.mj_note) {
-      var read = localStorage.getItem(STORAGE_KEY + '_mj_note_read');
-      if (rec.mj_note !== read) showMjNotePopup(rec.mj_note);
-    }
-  });
-}
-
-/* ── Écoute temps réel : si le MJ envoie un message ── */
-
-
-/* ── Init : remplace initPlayerBin() ── */
-function initPlayerBin() {
-  loadNotesFromCloud();
-  listenMjNote();
-  /* Enregistrer la présence du joueur */
-  fbSet('slug', PLAYER_KEY);
-}
-
-/* Fonctions JSONBin devenues inutiles — stubs vides */
-function _getOrCreateBin(cb) { if (cb) cb('firebase'); }
-function _registerInCentral() {}
-
 var STORAGE_KEY = 'jdr_player_' + PLAYER_KEY;
 var PARTNER_NAME_ASCII = 'Kaiminus';
 var JSONBIN_KEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
 var JSONBIN_URL = 'https://api.jsonbin.io/v3';
+var BIN_ID_KEY = STORAGE_KEY + '_bin_id';
 
 function showPlayerTab(tab, btn) {
   document.querySelectorAll('.player-tab').forEach(function(t) { t.classList.remove('active'); });
@@ -964,7 +787,6 @@ function loadState() {
 
 function saveState() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify({team:state.team,notes:state.notes,activeNote:state.activeNote})); } catch(e) {}
-  _syncCloud();
 }
 
 function renderTeam() {
@@ -1126,7 +948,7 @@ function loadBlessures() {
   }catch(e){}
 }
 
-var DEFAULT_NAME_JS = 'Elias Voss';
+var DEFAULT_NAME_JS = 'Magdalena Hell';
 
 function loadPlayerName() {
   var saved=localStorage.getItem(STORAGE_KEY+'_name');
@@ -1159,11 +981,10 @@ function cancelEditName() {
 
 document.addEventListener('DOMContentLoaded',function(){
   loadState(); state.activeSlot=0; renderTeam(); initNotes(); loadBlessures(); loadPlayerName(); initPlayerBin();
-  _syncCloud(); // push localStorage -> Firebase au chargement
 });
 
 /* ---- EQUIPEMENT EDITABLE ---- */
-var DEFAULT_GEAR = ["Revolver Magnum .44 (2d6+1, Portee 12/24/48)", "Fusil a pompe scie (1-3d6, portee courte)", "Gilet pare-balles leger (Armure +2)", "3 recharges standard", "Menottes x2", "300 "];
+var DEFAULT_GEAR = ["Analyseur de CT portable (+2 aux jets de Sciences sur toute CT)", "Carnet de terrain chiffre", "Lampe frontale haute puissance", "Pokedex modifie (acces aux bases de donnees de recherche)", "Marteau d alpiniste (arme improvisee, Str+d4)", "500  en especes"];
 
 function loadGear() {
   try {
@@ -1354,7 +1175,13 @@ function showMjNotePopup(text) {
   popup.classList.remove('hidden');
 }
 
-
+function closeMjNotePopup() {
+  var popup = document.getElementById('mj-note-popup');
+  var content = document.getElementById('mj-note-content');
+  if (!popup || !content) return;
+  popup.classList.add('hidden');
+  localStorage.setItem(STORAGE_KEY + '_mj_note_read', content.textContent);
+}
 
 document.addEventListener('DOMContentLoaded', function() {
   renderGear();
@@ -1371,151 +1198,128 @@ var JB_URL  = 'https://api.jsonbin.io/v3';
 /* Ecrire son bin_id dans le canal central */
 
 /* == CLOUD UNIFIE == */
+var _JBKEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
+var _JBURL = 'https://api.jsonbin.io/v3';
+var _CTRID = '6a2f352bf5f4af5e29f21a22';
 
+function _getOrCreateBin(cb) {
+  var saved = localStorage.getItem(BIN_ID_KEY);
+  if (saved) { cb(saved); return; }
+  fetch(_JBURL + '/b', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json',
+               'X-Master-Key': _JBKEY,
+               'X-Bin-Name': 'jdr-' + PLAYER_KEY,
+               'X-Bin-Private': 'false' },
+    body: JSON.stringify({ notes: [], joueur: PLAYER_KEY })
+  }).then(function(r) { return r.json(); })
+    .then(function(d) {
+      var id = d.metadata && d.metadata.id;
+      if (!id) return;
+      localStorage.setItem(BIN_ID_KEY, id);
+      _registerInCentral(id);
+      cb(id);
+    }).catch(function() {});
+}
 
+function _registerInCentral(myBinId) {
+  fetch(_JBURL + '/b/' + _CTRID + '/latest', {
+    headers: { 'X-Master-Key': _JBKEY }
+  }).then(function(r) { return r.json(); })
+    .then(function(d) {
+      var rec = d.record || {};
+      if (rec[PLAYER_KEY] === myBinId) return;
+      rec[PLAYER_KEY] = myBinId;
+      return fetch(_JBURL + '/b/' + _CTRID, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JBKEY },
+        body: JSON.stringify(rec)
+      });
+    }).catch(function() {});
+}
 
-
-
-
+function _syncCloud() {
+  var binId = localStorage.getItem(BIN_ID_KEY);
+  if (!binId) return;
+  var gear = loadGear();
+  fetch(_JBURL + '/b/' + binId + '/latest', {
+    headers: { 'X-Master-Key': _JBKEY }
+  }).then(function(r) { return r.json(); })
+    .then(function(d) {
+      var rec = d.record || {};
+      rec.notes   = state.notes;
+      rec.joueur  = PLAYER_KEY;
+      rec.updated = Date.now();
+      rec.gear    = gear;
+      rec.team    = state.team;
+      return fetch(_JBURL + '/b/' + binId, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Master-Key': _JBKEY },
+        body: JSON.stringify(rec)
+      });
+    }).catch(function() {});
+}
 
 function saveNotesToCloud() { _syncCloud(); }
 
+function loadNotesFromCloud() {
+  _getOrCreateBin(function(binId) {
+    fetch(_JBURL + '/b/' + binId + '/latest', {
+      headers: { 'X-Master-Key': _JBKEY }
+    }).then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (!d.record) return;
+        var rec = d.record;
+        if (rec.notes && rec.notes.length) {
+          state.notes = rec.notes;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify({ team: state.team, notes: state.notes }));
+          renderNoteList();
+          var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
+          if (id) openNote(id);
+        }
+        if (rec.mj_note) {
+          var read = localStorage.getItem(STORAGE_KEY + '_mj_note_read');
+          if (rec.mj_note !== read) showMjNotePopup(rec.mj_note);
+        }
+      }).catch(function() {});
+  });
+}
 
-
+function initPlayerBin() {
+  _getOrCreateBin(function(binId) {
+    loadNotesFromCloud();
+  });
+}
 
 
 /* ── PHOTO PJ ── */
+function loadPhoto(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var dataUrl = e.target.result;
+    localStorage.setItem(STORAGE_KEY + '_photo', dataUrl);
+    showPhoto(dataUrl);
+  };
+  reader.readAsDataURL(file);
+}
 
-
-
-
-
-
-
-
-
-/* ── BANNIERE PJ ── */
-
-
-
-
-
-
-
-
-
-
-
-
-/* ── BANNIERE PJ ── */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* ── BANNIERE FIXE ── */
 function showPhoto(dataUrl) {
   var img = document.getElementById('pj-photo-img');
   var ph  = document.getElementById('pj-photo-placeholder');
-  if (img) { img.src = dataUrl; img.style.display = 'block'; }
-  if (ph)  { ph.style.display = 'none'; }
-}
-
-
-
-function _updateBannerName() {
-  var el  = document.getElementById('pj-banner-name');
-  var src = document.getElementById('pj-name-display');
-  if (el && src) el.textContent = src.textContent;
-}
-
-/* ── EXPORT JSON ── */
-function exportJSON() {
-  var nom    = (document.getElementById('pj-name-display') || {}).textContent || PLAYER_KEY;
-  var gear   = loadGear();
-  var date   = new Date().toISOString().slice(0,10);
-
-  var data = {
-    joueur:    PLAYER_KEY,
-    nom:       nom,
-    date:      date,
-    equipe:    state.team,
-    notes:     state.notes,
-    equipement: gear
-  };
-
-  var json   = JSON.stringify(data, null, 2);
-  var blob   = new Blob([json], { type: 'application/json' });
-  var url    = URL.createObjectURL(blob);
-  var a      = document.createElement('a');
-  a.href     = url;
-  a.download = 'sauvegarde_' + PLAYER_KEY + '_' + date + '.json';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-
-  var btn = document.getElementById('save-json-btn');
-  if (btn) {
-    btn.classList.add('saved');
-    btn.innerHTML = '&#10003; Sauvegard&eacute;';
-    setTimeout(function() {
-      btn.classList.remove('saved');
-      btn.innerHTML = '&#8659; Sauvegarder';
-    }, 2000);
+  if (img && ph) {
+    img.src = dataUrl;
+    img.style.display = 'block';
+    ph.style.display  = 'none';
   }
 }
 
-
-
-
-function closeMjNotePopup() {
-  var popup = document.getElementById('mj-note-popup');
-  if (popup) popup.classList.add('hidden');
-  // Marquer comme acquitté pour ne plus afficher au rechargement
-  var content = document.getElementById('mj-note-content');
-  if (content && content.textContent) {
-    localStorage.setItem(STORAGE_KEY + '_mj_note_dismissed', content.textContent);
-  }
+function initPhoto() {
+  var saved = localStorage.getItem(STORAGE_KEY + '_photo');
+  if (saved) showPhoto(saved);
 }
 
-function listenMjNote() {
-  var _initialLoad = true;
-  fbListen('mj_note', function(val) {
-    if (_initialLoad) {
-      // Premier event SSE = valeur actuelle stockée dans Firebase
-      // On la mémorise sans afficher (déjà vue ou pas encore lue)
-      _initialLoad = false;
-      if (val) {
-        var dismissed = localStorage.getItem(STORAGE_KEY + '_mj_note_dismissed');
-        // Afficher seulement si pas encore acquittée
-        if (dismissed !== val) {
-          showMjNotePopup(val);
-        }
-      }
-      return;
-    }
-    // Events suivants = nouveau message envoyé par le MJ EN DIRECT
-    if (val) {
-      localStorage.removeItem(STORAGE_KEY + '_mj_note_dismissed');
-      showMjNotePopup(val);
-    }
-  });
-}
 </script>
 </body>
 </html>
