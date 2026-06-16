@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MJ — Vue Joueurs</title>
+<title>MJ - Vue Joueurs</title>
 <style>
 :root {
   --bg:#0e0e10;--surface:#141416;--card:#1a1a1e;--border:#2a2a30;
@@ -13,41 +13,34 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;}
-
 header{display:flex;align-items:center;justify-content:space-between;
   padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--border);
   position:sticky;top:0;z-index:100;}
 .hd-title{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--amber);}
-.hd-sub{font-size:11px;color:var(--muted);margin-left:10px;}
 .live-pill{font-family:var(--mono);font-size:9px;color:var(--amber);
-  border:1px solid var(--amber-dim);border-radius:2px;padding:1px 7px;
+  border:1px solid var(--amber-dim);border-radius:2px;padding:1px 7px;margin-left:10px;
   animation:blink 2s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
 .back-link{font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;
   border:1px solid var(--border);border-radius:2px;padding:5px 12px;
   transition:color .15s,border-color .15s;}
 .back-link:hover{color:var(--amber);border-color:var(--amber-dim);}
-
 #status-bar{padding:6px 24px;font-family:var(--mono);font-size:10px;
   background:var(--surface);border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:8px;color:var(--muted);}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;}
-.dot.ok{background:#4caf6e;box-shadow:0 0 5px rgba(76,175,110,.4);}
+.dot.ok{background:#4caf6e;}
 .dot.loading{background:var(--amber);animation:pulse .9s infinite;}
 .dot.err{background:#e57373;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
-
 .main{padding:20px 24px;}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:18px;}
-
-/* Carte joueur */
+/* Carte */
 .player-card{background:var(--card);border:1px solid var(--border);
   border-radius:var(--radius);overflow:hidden;transition:border-color .3s;}
-.player-card.flash{border-color:var(--amber);animation:card-flash .7s ease;}
-@keyframes card-flash{0%,100%{border-color:var(--amber-dim)}50%{border-color:var(--amber)}}
-
-/* Header carte */
-.card-head{display:flex;align-items:stretch;border-bottom:1px solid var(--border);}
+.player-card.flash{animation:card-flash .7s ease;}
+@keyframes card-flash{0%,100%{border-color:var(--border)}50%{border-color:var(--amber)}}
+.card-head{display:flex;border-bottom:1px solid var(--border);}
 .card-avatar{width:60px;flex-shrink:0;background:var(--surface);}
 .card-avatar img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
 .card-avatar-ph{width:100%;min-height:60px;display:flex;align-items:center;
@@ -59,42 +52,58 @@ header{display:flex;align-items:center;justify-content:space-between;
 .card-role{font-size:11px;color:var(--muted);}
 .card-meta{padding:5px 14px;background:var(--surface);border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;}
-.badge{padding:2px 7px;border-radius:2px;font-size:9px;font-weight:700;
-  letter-spacing:.06em;text-transform:uppercase;}
+.badge{padding:2px 7px;border-radius:2px;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
 .badge-ok{background:rgba(45,110,53,.2);color:#4caf6e;border:1px solid rgba(45,110,53,.3);}
 .badge-old{background:rgba(139,51,0,.15);color:#d4835a;border:1px solid rgba(139,51,0,.3);}
 .badge-none{background:var(--surface);color:var(--muted);border:1px solid var(--border);}
 .card-upd{margin-left:auto;color:var(--muted);}
-
-/* Équipe */
+/* Corps */
 .card-body{padding:14px;}
 .sec-lbl{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:5px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding-bottom:4px;
   border-bottom:1px solid var(--border);}
-.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
-.pk-slot{background:var(--surface);border:1px solid var(--border);border-radius:4px;
-  padding:8px 10px;min-height:56px;}
-.pk-slot.empty{opacity:.4;display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:10px;color:var(--muted);}
+/* Equipe */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px;}
+.pk-slot{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:7px 9px;min-height:52px;}
+.pk-slot.empty{opacity:.35;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:9px;color:var(--muted);}
 .pk-slot.partner{border-color:var(--amber-dim);background:var(--amber-glow);}
-.pk-badge{font-family:var(--mono);font-size:8px;color:var(--amber);
-  text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:3px;}
-.pk-name{font-family:var(--mono);font-size:12px;font-weight:700;
-  color:var(--text);margin-bottom:2px;}
-.pk-type{font-size:10px;color:var(--muted);margin-bottom:5px;}
-.pk-stats-row{display:flex;flex-wrap:wrap;gap:3px;}
+.pk-badge{font-family:var(--mono);font-size:8px;color:var(--amber);text-transform:uppercase;
+  letter-spacing:.06em;display:block;margin-bottom:2px;}
+.pk-name{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--text);margin-bottom:1px;}
+.pk-type{font-size:10px;color:var(--muted);margin-bottom:4px;}
+.pk-stats-row{display:flex;flex-wrap:wrap;gap:2px;}
 .pk-stat{font-family:var(--mono);font-size:9px;background:var(--card);
-  border:1px solid var(--border);border-radius:2px;padding:1px 5px;color:var(--muted);}
+  border:1px solid var(--border);border-radius:2px;padding:1px 4px;color:var(--muted);}
 .pk-stat span{color:var(--text);}
-.pk-attacks{margin-top:5px;}
+.pk-attacks{margin-top:4px;}
 .pk-atk{font-size:10px;color:var(--muted);line-height:1.4;}
-.pk-atk strong{color:var(--text);font-weight:600;}
-
-/* Équipement */
+.pk-atk strong{color:var(--text);}
+/* Equipement */
 .gear-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
 .gear-chip{font-size:11px;background:var(--surface);border:1px solid var(--border);
-  border-radius:3px;padding:2px 8px;color:var(--muted);}
-
+  border-radius:3px;padding:2px 7px;color:var(--muted);}
+/* Traits accordeon */
+.pj-traits{border-top:1px solid var(--border);}
+.pj-traits-toggle{width:100%;background:none;border:none;padding:8px 14px;
+  text-align:left;cursor:pointer;font-family:var(--mono);font-size:9px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  display:flex;align-items:center;justify-content:space-between;transition:color .15s;}
+.pj-traits-toggle:hover{color:var(--amber);}
+.pj-traits-toggle .chev{transition:transform .2s;font-size:10px;}
+.pj-traits-toggle.open .chev{transform:rotate(90deg);}
+.pj-traits-body{display:none;padding:0 14px 12px;}
+.pj-traits-body.open{display:block;}
+.traits-section-lbl{font-family:var(--mono);font-size:9px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.08em;margin:8px 0 5px;}
+.trait-row{padding:5px 0;border-bottom:1px solid var(--border);}
+.trait-row:last-child{border-bottom:none;}
+.ttag{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;padding:1px 6px;border-radius:2px;margin-right:5px;}
+.ttag.majeur{background:rgba(139,51,0,.2);color:#d4835a;border:1px solid rgba(139,51,0,.3);}
+.ttag.mineur{background:rgba(90,70,0,.2);color:#c8a84b;border:1px solid rgba(90,70,0,.3);}
+.ttag.other{background:var(--surface);color:var(--muted);border:1px solid var(--border);}
+.trait-name{font-size:11px;font-weight:600;color:var(--text);}
 /* Message MJ */
 .mj-zone{border-top:1px solid var(--border);padding:10px 14px;}
 .mj-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;
@@ -105,33 +114,43 @@ header{display:flex;align-items:center;justify-content:space-between;
 .mj-ta:focus{border-color:var(--amber-dim);}
 .mj-row{display:flex;justify-content:flex-end;margin-top:5px;}
 .mj-btn{font-family:var(--mono);font-size:10px;background:var(--amber-dim);border:none;
-  border-radius:3px;color:var(--amber);padding:5px 14px;cursor:pointer;transition:background .15s;}
+  border-radius:3px;color:var(--amber);padding:5px 14px;cursor:pointer;}
 .mj-btn:hover{background:rgba(200,146,42,.4);}
 .mj-btn:disabled{opacity:.4;cursor:default;}
+</style>
+</head>
+<body>
 
-  .pj-traits { border-top: 1px solid var(--border); }
-  .pj-traits-toggle {
-    width: 100%; background: none; border: none;
-    padding: 8px 14px; text-align: left; cursor: pointer;
-    font-family: var(--mono); font-size: 9px; font-weight: 600;
-    letter-spacing: .1em; text-transform: uppercase;
-    color: var(--muted); display: flex; align-items: center;
-    justify-content: space-between; transition: color .15s;
-  }
-  .pj-traits-toggle:hover { color: var(--amber); }
-  .pj-traits-togg
+<header>
+  <div style="display:flex;align-items:center;">
+    <span class="hd-title">Compagnon MJ</span>
+    <span class="live-pill">LIVE</span>
+  </div>
+  <a href="mj.html" class="back-link">&#8592; MJ</a>
+</header>
+
+<div id="status-bar">
+  <div class="dot loading" id="dot"></div>
+  <span id="status-txt">Connexion Firebase...</span>
+</div>
+
+<div class="main">
+  <div class="grid" id="grid"></div>
+</div>
+
+<script>
 var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
 
 var PLAYERS = [
-  {slug:'analyste',  nom:'Magdalena Hell',  role:'Technicienne CT',            img:'img/analyste.png'},
-  {slug:'pistolero', nom:'Lidia Fireheart', role:'Ancien agent Ligue',         img:'img/pistolero.png'},
-  {slug:'causeuse',  nom:'Rizen Dao',       role:'Journaliste investigation',  img:'img/causeuse.png'},
-  {slug:'pisteur',   nom:'Teleera',         role:'Veterinaire Pokemon',        img:'img/pisteur.png'},
-  {slug:'tracker',   nom:'Elias Voss',      role:'Chasseur Anomaux',           img:'img/tracker.png'},
-  {slug:'dresseur',  nom:'Kael Oryn',       role:'Dresseur circuit libre',     img:''}
+  {slug:'analyste',  nom:'Magdalena Hell',  role:'Technicienne CT',           img:'img/analyste.png'},
+  {slug:'pistolero', nom:'Lidia Fireheart', role:'Ancien agent Ligue',        img:'img/pistolero.png'},
+  {slug:'causeuse',  nom:'Rizen Dao',       role:'Journaliste investigation', img:'img/causeuse.png'},
+  {slug:'pisteur',   nom:'Teleera',         role:'Veterinaire Pokemon',       img:'img/pisteur.png'},
+  {slug:'tracker',   nom:'Elias Voss',      role:'Chasseur Anomaux',          img:'img/tracker.png'},
+  {slug:'dresseur',  nom:'Kael Oryn',       role:'Dresseur circuit libre',    img:''}
 ];
 
-var STATIC_DATA = {"analyste": {"edges": [{"tag": "Background", "name": "Enquêteur", "desc": ""}, {"tag": "Weird", "name": "MacGyver (Atout gratuit Humain)", "desc": ""}], "hindrances": [{"tag": "Majeur", "name": "Curieuse", "desc": ""}, {"tag": "Mineur", "name": "Ennemie", "desc": ""}]}, "pistolero": {"edges": [{"tag": "Combat", "name": "Combatif", "desc": ""}, {"tag": "Weird", "name": "Dur à Cuire", "desc": ""}], "hindrances": [{"tag": "Majeur", "name": "Loyal", "desc": ""}, {"tag": "Mineur", "name": "Passé encombrant", "desc": ""}]}, "causeuse": {"edges": [{"tag": "Background", "name": "Réseau d'informateurs", "desc": ""}, {"tag": "Social", "name": "Charismatique (Atout gratuit Humain)", "desc": ""}], "hindrances": [{"tag": "Majeur", "name": "Têtue", "desc": ""}, {"tag": "Mineur", "name": "Sans le sou", "desc": ""}, {"tag": "Mineur", "name": "Peur des Pokéball", "desc": ""}]}, "pisteur": {"edges": [{"tag": "Background", "name": "Empathie Pokémon", "desc": ""}, {"tag": "Weird", "name": "Galeries et souterrains (Atout gratuit Humain)", "desc": ""}], "hindrances": [{"tag": "Majeur", "name": "Protecteur compulsif", "desc": ""}, {"tag": "Mineur", "name": "Persona non grata", "desc": ""}, {"tag": "Mineur", "name": "Peur des Pokéball", "desc": ""}]}, "tracker": {"edges": [{"tag": "Background", "name": "Sens du Danger", "desc": ""}, {"tag": "Background", "name": "Pisteur Sp&eacute;cialis&eacute;", "desc": ""}, {"tag": "Pok&eacute;mon", "name": "Lien Profond &mdash; Kaiminus", "desc": ""}], "hindrances": [{"tag": "Majeur", "name": "Obsession des Origines", "desc": ""}, {"tag": "Mineur", "name": "R&eacute;putation", "desc": ""}, {"tag": "Mineur", "name": "Documentation Compulsive", "desc": ""}]}, "dresseur": {"edges": [{"tag": "Background", "name": "Maestro", "desc": ""}, {"tag": "Background", "name": "Lecteur de Combat", "desc": ""}, {"tag": "Pok&eacute;mon", "name": "Lien &Eacute;mergent &mdash; Abra", "desc": ""}], "hindrances": [{"tag": "Majeur", "name": "Compte &agrave; R&eacute;gler", "desc": ""}, {"tag": "Mineur", "name": "Arrogance", "desc": ""}, {"tag": "Mineur", "name": "Sans le Sou", "desc": ""}]}};
+var STATIC_DATA = {"analyste": {"edges": [{"tag": "Background", "name": "Enqu\u00eateur"}, {"tag": "Weird", "name": "MacGyver (Atout gratuit Humain)"}], "hindrances": [{"tag": "Majeur", "name": "Curieuse"}, {"tag": "Mineur", "name": "Ennemie"}]}, "pistolero": {"edges": [{"tag": "Combat", "name": "Combatif"}, {"tag": "Weird", "name": "Dur \u00e0 Cuire"}], "hindrances": [{"tag": "Majeur", "name": "Loyal"}, {"tag": "Mineur", "name": "Pass\u00e9 encombrant"}]}, "causeuse": {"edges": [{"tag": "Background", "name": "R\u00e9seau d'informateurs"}, {"tag": "Social", "name": "Charismatique (Atout gratuit Humain)"}], "hindrances": [{"tag": "Majeur", "name": "T\u00eatue"}, {"tag": "Mineur", "name": "Sans le sou"}, {"tag": "Mineur", "name": "Peur des Pok\u00e9ball"}]}, "pisteur": {"edges": [{"tag": "Background", "name": "Empathie Pok\u00e9mon"}, {"tag": "Weird", "name": "Galeries et souterrains (Atout gratuit Humain)"}], "hindrances": [{"tag": "Majeur", "name": "Protecteur compulsif"}, {"tag": "Mineur", "name": "Persona non grata"}, {"tag": "Mineur", "name": "Peur des Pok\u00e9ball"}]}, "tracker": {"edges": [{"tag": "Background", "name": "Sens du Danger"}, {"tag": "Background", "name": "Pisteur Sp&eacute;cialis&eacute;"}, {"tag": "Pok&eacute;mon", "name": "Lien Profond &mdash; Kaiminus"}], "hindrances": [{"tag": "Majeur", "name": "Obsession des Origines"}, {"tag": "Mineur", "name": "R&eacute;putation"}, {"tag": "Mineur", "name": "Documentation Compulsive"}]}, "dresseur": {"edges": [{"tag": "Background", "name": "Maestro"}, {"tag": "Background", "name": "Lecteur de Combat"}, {"tag": "Pok&eacute;mon", "name": "Lien &Eacute;mergent &mdash; Abra"}], "hindrances": [{"tag": "Majeur", "name": "Compte &agrave; R&eacute;gler"}, {"tag": "Mineur", "name": "Arrogance"}, {"tag": "Mineur", "name": "Sans le Sou"}]}};
 
 var data = {};
 var connCount = 0;
@@ -141,15 +160,60 @@ function setStatus(cls, txt) {
   document.getElementById('status-txt').textContent = txt;
 }
 
-/* ── SSE par joueur ─────────────────────────────────────────────────────── */
+function listenPlayer(p) {
+  var src = new EventSource(FB + '/joueurs/' + p.slug + '.json');
+  src.addEventListener('put', function(e) {
+    try {
+      var payload = JSON.parse(e.data);
+      var isFirst = !(p.slug in data);
+      if (!data[p.slug]) data[p.slug] = {};
+      if (payload.path === '/') {
+        data[p.slug] = payload.data || {};
+      } else {
+        var key = payload.path.replace(/^\//, '');
+        if (key) data[p.slug][key] = payload.data;
+      }
+      if (isFirst) {
+        connCount++;
+        if (connCount === PLAYERS.length) {
+          setStatus('ok', 'Connecte - ' + connCount + ' joueurs en temps reel');
+        }
+      }
+      renderCard(p, data[p.slug], !isFirst);
+    } catch(ex) {}
+  });
+  src.addEventListener('patch', function(e) {
+    try {
+      var payload = JSON.parse(e.data);
+      if (!data[p.slug]) data[p.slug] = {};
+      var updates = payload.data || {};
+      Object.keys(updates).forEach(function(k) { data[p.slug][k] = updates[k]; });
+      renderCard(p, data[p.slug], true);
+    } catch(ex) {}
+  });
+  src.addEventListener('error', function() {
+    setStatus('err', 'Erreur Firebase - reconnexion auto...');
+  });
+}
 
+function normalizeTeam(raw) {
+  var arr = [null,null,null,null,null,null];
+  if (!raw) return arr;
+  if (Array.isArray(raw)) {
+    for (var i=0;i<6;i++) arr[i] = raw[i]||null;
+  } else {
+    for (var k in raw) {
+      var idx = parseInt(k,10);
+      if (idx>=0 && idx<6) arr[idx] = raw[k]||null;
+    }
+  }
+  return arr;
+}
 
-/* ── Rendu ──────────────────────────────────────────────────────────────── */
 function renderCard(p, rec, flash) {
   var old = document.getElementById('card-' + p.slug);
   var card = buildCard(p, rec);
-  if (old) { old.replaceWith(card); }
-  else { document.getElementById('grid').appendChild(card); }
+  if (old) { old.replaceWith(card); } else { document.getElementById('grid').appendChild(card); }
   if (flash) {
     setTimeout(function() { card.classList.add('flash'); }, 10);
     setTimeout(function() { card.classList.remove('flash'); }, 800);
@@ -160,7 +224,6 @@ function buildCard(p, rec) {
   var el = document.createElement('div');
   el.className = 'player-card';
   el.id = 'card-' + p.slug;
-
   var upd = rec && rec.updated ? rec.updated : null;
   var age = upd ? Date.now() - upd : null;
   var badge = !rec ? '<span class="badge badge-none">En attente</span>'
@@ -168,81 +231,45 @@ function buildCard(p, rec) {
     : age < 3600000 ? '<span class="badge badge-ok">Recemment</span>'
     : age < 86400000 ? '<span class="badge badge-old">Hier</span>'
     : '<span class="badge badge-none">Inactif</span>';
-  var updStr = upd
-    ? new Date(upd).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})
-    : '';
-
+  var updStr = upd ? new Date(upd).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
   el.innerHTML =
     '<div class="card-head">'
     + '<div class="card-avatar">'
     + (p.img ? '<img src="' + p.img + '" alt="" loading="lazy">' : '<div class="card-avatar-ph">&#9670;</div>')
-    + '</div>'
-    + '<div class="card-identity">'
+    + '</div><div class="card-identity">'
     + '<div class="card-slug">' + p.slug + '</div>'
     + '<div class="card-nom">' + p.nom + '</div>'
     + '<div class="card-role">' + p.role + '</div>'
     + '</div></div>'
-    + '<div class="card-meta">' + badge
-    + (updStr ? '<span class="card-upd">' + updStr + '</span>' : '') + '</div>'
+    + '<div class="card-meta">' + badge + (updStr ? '<span class="card-upd">' + updStr + '</span>' : '') + '</div>'
     + '<div class="card-body">'
-    + '<div class="sec-lbl">Equipe Pokemon</div>'
+    + '<div class="sec-lbl">Equipe</div>'
     + buildTeam(rec)
     + buildGear(rec)
     + '</div>'
     + buildTraits(p.slug)
     + '<div class="mj-zone">'
     + '<span class="mj-lbl">Message au joueur</span>'
-    + '<textarea class="mj-ta" id="ta-' + p.slug + '" rows="2"'
-    + ' placeholder="Apparait en popup sur sa fiche...">'
+    + '<textarea class="mj-ta" id="ta-' + p.slug + '" rows="2" placeholder="Popup sur sa fiche...">'
     + (rec && rec.mj_note ? rec.mj_note : '') + '</textarea>'
-    + '<div class="mj-row"><button class="mj-btn" id="btn-' + p.slug
-    + '" onclick="sendNote(\'' + p.slug + '\')">Envoyer &#9654;</button></div>'
+    + '<div class="mj-row"><button class="mj-btn" id="btn-' + p.slug + '" onclick="sendNote(\'' + p.slug + '\')">Envoyer &#9654;</button></div>'
     + '</div>';
-
   return el;
-}
-
-/* ── Rendu équipe détaillée ─────────────────────────────────────────────── */
-function normalizeTeam(raw) {
-  // Firebase renvoie un objet {0:{...}, 1:null} ou un tableau — normaliser en tableau de 6
-  var arr = [null, null, null, null, null, null];
-  if (!raw) return arr;
-  if (Array.isArray(raw)) {
-    for (var i = 0; i < 6; i++) arr[i] = raw[i] || null;
-  } else {
-    // objet Firebase : clés "0" à "5"
-    for (var k in raw) {
-      var idx = parseInt(k, 10);
-      if (idx >= 0 && idx < 6) arr[idx] = raw[k] || null;
-    }
-  }
-  return arr;
 }
 
 function buildTeam(rec) {
   var team = normalizeTeam(rec ? rec.team : null);
   var h = '<div class="team-grid">';
-
-  for (var i = 0; i < 6; i++) {
+  for (var i=0;i<6;i++) {
     var pk = team[i];
     if (!pk || !pk.name) {
-      h += '<div class="pk-slot empty">' + (i === 0 ? 'Partenaire' : 'Vide') + '</div>';
+      h += '<div class="pk-slot empty">' + (i===0?'Partenaire':'Vide') + '</div>';
       continue;
     }
-
-    var cls = 'pk-slot' + (pk.partner ? ' partner' : '');
-    h += '<div class="' + cls + '">';
-
+    h += '<div class="pk-slot' + (pk.partner?' partner':'') + '">';
     if (pk.partner) h += '<span class="pk-badge">Partenaire</span>';
-
     h += '<div class="pk-name">' + pk.name + '</div>';
-
-    if (pk.type) {
-      h += '<div class="pk-type">' + pk.type;
-      if (pk.talent) h += ' &middot; ' + pk.talent;
-      h += '</div>';
-    }
-
+    if (pk.type) { h += '<div class="pk-type">' + pk.type + (pk.talent?' &middot; '+pk.talent:'') + '</div>'; }
     if (pk.stats) {
       h += '<div class="pk-stats-row">';
       var labels = {for:'FOR',agi:'AGI',vig:'VIG',rus:'RUS',parade:'PAR',robustesse:'ROB',allure:'ALL'};
@@ -252,241 +279,99 @@ function buildTeam(rec) {
       h += '</div>';
       var attacks = pk.stats.attacks;
       if (attacks) {
-        // Firebase peut renvoyer attacks comme objet ou tableau
         var atk_arr = Array.isArray(attacks) ? attacks : Object.values(attacks);
         if (atk_arr.length) {
           h += '<div class="pk-attacks">';
           atk_arr.forEach(function(a) {
-            if (!a || !a.name) return;
-            h += '<div class="pk-atk"><strong>' + a.name + '</strong>';
-            if (a.dmg) h += ' &mdash; ' + a.dmg;
-            h += '</div>';
+            if (!a||!a.name) return;
+            h += '<div class="pk-atk"><strong>' + a.name + '</strong>' + (a.dmg?' &mdash; '+a.dmg:'') + '</div>';
           });
           h += '</div>';
         }
       }
     }
-
-    if (pk.notes) {
-      h += '<div style="font-size:10px;color:var(--muted);margin-top:4px;font-style:italic">' + pk.notes + '</div>';
-    }
-
+    if (pk.notes) h += '<div style="font-size:10px;color:var(--muted);margin-top:3px;font-style:italic">' + pk.notes + '</div>';
     h += '</div>';
   }
-
   return h + '</div>';
 }
 
-/* ── Équipement ─────────────────────────────────────────────────────────── */
 function buildGear(rec) {
-  if (!rec || !rec.gear) return '';
-  var items = rec.gear.filter(function(g) { return g && g.trim(); });
+  if (!rec||!rec.gear) return '';
+  var items = rec.gear.filter(function(g){return g&&g.trim();});
   if (!items.length) return '';
   var h = '<div class="sec-lbl" style="margin-top:10px">Equipement</div><div class="gear-row">';
-  items.forEach(function(g) { h += '<span class="gear-chip">' + g + '</span>'; });
-  return h + '</div>';
+  items.forEach(function(g){h+='<span class="gear-chip">'+g+'</span>';});
+  return h+'</div>';
 }
 
-/* ── Envoi message MJ ────────────────────────────────────────────────────── */
-function sendNote(slug) {
-  var ta  = document.getElementById('ta-' + slug);
-  var btn = document.getElementById('btn-' + slug);
-  var msg = ta.value.trim();
-
-  btn.disabled = true;
-  btn.textContent = 'Envoi...';
-
-  fetch(FB + '/joueurs/' + slug + '/mj_note.json', {
-    method: 'PUT',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(msg || null)
-  })
-  .then(function(r) {
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    btn.textContent = 'Envoye !';
-    btn.style.background = 'rgba(45,110,53,.3)';
-    btn.style.color = '#4caf6e';
-    setTimeout(function() {
-      btn.disabled = false;
-      btn.textContent = 'Envoyer \u25b6';
-      btn.style.background = '';
-      btn.style.color = '';
-    }, 2500);
-  })
-  .catch(function(e) {
-    btn.disabled = false;
-    btn.textContent = 'Erreur : ' + e.message;
-  });
-}
-
-/* ── Init ────────────────────────────────────────────────────────────────── */
-setStatus('loading', 'Connexion Firebase...');
-PLAYERS.forEach(function(p) {
-  document.getElementById('grid').appendChild(buildCard(p, null));
-  listenPlayer(p);
-});
-
-function listenPlayer(p) {
-  // Un seul SSE sur le noeud racine — couvre team, gear, notes, updated
-  var src = new EventSource(FB + '/joueurs/' + p.slug + '.json');
-
-  src.addEventListener('put', function(e) {
-    try {
-      var payload = JSON.parse(e.data);
-      var path    = payload.path;
-      var val     = payload.data;
-      var isFirst = !(p.slug in data);
-
-      if (!data[p.slug]) data[p.slug] = {};
-
-      if (path === '/') {
-        // Chargement initial complet
-        data[p.slug] = val || {};
-      } else {
-        // Mise à jour partielle — ex: path="/team" ou "/updated"
-        var key = path.replace(/^\//, '');
-        if (key) data[p.slug][key] = val;
-      }
-
-      if (isFirst) {
-        connCount++;
-        if (connCount === PLAYERS.length) {
-          setStatus('ok', 'Connecte — ' + connCount + ' joueurs en temps reel');
-        }
-      }
-
-      renderCard(p, data[p.slug], !isFirst);
-    } catch(ex) {}
-  });
-
-  src.addEventListener('patch', function(e) {
-    try {
-      var payload = JSON.parse(e.data);
-      if (!data[p.slug]) data[p.slug] = {};
-      var updates = payload.data || {};
-      Object.keys(updates).forEach(function(k) {
-        data[p.slug][k] = updates[k];
-      });
-      renderCard(p, data[p.slug], true);
-    } catch(ex) {}
-  });
-
-  src.addEventListener('error', function() {
-    setStatus('err', 'Erreur Firebase — reconnexion auto...');
-  });
-}
-
-function tagClass(tag) {
+function ttagClass(tag) {
   if (!tag) return 'other';
   var t = tag.toLowerCase();
-  if (t === 'majeur') return 'majeur';
-  if (t === 'mineur') return 'mineur';
-  if (t === 'background' || t === 'combat' || t === 'social' || t === 'weird') return 'background';
-  return 'other';
+  return (t==='majeur')?'majeur':(t==='mineur')?'mineur':'other';
 }
 
 function buildTraits(slug) {
   var sd = STATIC_DATA[slug];
   if (!sd) return '';
-
-  var toggleId = 'traits-' + slug;
-
+  var tid = 'traits-' + slug;
   var h = '<div class="pj-traits">'
-    + '<button class="pj-traits-toggle" id="btn-' + toggleId + '"'
-    + ' onclick="toggleTraits(\'' + toggleId + '\')">'
-    + 'Atouts &amp; Handicaps'
-    + ' <span class="chev">&#9654;</span></button>'
-    + '<div class="pj-traits-body" id="' + toggleId + '">';
-
+    + '<button class="pj-traits-toggle" id="btn-' + tid + '" onclick="toggleTraits(\'' + tid + '\')">'
+    + 'Atouts &amp; Handicaps <span class="chev">&#9654;</span></button>'
+    + '<div class="pj-traits-body" id="' + tid + '">';
   if (sd.hindrances && sd.hindrances.length) {
-    h += '<div style="font-family:var(--mono);font-size:9px;color:var(--muted);'
-       + 'text-transform:uppercase;letter-spacing:.08em;margin:8px 0 5px">Handicaps</div>';
+    h += '<div class="traits-section-lbl">Handicaps</div>';
     sd.hindrances.forEach(function(hd) {
-      h += '<div class="trait-row">'
-         + '<span class="trait-tag ' + tagClass(hd.tag) + '">' + hd.tag + '</span>'
-         + '<span class="trait-name">' + hd.name + '</span>'
-         + (hd.desc ? '<div class="trait-desc">' + hd.desc + '</div>' : '')
-         + '</div>';
+      h += '<div class="trait-row"><span class="ttag ' + ttagClass(hd.tag) + '">' + hd.tag + '</span>'
+         + '<span class="trait-name">' + hd.name + '</span></div>';
     });
   }
-
   if (sd.edges && sd.edges.length) {
-    h += '<div style="font-family:var(--mono);font-size:9px;color:var(--muted);'
-       + 'text-transform:uppercase;letter-spacing:.08em;margin:8px 0 5px">Atouts</div>';
+    h += '<div class="traits-section-lbl">Atouts</div>';
     sd.edges.forEach(function(ed) {
-      h += '<div class="trait-row">'
-         + '<span class="trait-tag ' + tagClass(ed.tag) + '">' + ed.tag + '</span>'
-         + '<span class="trait-name">' + ed.name + '</span>'
-         + (ed.desc ? '<div class="trait-desc">' + ed.desc + '</div>' : '')
-         + '</div>';
+      h += '<div class="trait-row"><span class="ttag other">' + ed.tag + '</span>'
+         + '<span class="trait-name">' + ed.name + '</span></div>';
     });
   }
-
   return h + '</div></div>';
 }
 
 function toggleTraits(id) {
   var body = document.getElementById(id);
   var btn  = document.getElementById('btn-' + id);
-  if (!body) return;
-  body.classList.toggle('open');
-  if (btn) btn.classList.toggle('open');
+  if (body) body.classList.toggle('open');
+  if (btn)  btn.classList.toggle('open');
 }
-────────────────────────────────────────────────────── */
-setStatus('loading', 'Connexion Firebase...');
+
+function sendNote(slug) {
+  var ta  = document.getElementById('ta-' + slug);
+  var btn = document.getElementById('btn-' + slug);
+  var msg = ta.value.trim();
+  btn.disabled = true;
+  btn.textContent = 'Envoi...';
+  fetch(FB + '/joueurs/' + slug + '/mj_note.json', {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(msg||null)
+  }).then(function(r) {
+    if (!r.ok) throw new Error('HTTP '+r.status);
+    btn.textContent = 'Envoye !';
+    btn.style.background = 'rgba(45,110,53,.3)';
+    btn.style.color = '#4caf6e';
+    setTimeout(function() {
+      btn.disabled=false; btn.textContent='Envoyer ▶';
+      btn.style.background=''; btn.style.color='';
+    }, 2500);
+  }).catch(function(e) {
+    btn.disabled=false; btn.textContent='Erreur: '+e.message;
+  });
+}
+
+setStatus('loading','Connexion Firebase...');
 PLAYERS.forEach(function(p) {
-  document.getElementById('grid').appendChild(buildCard(p, null));
+  document.getElementById('grid').appendChild(buildCard(p,null));
   listenPlayer(p);
 });
-
-function listenPlayer(p) {
-  // Un seul SSE sur le noeud racine — couvre team, gear, notes, updated
-  var src = new EventSource(FB + '/joueurs/' + p.slug + '.json');
-
-  src.addEventListener('put', function(e) {
-    try {
-      var payload = JSON.parse(e.data);
-      var path    = payload.path;
-      var val     = payload.data;
-      var isFirst = !(p.slug in data);
-
-      if (!data[p.slug]) data[p.slug] = {};
-
-      if (path === '/') {
-        // Chargement initial complet
-        data[p.slug] = val || {};
-      } else {
-        // Mise à jour partielle — ex: path="/team" ou "/updated"
-        var key = path.replace(/^\//, '');
-        if (key) data[p.slug][key] = val;
-      }
-
-      if (isFirst) {
-        connCount++;
-        if (connCount === PLAYERS.length) {
-          setStatus('ok', 'Connecte — ' + connCount + ' joueurs en temps reel');
-        }
-      }
-
-      renderCard(p, data[p.slug], !isFirst);
-    } catch(ex) {}
-  });
-
-  src.addEventListener('patch', function(e) {
-    try {
-      var payload = JSON.parse(e.data);
-      if (!data[p.slug]) data[p.slug] = {};
-      var updates = payload.data || {};
-      Object.keys(updates).forEach(function(k) {
-        data[p.slug][k] = updates[k];
-      });
-      renderCard(p, data[p.slug], true);
-    } catch(ex) {}
-  });
-
-  src.addEventListener('error', function() {
-    setStatus('err', 'Erreur Firebase — reconnexion auto...');
-  });
-}</script>
+</script>
 </body>
 </html>
