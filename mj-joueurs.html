@@ -151,39 +151,7 @@ function setStatus(cls, txt) {
 }
 
 /* ── SSE par joueur ─────────────────────────────────────────────────────── */
-function listenPlayer(p) {
-  // Écouter le nœud joueur complet (données initiales)
-  var src = new EventSource(FB + '/joueurs/' + p.slug + '.json');
-  src.addEventListener('put', function(e) {
-    try {
-      var rec = JSON.parse(e.data).data;
-      var isFirst = !(p.slug in data);
-      data[p.slug] = rec || {};
-      if (isFirst) {
-        connCount++;
-        if (connCount === PLAYERS.length) {
-          setStatus('ok', 'Connecte — ' + connCount + ' joueurs en temps reel');
-        }
-      }
-      renderCard(p, data[p.slug], !isFirst);
-    } catch(ex) {}
-  });
 
-  // Écouter /team séparément pour les mises à jour en temps réel
-  var srcTeam = new EventSource(FB + '/joueurs/' + p.slug + '/team.json');
-  srcTeam.addEventListener('put', function(e) {
-    try {
-      var teamRaw = JSON.parse(e.data).data;
-      if (!data[p.slug]) data[p.slug] = {};
-      data[p.slug].team = teamRaw;
-      data[p.slug].updated = Date.now();
-      renderCard(p, data[p.slug], true);
-    } catch(ex) {}
-  });
-
-  src.addEventListener('error', function() {});
-  srcTeam.addEventListener('error', function() {});
-}
 
 /* ── Rendu ──────────────────────────────────────────────────────────────── */
 function renderCard(p, rec, flash) {
@@ -365,6 +333,55 @@ PLAYERS.forEach(function(p) {
   document.getElementById('grid').appendChild(buildCard(p, null));
   listenPlayer(p);
 });
-</script>
+
+function listenPlayer(p) {
+  // Un seul SSE sur le noeud racine — couvre team, gear, notes, updated
+  var src = new EventSource(FB + '/joueurs/' + p.slug + '.json');
+
+  src.addEventListener('put', function(e) {
+    try {
+      var payload = JSON.parse(e.data);
+      var path    = payload.path;
+      var val     = payload.data;
+      var isFirst = !(p.slug in data);
+
+      if (!data[p.slug]) data[p.slug] = {};
+
+      if (path === '/') {
+        // Chargement initial complet
+        data[p.slug] = val || {};
+      } else {
+        // Mise à jour partielle — ex: path="/team" ou "/updated"
+        var key = path.replace(/^\//, '');
+        if (key) data[p.slug][key] = val;
+      }
+
+      if (isFirst) {
+        connCount++;
+        if (connCount === PLAYERS.length) {
+          setStatus('ok', 'Connecte — ' + connCount + ' joueurs en temps reel');
+        }
+      }
+
+      renderCard(p, data[p.slug], !isFirst);
+    } catch(ex) {}
+  });
+
+  src.addEventListener('patch', function(e) {
+    try {
+      var payload = JSON.parse(e.data);
+      if (!data[p.slug]) data[p.slug] = {};
+      var updates = payload.data || {};
+      Object.keys(updates).forEach(function(k) {
+        data[p.slug][k] = updates[k];
+      });
+      renderCard(p, data[p.slug], true);
+    } catch(ex) {}
+  });
+
+  src.addEventListener('error', function() {
+    setStatus('err', 'Erreur Firebase — reconnexion auto...');
+  });
+}</script>
 </body>
 </html>
