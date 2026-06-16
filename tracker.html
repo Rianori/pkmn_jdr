@@ -727,12 +727,13 @@ a { color: inherit; }
                 <div class="block-desc">Une fois par sc&egrave;ne : demander au MJ si une menace non visible est pr&eacute;sente dans un rayon de 20&quot;. R&eacute;ponse : oui / non / type d'anomalie.</div>
               </div>
         <div class="section-title">Equipement</div>
-        <ul class="gear-list"><li>Carnet de terrain (r&eacute;sistant &agrave; l'eau)</li><li>Appareil photo &agrave; m&eacute;moire physique</li><li>Kit de survie (corde 15m, pitons x4, lampe frontale)</li><li>Couteau de survie</li><li>Pochette &eacute;tanche documents</li><li>250&nbsp;&#8377;</li></ul>
-        <button class="note-add-btn" style="margin-top:14px" onclick="addGear()">+ Ajouter</button>
-        <div class="player-tab active"" id="player-tab-perso" style="display:none"></div>
-      </div>
-
-<div class="player-tab" id="tab-partner">
+          <div class="gear-editable" id="gear-editable"></div>
+          <div class="gear-add-row">
+            <input class="gear-add-input" id="gear-new-input" type="text" placeholder="Ajouter un item..." onkeydown="gearInputKey(event)" maxlength="100">
+            <button class="gear-add-btn" onclick="addGearItem()">+ Ajouter</button>
+          </div>
+        </div>
+    </div><div class="player-tab" id="tab-partner">
         <div class="page-title">Pok&eacute;mon partenaire</div>
         <div class="page-tagline">Kaiminus</div>
         <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
