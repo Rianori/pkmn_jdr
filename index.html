@@ -992,19 +992,40 @@
   max-width: 700px;
 }
 .pj-portal-card {
-  background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 20px 22px;
+  padding: 0;
   text-decoration: none;
   display: block;
   position: relative;
-  transition: border-color .15s, background .15s;
+  transition: border-color .2s, transform .15s;
   cursor: pointer;
+  overflow: hidden;
+  min-height: 160px;
+  background: var(--card);
 }
 .pj-portal-card:hover {
   border-color: var(--amber-dim);
-  background: var(--surface);
+  transform: translateY(-2px);
+}
+.pj-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center top;
+  opacity: .25;
+  transition: opacity .2s;
+}
+.pj-portal-card:hover .pj-card-bg { opacity: .38; }
+.pj-card-content {
+  position: relative;
+  z-index: 1;
+  padding: 20px 22px;
+  background: linear-gradient(to top, rgba(14,14,15,.92) 0%, rgba(14,14,15,.3) 100%);
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 .portal-num {
   font-family: var(--mono);
@@ -1083,56 +1104,74 @@
   <div class="portal-grid">
 
 <a href="analyste.html" class="pj-portal-card">
+  <div class="pj-card-bg" style="background-image:url('img/analyste.png')"></div>
+  <div class="pj-card-content">
   <div class="portal-num">Cécilie</div>
   <div class="portal-name">Magdalena Hell</div>
   <div class="portal-concept">Technicienne en Capsules Techniques</div>
   <div class="portal-pokemon">★ Métamorph</div>
   <div class="portal-skills">Ruse · Investigation</div>
   <div class="portal-arrow">→</div>
+  </div>
 </a>
 
 <a href="pistolero.html" class="pj-portal-card">
+  <div class="pj-card-bg" style="background-image:url('img/pistolero.png')"></div>
+  <div class="pj-card-content">
   <div class="portal-num">Manuela</div>
   <div class="portal-name">Lidia Fireheart</div>
   <div class="portal-concept">Ancien agent de terrain de la Ligue</div>
   <div class="portal-pokemon">★ Arcanin</div>
   <div class="portal-skills">Combat · Intimidation</div>
   <div class="portal-arrow">→</div>
+  </div>
 </a>
 
 <a href="causeuse.html" class="pj-portal-card">
+  <div class="pj-card-bg" style="background-image:url('img/causeuse.png')"></div>
+  <div class="pj-card-content">
   <div class="portal-num">Christophe</div>
   <div class="portal-name">Rizen Dao</div>
   <div class="portal-concept">Journaliste d'investigation</div>
   <div class="portal-pokemon">★ Évoli</div>
   <div class="portal-skills">Persuasion · Réseau</div>
   <div class="portal-arrow">→</div>
+  </div>
 </a>
 
 <a href="pisteur.html" class="pj-portal-card">
+  <div class="pj-card-bg" style="background-image:url('img/pisteur.png')"></div>
+  <div class="pj-card-content">
   <div class="portal-num">Camille</div>
   <div class="portal-name">Téléra</div>
   <div class="portal-concept">Vétérinaire Pokémon des zones sauvages</div>
   <div class="portal-pokemon">★ Noctali</div>
   <div class="portal-skills">Dressage · Survie</div>
   <div class="portal-arrow">→</div>
+  </div>
 </a>
 <a href="tracker.html" class="pj-portal-card">
+  <div class="pj-card-bg" style="background-image:url('img/tracker.png')"></div>
+  <div class="pj-card-content">
   <div class="portal-num">Elias</div>
   <div class="portal-name">Elias Voss</div>
   <div class="portal-concept">Chasseur de Ph&eacute;nom&egrave;nes Anomaux</div>
   <div class="portal-pokemon">&#9733; Kaiminus</div>
   <div class="portal-skills">Perception &middot; Pistage</div>
   <div class="portal-arrow">&rarr;</div>
+  </div>
 </a>
 
 <a href="dresseur.html" class="pj-portal-card">
+  <div class="pj-card-bg" style="background:var(--surface)"></div>
+  <div class="pj-card-content">
   <div class="portal-num">Kael</div>
   <div class="portal-name">Kael Oryn</div>
   <div class="portal-concept">Dresseur de circuit libre</div>
   <div class="portal-pokemon">&#9733; Abra</div>
   <div class="portal-skills">Dressage d12 &middot; Strat&eacute;gie</div>
   <div class="portal-arrow">&rarr;</div>
+  </div>
 </a>
   </div>
 
