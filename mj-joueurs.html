@@ -117,6 +117,26 @@ header{display:flex;align-items:center;justify-content:space-between;
   border-radius:3px;color:var(--amber);padding:5px 14px;cursor:pointer;}
 .mj-btn:hover{background:rgba(200,146,42,.4);}
 .mj-btn:disabled{opacity:.4;cursor:default;}
+
+  /* Equipe détaillée */
+  .team-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
+  .pk-slot { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:9px 11px; }
+  .pk-slot.empty { opacity:.35; display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:9px; color:var(--muted); min-height:48px; }
+  .pk-slot.partner { border-color:var(--amber-dim); background:var(--amber-glow); }
+  .pk-partner-badge { font-family:var(--mono); font-size:8px; color:var(--amber);
+    text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:3px; }
+  .pk-name { font-family:var(--mono); font-size:12px; font-weight:700;
+    color:var(--text); margin-bottom:2px; }
+  .pk-type { font-size:10px; color:var(--muted); margin-bottom:6px; }
+  .pk-attrs { display:flex; flex-wrap:wrap; gap:3px; margin-bottom:5px; }
+  .pk-attr { font-family:var(--mono); font-size:9px; background:var(--card);
+    border:1px solid var(--border); border-radius:2px; padding:1px 5px; color:var(--muted); }
+  .pk-attr span { color:var(--text); }
+  .pk-atks { margin-top:5px; border-top:1px solid var(--border); padding-top:5px; }
+  .pk-atk-row { font-size:10px; color:var(--muted); line-height:1.5; display:flex; gap:6px; }
+  .pk-atk-name { color:var(--text); font-weight:600; flex-shrink:0; }
+  .pk-atk-dmg { color:var(--amber); font-family:var(--mono); font-size:9px; }
 </style>
 </head>
 <body>
@@ -196,19 +216,7 @@ function listenPlayer(p) {
   });
 }
 
-function normalizeTeam(raw) {
-  var arr = [null,null,null,null,null,null];
-  if (!raw) return arr;
-  if (Array.isArray(raw)) {
-    for (var i=0;i<6;i++) arr[i] = raw[i]||null;
-  } else {
-    for (var k in raw) {
-      var idx = parseInt(k,10);
-      if (idx>=0 && idx<6) arr[idx] = raw[k]||null;
-    }
-  }
-  return arr;
-}
+
 
 function renderCard(p, rec, flash) {
   var old = document.getElementById('card-' + p.slug);
@@ -257,44 +265,7 @@ function buildCard(p, rec) {
   return el;
 }
 
-function buildTeam(rec) {
-  var team = normalizeTeam(rec ? rec.team : null);
-  var h = '<div class="team-grid">';
-  for (var i=0;i<6;i++) {
-    var pk = team[i];
-    if (!pk || !pk.name) {
-      h += '<div class="pk-slot empty">' + (i===0?'Partenaire':'Vide') + '</div>';
-      continue;
-    }
-    h += '<div class="pk-slot' + (pk.partner?' partner':'') + '">';
-    if (pk.partner) h += '<span class="pk-badge">Partenaire</span>';
-    h += '<div class="pk-name">' + pk.name + '</div>';
-    if (pk.type) { h += '<div class="pk-type">' + pk.type + (pk.talent?' &middot; '+pk.talent:'') + '</div>'; }
-    if (pk.stats) {
-      h += '<div class="pk-stats-row">';
-      var labels = {for:'FOR',agi:'AGI',vig:'VIG',rus:'RUS',parade:'PAR',robustesse:'ROB',allure:'ALL'};
-      Object.keys(labels).forEach(function(k) {
-        if (pk.stats[k]) h += '<div class="pk-stat">' + labels[k] + ' <span>' + pk.stats[k] + '</span></div>';
-      });
-      h += '</div>';
-      var attacks = pk.stats.attacks;
-      if (attacks) {
-        var atk_arr = Array.isArray(attacks) ? attacks : Object.values(attacks);
-        if (atk_arr.length) {
-          h += '<div class="pk-attacks">';
-          atk_arr.forEach(function(a) {
-            if (!a||!a.name) return;
-            h += '<div class="pk-atk"><strong>' + a.name + '</strong>' + (a.dmg?' &mdash; '+a.dmg:'') + '</div>';
-          });
-          h += '</div>';
-        }
-      }
-    }
-    if (pk.notes) h += '<div style="font-size:10px;color:var(--muted);margin-top:3px;font-style:italic">' + pk.notes + '</div>';
-    h += '</div>';
-  }
-  return h + '</div>';
-}
+
 
 function buildGear(rec) {
   if (!rec||!rec.gear) return '';
@@ -372,6 +343,81 @@ PLAYERS.forEach(function(p) {
   document.getElementById('grid').appendChild(buildCard(p,null));
   listenPlayer(p);
 });
-</script>
+
+function normalizeTeam(raw) {
+  var arr = [null,null,null,null,null,null];
+  if (!raw) return arr;
+  if (Array.isArray(raw)) {
+    for (var i=0;i<6;i++) arr[i] = raw[i]||null;
+  } else {
+    for (var k in raw) {
+      var idx = parseInt(k,10);
+      if (idx>=0&&idx<6) arr[idx] = raw[k]||null;
+    }
+  }
+  return arr;
+}
+
+function buildTeam(rec) {
+  var team = normalizeTeam(rec ? rec.team : null);
+  var h = '<div class="sec-lbl">Equipe Pokemon</div><div class="team-grid">';
+
+  for (var i = 0; i < 6; i++) {
+    var pk = team[i];
+
+    if (!pk || !pk.name) {
+      h += '<div class="pk-slot empty">' + (i===0 ? 'Partenaire' : 'Vide') + '</div>';
+      continue;
+    }
+
+    h += '<div class="pk-slot' + (pk.partner ? ' partner' : '') + '">';
+
+    if (pk.partner) h += '<span class="pk-partner-badge">Partenaire</span>';
+
+    h += '<div class="pk-name">' + pk.name + '</div>';
+
+    if (pk.type) {
+      h += '<div class="pk-type">' + pk.type;
+      if (pk.talent) h += ' &middot; ' + pk.talent;
+      h += '</div>';
+    }
+
+    // Attributs et stats
+    if (pk.stats) {
+      var labels = {for:'FOR',agi:'AGI',vig:'VIG',rus:'RUS',parade:'PAR',robustesse:'ROB',allure:'ALL'};
+      var hasStats = false;
+      var attrH = '<div class="pk-attrs">';
+      Object.keys(labels).forEach(function(k) {
+        if (pk.stats[k]) {
+          attrH += '<div class="pk-attr">' + labels[k] + ' <span>' + pk.stats[k] + '</span></div>';
+          hasStats = true;
+        }
+      });
+      attrH += '</div>';
+      if (hasStats) h += attrH;
+
+      // Attaques
+      var attacks = pk.stats.attacks;
+      if (attacks) {
+        var atk_arr = Array.isArray(attacks) ? attacks : Object.values(attacks);
+        var validAtks = atk_arr.filter(function(a) { return a && a.name; });
+        if (validAtks.length) {
+          h += '<div class="pk-atks">';
+          validAtks.forEach(function(a) {
+            h += '<div class="pk-atk-row">'
+              + '<span class="pk-atk-name">' + a.name + '</span>'
+              + (a.dmg ? '<span class="pk-atk-dmg">' + a.dmg + '</span>' : '')
+              + '</div>';
+          });
+          h += '</div>';
+        }
+      }
+    }
+
+    h += '</div>';
+  }
+
+  return h + '</div>';
+}</script>
 </body>
 </html>
