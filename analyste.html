@@ -727,6 +727,24 @@ a { color: inherit; }
   .pk-atk-del { background:none; border:none; color:var(--muted); cursor:pointer;
     font-size:14px; padding:0 3px; flex-shrink:0; transition:color .12s; }
   .pk-atk-del:hover { color:var(--danger); }
+
+  .pk-edit-row { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+  .pk-edit-label { font-family:var(--mono); font-size:9px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--muted); width:80px; flex-shrink:0; }
+  .pk-edit-input { flex:1; background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-family:var(--mono); font-size:12px;
+    padding:3px 7px; outline:none; transition:border-color .12s; }
+  .pk-edit-input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit { display:flex; gap:6px; margin-bottom:4px; }
+  .pk-atk-edit input { background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-size:11px; padding:3px 7px;
+    outline:none; transition:border-color .12s; }
+  .pk-atk-edit input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit .atk-name { flex:2; }
+  .pk-atk-edit .atk-dmg  { flex:1; }
+  .pk-notes-ta { width:100%; min-height:80px; background:var(--surface);
+    border:1px solid var(--border); border-radius:4px; color:var(--text);
+    font-size:13px; padding:10px; resize:vertical; outline:none; }
 </style>
 </head>
 <body>
@@ -1684,13 +1702,17 @@ function renderGear() {
     container.appendChild(li);
   });
 }
+
+
+
+
+
 function renderPanel() {
   var panel = document.getElementById('team-panel');
   if (!panel) return;
   var slot = state.team[state.activeSlot];
   if (!slot) { selectSlot(0); return; }
 
-  // Slot 0 = partenaire fixe (fiche dédiée)
   if (state.activeSlot === 0) {
     var pk = document.getElementById('partner-pk-card');
     if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
@@ -1702,24 +1724,25 @@ function renderPanel() {
   var attacks = s.attacks || [];
   if (!Array.isArray(attacks)) attacks = Object.values(attacks);
 
-  // Helper input stat
-  function statInput(key, label) {
-    return '<div class="pk-edit-row">'
-      + '<span class="pk-edit-label">' + label + '</span>'
-      + '<input class="pk-edit-input" type="text" value="' + escHtml(s[key]||'') + '"'
-      + ' oninput="updatePkStat(' + idx + ','' + key + '',this.value)" maxlength="20">'
-      + '</div>';
-  }
+  var STAT_KEYS = ['for','agi','vig','rus','parade','robustesse','allure'];
+  var STAT_LABELS = {for:'Force',agi:'Agilite',vig:'Vigueur',rus:'Ruse',
+                     parade:'Parade',robustesse:'Robust.',allure:'Allure'};
 
-  // Attaques
+  var statsHtml = '';
+  STAT_KEYS.forEach(function(key) {
+    statsHtml += '<div class="pk-edit-row">'
+      + '<span class="pk-edit-label">' + STAT_LABELS[key] + '</span>'
+      + '<input class="pk-edit-input" type="text" data-idx="' + idx + '" data-key="' + key + '"'
+      + ' value="' + escHtml(s[key]||'') + '" maxlength="20">'
+      + '</div>';
+  });
+
   var atksHtml = '';
-  for (var ai = 0; ai < Math.max(attacks.length, 4); ai++) {
+  for (var ai = 0; ai < Math.max(attacks.length + 1, 4); ai++) {
     var atk = attacks[ai] || {name:'', dmg:''};
-    atksHtml += '<div class="pk-atk-edit" id="atk-row-' + ai + '">'
-      + '<input class="atk-name" type="text" placeholder="Nom attaque" value="' + escHtml(atk.name||'') + '"'
-      + ' oninput="updatePkAtk(' + idx + ',' + ai + ','name',this.value)" maxlength="50">'
-      + '<input class="atk-dmg" type="text" placeholder="Dmg" value="' + escHtml(atk.dmg||'') + '"'
-      + ' oninput="updatePkAtk(' + idx + ',' + ai + ','dmg',this.value)" maxlength="20">'
+    atksHtml += '<div class="pk-atk-edit">'
+      + '<input class="atk-name" type="text" placeholder="Nom attaque" data-idx="' + idx + '" data-ai="' + ai + '" data-field="name" value="' + escHtml(atk.name||'') + '" maxlength="50">'
+      + '<input class="atk-dmg"  type="text" placeholder="Dmg"         data-idx="' + idx + '" data-ai="' + ai + '" data-field="dmg"  value="' + escHtml(atk.dmg||'')  + '" maxlength="20">'
       + '</div>';
   }
 
@@ -1731,18 +1754,26 @@ function renderPanel() {
     + '</div>'
     + '<div class="team-panel-body">'
     + '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Attributs</div>'
-    + statInput('for',  'Force')
-    + statInput('agi',  'Agilite')
-    + statInput('vig',  'Vigueur')
-    + statInput('rus',  'Ruse')
-    + statInput('parade','Parade')
-    + statInput('robustesse','Robust.')
-    + statInput('allure','Allure')
+    + statsHtml
     + '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px">Attaques</div>'
     + atksHtml
     + '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px">Notes de session</div>'
-    + '<textarea style="width:100%;min-height:80px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:13px;padding:10px;resize:vertical;outline:none" oninput="updatePkNotes(this.value)">' + escHtml(slot.notes || '') + '</textarea>'
+    + '<textarea class="pk-notes-ta">' + escHtml(slot.notes || '') + '</textarea>'
     + '</div>';
+
+  // Attacher les listeners via JS (evite les guillemets inline)
+  panel.querySelectorAll('.pk-edit-input').forEach(function(inp) {
+    inp.addEventListener('input', function() {
+      updatePkStat(parseInt(this.dataset.idx), this.dataset.key, this.value);
+    });
+  });
+  panel.querySelectorAll('.pk-atk-edit input').forEach(function(inp) {
+    inp.addEventListener('input', function() {
+      updatePkAtk(parseInt(this.dataset.idx), parseInt(this.dataset.ai), this.dataset.field, this.value);
+    });
+  });
+  var ta = panel.querySelector('.pk-notes-ta');
+  if (ta) ta.addEventListener('input', function() { updatePkNotes(this.value); });
 }
 
 function updatePkStat(idx, key, val) {
@@ -1752,14 +1783,13 @@ function updatePkStat(idx, key, val) {
   saveState();
 }
 
-function updatePkAtk(idx, atkIdx, field, val) {
+function updatePkAtk(idx, ai, field, val) {
   if (!state.team[idx]) return;
   if (!state.team[idx].stats) state.team[idx].stats = {};
   var attacks = state.team[idx].stats.attacks || [];
   if (!Array.isArray(attacks)) attacks = Object.values(attacks);
-  while (attacks.length <= atkIdx) attacks.push({name:'', dmg:''});
-  attacks[atkIdx][field] = val;
-  // Nettoyer les attaques vides en fin de tableau (sauf si en cours d'édition)
+  while (attacks.length <= ai) attacks.push({name:'', dmg:''});
+  attacks[ai][field] = val;
   state.team[idx].stats.attacks = attacks;
   saveState();
 }</script>
