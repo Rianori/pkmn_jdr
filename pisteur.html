@@ -1630,7 +1630,21 @@ function exportJSON() {
 }
 
 
-
+function listenMjNote() {
+  var _lastMjNote = null;
+  fbListen('mj_note', function(val) {
+    if (!val) return;
+    // Afficher si c'est un nouveau message (différent du dernier vu CE SESSION)
+    if (val !== _lastMjNote) {
+      _lastMjNote = val;
+      var dismissed = localStorage.getItem(STORAGE_KEY + '_mj_note_dismissed');
+      // Afficher si jamais acquitté, ou si message différent du dernier acquitté
+      if (dismissed !== val) {
+        showMjNotePopup(val);
+      }
+    }
+  });
+}
 
 function closeMjNotePopup() {
   var popup = document.getElementById('mj-note-popup');
@@ -1641,30 +1655,7 @@ function closeMjNotePopup() {
     localStorage.setItem(STORAGE_KEY + '_mj_note_dismissed', content.textContent);
   }
 }
-
-function listenMjNote() {
-  var _initialLoad = true;
-  fbListen('mj_note', function(val) {
-    if (_initialLoad) {
-      // Premier event SSE = valeur actuelle stockée dans Firebase
-      // On la mémorise sans afficher (déjà vue ou pas encore lue)
-      _initialLoad = false;
-      if (val) {
-        var dismissed = localStorage.getItem(STORAGE_KEY + '_mj_note_dismissed');
-        // Afficher seulement si pas encore acquittée
-        if (dismissed !== val) {
-          showMjNotePopup(val);
-        }
-      }
-      return;
-    }
-    // Events suivants = nouveau message envoyé par le MJ EN DIRECT
-    if (val) {
-      localStorage.removeItem(STORAGE_KEY + '_mj_note_dismissed');
-      showMjNotePopup(val);
-    }
-  });
-}</script>
+</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
     <div class="mj-note-box-title">Message du MJ</div>
