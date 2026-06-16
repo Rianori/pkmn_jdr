@@ -1024,13 +1024,7 @@ function loadNotesFromCloud() {
 }
 
 /* ── Écoute temps réel : si le MJ envoie un message ── */
-function listenMjNote() {
-  fbListen('mj_note', function(val) {
-    if (!val) return;
-    var read = localStorage.getItem(STORAGE_KEY + '_mj_note_read');
-    if (val !== read) showMjNotePopup(val);
-  });
-}
+
 
 /* ── Init : remplace initPlayerBin() ── */
 function initPlayerBin() {
@@ -1080,6 +1074,7 @@ function loadState() {
 
 function saveState() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify({team:state.team,notes:state.notes,activeNote:state.activeNote})); } catch(e) {}
+  _syncCloud();
 }
 
 function renderTeam() {
@@ -1468,13 +1463,7 @@ function showMjNotePopup(text) {
   popup.classList.remove('hidden');
 }
 
-function closeMjNotePopup() {
-  var popup = document.getElementById('mj-note-popup');
-  var content = document.getElementById('mj-note-content');
-  if (!popup || !content) return;
-  popup.classList.add('hidden');
-  localStorage.setItem(STORAGE_KEY + '_mj_note_read', content.textContent);
-}
+
 
 document.addEventListener('DOMContentLoaded', function() {
   renderGear();
@@ -1600,6 +1589,32 @@ function exportJSON() {
   }
 }
 
+
+function listenMjNote() {
+  var _lastMjNote = null;
+  fbListen('mj_note', function(val) {
+    if (!val) return;
+    // Afficher si c'est un nouveau message (différent du dernier vu CE SESSION)
+    if (val !== _lastMjNote) {
+      _lastMjNote = val;
+      var dismissed = localStorage.getItem(STORAGE_KEY + '_mj_note_dismissed');
+      // Afficher si jamais acquitté, ou si message différent du dernier acquitté
+      if (dismissed !== val) {
+        showMjNotePopup(val);
+      }
+    }
+  });
+}
+
+function closeMjNotePopup() {
+  var popup = document.getElementById('mj-note-popup');
+  if (popup) popup.classList.add('hidden');
+  // Marquer comme acquitté pour ne plus afficher au rechargement
+  var content = document.getElementById('mj-note-content');
+  if (content && content.textContent) {
+    localStorage.setItem(STORAGE_KEY + '_mj_note_dismissed', content.textContent);
+  }
+}
 </script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
