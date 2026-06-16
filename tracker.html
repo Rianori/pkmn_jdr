@@ -675,14 +675,163 @@ a { color: inherit; }
   </header>
 
   <div class="player-body">
-  <div class="pj-banner" id="pj-banner">
+    <div class="pj-banner" id="pj-banner">
     <img class="pj-banner-img" id="pj-photo-img" src="img/tracker.png" alt="">
     </div>
-    <div class="pj-banner-overlay">
-      <div class="pj-banner-name" id="pj-banner-name">Elias Voss</div>
-      <div class="pj-banner-role">Chasseur Ph&eacute;nom&egrave;nes Anomaux</div>
+    <div class="player-main">
+      <nav class="player-nav">
+        <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
+        <button onclick="showPlayerTab('partner',this)">Kaiminus</button>
+        <button onclick="showPlayerTab('team',this)">Equipe</button>
+        <button onclick="showPlayerTab('notes',this)">Notes</button>
+      </nav>
+      <div class="player-content">
+
+<div class="player-tab active" id="tab-perso">
+        <div class="page-title">Elias Voss</div>
+        <div class="page-tagline">Chasseur de Ph&eacute;nom&egrave;nes Anomaux</div>
+        <div class="stats-grid">
+          <div class="stat-block">
+            <div class="stat-block-title">Attributs</div>
+            <div class="stat-row"><span class="stat-name">Agilit&eacute;</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Ruse</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Force</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Trempe</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Vigueur</span><span class="stat-val">d8</span></div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-block-title">Stats d&eacute;riv&eacute;es</div>
+            <div class="stat-row"><span class="stat-name">Parade</span><span class="stat-val">6</span></div><div class="stat-row"><span class="stat-name">Robustesse</span><span class="stat-val">6</span></div><div class="stat-row"><span class="stat-name">Allure</span><span class="stat-val">6&quot;</span></div><div class="stat-row"><span class="stat-name">D&eacute; Joker</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Fate Chips</span><span class="stat-val">3/session</span></div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--muted);font-style:italic;margin-bottom:18px;line-height:1.7">Ancien chercheur de terrain pour un laboratoire priv&eacute;. A tout perdu &mdash; poste, cr&eacute;dit, r&eacute;putation &mdash; en documentant des faits que personne ne voulait voir. Voyage seul depuis. Kaiminus l'a suivi hors d'un tunnel inond&eacute; il y a six mois. Ni l'un ni l'autre n'a vraiment choisi l'autre.</p>
+        <div class="section-title">Comp&eacute;tences</div>
+        <div class="stat-block" style="margin-bottom:18px"><div class="stat-row"><span class="stat-name">Athl&eacute;tisme</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Connaissances Communes</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Perception (Notice)</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Survie (Survival)</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Discr&eacute;tion (Sneak)</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Pistage Anomal</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Combat (Fightin')</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Intimidation (Overawe)</span><span class="stat-val">d6</span></div></div>
+        <div class="section-title">Handicaps</div>
+        <div class="hindrance-block">
+                <div class="block-name"><span class="tag tag-majeur">Majeur</span> Obsession des Origines</div>
+                <div class="block-desc">Ne peut pas laisser une installation d'exp&eacute;rimentation ill&eacute;gale sur les Pok&eacute;mon sans tenter de la documenter et la d&eacute;truire. Jet de Trempe d10 diff. 8 pour se retenir.</div>
+              </div><div class="hindrance-block">
+                <div class="block-name"><span class="tag tag-mineur">Mineur</span> R&eacute;putation</div>
+                <div class="block-desc">Connu comme &laquo;&nbsp;le chasseur de fant&ocirc;mes&nbsp;&raquo;. -2 &agrave; Persuasion avec les officiels. +2 avec les t&eacute;moins de ph&eacute;nom&egrave;nes inexpliques.</div>
+              </div><div class="hindrance-block">
+                <div class="block-name"><span class="tag tag-mineur">Mineur</span> Documentation Compulsive</div>
+                <div class="block-desc">Perd 1 round &agrave; documenter toute nouvelle anomalie avant de pouvoir agir (sauf jet Trempe d10 diff. 6).</div>
+              </div>
+        <div class="section-title">Atouts</div>
+        <div class="edge-block">
+                <div class="block-name"><span class="tag tag-background">Background</span> Sens du Danger</div>
+                <div class="block-desc">Jamais pris par surprise. Peut agir normalement dans les rounds de surprise. S'&eacute;tend &agrave; Kaiminus si dans un rayon de 6&quot;.</div>
+              </div><div class="edge-block">
+                <div class="block-name"><span class="tag tag-background">Background</span> Pisteur Sp&eacute;cialis&eacute;</div>
+                <div class="block-desc">+2 &agrave; tous les jets de Perception et Survie impliquant des Pok&eacute;mon corrompus, mutants ou anomaux. Peut identifier l'&acirc;ge d'une piste jusqu'&agrave; 48h.</div>
+              </div><div class="edge-block">
+                <div class="block-name"><span class="tag tag-background">Pok&eacute;mon</span> Lien Profond &mdash; Kaiminus</div>
+                <div class="block-desc">Une fois par sc&egrave;ne : demander au MJ si une menace non visible est pr&eacute;sente dans un rayon de 20&quot;. R&eacute;ponse : oui / non / type d'anomalie.</div>
+              </div>
+        <div class="section-title">Equipement</div>
+        <ul class="gear-list"><li>Carnet de terrain (r&eacute;sistant &agrave; l'eau)</li><li>Appareil photo &agrave; m&eacute;moire physique</li><li>Kit de survie (corde 15m, pitons x4, lampe frontale)</li><li>Couteau de survie</li><li>Pochette &eacute;tanche documents</li><li>250&nbsp;&#8377;</li></ul>
+        <button class="note-add-btn" style="margin-top:14px" onclick="addGear()">+ Ajouter</button>
+        <div class="player-tab" id="player-tab-perso" style="display:none"></div>
+      </div>
+
+<div class="player-tab" id="tab-partner">
+        <div class="page-title">Pok&eacute;mon partenaire</div>
+        <div class="page-tagline">Kaiminus</div>
+        <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+          <span style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Blessures</span>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b1" onchange="saveBlessures()"> Blessure 1 (-1)</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b2" onchange="saveBlessures()"> Blessure 2 (-2)</label>
+        </div>
+        <div class="pk-grid">
+          <div class="pk-card">
+            <div class="pk-card-header">
+              <div class="pk-owner">Pok&eacute;mon Partenaire</div>
+              <div class="pk-name">Kaiminus</div>
+              <div class="pk-species">Totodile &middot; Eau &middot; N&deg;158</div>
+              <div class="pk-meta-row">
+                <span class="tag tag-weird">Eau</span>
+                <span class="tag tag-background">Moyen</span>
+                <span class="tag tag-edge">Extra sp&eacute;cial</span>
+              </div>
+            </div>
+            <div class="pk-body">
+              <p class="pk-lore">Trouv&eacute; seul dans des tunnels inond&eacute;s. Il survivait d&eacute;j&agrave; tr&egrave;s bien sans personne. Sa gueule est toujours l&eacute;g&egrave;rement entrouverte.</p>
+              <div class="pk-stats-row"><div class="pk-stat">AGI&nbsp;<span class="val">d8</span></div><div class="pk-stat">FOR&nbsp;<span class="val">d8</span></div><div class="pk-stat">VIG&nbsp;<span class="val">d10</span></div><div class="pk-stat">Parade&nbsp;<span class="val">6</span></div><div class="pk-stat">Robustesse&nbsp;<span class="val">8</span></div><div class="pk-stat">Allure&nbsp;<span class="val">4 / 8 eau</span></div></div>
+              <div class="pk-section-lbl">Attaques</div>
+              <table class="pk-atk-table">
+                <tr><th>Attaque</th><th>Domm.</th><th>Port&eacute;e</th><th>Effet</th></tr>
+                <tr><td class="pk-atk-name">Morsure</td><td class="pk-atk-dmg">FOR+d8</td><td>M&ecirc;l&eacute;e</td><td>Combat d8 &mdash; chance de Secousse</td></tr><tr><td class="pk-atk-name">Jet d'Eau</td><td class="pk-atk-dmg">2d6</td><td>8&quot;/16&quot;</td><td>Pousse la cible d'1 case</td></tr><tr><td class="pk-atk-name">Charge</td><td class="pk-atk-dmg">FOR+d6</td><td>M&ecirc;l&eacute;e</td><td>Initiative +2 si charge 4&quot;+</td></tr>
+              </table>
+              <div class="pk-section-lbl">Capacit&eacute;s sp&eacute;ciales</div>
+              <div class="pk-capa"><div class="pk-capa-name">Intimidation Naturelle</div><div class="pk-capa-desc">Intimidation d8 gratuite en d&eacute;but de sc&egrave;ne. Cibles Petites ou Moyennes : -1 Parade ce round.</div></div><div class="pk-capa"><div class="pk-capa-name">Gardien (Passif)</div><div class="pk-capa-desc">Si Elias est Secouu&eacute;, s'interpose automatiquement. Robustesse 8 absorbe le prochain coup. 1x/round.</div></div><div class="pk-capa"><div class="pk-capa-name">Instinct de Traqueur (Passif)</div><div class="pk-capa-desc">Peut pister &agrave; l'odorat et aux traces jusqu'&agrave; 12h. +2 Perception en milieu aquatique ou humide.</div></div>
+              <div class="pk-note">Kaiminus ne montre aucune affection visible. Il suit Elias comme un fait &eacute;tabli. Les autres PJ le trouvent inqui&eacute;tant. Elias lui fait confiance pr&eacute;cis&eacute;ment parce qu'il ne cherche pas &agrave; plaire.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<div class="player-tab" id="tab-team">
+      <div class="page-title">Equipe Pokemon</div>
+      <div class="page-tagline">6 slots - partenaire fixe en slot 0</div>
+      <div class="team-grid" id="team-grid"></div>
+      <div class="pk-add-form" id="pk-add-form">
+        <div class="section-title">Ajouter - <span id="add-slot-num"></span></div>
+        <input type="hidden" id="add-slot-hidden">
+        <div class="form-row">
+          <div><label>Nom</label><input type="text" id="pk-add-name" placeholder="Ex : Racaillou"></div>
+          <div><label>Type(s)</label><input type="text" id="pk-add-type" placeholder="Ex : Roche/Sol"></div>
+        </div>
+        <label>Talent / Capacite speciale</label>
+        <input type="text" id="pk-add-talent" placeholder="Ex : Levitation, Torrent, Intimidation..." style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:13px;padding:8px 12px;margin-bottom:8px">
+        <label>Notes</label>
+        <textarea id="pk-add-notes" placeholder="Statut, PV actuels..."></textarea>
+        <label style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px;display:block">Stats de base</label>
+        <div class="pk-stats-grid">
+          <div class="pk-stat-field"><label>FOR</label><input type="text" id="pk-stat-for" placeholder="d8"></div>
+          <div class="pk-stat-field"><label>AGI</label><input type="text" id="pk-stat-agi" placeholder="d6"></div>
+          <div class="pk-stat-field"><label>VIG</label><input type="text" id="pk-stat-vig" placeholder="d6"></div>
+          <div class="pk-stat-field"><label>RUS</label><input type="text" id="pk-stat-rus" placeholder="d4"></div>
+          <div class="pk-stat-field"><label>Parade</label><input type="text" id="pk-stat-parade" placeholder="5"></div>
+          <div class="pk-stat-field"><label>Robustesse</label><input type="text" id="pk-stat-robustesse" placeholder="5"></div>
+        </div>
+        <div class="pk-stat-field" style="margin-top:6px"><label>Allure</label><input type="text" id="pk-stat-allure" placeholder='6"' style="max-width:120px"></div>
+        <div class="pk-attacks-area">
+          <label style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin:8px 0 5px">Attaques</label>
+          <div id="pk-attacks-container">
+            <div class="pk-attack-row" id="atk-row-1">
+              <input type="text" id="pk-atk-name-1" placeholder="Attaque 1">
+              <input type="text" id="pk-atk-dmg-1" placeholder="Degats" style="max-width:90px">
+            </div>
+          </div>
+          <button class="pk-attack-add" onclick="addAttackRow()">+ Attaque</button>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-primary" onclick="addPokemon()">Ajouter</button>
+          <button class="btn-ghost" onclick="closeAddForm()">Annuler</button>
+        </div>
+      </div>
+      <div class="team-panel" id="team-panel"><div class="team-empty-state">Selectionne un slot.</div></div>
     </div>
-  </div>
+
+<div class="player-tab" id="tab-notes">
+      <div class="page-title">Notes</div>
+      <div class="page-tagline">Sauvegarde automatique</div>
+      <div class="notes-layout">
+        <div class="notes-sidebar">
+          <div id="note-list"></div>
+          <button class="note-add-btn" onclick="addNote()">+ Nouveau</button>
+        </div>
+        <div class="note-editor-wrap">
+          <input class="note-title-input" id="note-title" placeholder="Titre" oninput="onNoteTitle(this.value)">
+          <textarea class="note-body-textarea" id="note-body" placeholder="Tes notes ici..." oninput="onNoteBody(this.value)"></textarea>
+          <div class="note-meta-bar">
+            <span id="save-status" class="save-ok">Sauvegarde</span>
+            <span id="note-wc" style="margin-left:auto">0 mots</span>
+            <button class="btn-ghost" onclick="exportNote()">Exporter</button>
+            <button class="btn-danger" onclick="deleteNote()">Supprimer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</div>
 </div>
 </div>
 <script>
