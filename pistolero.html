@@ -688,6 +688,22 @@ a { color: inherit; }
   .hd-identity { display: flex; flex-direction: column; gap: 1px; }
   .hd-nom { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--amber); }
   .hd-role { font-size: 10px; color: var(--muted); }
+
+  .gear-item-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 0;
+    outline: none;
+    transition: border-color .15s;
+    min-width: 0;
+  }
+  .gear-item-input:hover { border-bottom-color: var(--border); }
+  .gear-item-input:focus { border-bottom-color: var(--amber-dim); }
 </style>
 </head>
 <body>
@@ -1331,19 +1347,7 @@ function saveGear(items) {
   _syncCloud();
 }
 
-function renderGear() {
-  var container = document.getElementById('gear-editable');
-  if (!container) return;
-  var items = loadGear();
-  container.innerHTML = '';
-  items.forEach(function(item, idx) {
-    var li = document.createElement('div');
-    li.className = 'gear-item';
-    li.innerHTML = '<span class="gear-item-text">' + escHtml(item) + '</span>'
-      + '<button class="gear-del-btn" onclick="deleteGearItem(' + idx + ')" title="Supprimer">x</button>';
-    container.appendChild(li);
-  });
-}
+
 
 function escHtml(s) {
   return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -1660,7 +1664,43 @@ function closeMjNotePopup() {
     localStorage.setItem(STORAGE_KEY + '_mj_note_dismissed', content.textContent);
   }
 }
-</script>
+
+function renderGear() {
+  var container = document.getElementById('gear-editable');
+  if (!container) return;
+  var items = loadGear();
+  container.innerHTML = '';
+  items.forEach(function(item, idx) {
+    var li = document.createElement('div');
+    li.className = 'gear-item';
+    var inp = document.createElement('input');
+    inp.type = 'text';
+    inp.className = 'gear-item-input';
+    inp.value = item;
+    inp.maxLength = 120;
+    inp.addEventListener('blur', (function(i) {
+      return function() {
+        var items = loadGear();
+        items[i] = this.value.trim();
+        if (!items[i]) { items.splice(i, 1); }
+        saveGear(items);
+        renderGear();
+      };
+    })(idx));
+    inp.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { this.blur(); }
+      if (e.key === 'Escape') { renderGear(); }
+    });
+    var del = document.createElement('button');
+    del.className = 'gear-del-btn';
+    del.title = 'Supprimer';
+    del.textContent = 'x';
+    del.onclick = (function(i) { return function() { deleteGearItem(i); }; })(idx);
+    li.appendChild(inp);
+    li.appendChild(del);
+    container.appendChild(li);
+  });
+}</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
     <div class="mj-note-box-title">Message du MJ</div>
