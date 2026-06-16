@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MJ — Vue Joueurs</title>
+<title>MJ — Vue Joueurs (temps réel)</title>
 <style>
 :root {
   --bg:#0e0e10;--surface:#141416;--card:#1a1a1e;--border:#2a2a30;
@@ -13,79 +13,80 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;}
-header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;
-  background:var(--surface);border-bottom:1px solid var(--border);
+header{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--border);
   position:sticky;top:0;z-index:100;}
 .hd-title{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--amber);}
-.hd-sub{font-size:11px;color:var(--muted);margin-left:12px;}
+.hd-sub{font-size:11px;color:var(--muted);margin-left:10px;}
 .hd-right{display:flex;align-items:center;gap:12px;}
-.refresh-btn{font-family:var(--mono);font-size:10px;letter-spacing:.06em;
-  background:none;border:1px solid var(--border);border-radius:3px;
-  color:var(--muted);padding:5px 12px;cursor:pointer;transition:color .15s,border-color .15s;}
-.refresh-btn:hover{color:var(--amber);border-color:var(--amber-dim);}
 .back-link{font-family:var(--mono);font-size:11px;color:var(--muted);text-decoration:none;
   border:1px solid var(--border);border-radius:2px;padding:5px 12px;
   transition:color .15s,border-color .15s;}
 .back-link:hover{color:var(--amber);border-color:var(--amber-dim);}
-#status-bar{padding:8px 24px;font-family:var(--mono);font-size:11px;
+#status-bar{padding:7px 24px;font-family:var(--mono);font-size:10px;
   background:var(--surface);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:10px;}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0;}
-.dot.ok{background:#4caf6e;}
-.dot.loading{background:var(--amber);animation:pulse 1s infinite;}
+  display:flex;align-items:center;gap:8px;color:var(--muted);}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;}
+.dot.ok{background:#4caf6e;box-shadow:0 0 5px rgba(76,175,110,.5);}
+.dot.loading{background:var(--amber);animation:pulse .9s infinite;}
 .dot.err{background:#e57373;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.main{padding:24px;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:18px;}
-.player-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+.main{padding:22px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px;}
+.player-card{background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;transition:border-color .2s;}
+.player-card.updated{border-color:var(--amber-dim);animation:flash .6s ease;}
+@keyframes flash{0%,100%{border-color:var(--amber-dim)}50%{border-color:var(--amber)}}
 .card-head{display:flex;border-bottom:1px solid var(--border);}
 .card-avatar{width:64px;flex-shrink:0;background:var(--surface);}
 .card-avatar img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
-.card-avatar-ph{width:100%;height:100%;min-height:64px;display:flex;align-items:center;
+.card-avatar-ph{width:100%;min-height:64px;display:flex;align-items:center;
   justify-content:center;color:var(--muted);font-size:20px;}
-.card-identity{padding:12px 14px;flex:1;}
-.card-slug{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);margin-bottom:3px;}
-.card-nom{font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.card-identity{padding:11px 14px;flex:1;}
+.card-slug{font-family:var(--mono);font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+.card-nom{font-size:14px;font-weight:600;color:var(--text);margin-bottom:1px;}
 .card-role{font-size:11px;color:var(--muted);}
-.card-meta{padding:6px 14px;background:var(--surface);border-bottom:1px solid var(--border);
+.card-meta{padding:5px 14px;background:var(--surface);border-bottom:1px solid var(--border);
   display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;}
-.badge{padding:2px 8px;border-radius:2px;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.badge{padding:2px 7px;border-radius:2px;font-size:9px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;}
 .badge-ok{background:rgba(45,110,53,.2);color:#4caf6e;border:1px solid rgba(45,110,53,.3);}
-.badge-old{background:rgba(139,51,0,.2);color:#d4835a;border:1px solid rgba(139,51,0,.3);}
+.badge-old{background:rgba(139,51,0,.15);color:#d4835a;border:1px solid rgba(139,51,0,.3);}
 .badge-none{background:var(--surface);color:var(--muted);border:1px solid var(--border);}
 .card-upd{margin-left:auto;color:var(--muted);}
-.card-body{padding:14px;}
+.card-body{padding:12px 14px;}
 .sec-lbl{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;
-  text-transform:uppercase;color:var(--muted);margin-bottom:6px;padding-bottom:4px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:5px;padding-bottom:4px;
   border-bottom:1px solid var(--border);}
-.team-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
+.team-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;}
 .pk-chip{font-family:var(--mono);font-size:10px;background:var(--surface);
   border:1px solid var(--border);border-radius:3px;padding:2px 7px;color:var(--muted);}
 .pk-chip.on{color:var(--amber);border-color:var(--amber-dim);background:var(--amber-glow);}
-.gear-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
+.gear-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px;}
 .gear-chip{font-size:11px;background:var(--surface);border:1px solid var(--border);
   border-radius:3px;padding:2px 7px;color:var(--muted);}
-.notes-area{margin-bottom:0;}
-.note-preview{padding:7px 10px;border-left:2px solid var(--border);margin-bottom:5px;}
-.note-title{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.note-preview{padding:6px 10px;border-left:2px solid var(--border);margin-bottom:5px;}
+.note-title{font-family:var(--mono);font-size:10px;font-weight:600;
+  color:var(--text);margin-bottom:2px;}
 .note-body{font-size:11px;color:var(--muted);line-height:1.5;}
-.note-empty{font-size:11px;color:var(--muted);font-style:italic;}
-.mj-zone{border-top:1px solid var(--border);padding:12px 14px;}
-.mj-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);display:block;margin-bottom:5px;}
+.note-empty{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:12px;}
+.mj-zone{border-top:1px solid var(--border);padding:10px 14px;}
+.mj-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px;}
 .mj-ta{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:3px;
   color:var(--text);font-family:var(--sans);font-size:12px;padding:6px 9px;
   outline:none;resize:none;transition:border-color .15s;}
 .mj-ta:focus{border-color:var(--amber-dim);}
 .mj-row{display:flex;justify-content:flex-end;margin-top:5px;}
 .mj-btn{font-family:var(--mono);font-size:10px;background:var(--amber-dim);border:none;
-  border-radius:3px;color:var(--amber);padding:5px 12px;cursor:pointer;transition:background .15s;}
+  border-radius:3px;color:var(--amber);padding:5px 12px;cursor:pointer;}
 .mj-btn:hover{background:rgba(200,146,42,.4);}
 .mj-btn:disabled{opacity:.4;cursor:default;}
-.err-box{background:rgba(139,51,0,.15);border:1px solid rgba(139,51,0,.4);
-  border-radius:var(--radius);padding:14px 18px;margin-bottom:18px;
-  font-family:var(--mono);font-size:12px;color:#e57373;}
+.live-badge{font-family:var(--mono);font-size:9px;color:var(--amber);
+  border:1px solid var(--amber-dim);border-radius:2px;padding:1px 6px;
+  animation:pulse-live 2s infinite;}
+@keyframes pulse-live{0%,100%{opacity:1}50%{opacity:.5}}
 </style>
 </head>
 <body>
@@ -94,106 +95,86 @@ header{display:flex;align-items:center;justify-content:space-between;padding:12p
   <div style="display:flex;align-items:center;gap:8px;">
     <span class="hd-title">Compagnon MJ</span>
     <span class="hd-sub">— Vue Joueurs</span>
+    <span class="live-badge">LIVE</span>
   </div>
   <div class="hd-right">
-    <button class="refresh-btn" onclick="loadAll()">&#8635; Actualiser</button>
     <a href="mj.html" class="back-link">&#8592; MJ</a>
   </div>
 </header>
 
 <div id="status-bar">
   <div class="dot loading" id="dot"></div>
-  <span id="status-txt">Connexion à JSONBin...</span>
+  <span id="status-txt">Connexion Firebase...</span>
 </div>
 
 <div class="main">
-  <div id="err-zone"></div>
   <div class="grid" id="grid"></div>
 </div>
 
 <script>
-var JBKEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
-var JBURL = 'https://api.jsonbin.io/v3';
-var CTRID = '6a2f352bf5f4af5e29f21a22';
+var FB_URL = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
 
 var PLAYERS = [
-  {slug:'analyste',  nom:'Magdalena Hell',  role:'Technicienne CT',              img:'img/analyste.png'},
-  {slug:'pistolero', nom:'Lidia Fireheart', role:'Ancien agent Ligue',           img:'img/pistolero.png'},
-  {slug:'causeuse',  nom:'Rizen Dao',       role:'Journaliste investigation',    img:'img/causeuse.png'},
-  {slug:'pisteur',   nom:'Teleera',         role:'Veterinaire Pokemon',          img:'img/pisteur.png'},
-  {slug:'tracker',   nom:'Elias Voss',      role:'Chasseur Phenomenes Anomaux',  img:'img/tracker.png'},
-  {slug:'dresseur',  nom:'Kael Oryn',       role:'Dresseur circuit libre',       img:''}
+  {slug:'analyste',  nom:'Magdalena Hell',  role:'Technicienne CT',             img:'img/analyste.png'},
+  {slug:'pistolero', nom:'Lidia Fireheart', role:'Ancien agent Ligue',          img:'img/pistolero.png'},
+  {slug:'causeuse',  nom:'Rizen Dao',       role:'Journaliste investigation',   img:'img/causeuse.png'},
+  {slug:'pisteur',   nom:'Teleera',         role:'Veterinaire Pokemon',         img:'img/pisteur.png'},
+  {slug:'tracker',   nom:'Elias Voss',      role:'Chasseur Phenomenes Anomaux', img:'img/tracker.png'},
+  {slug:'dresseur',  nom:'Kael Oryn',       role:'Dresseur circuit libre',      img:''}
 ];
 
-var bins = {};
 var data = {};
+var sources = {};
+var connCount = 0;
 
 function setStatus(cls, txt) {
   document.getElementById('dot').className = 'dot ' + cls;
   document.getElementById('status-txt').textContent = txt;
 }
 
-function showErr(msg) {
-  document.getElementById('err-zone').innerHTML =
-    '<div class="err-box">Erreur : ' + msg + '</div>';
+/* ── Écoute temps réel via SSE Firebase ─────────────────────────────────── */
+function listenPlayer(p) {
+  var url = FB_URL + '/joueurs/' + p.slug + '.json';
+  var src = new EventSource(url);
+
+  src.addEventListener('put', function(e) {
+    try {
+      var payload = JSON.parse(e.data);
+      var rec = payload.data;
+      var isFirst = !data[p.slug];
+      data[p.slug] = rec;
+
+      if (isFirst) {
+        connCount++;
+        if (connCount === PLAYERS.length) {
+          setStatus('ok', 'Connecte a ' + connCount + ' joueurs — mises a jour en temps reel');
+        }
+      }
+
+      renderCard(p, rec, !isFirst);
+    } catch(ex) {}
+  });
+
+  src.addEventListener('error', function() {
+    /* SSE déconnecté — Firebase reconnecte automatiquement */
+  });
+
+  sources[p.slug] = src;
 }
 
-function jbGet(url) {
-  return fetch(url, {headers:{'X-Master-Key': JBKEY}}).then(function(r) {
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  });
-}
-
-function jbPut(url, body) {
-  return fetch(url, {
-    method: 'PUT',
-    headers: {'X-Master-Key': JBKEY, 'Content-Type': 'application/json'},
-    body: JSON.stringify(body)
-  }).then(function(r) {
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  });
-}
-
-function loadAll() {
-  setStatus('loading', 'Chargement...');
-  document.getElementById('err-zone').innerHTML = '';
-
-  jbGet(JBURL + '/b/' + CTRID + '/latest')
-  .then(function(d) {
-    bins = d.record || {};
-    var keys = Object.keys(bins);
-    if (!keys.length) throw new Error('Canal central vide — aucun joueur connecté');
-
-    var promises = PLAYERS.map(function(p) {
-      var bid = bins[p.slug];
-      if (!bid) return Promise.resolve({slug: p.slug, rec: null});
-      return jbGet(JBURL + '/b/' + bid + '/latest')
-        .then(function(d2) { return {slug: p.slug, rec: d2.record || null}; })
-        .catch(function() { return {slug: p.slug, rec: null}; });
-    });
-    return Promise.all(promises);
-  })
-  .then(function(results) {
-    results.forEach(function(r) { data[r.slug] = r.rec; });
-    renderAll();
-    var now = new Date().toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-    setStatus('ok', 'Mis a jour a ' + now + ' — actualisation auto toutes les 60s');
-  })
-  .catch(function(e) {
-    setStatus('err', 'Erreur : ' + e.message);
-    showErr(e.message);
-    renderAll(); // afficher les cartes vides quand meme
-  });
-}
-
-function renderAll() {
-  var grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  PLAYERS.forEach(function(p) {
-    grid.appendChild(buildCard(p, data[p.slug] || null));
-  });
+/* ── Rendu d'une carte ───────────────────────────────────────────────────── */
+function renderCard(p, rec, flash) {
+  var existing = document.getElementById('card-' + p.slug);
+  var card = buildCard(p, rec);
+  if (existing) {
+    existing.replaceWith(card);
+  } else {
+    document.getElementById('grid').appendChild(card);
+  }
+  if (flash) {
+    setTimeout(function() { card.classList.add('updated'); }, 10);
+    setTimeout(function() { card.classList.remove('updated'); }, 700);
+  }
 }
 
 function buildCard(p, rec) {
@@ -201,13 +182,15 @@ function buildCard(p, rec) {
   el.className = 'player-card';
   el.id = 'card-' + p.slug;
 
-  var age = rec && rec.updated ? Date.now() - rec.updated : null;
-  var badge = !rec ? '<span class="badge badge-none">Non connecte</span>'
-    : age < 3600000  ? '<span class="badge badge-ok">Actif</span>'
+  var upd = rec && rec.updated ? rec.updated : null;
+  var age = upd ? Date.now() - upd : null;
+  var badge = !rec ? '<span class="badge badge-none">En attente</span>'
+    : age < 300000   ? '<span class="badge badge-ok">Actif</span>'
+    : age < 3600000  ? '<span class="badge badge-ok">Recemment</span>'
     : age < 86400000 ? '<span class="badge badge-old">Hier</span>'
     : '<span class="badge badge-none">Inactif</span>';
-  var upd = rec && rec.updated
-    ? new Date(rec.updated).toLocaleString('fr-FR', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'})
+  var updStr = upd
+    ? new Date(upd).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})
     : '';
 
   el.innerHTML =
@@ -220,31 +203,34 @@ function buildCard(p, rec) {
     + '<div class="card-nom">' + p.nom + '</div>'
     + '<div class="card-role">' + p.role + '</div>'
     + '</div></div>'
-    + '<div class="card-meta">' + badge + (upd ? '<span class="card-upd">' + upd + '</span>' : '') + '</div>'
+    + '<div class="card-meta">' + badge
+    + (updStr ? '<span class="card-upd">' + updStr + '</span>' : '') + '</div>'
     + '<div class="card-body">'
     + buildTeam(rec)
     + buildGear(rec)
     + buildNotes(rec)
     + '</div>'
     + '<div class="mj-zone">'
-    + '<span class="mj-lbl">Message au joueur (popup)</span>'
-    + '<textarea class="mj-ta" id="ta-' + p.slug + '" rows="2" placeholder="Message visible au prochain chargement de sa fiche...">'
+    + '<span class="mj-lbl">Message au joueur</span>'
+    + '<textarea class="mj-ta" id="ta-' + p.slug + '" rows="2"'
+    + ' placeholder="Apparait en popup sur sa fiche...">'
     + (rec && rec.mj_note ? rec.mj_note : '')
     + '</textarea>'
-    + '<div class="mj-row"><button class="mj-btn" id="btn-' + p.slug + '" onclick="sendNote(\'' + p.slug + '\')">Envoyer &#9654;</button></div>'
-    + '</div>';
+    + '<div class="mj-row">'
+    + '<button class="mj-btn" id="btn-' + p.slug + '" onclick="sendNote(\'' + p.slug + '\')">Envoyer &#9654;</button>'
+    + '</div></div>';
 
   return el;
 }
 
 function buildTeam(rec) {
-  var h = '<div class="sec-lbl">Equipe Pokemon</div><div class="team-row">';
+  var h = '<div class="sec-lbl">Equipe</div><div class="team-row">';
   if (!rec || !rec.team) {
     for (var i = 0; i < 6; i++) h += '<span class="pk-chip">vide</span>';
     return h + '</div>';
   }
   for (var i = 0; i < 6; i++) {
-    var pk = rec.team[i];
+    var pk = rec.team && rec.team[i];
     h += pk && pk.name
       ? '<span class="pk-chip on">' + pk.name + (pk.level ? ' Lv.' + pk.level : '') + '</span>'
       : '<span class="pk-chip">vide</span>';
@@ -254,7 +240,7 @@ function buildTeam(rec) {
 
 function buildGear(rec) {
   if (!rec || !rec.gear) return '';
-  var items = (rec.gear || []).filter(function(g) { return g && g.trim(); });
+  var items = rec.gear.filter(function(g) { return g && g.trim(); });
   if (!items.length) return '';
   var h = '<div class="sec-lbl">Equipement</div><div class="gear-row">';
   items.forEach(function(g) { h += '<span class="gear-chip">' + g + '</span>'; });
@@ -262,41 +248,36 @@ function buildGear(rec) {
 }
 
 function buildNotes(rec) {
-  var h = '<div class="sec-lbl">Notes (' + (rec && rec.notes ? rec.notes.length : 0) + ')</div>';
-  if (!rec || !rec.notes || !rec.notes.length) {
-    return h + '<div class="note-empty">Aucune note.</div>';
-  }
-  var sorted = rec.notes.slice().sort(function(a, b) { return (b.updated || 0) - (a.updated || 0); });
-  h += '<div class="notes-area">';
+  var count = rec && rec.notes ? rec.notes.length : 0;
+  var h = '<div class="sec-lbl">Notes (' + count + ')</div>';
+  if (!count) return h + '<div class="note-empty">Aucune note.</div>';
+  var sorted = rec.notes.slice().sort(function(a,b) { return (b.updated||0)-(a.updated||0); });
   sorted.slice(0, 2).forEach(function(n) {
     var preview = (n.content || '').replace(/<[^>]+>/g, '').slice(0, 90);
-    if ((n.content || '').length > 90) preview += '...';
+    if ((n.content||'').length > 90) preview += '...';
     h += '<div class="note-preview"><div class="note-title">' + (n.title || 'Sans titre') + '</div>'
        + '<div class="note-body">' + preview + '</div></div>';
   });
-  if (rec.notes.length > 2) {
-    h += '<div style="font-size:11px;color:var(--muted);margin-top:4px">+ ' + (rec.notes.length - 2) + ' autre(s)</div>';
-  }
-  return h + '</div>';
+  if (count > 2) h += '<div style="font-size:11px;color:var(--muted);margin-top:3px">+ ' + (count-2) + ' autre(s)</div>';
+  return h;
 }
 
+/* ── Envoi message MJ ────────────────────────────────────────────────────── */
 function sendNote(slug) {
   var ta  = document.getElementById('ta-' + slug);
   var btn = document.getElementById('btn-' + slug);
   var msg = ta.value.trim();
-  var bid = bins[slug];
-  if (!bid) { alert('Bin introuvable pour ' + slug + ' — le joueur doit ouvrir sa fiche au moins une fois.'); return; }
 
   btn.disabled = true;
   btn.textContent = 'Envoi...';
 
-  jbGet(JBURL + '/b/' + bid + '/latest')
-  .then(function(d) {
-    var rec = d.record || {};
-    rec.mj_note = msg || null;
-    return jbPut(JBURL + '/b/' + bid, rec);
+  fetch(FB_URL + '/joueurs/' + slug + '/mj_note.json', {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(msg || null)
   })
-  .then(function() {
+  .then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     btn.textContent = 'Envoye !';
     btn.style.background = 'rgba(45,110,53,.3)';
     btn.style.color = '#4caf6e';
@@ -313,9 +294,18 @@ function sendNote(slug) {
   });
 }
 
-// Init
-loadAll();
-setInterval(loadAll, 60000);
+/* ── Init : ouvrir un SSE par joueur ────────────────────────────────────── */
+setStatus('loading', 'Connexion Firebase...');
+
+/* Afficher les cartes vides immédiatement */
+PLAYERS.forEach(function(p) {
+  document.getElementById('grid').appendChild(buildCard(p, null));
+});
+
+/* Ouvrir les écouteurs temps réel */
+PLAYERS.forEach(function(p) {
+  listenPlayer(p);
+});
 </script>
 </body>
 </html>
