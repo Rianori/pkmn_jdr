@@ -771,9 +771,11 @@ a { color: inherit; }
                 <div class="block-desc">Une fois par sc&egrave;ne : demander au MJ si une menace non visible est pr&eacute;sente dans un rayon de 20&quot;. R&eacute;ponse : oui / non / type d'anomalie.</div>
               </div>
         <div class="section-title">Equipement</div>
-        <ul class="gear-list"><li>Carnet de terrain (r&eacute;sistant &agrave; l'eau)</li><li>Appareil photo &agrave; m&eacute;moire physique</li><li>Kit de survie (corde 15m, pitons x4, lampe frontale)</li><li>Couteau de survie</li><li>Pochette &eacute;tanche documents</li><li>250&nbsp;&#8377;</li></ul>
-        <button class="note-add-btn" style="margin-top:14px" onclick="addGear()">+ Ajouter</button>
-        <div class="player-tab" id="player-tab-perso" style="display:none"></div>
+          <div class="gear-editable" id="gear-editable"></div>
+          <div class="gear-add-row">
+            <input class="gear-add-input" id="gear-new-input" type="text" placeholder="Ajouter un item..." onkeydown="gearInputKey(event)" maxlength="100">
+            <button class="gear-add-btn" onclick="addGearItem()">+ Ajouter</button>
+          </div>
       </div>
 
       <!-- ── ONGLET PARTENAIRE ── -->
@@ -1324,7 +1326,7 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 /* ---- EQUIPEMENT EDITABLE ---- */
-var DEFAULT_GEAR = ["Analyseur de CT portable (+2 aux jets de Sciences sur toute CT)", "Carnet de terrain chiffre", "Lampe frontale haute puissance", "Pokedex modifie (acces aux bases de donnees de recherche)", "Marteau d alpiniste (arme improvisee, Str+d4)", "500  en especes"];
+var DEFAULT_GEAR = ["Carnet de terrain (r\u00e9sistant \u00e0 l'eau)","Appareil photo \u00e0 m\u00e9moire physique","Kit de survie (corde 15m, pitons x4, lampe frontale)","Couteau de survie","Pochette \u00e9tanche documents","250 ₨"];
 
 function loadGear() {
   try {
