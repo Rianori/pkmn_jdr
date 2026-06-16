@@ -108,29 +108,18 @@ header{display:flex;align-items:center;justify-content:space-between;
   border-radius:3px;color:var(--amber);padding:5px 14px;cursor:pointer;transition:background .15s;}
 .mj-btn:hover{background:rgba(200,146,42,.4);}
 .mj-btn:disabled{opacity:.4;cursor:default;}
-</style>
-</head>
-<body>
 
-<header>
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span class="hd-title">Compagnon MJ</span>
-    <span class="hd-sub">Vue Joueurs</span>
-    <span class="live-pill">LIVE</span>
-  </div>
-  <a href="mj.html" class="back-link">&#8592; MJ</a>
-</header>
-
-<div id="status-bar">
-  <div class="dot loading" id="dot"></div>
-  <span id="status-txt">Connexion Firebase...</span>
-</div>
-
-<div class="main">
-  <div class="grid" id="grid"></div>
-</div>
-
-<script>
+  .pj-traits { border-top: 1px solid var(--border); }
+  .pj-traits-toggle {
+    width: 100%; background: none; border: none;
+    padding: 8px 14px; text-align: left; cursor: pointer;
+    font-family: var(--mono); font-size: 9px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); display: flex; align-items: center;
+    justify-content: space-between; transition: color .15s;
+  }
+  .pj-traits-toggle:hover { color: var(--amber); }
+  .pj-traits-togg
 var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
 
 var PLAYERS = [
@@ -141,6 +130,8 @@ var PLAYERS = [
   {slug:'tracker',   nom:'Elias Voss',      role:'Chasseur Anomaux',           img:'img/tracker.png'},
   {slug:'dresseur',  nom:'Kael Oryn',       role:'Dresseur circuit libre',     img:''}
 ];
+
+var STATIC_DATA = {"analyste": {"edges": [{"tag": "Background", "name": "Enquêteur", "desc": ""}, {"tag": "Weird", "name": "MacGyver (Atout gratuit Humain)", "desc": ""}], "hindrances": [{"tag": "Majeur", "name": "Curieuse", "desc": ""}, {"tag": "Mineur", "name": "Ennemie", "desc": ""}]}, "pistolero": {"edges": [{"tag": "Combat", "name": "Combatif", "desc": ""}, {"tag": "Weird", "name": "Dur à Cuire", "desc": ""}], "hindrances": [{"tag": "Majeur", "name": "Loyal", "desc": ""}, {"tag": "Mineur", "name": "Passé encombrant", "desc": ""}]}, "causeuse": {"edges": [{"tag": "Background", "name": "Réseau d'informateurs", "desc": ""}, {"tag": "Social", "name": "Charismatique (Atout gratuit Humain)", "desc": ""}], "hindrances": [{"tag": "Majeur", "name": "Têtue", "desc": ""}, {"tag": "Mineur", "name": "Sans le sou", "desc": ""}, {"tag": "Mineur", "name": "Peur des Pokéball", "desc": ""}]}, "pisteur": {"edges": [{"tag": "Background", "name": "Empathie Pokémon", "desc": ""}, {"tag": "Weird", "name": "Galeries et souterrains (Atout gratuit Humain)", "desc": ""}], "hindrances": [{"tag": "Majeur", "name": "Protecteur compulsif", "desc": ""}, {"tag": "Mineur", "name": "Persona non grata", "desc": ""}, {"tag": "Mineur", "name": "Peur des Pokéball", "desc": ""}]}, "tracker": {"edges": [{"tag": "Background", "name": "Sens du Danger", "desc": ""}, {"tag": "Background", "name": "Pisteur Sp&eacute;cialis&eacute;", "desc": ""}, {"tag": "Pok&eacute;mon", "name": "Lien Profond &mdash; Kaiminus", "desc": ""}], "hindrances": [{"tag": "Majeur", "name": "Obsession des Origines", "desc": ""}, {"tag": "Mineur", "name": "R&eacute;putation", "desc": ""}, {"tag": "Mineur", "name": "Documentation Compulsive", "desc": ""}]}, "dresseur": {"edges": [{"tag": "Background", "name": "Maestro", "desc": ""}, {"tag": "Background", "name": "Lecteur de Combat", "desc": ""}, {"tag": "Pok&eacute;mon", "name": "Lien &Eacute;mergent &mdash; Abra", "desc": ""}], "hindrances": [{"tag": "Majeur", "name": "Compte &agrave; R&eacute;gler", "desc": ""}, {"tag": "Mineur", "name": "Arrogance", "desc": ""}, {"tag": "Mineur", "name": "Sans le Sou", "desc": ""}]}};
 
 var data = {};
 var connCount = 0;
@@ -198,6 +189,7 @@ function buildCard(p, rec) {
     + buildTeam(rec)
     + buildGear(rec)
     + '</div>'
+    + buildTraits(p.slug)
     + '<div class="mj-zone">'
     + '<span class="mj-lbl">Message au joueur</span>'
     + '<textarea class="mj-ta" id="ta-' + p.slug + '" rows="2"'
@@ -328,6 +320,119 @@ function sendNote(slug) {
 }
 
 /* ── Init ────────────────────────────────────────────────────────────────── */
+setStatus('loading', 'Connexion Firebase...');
+PLAYERS.forEach(function(p) {
+  document.getElementById('grid').appendChild(buildCard(p, null));
+  listenPlayer(p);
+});
+
+function listenPlayer(p) {
+  // Un seul SSE sur le noeud racine — couvre team, gear, notes, updated
+  var src = new EventSource(FB + '/joueurs/' + p.slug + '.json');
+
+  src.addEventListener('put', function(e) {
+    try {
+      var payload = JSON.parse(e.data);
+      var path    = payload.path;
+      var val     = payload.data;
+      var isFirst = !(p.slug in data);
+
+      if (!data[p.slug]) data[p.slug] = {};
+
+      if (path === '/') {
+        // Chargement initial complet
+        data[p.slug] = val || {};
+      } else {
+        // Mise à jour partielle — ex: path="/team" ou "/updated"
+        var key = path.replace(/^\//, '');
+        if (key) data[p.slug][key] = val;
+      }
+
+      if (isFirst) {
+        connCount++;
+        if (connCount === PLAYERS.length) {
+          setStatus('ok', 'Connecte — ' + connCount + ' joueurs en temps reel');
+        }
+      }
+
+      renderCard(p, data[p.slug], !isFirst);
+    } catch(ex) {}
+  });
+
+  src.addEventListener('patch', function(e) {
+    try {
+      var payload = JSON.parse(e.data);
+      if (!data[p.slug]) data[p.slug] = {};
+      var updates = payload.data || {};
+      Object.keys(updates).forEach(function(k) {
+        data[p.slug][k] = updates[k];
+      });
+      renderCard(p, data[p.slug], true);
+    } catch(ex) {}
+  });
+
+  src.addEventListener('error', function() {
+    setStatus('err', 'Erreur Firebase — reconnexion auto...');
+  });
+}
+
+function tagClass(tag) {
+  if (!tag) return 'other';
+  var t = tag.toLowerCase();
+  if (t === 'majeur') return 'majeur';
+  if (t === 'mineur') return 'mineur';
+  if (t === 'background' || t === 'combat' || t === 'social' || t === 'weird') return 'background';
+  return 'other';
+}
+
+function buildTraits(slug) {
+  var sd = STATIC_DATA[slug];
+  if (!sd) return '';
+
+  var toggleId = 'traits-' + slug;
+
+  var h = '<div class="pj-traits">'
+    + '<button class="pj-traits-toggle" id="btn-' + toggleId + '"'
+    + ' onclick="toggleTraits(\'' + toggleId + '\')">'
+    + 'Atouts &amp; Handicaps'
+    + ' <span class="chev">&#9654;</span></button>'
+    + '<div class="pj-traits-body" id="' + toggleId + '">';
+
+  if (sd.hindrances && sd.hindrances.length) {
+    h += '<div style="font-family:var(--mono);font-size:9px;color:var(--muted);'
+       + 'text-transform:uppercase;letter-spacing:.08em;margin:8px 0 5px">Handicaps</div>';
+    sd.hindrances.forEach(function(hd) {
+      h += '<div class="trait-row">'
+         + '<span class="trait-tag ' + tagClass(hd.tag) + '">' + hd.tag + '</span>'
+         + '<span class="trait-name">' + hd.name + '</span>'
+         + (hd.desc ? '<div class="trait-desc">' + hd.desc + '</div>' : '')
+         + '</div>';
+    });
+  }
+
+  if (sd.edges && sd.edges.length) {
+    h += '<div style="font-family:var(--mono);font-size:9px;color:var(--muted);'
+       + 'text-transform:uppercase;letter-spacing:.08em;margin:8px 0 5px">Atouts</div>';
+    sd.edges.forEach(function(ed) {
+      h += '<div class="trait-row">'
+         + '<span class="trait-tag ' + tagClass(ed.tag) + '">' + ed.tag + '</span>'
+         + '<span class="trait-name">' + ed.name + '</span>'
+         + (ed.desc ? '<div class="trait-desc">' + ed.desc + '</div>' : '')
+         + '</div>';
+    });
+  }
+
+  return h + '</div></div>';
+}
+
+function toggleTraits(id) {
+  var body = document.getElementById(id);
+  var btn  = document.getElementById('btn-' + id);
+  if (!body) return;
+  body.classList.toggle('open');
+  if (btn) btn.classList.toggle('open');
+}
+────────────────────────────────────────────────────── */
 setStatus('loading', 'Connexion Firebase...');
 PLAYERS.forEach(function(p) {
   document.getElementById('grid').appendChild(buildCard(p, null));
