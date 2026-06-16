@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Magdalena Hell</title>
 <style>
+
 :root {
     --bg:        #0e0e0f;
     --surface:   #161618;
@@ -655,6 +656,7 @@ a { color: inherit; }
     border-color: rgba(30,92,46,.4);
     background: rgba(30,92,46,.08);
   }
+
 </style>
 </head>
 <body>
@@ -667,30 +669,29 @@ a { color: inherit; }
       <button class="edit-name-btn" id="edit-name-btn" onclick="startEditName()" title="Modifier">Edit</button>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <button class="save-json-btn" id="save-json-btn" onclick="exportJSON()" title="T&eacute;l&eacute;charger une sauvegarde JSON">
-        &#8659; Sauvegarder
-      </button>
+      <button class="save-json-btn" id="save-json-btn" onclick="exportJSON()" title="T&eacute;l&eacute;charger une sauvegarde JSON">&#8659; Sauvegarder</button>
       <a href="index.html" class="player-back">Portail</a>
     </div>
   </header>
+
   <div class="player-body">
-  <div class="pj-banner" id="pj-banner">
-    <img class="pj-banner-img" id="pj-photo-img" src="https://rianori.github.io/pkmn_jdr/img/analyste.png" alt="">
+    <div class="pj-banner" id="pj-banner">
+      <img class="pj-banner-img" id="pj-photo-img" src="img/analyste.png" alt="">
+      <div class="pj-banner-overlay" id="pj-banner-overlay">
+        <div class="pj-banner-name" id="pj-banner-name">Magdalena Hell</div>
+        <div class="pj-banner-role">Magdalena Hell</div>
+      </div>
     </div>
-    <div class="pj-banner-overlay">
-      <div class="pj-banner-name" id="pj-banner-name">Magdalena Hell</div>
-      <div class="pj-banner-role">Technicienne en Capsules Techniques</div>
-    </div>
-  </div>
-  <div class="player-main">
-    <nav class="player-nav">
-    <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
-    <button onclick="showPlayerTab('partner',this)">Métamorph</button>
-    <button onclick="showPlayerTab('team',this)">Equipe</button>
-    <button onclick="showPlayerTab('notes',this)">Notes</button>
-  </nav>
-    <div class="player-content">
-    <div class="player-tab active" id="tab-perso">
+    <div class="player-main">
+      <nav class="player-nav">
+        <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
+        <button onclick="showPlayerTab('partner',this)">Metamorph</button>
+        <button onclick="showPlayerTab('team',this)">Equipe</button>
+        <button onclick="showPlayerTab('notes',this)">Notes</button>
+      </nav>
+      <div class="player-content">
+
+<div class="player-tab active" id="tab-perso">
       <div class="page-title">Magdalena Hell</div>
       <div class="page-tagline">Technicienne en Capsules Techniques</div>
       <div class="stats-grid">
@@ -741,7 +742,8 @@ a { color: inherit; }
           </div>
         </div>
     </div>
-    <div class="player-tab" id="tab-partner">
+
+<div class="player-tab" id="tab-partner">
       <div class="page-title">Pokemon partenaire</div>
       <div class="page-tagline">Metamorph</div>
       <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
@@ -879,7 +881,8 @@ a { color: inherit; }
     </div>
   </div>
     </div>
-    <div class="player-tab" id="tab-team">
+
+<div class="player-tab" id="tab-team">
       <div class="page-title">Equipe Pokemon</div>
       <div class="page-tagline">6 slots - partenaire fixe en slot 0</div>
       <div class="team-grid" id="team-grid"></div>
@@ -921,7 +924,8 @@ a { color: inherit; }
       </div>
       <div class="team-panel" id="team-panel"><div class="team-empty-state">Selectionne un slot.</div></div>
     </div>
-    <div class="player-tab" id="tab-notes">
+
+<div class="player-tab" id="tab-notes">
       <div class="page-title">Notes</div>
       <div class="page-tagline">Sauvegarde automatique</div>
       <div class="notes-layout">
@@ -941,11 +945,12 @@ a { color: inherit; }
         </div>
       </div>
     </div>
-  </div>
-  </div>
+
+</div>
 </div>
 </div>
 <script>
+
 
 var PLAYER_KEY = 'analyste';
 
@@ -1273,7 +1278,7 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 /* ---- EQUIPEMENT EDITABLE ---- */
-var DEFAULT_GEAR = ["Analyseur de CT portable (+2 aux jets de Sciences sur toute CT)", "Carnet de terrain chiffre", "Lampe frontale haute puissance", "Pokedex modifie (acces aux bases de donnees de recherche)", "Marteau d alpiniste (arme improvisee, Str+d4)", "500  en especes"];
+var DEFAULT_GEAR = ["Revolver Magnum .44 (2d6+1, Portee 12/24/48)", "Fusil a pompe scie (1-3d6, portee courte)", "Gilet pare-balles leger (Armure +2)", "3 recharges standard", "Menottes x2", "300 "];
 
 function loadGear() {
   try {
@@ -1625,13 +1630,7 @@ function listenMjNote() {
       showMjNotePopup(val);
     }
   });
-}</script>
-<div class="mj-note-popup hidden" id="mj-note-popup">
-  <div class="mj-note-box">
-    <div class="mj-note-box-title">Message du MJ</div>
-    <div class="mj-note-box-content" id="mj-note-content"></div>
-    <button class="mj-note-box-close" onclick="closeMjNotePopup()">Lu - Fermer</button>
-  </div>
-</div>
+}
+</script>
 </body>
 </html>
