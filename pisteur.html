@@ -1130,44 +1130,10 @@ function fbListen(path, cb) {
 }
 
 /* ── Sync cloud : remplace _syncCloud() ── */
-function _syncCloud() {
-  var gear = loadGear();
-  fbSet('notes',   state.notes);
-  fbSet('team',    state.team);
-  fbSet('gear',    gear);
-  fbSet('updated', Date.now());
-}
+
 
 /* ── Chargement initial depuis Firebase : remplace loadNotesFromCloud() ── */
-function loadNotesFromCloud() {
-  fbGet('').then(function(rec) {
-    if (!rec) return;
-    if (rec.notes && rec.notes.length) {
-      state.notes = rec.notes;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        team: state.team, notes: state.notes
-      }));
-      renderNoteList();
-      var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
-      if (id) openNote(id);
-    }
-    if (rec.team) {
-      for (var i = 1; i < 6; i++) {
-        state.team[i] = rec.team[i] || null;
-      }
-      renderTeam();
-    }
-    if (rec.gear) {
-      localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(rec.gear));
-      renderGear();
-    }
-    /* Message MJ */
-    if (rec.mj_note) {
-      var read = localStorage.getItem(STORAGE_KEY + '_mj_note_read');
-      if (rec.mj_note !== read) showMjNotePopup(rec.mj_note);
-    }
-  });
-}
+
 
 /* ── Écoute temps réel : si le MJ envoie un message ── */
 
@@ -1369,26 +1335,13 @@ function exportNote() {
 
 function wordCount(s) { return (s||'').trim().split(/\s+/).filter(function(w){return w;}).length; }
 
-function saveBlessures() {
-  var b={b1:document.getElementById('b1').checked,b2:document.getElementById('b2').checked,bko:document.getElementById('bko').checked};
-  localStorage.setItem(STORAGE_KEY+'_blessures',JSON.stringify(b));
-}
 
-function loadBlessures() {
-  try{var b=JSON.parse(localStorage.getItem(STORAGE_KEY+'_blessures')||'{}');
-    document.getElementById('b1').checked=b.b1||false;
-    document.getElementById('b2').checked=b.b2||false;
-    document.getElementById('bko').checked=b.bko||false;
-  }catch(e){}
-}
+
+
 
 var DEFAULT_NAME_JS = 'Telera';
 
-function loadPlayerName() {
-  var saved=localStorage.getItem(STORAGE_KEY+'_name');
-  var el=document.getElementById('pj-name-display');
-  if (el) el.textContent=saved||document.getElementById('pj-name-display').getAttribute('data-default');
-}
+
 
 function startEditName() {
   var disp=document.getElementById('pj-name-display'),input=document.getElementById('pj-name-input'),btn=document.getElementById('edit-name-btn');
@@ -1909,7 +1862,87 @@ function forceSave() {
     btn.style.color = '';
     btn.style.borderColor = '';
   }, 2000);
-}</script>
+}
+/* ── TOUT FIREBASE — plus de localStorage pour les données joueur ── */
+
+function _syncCloud() {
+  var gear = loadGear();
+  var nom  = (document.getElementById('pj-name-display') || {}).textContent || '';
+  var b1   = document.getElementById('b1')  ? document.getElementById('b1').checked  : false;
+  var b2   = document.getElementById('b2')  ? document.getElementById('b2').checked  : false;
+  var bko  = document.getElementById('bko') ? document.getElementById('bko').checked : false;
+  fbSet('notes',    state.notes);
+  fbSet('team',     state.team);
+  fbSet('gear',     gear);
+  fbSet('nom',      nom);
+  fbSet('blessures', {b1:b1, b2:b2, bko:bko});
+  fbSet('updated',  Date.now());
+}
+
+function saveBlessures() {
+  _syncCloud();
+}
+
+function loadBlessures() {
+  /* chargé depuis Firebase dans loadNotesFromCloud */
+}
+
+function loadPlayerName() {
+  /* chargé depuis Firebase dans loadNotesFromCloud */
+  var el  = document.getElementById('pj-name-display');
+  var def = el ? el.getAttribute('data-default') : '';
+  if (el && !el.textContent) el.textContent = def;
+}
+
+function loadNotesFromCloud() {
+  fbGet('').then(function(rec) {
+    if (!rec) return;
+
+    /* Notes */
+    if (rec.notes && rec.notes.length) {
+      state.notes = rec.notes;
+      renderNoteList();
+      var id = state.activeNote || state.notes[0].id;
+      if (id) openNote(id);
+    }
+
+    /* Equipe */
+    if (rec.team) {
+      for (var i = 1; i < 6; i++) {
+        state.team[i] = rec.team[i] || null;
+      }
+      renderTeam();
+    }
+
+    /* Equipement */
+    if (rec.gear) {
+      localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(rec.gear));
+      renderGear();
+    }
+
+    /* Nom du joueur */
+    if (rec.nom) {
+      var el = document.getElementById('pj-name-display');
+      if (el) el.textContent = rec.nom;
+    }
+
+    /* Blessures */
+    if (rec.blessures) {
+      var b = rec.blessures;
+      if (document.getElementById('b1'))  document.getElementById('b1').checked  = b.b1  || false;
+      if (document.getElementById('b2'))  document.getElementById('b2').checked  = b.b2  || false;
+      if (document.getElementById('bko')) document.getElementById('bko').checked = b.bko || false;
+    }
+
+    /* Message MJ */
+    if (rec.mj_note) {
+      var dismissed = localStorage.getItem(STORAGE_KEY + '_mj_note_dismissed');
+      if (rec.mj_note !== dismissed) showMjNotePopup(rec.mj_note);
+    }
+  });
+}
+function savePlayerName() { _syncCloud(); }
+</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
     <div class="mj-note-box-title">Message du MJ</div>
