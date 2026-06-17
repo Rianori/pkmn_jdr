@@ -368,60 +368,56 @@ function normalizeTeam(raw) {
   return arr;
 }
 
+
 function buildTeam(rec) {
   var team = normalizeTeam(rec ? rec.team : null);
   var h = '<div class="sec-lbl">Equipe Pokemon</div><div class="team-grid">';
 
   var STAT_KEYS   = ['for','agi','vig','rus','tremp','parade','robustesse','allure'];
-  var STAT_LABELS = {for:'FOR', agi:'AGI', vig:'VIG', rus:'RUS', tremp:'TREMP',
-                     parade:'Parade', robustesse:'Robustesse', allure:'Allure'};
+  var STAT_LABELS = {for:'FOR',agi:'AGI',vig:'VIG',rus:'RUS',tremp:'TREMP',
+                     parade:'Parade',robustesse:'Robustesse',allure:'Allure'};
   var DEF = 'd4';
 
   for (var i = 0; i < 6; i++) {
     var pk = team[i];
-
     if (!pk || !pk.name) {
-      h += '<div class="pk-slot empty">' + (i===0 ? 'Partenaire' : 'Vide') + '</div>';
+      h += '<div class="pk-slot empty">' + (i===0?'Partenaire':'Vide') + '</div>';
       continue;
     }
 
     h += '<div class="pk-slot' + (pk.partner ? ' partner' : '') + '">';
     if (pk.partner) h += '<span class="pk-partner-badge">Partenaire</span>';
 
-    // Nom
+    /* Nom */
     h += '<div class="pk-name">' + pk.name + '</div>';
 
-    // Type
+    /* Type */
     if (pk.type) h += '<div class="pk-type">' + pk.type
       + (pk.taille ? ' &middot; ' + pk.taille : '') + '</div>';
 
-    // Talent (nom uniquement)
-    if (pk.talent) {
-      h += '<div class="pk-talent-lbl">' + pk.talent + '</div>';
-    }
+    /* Talent (nom uniquement) */
+    if (pk.talent) h += '<div class="pk-talent-lbl">' + pk.talent + '</div>';
 
-    // 8 attributs en pills — toujours affichés, d4 par défaut
-    if (pk.stats) {
-      var s = pk.stats;
-      h += '<div class="pk-attrs">';
-      STAT_KEYS.forEach(function(k) {
-        h += '<div class="pk-attr">' + STAT_LABELS[k]
-          + ' <span>' + (s[k] || DEF) + '</span></div>';
-      });
-      h += '</div>';
+    /* 8 attributs en pills — toujours affichés, d4 par défaut */
+    var s = pk.stats || {};
+    h += '<div class="pk-attrs">';
+    STAT_KEYS.forEach(function(k) {
+      h += '<div class="pk-attr">' + STAT_LABELS[k]
+        + ' <span>' + (s[k] || DEF) + '</span></div>';
+    });
+    h += '</div>';
 
-      // Attaques — colonne 1 uniquement (nom)
-      var attacks = s.attacks;
-      if (attacks) {
-        var atk_arr = Array.isArray(attacks) ? attacks : Object.values(attacks);
-        var valid   = atk_arr.filter(function(a){ return a && a.name; });
-        if (valid.length) {
-          h += '<div class="pk-atks">';
-          valid.forEach(function(a) {
-            h += '<div class="pk-atk-name-only">' + a.name + '</div>';
-          });
-          h += '</div>';
-        }
+    /* Attaques — colonne 1 uniquement */
+    var attacks = s.attacks;
+    if (attacks) {
+      var atk_arr = Array.isArray(attacks) ? attacks : Object.values(attacks);
+      var valid   = atk_arr.filter(function(a){ return a && a.name; });
+      if (valid.length) {
+        h += '<div class="pk-atks">';
+        valid.forEach(function(a) {
+          h += '<div class="pk-atk-name-only">' + a.name + '</div>';
+        });
+        h += '</div>';
       }
     }
 
