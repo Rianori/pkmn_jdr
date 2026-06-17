@@ -1691,20 +1691,7 @@ function renderGear() {
 
 
 
-function forceSave() {
-  _syncCloud();
-  var btn = document.getElementById('save-json-btn');
-  if (!btn) return;
-  var orig = btn.innerHTML;
-  btn.innerHTML = '&#10003; Sauvegardé';
-  btn.style.color = '#4caf6e';
-  btn.style.borderColor = 'rgba(45,110,53,.4)';
-  setTimeout(function() {
-    btn.innerHTML = orig;
-    btn.style.color = '';
-    btn.style.borderColor = '';
-  }, 2000);
-}
+
 /* ── TOUT FIREBASE — plus de localStorage pour les données joueur ── */
 
 
@@ -2233,62 +2220,7 @@ function _syncCloud() {
   setTimeout(function() { _writing = false; }, 1500);
 }
 
-function applyRemoteUpdate(rec) {
-  if (!rec) return;
 
-  /* Equipe */
-  if (rec.team) {
-    var changed = false;
-    for (var i = 1; i < 6; i++) {
-      var remote = rec.team[i] || null;
-      var local  = state.team[i];
-      var rs = JSON.stringify(remote);
-      var ls = JSON.stringify(local);
-      if (rs !== ls) { state.team[i] = remote; changed = true; }
-    }
-    if (changed) {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({team:state.team,notes:state.notes,activeNote:state.activeNote})); } catch(e) {}
-      renderTeam();
-    }
-  }
-
-  /* Notes */
-  if (rec.notes) {
-    var remoteNotes = JSON.stringify(rec.notes);
-    var localNotes  = JSON.stringify(state.notes);
-    if (remoteNotes !== localNotes) {
-      state.notes = rec.notes;
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({team:state.team,notes:state.notes,activeNote:state.activeNote})); } catch(e) {}
-      renderNoteList();
-      var id = state.activeNote;
-      if (id) openNote(id);
-    }
-  }
-
-  /* Equipement */
-  if (rec.gear) {
-    var rg = JSON.stringify(rec.gear);
-    var lg = localStorage.getItem(STORAGE_KEY + '_gear');
-    if (rg !== lg) {
-      localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(rec.gear));
-      renderGear();
-    }
-  }
-
-  /* Nom */
-  if (rec.nom) {
-    var el = document.getElementById('pj-name-display');
-    if (el && el.textContent !== rec.nom) el.textContent = rec.nom;
-  }
-
-  /* Blessures */
-  if (rec.blessures) {
-    var b = rec.blessures;
-    if (document.getElementById('b1'))  document.getElementById('b1').checked  = b.b1  || false;
-    if (document.getElementById('b2'))  document.getElementById('b2').checked  = b.b2  || false;
-    if (document.getElementById('bko')) document.getElementById('bko').checked = b.bko || false;
-  }
-}
 
 function startRealtime() {
   if (_sseSource) { _sseSource.close(); }
@@ -2393,6 +2325,81 @@ function initPartnerStats() {
   if (ptype) state.team[0].type = ptype;
 
   fbSet('team', state.team);
+}
+function forceSave() {
+  /* Push complet vers Firebase — PAS de flag _writing
+     Les autres appareils recevront l'update et re-renderont */
+  var gear = loadGear();
+  var nom  = (document.getElementById('pj-name-display') || {}).textContent || '';
+  var b1   = document.getElementById('b1')  ? document.getElementById('b1').checked  : false;
+  var b2   = document.getElementById('b2')  ? document.getElementById('b2').checked  : false;
+  var bko  = document.getElementById('bko') ? document.getElementById('bko').checked : false;
+
+  fbSet('notes',     state.notes);
+  fbSet('team',      state.team);
+  fbSet('gear',      gear);
+  fbSet('nom',       nom);
+  fbSet('blessures', {b1:b1, b2:b2, bko:bko});
+  fbSet('updated',   Date.now());
+
+  /* Feedback visuel */
+  var btn = document.getElementById('save-json-btn');
+  if (!btn) return;
+  var orig = btn.innerHTML;
+  btn.innerHTML = '&#10003; Sauvegard\u00e9';
+  btn.style.color = '#4caf6e';
+  btn.style.borderColor = 'rgba(45,110,53,.4)';
+  setTimeout(function() {
+    btn.innerHTML = orig;
+    btn.style.color = '';
+    btn.style.borderColor = '';
+  }, 2000);
+}
+
+function applyRemoteUpdate(rec) {
+  if (!rec) return;
+
+  /* Equipe — forcer le re-render sans comparaison */
+  if (rec.team) {
+    for (var i = 1; i < 6; i++) {
+      state.team[i] = rec.team[i] || null;
+    }
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(
+      {team:state.team, notes:state.notes, activeNote:state.activeNote}
+    )); } catch(e) {}
+    renderTeam();
+  }
+
+  /* Notes — forcer le re-render */
+  if (rec.notes) {
+    state.notes = rec.notes;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(
+      {team:state.team, notes:state.notes, activeNote:state.activeNote}
+    )); } catch(e) {}
+    renderNoteList();
+    var id = state.activeNote;
+    if (id) openNote(id);
+  }
+
+  /* Equipement */
+  if (rec.gear) {
+    localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(rec.gear));
+    renderGear();
+  }
+
+  /* Nom */
+  if (rec.nom) {
+    var el = document.getElementById('pj-name-display');
+    if (el) el.textContent = rec.nom;
+  }
+
+  /* Blessures */
+  if (rec.blessures) {
+    var b = rec.blessures;
+    if (document.getElementById('b1'))  document.getElementById('b1').checked  = b.b1  || false;
+    if (document.getElementById('b2'))  document.getElementById('b2').checked  = b.b2  || false;
+    if (document.getElementById('bko')) document.getElementById('bko').checked = b.bko || false;
+  }
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
