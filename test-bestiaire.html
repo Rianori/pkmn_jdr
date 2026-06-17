@@ -757,6 +757,36 @@ a { color: inherit; }
   .btn-save:hover { background:rgba(200,146,42,.4); }
   .pk-edit-input[disabled], .pk-atk-edit input[disabled], .pk-notes-ta[disabled] {
     opacity:.6; cursor:default; background:transparent; border-color:transparent; }
+
+  /* ── BESTIAIRE PICKER ── */
+  .add-mode-tabs { display:flex; gap:8px; margin-bottom:16px; }
+  .add-mode-tab { font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+    text-transform:uppercase; background:none; border:1px solid var(--border);
+    border-radius:3px; color:var(--muted); padding:5px 14px; cursor:pointer;
+    transition:color .12s,border-color .12s; }
+  .add-mode-tab.active { color:var(--amber); border-color:var(--amber-dim);
+    background:var(--amber-glow); }
+  .add-form-section { display:none; }
+  .add-form-section.active { display:block; }
+  .bst-search { width:100%; background:var(--surface); border:1px solid var(--border);
+    border-radius:4px; color:var(--text); font-size:13px; padding:8px 12px;
+    outline:none; margin-bottom:10px; transition:border-color .15s; }
+  .bst-search:focus { border-color:var(--amber-dim); }
+  .bst-picker-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+    gap:8px; max-height:320px; overflow-y:auto; }
+  .bst-pick-card { background:var(--surface); border:1px solid var(--border);
+    border-radius:4px; padding:10px 12px; cursor:pointer;
+    transition:border-color .15s,background .15s; }
+  .bst-pick-card:hover { border-color:var(--amber-dim); background:var(--amber-glow); }
+  .bst-pick-name { font-family:var(--mono); font-size:12px; font-weight:700;
+    color:var(--text); margin-bottom:3px; }
+  .bst-pick-meta { font-size:10px; color:var(--muted); margin-bottom:5px; }
+  .bst-pick-stats { display:flex; flex-wrap:wrap; gap:3px; }
+  .bst-pick-stat { font-family:var(--mono); font-size:9px; background:var(--card);
+    border:1px solid var(--border); border-radius:2px; padding:1px 5px; color:var(--muted); }
+  .bst-pick-stat span { color:var(--amber); }
+  .bst-selected { border-color:var(--amber) !important; background:var(--amber-glow) !important; }
+  .bst-loading { text-align:center; color:var(--muted); font-size:12px; padding:20px; }
 </style>
 </head>
 <body>
@@ -993,6 +1023,11 @@ a { color: inherit; }
       <div class="team-grid" id="team-grid"></div>
       <div class="pk-add-form" id="pk-add-form">
         <div class="section-title">Ajouter - <span id="add-slot-num"></span></div>
+        <div class="add-mode-tabs">
+          <button class="add-mode-tab active" id="tab-manuel-btn" onclick="switchAddMode('manuel')">Manuel</button>
+          <button class="add-mode-tab" id="tab-bestiaire-btn" onclick="switchAddMode('bestiaire')">Bestiaire</button>
+        </div>
+        <div class="add-form-section active" id="add-section-manuel">
         <input type="hidden" id="add-slot-hidden">
         <div class="form-row">
           <div><label>Nom</label><input type="text" id="pk-add-name" placeholder="Ex : Racaillou"></div>
@@ -1904,6 +1939,150 @@ function loadNotesFromCloud() {
   });
 }
 function savePlayerName() { _syncCloud(); }
+
+/* ── BESTIAIRE PICKER ── */
+var _bstData = null;  // cache des cartes parsées
+var _bstMode = 'manuel';
+
+function switchAddMode(mode) {
+  _bstMode = mode;
+  document.getElementById('add-section-manuel').classList.toggle('active', mode === 'manuel');
+  document.getElementById('add-section-bestiaire').classList.toggle('active', mode === 'bestiaire');
+  document.getElementById('tab-manuel-btn').classList.toggle('active', mode === 'manuel');
+  document.getElementById('tab-bestiaire-btn').classList.toggle('active', mode === 'bestiaire');
+  if (mode === 'bestiaire' && !_bstData) loadBestiaire();
+}
+
+function loadBestiaire() {
+  var grid = document.getElementById('bst-picker-grid');
+  if (!grid) return;
+  grid.innerHTML = '<div class="bst-loading">Chargement...</div>';
+
+  fetch('mj.html')
+    .then(function(r) { return r.text(); })
+    .then(function(html) {
+      _bstData = parseBestCards(html);
+      renderBstPicker(_bstData);
+    })
+    .catch(function() {
+      grid.innerHTML = '<div class="bst-loading">Erreur de chargement.</div>';
+    });
+}
+
+function parseBestCards(html) {
+  var cards = [];
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(html, 'text/html');
+  doc.querySelectorAll('.beast-card').forEach(function(card) {
+    var name = card.querySelector('.beast-name');
+    var meta = card.querySelector('.beast-meta');
+    if (!name) return;
+
+    // Stats depuis stat-pills
+    var stats = {};
+    var statMap = {AGI:'agi', FOR:'for', VIG:'vig', RUS:'rus',
+                   Parade:'parade', Robustesse:'robustesse', Allure:'allure'};
+    card.querySelectorAll('.stat-pill').forEach(function(pill) {
+      var txt  = pill.textContent.trim();
+      var val  = pill.querySelector('span');
+      if (!val) return;
+      var key  = txt.replace(val.textContent, '').trim();
+      var fkey = statMap[key];
+      if (fkey) stats[fkey] = val.textContent.trim();
+    });
+
+    // Attaques depuis atk-table
+    var attacks = [];
+    card.querySelectorAll('.atk-table tr').forEach(function(row) {
+      var nm = row.querySelector('.atk-name');
+      var dm = row.querySelector('.atk-dmg');
+      if (nm) attacks.push({ name: nm.textContent.trim(), dmg: dm ? dm.textContent.trim() : '' });
+    });
+    if (attacks.length) stats.attacks = attacks;
+
+    // Type depuis beast-meta (1er texte après le tag)
+    var metaTxt = meta ? meta.textContent : '';
+    var typeMatch = metaTxt.match(/[A-ZÀÂÉÈÊËÎÏÔÙÛÜ][a-zàâéèêëîïôùûü]+/);
+
+    cards.push({
+      name:  name.textContent.trim(),
+      meta:  meta ? meta.textContent.trim() : '',
+      type:  typeMatch ? typeMatch[0] : '',
+      stats: stats
+    });
+  });
+  return cards;
+}
+
+function renderBstPicker(cards) {
+  var grid = document.getElementById('bst-picker-grid');
+  var search = (document.getElementById('bst-search') || {}).value || '';
+  var q = search.toLowerCase();
+  grid.innerHTML = '';
+  var filtered = cards.filter(function(c) {
+    return !q || c.name.toLowerCase().indexOf(q) >= 0 || c.type.toLowerCase().indexOf(q) >= 0;
+  });
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="bst-loading">Aucun résultat.</div>';
+    return;
+  }
+  filtered.forEach(function(c) {
+    var div = document.createElement('div');
+    div.className = 'bst-pick-card';
+
+    var statsHtml = '';
+    var statLabels = {agi:'AGI',for:'FOR',vig:'VIG',rus:'RUS',
+                      parade:'PAR',robustesse:'ROB',allure:'ALL'};
+    Object.keys(statLabels).forEach(function(k) {
+      if (c.stats[k]) statsHtml += '<div class="bst-pick-stat">' + statLabels[k] + ' <span>' + c.stats[k] + '</span></div>';
+    });
+
+    div.innerHTML =
+      '<div class="bst-pick-name">' + c.name + '</div>'
+      + '<div class="bst-pick-meta">' + c.meta + '</div>'
+      + '<div class="bst-pick-stats">' + statsHtml + '</div>';
+
+    div.addEventListener('click', function() {
+      selectBstCard(c, div);
+    });
+    grid.appendChild(div);
+  });
+}
+
+function filterBstPicker() {
+  if (_bstData) renderBstPicker(_bstData);
+}
+
+function selectBstCard(c, el) {
+  // Désélectionner la précédente
+  document.querySelectorAll('.bst-selected').forEach(function(d) { d.classList.remove('bst-selected'); });
+  el.classList.add('bst-selected');
+
+  // Pré-remplir le formulaire manuel
+  switchAddMode('manuel');
+
+  var nameInp = document.getElementById('pk-add-name');
+  var typeInp = document.getElementById('pk-add-type');
+  if (nameInp) nameInp.value = c.name;
+  if (typeInp) typeInp.value = c.type;
+
+  // Stats
+  var statKeys = ['for','agi','vig','rus','parade','robustesse','allure'];
+  statKeys.forEach(function(k) {
+    var el = document.getElementById('pk-stat-' + k);
+    if (el) el.value = c.stats[k] || '';
+  });
+
+  // Attaques
+  var attacks = c.stats.attacks || [];
+  for (var i = 1; i <= 4; i++) {
+    var n = document.getElementById('pk-atk-name-' + i);
+    var d = document.getElementById('pk-atk-dmg-' + i);
+    var atk = attacks[i-1] || {name:'', dmg:''};
+    if (n) n.value = atk.name || '';
+    if (d) d.value = atk.dmg  || '';
+  }
+}
 </script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
