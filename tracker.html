@@ -776,8 +776,8 @@ a { color: inherit; }
       <button class="edit-name-btn" id="edit-name-btn" onclick="startEditName()" title="Modifier">Edit</button>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <button class="save-json-btn" id="save-json-btn" onclick="exportJSON()" title="T&eacute;l&eacute;charger une sauvegarde JSON">
-        &#8659; Exporter JSON
+      <button class="save-json-btn" id="save-json-btn" onclick="forceSave()" title="T&eacute;l&eacute;charger une sauvegarde JSON">
+        &#9650; Sauvegarder
       </button>
       <a href="index.html" class="player-back">Portail</a>
     </div>
@@ -1629,41 +1629,7 @@ function _updateBannerName() {
 }
 
 /* ── EXPORT JSON ── */
-function exportJSON() {
-  var nom    = (document.getElementById('pj-name-display') || {}).textContent || PLAYER_KEY;
-  var gear   = loadGear();
-  var date   = new Date().toISOString().slice(0,10);
 
-  var data = {
-    joueur:    PLAYER_KEY,
-    nom:       nom,
-    date:      date,
-    equipe:    state.team,
-    notes:     state.notes,
-    equipement: gear
-  };
-
-  var json   = JSON.stringify(data, null, 2);
-  var blob   = new Blob([json], { type: 'application/json' });
-  var url    = URL.createObjectURL(blob);
-  var a      = document.createElement('a');
-  a.href     = url;
-  a.download = 'sauvegarde_' + PLAYER_KEY + '_' + date + '.json';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-
-  var btn = document.getElementById('save-json-btn');
-  if (btn) {
-    btn.classList.add('saved');
-    btn.innerHTML = '&#10003; Sauvegard&eacute;';
-    setTimeout(function() {
-      btn.classList.remove('saved');
-      btn.innerHTML = '&#8659; Sauvegarder';
-    }, 2000);
-  }
-}
 
 
 function listenMjNote() {
@@ -1905,6 +1871,20 @@ function renderPanel() {
   panel.querySelector('#pk-btn-del').addEventListener('click', function() {
     removePokemon(state.activeSlot);
   });
+}
+function forceSave() {
+  _syncCloud();
+  var btn = document.getElementById('save-json-btn');
+  if (!btn) return;
+  var orig = btn.innerHTML;
+  btn.innerHTML = '&#10003; Sauvegardé';
+  btn.style.color = '#4caf6e';
+  btn.style.borderColor = 'rgba(45,110,53,.4)';
+  setTimeout(function() {
+    btn.innerHTML = orig;
+    btn.style.color = '';
+    btn.style.borderColor = '';
+  }, 2000);
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
