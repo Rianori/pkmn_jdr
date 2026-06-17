@@ -1057,6 +1057,14 @@ a { color: inherit; }
           </div>
           <button class="pk-attack-add" onclick="addAttackRow()">+ Attaque</button>
         </div>
+        </div><!-- /add-section-manuel -->
+
+        <div class="add-form-section" id="add-section-bestiaire">
+          <input class="bst-search" id="bst-search" type="text" placeholder="Rechercher..." oninput="filterBstPicker()">
+          <div class="bst-picker-grid" id="bst-picker-grid"><div class="bst-loading">Chargement du bestiaire...</div></div>
+          <p style="font-size:11px;color:var(--muted);margin-top:8px">Cliquez sur une carte pour pré-remplir le formulaire.</p>
+        </div><!-- /add-section-bestiaire -->
+
         <div style="display:flex;gap:8px">
           <button class="btn-primary" onclick="addPokemon()">Ajouter</button>
           <button class="btn-ghost" onclick="closeAddForm()">Annuler</button>
