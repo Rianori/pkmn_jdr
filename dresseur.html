@@ -1064,12 +1064,7 @@ function fbListen(path, cb) {
 
 
 /* ── Init : remplace initPlayerBin() ── */
-function initPlayerBin() {
-  loadNotesFromCloud();
-  listenMjNote();
-  /* Enregistrer la présence du joueur */
-  fbSet('slug', PLAYER_KEY);
-}
+
 
 /* Fonctions JSONBin devenues inutiles — stubs vides */
 function _getOrCreateBin(cb) { if (cb) cb('firebase'); }
@@ -1631,19 +1626,7 @@ function forceSave() {
 }
 /* ── TOUT FIREBASE — plus de localStorage pour les données joueur ── */
 
-function _syncCloud() {
-  var gear = loadGear();
-  var nom  = (document.getElementById('pj-name-display') || {}).textContent || '';
-  var b1   = document.getElementById('b1')  ? document.getElementById('b1').checked  : false;
-  var b2   = document.getElementById('b2')  ? document.getElementById('b2').checked  : false;
-  var bko  = document.getElementById('bko') ? document.getElementById('bko').checked : false;
-  fbSet('notes',    state.notes);
-  fbSet('team',     state.team);
-  fbSet('gear',     gear);
-  fbSet('nom',      nom);
-  fbSet('blessures', {b1:b1, b2:b2, bko:bko});
-  fbSet('updated',  Date.now());
-}
+
 
 function saveBlessures() {
   _syncCloud();
@@ -2141,6 +2124,128 @@ function renderPanel() {
   panel.querySelector('#pk-btn-del').addEventListener('click', function() {
     removePokemon(state.activeSlot);
   });
+}
+
+/* ══════════════════════════════════════════════════════
+   SYNC TEMPS REEL — SSE Firebase
+   Ecoute les changements des autres appareils
+   _writing bloque l'auto-application de nos propres ecritures
+   ══════════════════════════════════════════════════════ */
+
+var _writing   = false;  // true pendant qu'on ecrit vers Firebase
+var _sseSource = null;   // EventSource actif
+
+function _syncCloud() {
+  var gear = loadGear();
+  var nom  = (document.getElementById('pj-name-display') || {}).textContent || '';
+  var b1   = document.getElementById('b1')  ? document.getElementById('b1').checked  : false;
+  var b2   = document.getElementById('b2')  ? document.getElementById('b2').checked  : false;
+  var bko  = document.getElementById('bko') ? document.getElementById('bko').checked : false;
+  _writing = true;
+  fbSet('notes',     state.notes);
+  fbSet('team',      state.team);
+  fbSet('gear',      gear);
+  fbSet('nom',       nom);
+  fbSet('blessures', {b1:b1, b2:b2, bko:bko});
+  fbSet('updated',   Date.now());
+  // Relacher le flag apres un court delai (les writes sont async)
+  setTimeout(function() { _writing = false; }, 1500);
+}
+
+function applyRemoteUpdate(rec) {
+  if (!rec) return;
+
+  /* Equipe */
+  if (rec.team) {
+    var changed = false;
+    for (var i = 1; i < 6; i++) {
+      var remote = rec.team[i] || null;
+      var local  = state.team[i];
+      var rs = JSON.stringify(remote);
+      var ls = JSON.stringify(local);
+      if (rs !== ls) { state.team[i] = remote; changed = true; }
+    }
+    if (changed) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({team:state.team,notes:state.notes,activeNote:state.activeNote})); } catch(e) {}
+      renderTeam();
+    }
+  }
+
+  /* Notes */
+  if (rec.notes) {
+    var remoteNotes = JSON.stringify(rec.notes);
+    var localNotes  = JSON.stringify(state.notes);
+    if (remoteNotes !== localNotes) {
+      state.notes = rec.notes;
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({team:state.team,notes:state.notes,activeNote:state.activeNote})); } catch(e) {}
+      renderNoteList();
+      var id = state.activeNote;
+      if (id) openNote(id);
+    }
+  }
+
+  /* Equipement */
+  if (rec.gear) {
+    var rg = JSON.stringify(rec.gear);
+    var lg = localStorage.getItem(STORAGE_KEY + '_gear');
+    if (rg !== lg) {
+      localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(rec.gear));
+      renderGear();
+    }
+  }
+
+  /* Nom */
+  if (rec.nom) {
+    var el = document.getElementById('pj-name-display');
+    if (el && el.textContent !== rec.nom) el.textContent = rec.nom;
+  }
+
+  /* Blessures */
+  if (rec.blessures) {
+    var b = rec.blessures;
+    if (document.getElementById('b1'))  document.getElementById('b1').checked  = b.b1  || false;
+    if (document.getElementById('b2'))  document.getElementById('b2').checked  = b.b2  || false;
+    if (document.getElementById('bko')) document.getElementById('bko').checked = b.bko || false;
+  }
+}
+
+function startRealtime() {
+  if (_sseSource) { _sseSource.close(); }
+  _sseSource = new EventSource(FB_PATH + '.json');
+
+  _sseSource.addEventListener('put', function(e) {
+    try {
+      var payload = JSON.parse(e.data);
+      var rec = payload.path === '/' ? payload.data : null;
+      // Mise a jour partielle
+      if (payload.path !== '/' && payload.path) {
+        var key = payload.path.replace(/^\//, '');
+        if (!rec) rec = {};
+        rec[key] = payload.data;
+      }
+      if (_writing) return;  // Ignorer nos propres ecritures
+      if (rec) applyRemoteUpdate(rec);
+    } catch(ex) {}
+  });
+
+  _sseSource.addEventListener('patch', function(e) {
+    try {
+      if (_writing) return;
+      var payload = JSON.parse(e.data);
+      if (payload.data) applyRemoteUpdate(payload.data);
+    } catch(ex) {}
+  });
+
+  _sseSource.addEventListener('error', function() {
+    // Firebase reconnecte automatiquement
+  });
+}
+
+function initPlayerBin() {
+  loadNotesFromCloud();
+  listenMjNote();
+  fbSet('slug', PLAYER_KEY);
+  startRealtime();
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
