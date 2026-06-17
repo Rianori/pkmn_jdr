@@ -1973,34 +1973,40 @@ function showBstDetail(c, el) {
   btn.style.opacity = '1';
 }
 
+
+
 function addFromBestiaire() {
   if (!_bstCurrent) return;
   var c    = _bstCurrent;
   var slot = parseInt(document.getElementById('add-slot-hidden').value);
 
-  // Talent choisi
-  var talentVal = '';
+  var talentVal  = '';
+  var talentDesc = '';
   var radios = document.querySelectorAll('input[name="bst-talent"]');
   radios.forEach(function(r) {
-    if (r.checked) talentVal = c.talents[parseInt(r.value)].name;
+    if (r.checked) {
+      var t = c.talents[parseInt(r.value)];
+      talentVal  = t.name;
+      talentDesc = t.desc || '';
+    }
   });
 
-  // Construire l'objet stats avec attaques complètes (4 champs)
   var stats = {};
   var statKeys = ['for','agi','vig','rus','tremp','parade','robustesse','allure'];
   statKeys.forEach(function(k) { if (c.attrs[k]) stats[k] = c.attrs[k]; });
   stats.attacks = c.attacks.map(function(a) {
-    return { name: a.name, dmg: a.dmg, range: a.range, effect: a.effect };
+    return { name:a.name, dmg:a.dmg, range:a.range, effect:a.effect };
   });
 
   state.team[slot] = {
-    name:     c.name,
-    type:     c.type,
-    taille:   c.taille,
-    talent:   talentVal,
-    partner:  false,
-    notes:    '',
-    stats:    stats
+    name:        c.name,
+    type:        c.type,
+    taille:      c.taille,
+    talent:      talentVal,
+    talent_desc: talentDesc,
+    partner:     false,
+    notes:       '',
+    stats:       stats
   };
 
   saveState();
@@ -2016,46 +2022,62 @@ function renderPanel() {
     panel.innerHTML = '<div style="padding:28px;text-align:center;color:var(--muted);font-size:13px">Cliquez sur un slot pour ajouter un Pok\u00e9mon.</div>';
     return;
   }
-
   if (state.activeSlot === 0) {
     var pk = document.getElementById('partner-pk-card');
     if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
     return;
   }
 
-  var idx = state.activeSlot;
-  var s   = slot.stats || {};
+  var idx     = state.activeSlot;
+  var s       = slot.stats || {};
   var attacks = s.attacks || [];
   if (!Array.isArray(attacks)) attacks = Object.values(attacks);
 
-  var STAT_KEYS   = ['for','agi','vig','rus','tremp','parade','robustesse','allure'];
-  var STAT_LABELS = {for:'FOR',agi:'AGI',vig:'VIG',rus:'RUS',tremp:'TREMP',
-                     parade:'PAR',robustesse:'ROB',allure:'ALL'};
-  var DEFAULT_VAL = 'd4';
+  var DEF = 'd4';
 
-  // ── MODE LECTURE ──────────────────────────────────────────────────────
-  // Attributs — toujours afficher, d4 par défaut si manquant
-  var statsHtml = '<div class="pk-stats-row">';
-  STAT_KEYS.forEach(function(key) {
-    var val = s[key] || DEFAULT_VAL;
-    statsHtml += '<div class="pk-stat">' + STAT_LABELS[key]
-      + ' <span class="val">' + escHtml(val) + '</span></div>';
-  });
-  statsHtml += '</div>';
+  // ── Attributs — 2 rangées ──────────────────────────────────────────────
+  // Rangée 1 : FOR AGI VIG RUS TREMP (abrégés, majuscules)
+  // Rangée 2 : Parade Robustesse Allure (noms complets, minuscules)
+  var ROW1 = [{k:'for',l:'FOR'},{k:'agi',l:'AGI'},{k:'vig',l:'VIG'},
+              {k:'rus',l:'RUS'},{k:'tremp',l:'TREMP'}];
+  var ROW2 = [{k:'parade',l:'Parade'},{k:'robustesse',l:'Robustesse'},{k:'allure',l:'Allure'}];
 
-  // Attaques — 4 colonnes complètes
-  var atksHtml = '';
+  var statsHtml =
+    '<div class="pk-stats-row" style="margin-bottom:4px">'
+    + ROW1.map(function(x){
+        return '<div class="pk-stat">' + x.l + ' <span class="val">' + escHtml(s[x.k]||DEF) + '</span></div>';
+      }).join('')
+    + '</div>'
+    + '<div class="pk-stats-row">'
+    + ROW2.map(function(x){
+        return '<div class="pk-stat">' + x.l + ' <span class="val">' + escHtml(s[x.k]||DEF) + '</span></div>';
+      }).join('')
+    + '</div>';
+
+  // ── Talent — nom : description ─────────────────────────────────────────
+  var talentHtml = '';
+  if (slot.talent) {
+    talentHtml = '<div class="pk-section-lbl">Talent</div>'
+      + '<div class="pk-capa"><span class="pk-capa-name">' + escHtml(slot.talent) + '</span>'
+      + (slot.talent_desc
+          ? '<span class="pk-capa-desc"> : ' + escHtml(slot.talent_desc) + '</span>'
+          : '')
+      + '</div>';
+  }
+
+  // ── Attaques 4 colonnes ────────────────────────────────────────────────
   var validAtks = attacks.filter(function(a){ return a && a.name; });
+  var atksHtml = '';
   if (validAtks.length) {
     atksHtml = '<div class="pk-section-lbl">Attaques</div>'
       + '<table class="pk-atk-table">'
       + '<tr><th>Attaque</th><th>Dommages</th><th>Port\u00e9e</th><th>Effet</th></tr>';
     validAtks.forEach(function(a) {
       atksHtml += '<tr>'
-        + '<td class="pk-atk-name">' + escHtml(a.name)         + '</td>'
-        + '<td class="pk-atk-dmg">'  + escHtml(a.dmg||'')      + '</td>'
-        + '<td>'                      + escHtml(a.range||'')    + '</td>'
-        + '<td>'                      + escHtml(a.effect||'')   + '</td>'
+        + '<td class="pk-atk-name">' + escHtml(a.name)       + '</td>'
+        + '<td class="pk-atk-dmg">'  + escHtml(a.dmg||'')    + '</td>'
+        + '<td>'                      + escHtml(a.range||'')  + '</td>'
+        + '<td>'                      + escHtml(a.effect||'') + '</td>'
         + '</tr>';
     });
     atksHtml += '</table>';
@@ -2065,22 +2087,21 @@ function renderPanel() {
     ? '<div class="pk-note">' + escHtml(slot.notes) + '</div>'
     : '';
 
-  // ── MODE EDITION ──────────────────────────────────────────────────────
-  // Attributs éditables
+  // ── Mode édition ───────────────────────────────────────────────────────
+  var EDIT_KEYS = ['for','agi','vig','rus','tremp','parade','robustesse','allure'];
+  var EDIT_LBL  = {for:'FOR',agi:'AGI',vig:'VIG',rus:'RUS',tremp:'TREMP',
+                   parade:'Parade',robustesse:'Robustesse',allure:'Allure'};
   var editStatsHtml = '<div class="pk-stats-grid">';
-  STAT_KEYS.forEach(function(key) {
-    editStatsHtml += '<div class="pk-stat-field">'
-      + '<label>' + STAT_LABELS[key] + '</label>'
-      + '<input class="pk-edit-input" type="text" data-idx="' + idx + '" data-key="' + key + '"'
-      + ' value="' + escHtml(s[key] || DEFAULT_VAL) + '" maxlength="20">'
-      + '</div>';
+  EDIT_KEYS.forEach(function(k) {
+    editStatsHtml += '<div class="pk-stat-field"><label>' + EDIT_LBL[k] + '</label>'
+      + '<input class="pk-edit-input" type="text" data-idx="' + idx + '" data-key="' + k + '"'
+      + ' value="' + escHtml(s[k]||DEF) + '" maxlength="20"></div>';
   });
   editStatsHtml += '</div>';
 
-  // Attaques éditables — 4 colonnes (nom, dommages, portée, effet)
   var editAtksHtml = '';
   for (var ai = 0; ai < Math.max(attacks.length + 1, 4); ai++) {
-    var atk = attacks[ai] || {name:'', dmg:'', range:'', effect:''};
+    var atk = attacks[ai] || {name:'',dmg:'',range:'',effect:''};
     editAtksHtml += '<div class="pk-atk-edit-row">'
       + '<input type="text" placeholder="Attaque"'
       + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="name"'
@@ -2097,21 +2118,20 @@ function renderPanel() {
       + '</div>';
   }
 
-  // ── RENDER ────────────────────────────────────────────────────────────
+  // ── HTML final ─────────────────────────────────────────────────────────
   panel.innerHTML =
     '<div class="pk-card">'
     + '<div class="pk-card-header">'
     + '<div class="pk-owner">Slot #' + idx + '</div>'
     + '<div class="pk-name">' + escHtml(slot.name) + '</div>'
-    + (slot.talent ? '<div class="pk-species">' + escHtml(slot.talent) + '</div>' : '')
     + '<div class="pk-meta-row">'
     + (slot.type   ? '<span class="tag tag-weird">'   + escHtml(slot.type)   + '</span>' : '')
     + (slot.taille ? '<span class="tag tag-sauvage">' + escHtml(slot.taille) + '</span>' : '')
-    + '</div>'
-    + '</div>'
+    + '</div></div>'
 
     // Lecture
     + '<div class="pk-body" id="pk-panel-read">'
+    + talentHtml
     + '<div class="pk-section-lbl">Attributs</div>'
     + statsHtml
     + atksHtml
@@ -2122,16 +2142,18 @@ function renderPanel() {
     + '<div class="pk-body" id="pk-panel-edit" style="display:none">'
     + '<div class="pk-section-lbl">Talent</div>'
     + '<input class="pk-edit-input" type="text" id="pk-talent-input"'
-    + ' style="width:100%;margin-bottom:10px"'
+    + ' style="width:100%;margin-bottom:4px"'
     + ' data-idx="' + idx + '" data-key="talent"'
-    + ' value="' + escHtml(slot.talent||'') + '" maxlength="80">'
+    + ' value="' + escHtml(slot.talent||'') + '" maxlength="80" placeholder="Nom du talent">'
+    + '<input class="pk-edit-input" type="text" id="pk-talent-desc-input"'
+    + ' style="width:100%;margin-bottom:10px"'
+    + ' data-idx="' + idx + '" data-key="talent_desc"'
+    + ' value="' + escHtml(slot.talent_desc||'') + '" maxlength="200" placeholder="Description du talent...">'
     + '<div class="pk-section-lbl">Attributs</div>'
     + editStatsHtml
-    + '<div class="pk-section-lbl" style="margin-top:10px">Attaques'
-    + ' <span style="font-size:9px;font-weight:400;color:var(--muted);margin-left:8px">'
-    + 'Attaque &nbsp; Dommages &nbsp; Port\u00e9e &nbsp; Effet</span></div>'
+    + '<div class="pk-section-lbl" style="margin-top:10px">Attaques</div>'
     + editAtksHtml
-    + '<div class="pk-section-lbl" style="margin-top:10px">Notes de session</div>'
+    + '<div class="pk-section-lbl" style="margin-top:10px">Notes</div>'
     + '<textarea class="pk-notes-ta">' + escHtml(slot.notes||'') + '</textarea>'
     + '</div>'
     + '</div>'
@@ -2142,7 +2164,6 @@ function renderPanel() {
     + '<button class="btn-danger" id="pk-btn-del">Retirer</button>'
     + '</div>';
 
-  // Bouton Modifier
   panel.querySelector('#pk-btn-edit').addEventListener('click', function() {
     document.getElementById('pk-panel-read').style.display = 'none';
     document.getElementById('pk-panel-edit').style.display = '';
@@ -2150,30 +2171,27 @@ function renderPanel() {
     panel.querySelector('#pk-btn-save').style.display = '';
   });
 
-  // Bouton Sauvegarder
   panel.querySelector('#pk-btn-save').addEventListener('click', function() {
     var curIdx = parseInt(panel.querySelector('[data-idx]').dataset.idx);
     if (!state.team[curIdx]) return;
     if (!state.team[curIdx].stats) state.team[curIdx].stats = {};
 
-    // Talent
     var ti = document.getElementById('pk-talent-input');
     if (ti) state.team[curIdx].talent = ti.value.trim();
+    var tdi = document.getElementById('pk-talent-desc-input');
+    if (tdi) state.team[curIdx].talent_desc = tdi.value.trim();
 
-    // Attributs
     panel.querySelectorAll('.pk-edit-input').forEach(function(inp) {
-      if (inp.dataset.key && inp.dataset.key !== 'talent') {
+      if (inp.dataset.key && inp.dataset.key !== 'talent' && inp.dataset.key !== 'talent_desc') {
         state.team[curIdx].stats[inp.dataset.key] = inp.value.trim();
       }
     });
 
-    // Attaques — 4 champs par ligne
     var atksMap = {};
     panel.querySelectorAll('.pk-atk-edit-row input').forEach(function(inp) {
-      var ai    = inp.dataset.ai;
-      var field = inp.dataset.field;
+      var ai = inp.dataset.ai; var field = inp.dataset.field;
       if (ai === undefined) return;
-      if (!atksMap[ai]) atksMap[ai] = {name:'', dmg:'', range:'', effect:''};
+      if (!atksMap[ai]) atksMap[ai] = {name:'',dmg:'',range:'',effect:''};
       atksMap[ai][field] = inp.value.trim();
     });
     var newAtks = [];
@@ -2182,12 +2200,10 @@ function renderPanel() {
     });
     state.team[curIdx].stats.attacks = newAtks;
 
-    // Notes
     var ta = panel.querySelector('.pk-notes-ta');
     if (ta) state.team[curIdx].notes = ta.value;
 
     saveState();
-
     document.getElementById('pk-panel-read').style.display = '';
     document.getElementById('pk-panel-edit').style.display = 'none';
     this.style.display = 'none';
@@ -2195,7 +2211,6 @@ function renderPanel() {
     renderPanel();
   });
 
-  // Bouton Retirer
   panel.querySelector('#pk-btn-del').addEventListener('click', function() {
     removePokemon(state.activeSlot);
   });
