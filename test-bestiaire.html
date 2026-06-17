@@ -1062,8 +1062,8 @@ a { color: inherit; }
       <div class="pk-add-form" id="pk-add-form">
         <div class="section-title">Ajouter - <span id="add-slot-num"></span></div>
         <div class="add-mode-tabs">
-          <button class="add-mode-tab active" id="tab-manuel-btn" onclick="switchAddMode('manuel')">Manuel</button>
-          <button class="add-mode-tab" id="tab-bestiaire-btn" onclick="switchAddMode('bestiaire')">Bestiaire</button>
+          <button class="add-mode-tab active" id="addtab-manuel" onclick="switchAddMode('manuel')">Manuel</button>
+          <button class="add-mode-tab" id="addtab-bestiaire" onclick="switchAddMode('bestiaire')">Bestiaire</button>
         </div>
         <div class="add-form-section active" id="add-section-manuel">
         <input type="hidden" id="add-slot-hidden">
@@ -2005,8 +2005,8 @@ function switchAddMode(mode) {
   _bstMode = mode;
   document.getElementById('add-section-manuel').classList.toggle('active', mode === 'manuel');
   document.getElementById('add-section-bestiaire').classList.toggle('active', mode === 'bestiaire');
-  document.getElementById('tab-manuel-btn').classList.toggle('active', mode === 'manuel');
-  document.getElementById('tab-bestiaire-btn').classList.toggle('active', mode === 'bestiaire');
+  document.getElementById('addtab-manuel').classList.toggle('active', mode === 'manuel');
+  document.getElementById('addtab-bestiaire').classList.toggle('active', mode === 'bestiaire');
   if (mode === 'bestiaire' && !_bstData) loadBestiaire();
 }
 
