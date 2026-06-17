@@ -2247,20 +2247,20 @@ function initPlayerBin() {
   fbSet('slug', PLAYER_KEY);
   startRealtime();
 }
+
 function initPartnerStats() {
-  /* Lire les donnees du partenaire depuis le HTML statique du tab-partner */
   var tab = document.getElementById('tab-partner');
   if (!tab) return;
 
   var FR_MAP = {
-    'agilit\u00e9':'agi', 'agilite':'agi',
-    'force':'for', 'vigueur':'vig', 'ruse':'rus', 'trempe':'tremp',
-    'parade':'parade', 'robustesse':'robustesse', 'allure':'allure'
+    'agilit\u00e9':'agi','agilite':'agi','force':'for','vigueur':'vig',
+    'ruse':'rus','trempe':'tremp','parade':'parade',
+    'robustesse':'robustesse','allure':'allure'
   };
 
   var stats = {};
 
-  // Stats depuis pk-stat > val
+  /* Stats depuis .pk-stat > .val */
   tab.querySelectorAll('.pk-stat').forEach(function(el) {
     var valEl = el.querySelector('.val');
     if (!valEl) return;
@@ -2269,7 +2269,7 @@ function initPartnerStats() {
     if (key) stats[key] = valEl.textContent.trim();
   });
 
-  // Attaques
+  /* Attaques UNIQUEMENT depuis .pk-atk-table */
   var attacks = [];
   tab.querySelectorAll('.pk-atk-table tr').forEach(function(row) {
     var cells = row.querySelectorAll('td');
@@ -2284,33 +2284,33 @@ function initPartnerStats() {
   });
   if (attacks.length) stats.attacks = attacks;
 
-  // Talent
-  var capaEl   = tab.querySelector('.capa-name');
-  var talent   = capaEl ? capaEl.textContent.trim() : '';
-  var descEl   = tab.querySelector('.pk-capa-desc');
-  var talentDesc = '';
-  if (descEl) {
-    talentDesc = descEl.textContent.replace(/^\s*:\s*/, '').trim();
-  } else if (capaEl) {
-    var li = capaEl.closest('li');
-    if (li) {
-      var full = li.textContent;
-      var parts = full.split(':');
-      if (parts.length > 1) talentDesc = parts.slice(1).join(':').trim();
-    }
-  }
+  /* Talents depuis .pk-capa (Capacites speciales) */
+  var talents = [];
+  tab.querySelectorAll('.pk-capa').forEach(function(el) {
+    var n = el.querySelector('.pk-capa-name');
+    var d = el.querySelector('.pk-capa-desc');
+    if (n) talents.push({
+      name: n.textContent.trim(),
+      desc: d ? d.textContent.trim() : ''
+    });
+  });
 
-  // Type
-  var typeEl  = tab.querySelector('.pk-meta-row .tag, .tag');
-  var ptype   = typeEl ? typeEl.textContent.trim() : '';
+  /* Type */
+  var typeEl = tab.querySelector('.pk-meta-row .tag, .tag');
+  var ptype  = typeEl ? typeEl.textContent.trim() : '';
 
-  // Enrichir state.team[0]
+  /* Premier talent comme talent principal */
+  var talent     = talents.length ? talents[0].name : '';
+  var talentDesc = talents.length ? talents[0].desc : '';
+
+  /* Stocker TOUS les talents dans stats.talents */
+  if (talents.length) stats.talents = talents;
+
   state.team[0].stats       = stats;
   state.team[0].talent      = talent;
   state.team[0].talent_desc = talentDesc;
   if (ptype) state.team[0].type = ptype;
 
-  /* Pousser vers Firebase pour que le MJ le voie */
   fbSet('team', state.team);
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
