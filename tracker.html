@@ -1381,7 +1381,7 @@ function cancelEditName() {
 }
 
 document.addEventListener('DOMContentLoaded',function(){
-  loadState(); state.activeSlot=0; renderTeam(); initNotes(); loadBlessures(); loadPlayerName(); initPlayerBin();
+  loadState(); state.activeSlot=0; renderTeam(); initNotes(); loadBlessures(); loadPlayerName(); initPartnerStats(); initPlayerBin();
   _syncCloud(); // push localStorage -> Firebase au chargement
 });
 
@@ -2336,6 +2336,72 @@ function initPlayerBin() {
   listenMjNote();
   fbSet('slug', PLAYER_KEY);
   startRealtime();
+}
+function initPartnerStats() {
+  /* Lire les donnees du partenaire depuis le HTML statique du tab-partner */
+  var tab = document.getElementById('tab-partner');
+  if (!tab) return;
+
+  var FR_MAP = {
+    'agilit\u00e9':'agi', 'agilite':'agi',
+    'force':'for', 'vigueur':'vig', 'ruse':'rus', 'trempe':'tremp',
+    'parade':'parade', 'robustesse':'robustesse', 'allure':'allure'
+  };
+
+  var stats = {};
+
+  // Stats depuis pk-stat > val
+  tab.querySelectorAll('.pk-stat').forEach(function(el) {
+    var valEl = el.querySelector('.val');
+    if (!valEl) return;
+    var label = el.textContent.replace(valEl.textContent,'').trim().toLowerCase();
+    var key   = FR_MAP[label];
+    if (key) stats[key] = valEl.textContent.trim();
+  });
+
+  // Attaques
+  var attacks = [];
+  tab.querySelectorAll('.pk-atk-table tr').forEach(function(row) {
+    var cells = row.querySelectorAll('td');
+    if (cells.length >= 2 && cells[0].classList.contains('pk-atk-name')) {
+      attacks.push({
+        name:   cells[0].textContent.trim(),
+        dmg:    cells[1] ? cells[1].textContent.trim() : '',
+        range:  cells[2] ? cells[2].textContent.trim() : '',
+        effect: cells[3] ? cells[3].textContent.trim() : ''
+      });
+    }
+  });
+  if (attacks.length) stats.attacks = attacks;
+
+  // Talent
+  var capaEl   = tab.querySelector('.capa-name');
+  var talent   = capaEl ? capaEl.textContent.trim() : '';
+  var descEl   = tab.querySelector('.pk-capa-desc');
+  var talentDesc = '';
+  if (descEl) {
+    talentDesc = descEl.textContent.replace(/^\s*:\s*/, '').trim();
+  } else if (capaEl) {
+    var li = capaEl.closest('li');
+    if (li) {
+      var full = li.textContent;
+      var parts = full.split(':');
+      if (parts.length > 1) talentDesc = parts.slice(1).join(':').trim();
+    }
+  }
+
+  // Type
+  var typeEl  = tab.querySelector('.pk-meta-row .tag, .tag');
+  var ptype   = typeEl ? typeEl.textContent.trim() : '';
+
+  // Enrichir state.team[0]
+  state.team[0].stats       = stats;
+  state.team[0].talent      = talent;
+  state.team[0].talent_desc = talentDesc;
+  if (ptype) state.team[0].type = ptype;
+
+  /* Pousser vers Firebase pour que le MJ le voie */
+  fbSet('team', state.team);
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
