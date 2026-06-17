@@ -1060,58 +1060,15 @@ a { color: inherit; }
       <div class="page-tagline">6 slots - partenaire fixe en slot 0</div>
       <div class="team-grid" id="team-grid"></div>
       <div class="pk-add-form" id="pk-add-form">
-        <div class="section-title">Ajouter - <span id="add-slot-num"></span></div>
-        <div class="add-mode-tabs">
-          <button class="add-mode-tab active" id="addtab-manuel" onclick="switchAddMode('manuel')">Manuel</button>
-          <button class="add-mode-tab" id="addtab-bestiaire" onclick="switchAddMode('bestiaire')">Bestiaire</button>
-        </div>
-        <div class="add-form-section active" id="add-section-manuel">
+        <div class="section-title">Ajouter un Pok&eacute;mon &mdash; <span id="add-slot-num"></span></div>
         <input type="hidden" id="add-slot-hidden">
-        <div class="form-row">
-          <div><label>Nom</label><input type="text" id="pk-add-name" placeholder="Ex : Racaillou"></div>
-          <div><label>Type(s)</label><select id="pk-add-type" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:var(--sans);font-size:13px;padding:8px 12px;outline:none"><option value="">— Choisir —</option>
-              <option>Feu</option><option>Eau</option><option>Plante</option>
-              <option>Electrik</option><option>Normal</option><option>Combat</option>
-              <option>Poison</option><option>Sol</option><option>Vol</option>
-              <option>Psy</option><option>Insecte</option><option>Roche</option>
-              <option>Spectre</option><option>Dragon</option><option>Tenebres</option>
-              <option>Acier</option><option>Fee</option><option>Glace</option>
-              <option>Mutant</option></select></div>
+        <input class="bst-search" id="bst-search" type="text" placeholder="Rechercher dans le bestiaire..." oninput="filterBstPicker()">
+        <div class="bst-picker-grid" id="bst-picker-grid">
+          <div class="bst-loading">Chargement du bestiaire...</div>
         </div>
-        <label>Talent / Capacite speciale</label>
-        <input type="text" id="pk-add-talent" placeholder="Ex : Levitation, Torrent, Intimidation..." style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:13px;padding:8px 12px;margin-bottom:8px">
-        <label>Notes</label>
-        <textarea id="pk-add-notes" placeholder="Statut, PV actuels..."></textarea>
-        <label style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px;display:block">Stats de base</label>
-        <div class="pk-stats-grid">
-          <div class="pk-stat-field"><label>FOR</label><input type="text" id="pk-stat-for" placeholder="d8"></div>
-          <div class="pk-stat-field"><label>AGI</label><input type="text" id="pk-stat-agi" placeholder="d6"></div>
-          <div class="pk-stat-field"><label>VIG</label><input type="text" id="pk-stat-vig" placeholder="d6"></div>
-          <div class="pk-stat-field"><label>RUS</label><input type="text" id="pk-stat-rus" placeholder="d4"></div>
-          <div class="pk-stat-field"><label>Parade</label><input type="text" id="pk-stat-parade" placeholder="5"></div>
-          <div class="pk-stat-field"><label>Robustesse</label><input type="text" id="pk-stat-robustesse" placeholder="5"></div>
-        </div>
-        <div class="pk-stat-field" style="margin-top:6px"><label>Allure</label><input type="text" id="pk-stat-allure" placeholder='6"' style="max-width:120px"></div>
-        <div class="pk-attacks-area">
-          <label style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin:8px 0 5px">Attaques</label>
-          <div id="pk-attacks-container">
-            <div class="pk-attack-row" id="atk-row-1">
-              <input type="text" id="pk-atk-name-1" placeholder="Attaque 1">
-              <input type="text" id="pk-atk-dmg-1" placeholder="Degats" style="max-width:90px">
-            </div>
-          </div>
-          <button class="pk-attack-add" onclick="addAttackRow()">+ Attaque</button>
-        </div>
-        </div><!-- /add-section-manuel -->
-
-        <div class="add-form-section" id="add-section-bestiaire">
-          <input class="bst-search" id="bst-search" type="text" placeholder="Rechercher..." oninput="filterBstPicker()">
-          <div class="bst-picker-grid" id="bst-picker-grid"><div class="bst-loading">Chargement du bestiaire...</div></div>
-          <div class="bst-detail-panel" id="bst-detail-panel"></div>
-        </div><!-- /add-section-bestiaire -->
-
-        <div style="display:flex;gap:8px">
-          <button class="btn-primary" onclick="addPokemon()">Ajouter</button>
+        <div class="bst-detail-panel" id="bst-detail-panel"></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+          <button class="btn-primary" id="bst-add-btn" onclick="addFromBestiaire()" disabled style="opacity:.4">Ajouter</button>
           <button class="btn-ghost" onclick="closeAddForm()">Annuler</button>
         </div>
       </div>
@@ -1271,19 +1228,9 @@ function selectSlot(i) {
   if (!state.team[i] && i>0) openAddForm(i); else closeAddForm();
 }
 
-function openAddForm(slot) {
-  document.getElementById('pk-add-form').classList.add('open');
-  document.getElementById('add-slot-num').textContent = 'Slot #' + slot;
-  document.getElementById('add-slot-hidden').value = slot;
-  document.getElementById('pk-add-name').focus();
-}
 
-function closeAddForm() {
-  document.getElementById('pk-add-form').classList.remove('open');
-  document.getElementById('pk-add-name').value = '';
-  document.getElementById('pk-add-type').value = '';
-  document.getElementById('pk-add-notes').value = '';
-}
+
+
 
 
 
@@ -1473,73 +1420,19 @@ function gearInputKey(e) {
 /* ---- STATS POKEMON FORMULAIRE ---- */
 var pkAttackCount = 1;
 
-function addAttackRow() {
-  pkAttackCount++;
-  var talentEl = document.getElementById('pk-add-talent'); if (talentEl) talentEl.value = '';
-  var container = document.getElementById('pk-attacks-container');
-  if (!container || pkAttackCount > 4) return;
-  var row = document.createElement('div');
-  row.className = 'pk-attack-row';
-  row.id = 'atk-row-' + pkAttackCount;
-  row.innerHTML = '<input type="text" id="pk-atk-name-' + pkAttackCount + '" placeholder="Attaque ' + pkAttackCount + '">'
-    + '<input type="text" id="pk-atk-dmg-' + pkAttackCount + '" placeholder="Degats" style="max-width:90px">'
-    + '<button class="pk-attack-del" onclick="removeAttackRow(' + pkAttackCount + ')">x</button>';
-  container.appendChild(row);
-}
+
 
 function removeAttackRow(n) {
   var row = document.getElementById('atk-row-' + n);
   if (row) row.remove();
 }
 
-function collectPkStats() {
-  var stats = {};
-  ['for','agi','vig','rus','parade','robustesse','allure'].forEach(function(s) {
-    var el = document.getElementById('pk-stat-' + s);
-    if (el) stats[s] = el.value.trim();
-  });
-  var attacks = [];
-  for (var i = 1; i <= 4; i++) {
-    var n = document.getElementById('pk-atk-name-' + i);
-    var d = document.getElementById('pk-atk-dmg-' + i);
-    if (n && n.value.trim()) attacks.push({ name: n.value.trim(), dmg: d ? d.value.trim() : '' });
-  }
-  stats.attacks = attacks;
-  return stats;
-}
 
-function resetPkStatsForm() {
-  ['for','agi','vig','rus','parade','robustesse','allure'].forEach(function(s) {
-    var el = document.getElementById('pk-stat-' + s);
-    if (el) el.value = '';
-  });
-  var container = document.getElementById('pk-attacks-container');
-  if (container) {
-    var rows = container.querySelectorAll('.pk-attack-row:not(#atk-row-1)');
-    rows.forEach(function(r) { r.remove(); });
-    pkAttackCount = 1;
-    var n1 = document.getElementById('pk-atk-name-1');
-    var d1 = document.getElementById('pk-atk-dmg-1');
-    if (n1) n1.value = '';
-    if (d1) d1.value = '';
-  }
-}
+
+
 
 /* Override addPokemon pour inclure les stats */
-function addPokemon() {
-  var slot = parseInt(document.getElementById('add-slot-hidden').value);
-  var name = document.getElementById('pk-add-name').value.trim();
-  var type = document.getElementById('pk-add-type').value.trim();
-  var notes = document.getElementById('pk-add-notes').value.trim();
-  if (!name) { document.getElementById('pk-add-name').focus(); return; }
-  var pkStats = collectPkStats();
-  var talent = document.getElementById('pk-add-talent'); var talentVal = talent ? talent.value.trim() : '';
-  state.team[slot] = { name: name, type: type, notes: notes, talent: talentVal, partner: false, stats: pkStats };
-  saveState();
-  closeAddForm();
-  resetPkStatsForm();
-  renderTeam();
-}
+
 
 /* Override renderPanel pour afficher les stats */
 
@@ -1772,7 +1665,7 @@ function renderPanel() {
   var validAtks = attacks.filter(function(a){ return a && a.name; });
   if (validAtks.length) {
     atksHtml = '<div class="pk-section-lbl">Attaques</div>'
-      + '<table class="pk-atk-table"><tr><th>Attaque</th><th>Dmg</th></tr>';
+      + '<table class="pk-atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>';
     validAtks.forEach(function(a) {
       atksHtml += '<tr><td class="pk-atk-name">' + escHtml(a.name) + '</td>'
         + '<td class="pk-atk-dmg">' + escHtml(a.dmg||'') + '</td></tr>';
@@ -1817,7 +1710,8 @@ function renderPanel() {
     + '<div class="pk-name">' + escHtml(slot.name) + '</div>'
     + (slot.talent ? '<div class="pk-species">' + escHtml(slot.talent) + '</div>' : '')
     + '<div class="pk-meta-row">'
-    + (slot.type ? '<span class="tag tag-weird">' + escHtml(slot.type) + '</span>' : '')
+    + (slot.type   ? '<span class="tag tag-weird">'     + escHtml(slot.type)   + '</span>' : '')
+    + (slot.taille  ? '<span class="tag tag-sauvage">'   + escHtml(slot.taille) + '</span>' : '')
     + '</div>'
     + '</div>'
 
@@ -1998,33 +1892,10 @@ function loadNotesFromCloud() {
 function savePlayerName() { _syncCloud(); }
 
 /* ── BESTIAIRE PICKER ── */
-var _bstData = null;  // cache des cartes parsées
-var _bstMode = 'manuel';
 
-function switchAddMode(mode) {
-  _bstMode = mode;
-  document.getElementById('add-section-manuel').classList.toggle('active', mode === 'manuel');
-  document.getElementById('add-section-bestiaire').classList.toggle('active', mode === 'bestiaire');
-  document.getElementById('addtab-manuel').classList.toggle('active', mode === 'manuel');
-  document.getElementById('addtab-bestiaire').classList.toggle('active', mode === 'bestiaire');
-  if (mode === 'bestiaire' && !_bstData) loadBestiaire();
-}
 
-function loadBestiaire() {
-  var grid = document.getElementById('bst-picker-grid');
-  if (!grid) return;
-  grid.innerHTML = '<div class="bst-loading">Chargement...</div>';
 
-  fetch('mj.html')
-    .then(function(r) { return r.text(); })
-    .then(function(html) {
-      _bstData = parseBestCards(html);
-      renderBstPicker(_bstData);
-    })
-    .catch(function() {
-      grid.innerHTML = '<div class="bst-loading">Erreur de chargement.</div>';
-    });
-}
+
 
 
 
@@ -2043,35 +1914,81 @@ function loadBestiaire() {
 
 /* ── BESTIAIRE PICKER v2 — structure unifiée ── */
 
+
+
+
+
+
+
+
+
+
+
+
+
+/* ══════════════════════════════════════════════════════
+   BESTIAIRE PICKER — flux unique
+   1. Grille → 2. Fiche + talent → 3. Ajouter
+   ══════════════════════════════════════════════════════ */
+
+var _bstData    = null;
+var _bstCurrent = null;
+
+function openAddForm(slot) {
+  var form = document.getElementById('pk-add-form');
+  form.classList.add('open');
+  document.getElementById('add-slot-num').textContent = 'Slot #' + slot;
+  document.getElementById('add-slot-hidden').value = slot;
+  document.getElementById('bst-detail-panel').innerHTML = '';
+  document.getElementById('bst-add-btn').disabled = true;
+  document.getElementById('bst-add-btn').style.opacity = '.4';
+  _bstCurrent = null;
+  if (!_bstData) {
+    loadBestiaire();
+  } else {
+    renderBstPicker(_bstData);
+  }
+}
+
+function closeAddForm() {
+  document.getElementById('pk-add-form').classList.remove('open');
+  document.getElementById('bst-search').value = '';
+  document.getElementById('bst-detail-panel').innerHTML = '';
+  _bstCurrent = null;
+}
+
+function loadBestiaire() {
+  var grid = document.getElementById('bst-picker-grid');
+  grid.innerHTML = '<div class="bst-loading">Chargement...</div>';
+  fetch('mj.html')
+    .then(function(r) { return r.text(); })
+    .then(function(txt) {
+      _bstData = parseBestCards(txt);
+      renderBstPicker(_bstData);
+    })
+    .catch(function() {
+      grid.innerHTML = '<div class="bst-loading">Erreur de chargement.</div>';
+    });
+}
+
 function parseBestCards(html) {
   var cards = [];
   var doc = (new DOMParser()).parseFromString(html, 'text/html');
-
   doc.querySelectorAll('.beast-card').forEach(function(card) {
     var nameEl = card.querySelector('.beast-name');
     var metaEl = card.querySelector('.beast-meta');
     if (!nameEl) return;
-
     var metaTxt = metaEl ? metaEl.textContent : '';
-
-    // Categorie (tag texte dans beast-meta)
-    var tagEl  = metaEl ? metaEl.querySelector('[class^="tag"]') : null;
+    var tagEl   = metaEl ? metaEl.querySelector('[class^="tag"]') : null;
     var categorie = tagEl ? tagEl.textContent.trim() : '';
-
-    // Type, taille depuis le reste du meta
-    var metaRest = metaTxt.replace(categorie,'').trim().replace(/^\s*[·\-]\s*/,'');
-    var parts = metaRest.split(/\s*·\s*/);
-    var type  = parts[0] ? parts[0].trim() : '';
+    var rest  = metaTxt.replace(categorie,'').replace(/^\s*[·\-]\s*/,'').trim();
+    var parts = rest.split(/\s*[·\-]\s*/);
+    var type   = parts[0] ? parts[0].trim() : '';
     var taille = parts[1] ? parts[1].trim() : '';
-
-    // Description
     var descEl = card.querySelector('p');
-    var desc   = descEl ? descEl.textContent.trim() : '';
-
-    // Attributs (stat-pills)
-    var attrs = {};
-    var statMap = {AGI:'agi', FOR:'for', VIG:'vig', RUS:'rus', TREMP:'tremp',
-                   Parade:'parade', Robustesse:'robustesse', Allure:'allure'};
+    var attrs  = {};
+    var statMap = {AGI:'agi',FOR:'for',VIG:'vig',RUS:'rus',TREMP:'tremp',
+                   Parade:'parade',Robustesse:'robustesse',Allure:'allure'};
     card.querySelectorAll('.stat-pill').forEach(function(pill) {
       var val = pill.querySelector('span');
       if (!val) return;
@@ -2079,8 +1996,6 @@ function parseBestCards(html) {
       var fk  = statMap[key];
       if (fk) attrs[fk] = val.textContent.trim();
     });
-
-    // Attaques (4 colonnes : nom, dommages, portée, effet)
     var attacks = [];
     card.querySelectorAll('.atk-table tr').forEach(function(row) {
       var cells = row.querySelectorAll('td');
@@ -2093,233 +2008,164 @@ function parseBestCards(html) {
         });
       }
     });
-
-    // Talents (capa-list — peuvent être plusieurs)
     var talents = [];
     card.querySelectorAll('.capa-list li').forEach(function(li) {
       var n = li.querySelector('.capa-name');
       if (!n) return;
-      var desc2 = li.textContent.replace(n.textContent,'').replace(/^\s*:\s*/,'').trim();
-      talents.push({ name: n.textContent.trim(), desc: desc2 });
+      var d = li.textContent.replace(n.textContent,'').replace(/^\s*:\s*/,'').trim();
+      talents.push({ name: n.textContent.trim(), desc: d });
     });
-
-    cards.push({ name:nameEl.textContent.trim(), categorie:categorie,
-      type:type, taille:taille, desc:desc, attrs:attrs, attacks:attacks, talents:talents });
+    cards.push({ name: nameEl.textContent.trim(), categorie: categorie,
+      type: type, taille: taille,
+      desc: descEl ? descEl.textContent.trim() : '',
+      attrs: attrs, attacks: attacks, talents: talents });
   });
   return cards;
-}
-
-function renderBstPicker(cards) {
-  var grid = document.getElementById('bst-picker-grid');
-  var q = ((document.getElementById('bst-search')||{}).value||'').toLowerCase();
-  grid.innerHTML = '';
-
-  var filtered = cards.filter(function(c) {
-    return !q || c.name.toLowerCase().indexOf(q)>=0
-              || c.type.toLowerCase().indexOf(q)>=0
-              || c.categorie.toLowerCase().indexOf(q)>=0;
-  });
-
-  if (!filtered.length) {
-    grid.innerHTML = '<div class="bst-loading">Aucun r\u00e9sultat.</div>';
-    return;
-  }
-
-  var STAT_L = {agi:'AGI',rus:'RUS',for:'FOR',tremp:'TREMP',vig:'VIG',
-                parade:'PAR',robustesse:'ROB',allure:'ALL'};
-
-  filtered.forEach(function(c) {
-    var div = document.createElement('div');
-    div.className = 'bst-pick-card';
-
-    var statsHtml = Object.keys(STAT_L).filter(function(k){ return c.attrs[k]; })
-      .map(function(k){ return '<div class="bst-pick-stat">' + STAT_L[k]
-        + ' <span>' + c.attrs[k] + '</span></div>'; }).join('');
-
-    var atksPreview = c.attacks.slice(0,2).map(function(a){
-      return '<span style="font-size:9px;color:var(--muted)">' + a.name
-        + (a.dmg ? ' <span style="color:var(--amber)">' + a.dmg + '</span>' : '')
-        + '</span>';
-    }).join('&nbsp;&middot;&nbsp;');
-
-    div.innerHTML =
-      '<div class="bst-pick-name">' + c.name + '</div>'
-      + '<div class="bst-pick-meta">'
-      + (c.categorie ? '<span style="opacity:.7">' + c.categorie + '</span> &middot; ' : '')
-      + c.type + (c.taille ? ' &middot; ' + c.taille : '')
-      + '</div>'
-      + '<div class="bst-pick-stats">' + statsHtml + '</div>'
-      + (atksPreview ? '<div style="margin-top:4px">' + atksPreview + '</div>' : '')
-      + (c.talents.length ? '<div style="font-size:9px;color:var(--muted);margin-top:3px;font-style:italic">'
-        + c.talents.length + ' talent' + (c.talents.length>1?'s':'') + '</div>' : '');
-
-    div.addEventListener('click', (function(card, el){ return function(){ showBstDetail(card, el); }; })(c, div));
-    grid.appendChild(div);
-  });
-
-  // Vider le panneau détail si ouvert
-  var detail = document.getElementById('bst-detail-panel');
-  if (detail) detail.innerHTML = '';
 }
 
 function filterBstPicker() {
   if (_bstData) renderBstPicker(_bstData);
 }
 
+function renderBstPicker(cards) {
+  var grid = document.getElementById('bst-picker-grid');
+  var q = ((document.getElementById('bst-search')||{}).value||'').toLowerCase();
+  grid.innerHTML = '';
+  var filtered = cards.filter(function(c) {
+    return !q || c.name.toLowerCase().indexOf(q) >= 0
+              || c.type.toLowerCase().indexOf(q) >= 0;
+  });
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="bst-loading">Aucun r\u00e9sultat.</div>';
+    return;
+  }
+  var SL = {agi:'AGI',rus:'RUS',for:'FOR',tremp:'TREMP',vig:'VIG',
+            parade:'PAR',robustesse:'ROB',allure:'ALL'};
+  filtered.forEach(function(c) {
+    var div = document.createElement('div');
+    div.className = 'bst-pick-card';
+    var statsHtml = Object.keys(SL).filter(function(k){ return c.attrs[k]; })
+      .map(function(k){ return '<div class="bst-pick-stat">' + SL[k]
+        + ' <span>' + c.attrs[k] + '</span></div>'; }).join('');
+    div.innerHTML =
+      '<div class="bst-pick-name">' + c.name + '</div>'
+      + '<div class="bst-pick-meta">' + c.type
+      + (c.taille ? ' &middot; ' + c.taille : '') + '</div>'
+      + '<div class="bst-pick-stats">' + statsHtml + '</div>'
+      + (c.talents.length
+          ? '<div style="font-size:9px;color:var(--muted);margin-top:3px">'
+            + c.talents.length + ' talent' + (c.talents.length > 1 ? 's' : '') + '</div>'
+          : '');
+    div.addEventListener('click', (function(card, el){
+      return function(){ showBstDetail(card, el); };
+    })(c, div));
+    grid.appendChild(div);
+  });
+}
+
 function showBstDetail(c, el) {
-  // Surligner la carte sélectionnée
   document.querySelectorAll('.bst-selected').forEach(function(d){ d.classList.remove('bst-selected'); });
   el.classList.add('bst-selected');
+  _bstCurrent = c;
 
-  var panel = document.getElementById('bst-detail-panel');
-  if (!panel) return;
+  var SL = {agi:'AGI',rus:'RUS',for:'FOR',tremp:'TREMP',vig:'VIG',
+            parade:'Parade',robustesse:'Robustesse',allure:'Allure'};
 
-  var STAT_L = {agi:'AGI',rus:'RUS',for:'FOR',tremp:'TREMP',vig:'VIG',
-                parade:'Parade',robustesse:'Robustesse',allure:'Allure'};
-
-  // Attributs
   var attrsHtml = '<div class="bst-attrs">'
-    + Object.keys(STAT_L).filter(function(k){ return c.attrs[k]; })
-      .map(function(k){ return '<div class="bst-attr">' + STAT_L[k]
+    + Object.keys(SL).filter(function(k){ return c.attrs[k]; })
+      .map(function(k){ return '<div class="bst-attr">' + SL[k]
         + ' <span>' + c.attrs[k] + '</span></div>'; }).join('')
     + '</div>';
 
-  // Attaques (4 colonnes)
   var atksHtml = '';
   if (c.attacks.length) {
     atksHtml = '<table class="bst-atk-table">'
       + '<tr><th>Attaque</th><th>Dommages</th><th>Port\u00e9e</th><th>Effet</th></tr>';
     c.attacks.forEach(function(a) {
-      atksHtml += '<tr>'
-        + '<td class="bst-atk-name">' + a.name + '</td>'
-        + '<td class="bst-atk-dmg">'  + a.dmg  + '</td>'
+      atksHtml += '<tr><td class="bst-atk-name">' + a.name + '</td>'
+        + '<td class="bst-atk-dmg">' + a.dmg + '</td>'
         + '<td>' + (a.range||'') + '</td>'
-        + '<td>' + (a.effect||'') + '</td>'
-        + '</tr>';
+        + '<td>' + (a.effect||'') + '</td></tr>';
     });
     atksHtml += '</table>';
   }
 
-  // Talents (radio si plusieurs)
   var talentsHtml = '';
   if (c.talents.length) {
     talentsHtml = '<span class="bst-talent-lbl">Talent</span>'
       + '<div class="bst-talent-list" id="bst-talent-list">';
     c.talents.forEach(function(t, i) {
-      talentsHtml += '<label class="bst-talent-opt" id="bst-topt-' + i + '">'
+      talentsHtml += '<label class="bst-talent-opt' + (i===0?' selected':'') + '">'
         + '<input type="radio" name="bst-talent" value="' + i + '"'
-        + (i===0 ? ' checked' : '') + '>'
+        + (i===0?' checked':'') + '>'
         + '<span><span class="bst-talent-name">' + t.name + '</span>'
         + (t.desc ? '<span class="bst-talent-desc">' + t.desc + '</span>' : '')
         + '</span></label>';
     });
     talentsHtml += '</div>';
-  } else if (c.name) {
-    // Pas de talent défini — champ libre
-    talentsHtml = '<span class="bst-talent-lbl">Talent</span>'
-      + '<input class="bst-search" id="bst-talent-free" type="text" placeholder="Talent libre...">';
   }
 
+  var panel = document.getElementById('bst-detail-panel');
   panel.innerHTML =
     '<div class="bst-detail-header">'
     + '<div class="bst-detail-name">' + c.name + '</div>'
     + '<div class="bst-detail-meta">'
-    + (c.categorie ? c.categorie + ' &middot; ' : '')
     + c.type + (c.taille ? ' &middot; ' + c.taille : '')
     + '</div>'
     + (c.desc ? '<div class="bst-detail-desc">' + c.desc + '</div>' : '')
     + '</div>'
     + '<div class="bst-detail-body">'
-    + '<div class="bst-talent-lbl" style="margin-top:0">Attributs</div>'
-    + attrsHtml
-    + atksHtml
-    + talentsHtml
-    + '<div class="bst-confirm-row">'
-    + '<button class="bst-confirm-btn" id="bst-confirm-btn" onclick="confirmBstSelection()">Ajouter ce Pok\u00e9mon &#9654;</button>'
-    + '</div>'
+    + '<span class="bst-talent-lbl" style="margin-top:0">Attributs</span>'
+    + attrsHtml + atksHtml + talentsHtml
     + '</div>';
 
-  // Styler le radio sélectionné
   panel.querySelectorAll('input[type=radio]').forEach(function(r) {
     r.addEventListener('change', function() {
       panel.querySelectorAll('.bst-talent-opt').forEach(function(o){ o.classList.remove('selected'); });
       this.closest('.bst-talent-opt').classList.add('selected');
     });
   });
-  var firstOpt = panel.querySelector('.bst-talent-opt');
-  if (firstOpt) firstOpt.classList.add('selected');
 
-  // Stocker la carte courante
-  _bstCurrent = c;
+  var btn = document.getElementById('bst-add-btn');
+  btn.disabled = false;
+  btn.style.opacity = '1';
 }
 
-var _bstCurrent = null;
-
-function confirmBstSelection() {
+function addFromBestiaire() {
   if (!_bstCurrent) return;
-  var c = _bstCurrent;
+  var c    = _bstCurrent;
+  var slot = parseInt(document.getElementById('add-slot-hidden').value);
 
   // Talent choisi
   var talentVal = '';
   var radios = document.querySelectorAll('input[name="bst-talent"]');
-  if (radios.length) {
-    radios.forEach(function(r) { if (r.checked) talentVal = c.talents[parseInt(r.value)].name; });
-  } else {
-    var free = document.getElementById('bst-talent-free');
-    if (free) talentVal = free.value.trim();
-  }
-
-  // Remplir le formulaire manuel et basculer
-  switchAddMode('manuel');
-
-  var nameInp = document.getElementById('pk-add-name');
-  if (nameInp) nameInp.value = c.name;
-
-  // Type — select
-  var typeEl = document.getElementById('pk-add-type');
-  if (typeEl) {
-    var matched = false;
-    for (var i = 0; i < typeEl.options.length; i++) {
-      if (typeEl.options[i].text.toLowerCase() === c.type.toLowerCase()) {
-        typeEl.selectedIndex = i; matched = true; break;
-      }
-    }
-    if (!matched) typeEl.selectedIndex = 0;
-  }
-
-  // Talent
-  var talentInp = document.getElementById('pk-add-talent');
-  if (talentInp) talentInp.value = talentVal;
-
-  // Stats
-  var statKeys = ['for','agi','vig','rus','tremp','parade','robustesse','allure'];
-  statKeys.forEach(function(k) {
-    var el = document.getElementById('pk-stat-' + k);
-    if (el) el.value = c.attrs[k] || '';
+  radios.forEach(function(r) {
+    if (r.checked) talentVal = c.talents[parseInt(r.value)].name;
   });
 
-  // Attaques
-  var container = document.getElementById('pk-attacks-container');
-  if (container) {
-    container.innerHTML =
-      '<div class="pk-attack-row" id="atk-row-1">'
-      + '<input type="text" id="pk-atk-name-1" placeholder="Attaque 1">'
-      + '<input type="text" id="pk-atk-dmg-1" placeholder="D\u00e9g\u00e2ts" style="max-width:90px">'
-      + '</div>';
-    if (c.attacks[0]) {
-      document.getElementById('pk-atk-name-1').value = c.attacks[0].name || '';
-      document.getElementById('pk-atk-dmg-1').value  = c.attacks[0].dmg  || '';
-    }
-    for (var ai = 1; ai < Math.min(c.attacks.length, 4); ai++) {
-      addAttackRow();
-      var nn = document.getElementById('pk-atk-name-' + (ai+1));
-      var dd = document.getElementById('pk-atk-dmg-'  + (ai+1));
-      if (nn) nn.value = c.attacks[ai].name || '';
-      if (dd) dd.value = c.attacks[ai].dmg  || '';
-    }
-  }
-}
-</script>
+  // Construire l'objet stats avec attaques complètes (4 champs)
+  var stats = {};
+  var statKeys = ['for','agi','vig','rus','tremp','parade','robustesse','allure'];
+  statKeys.forEach(function(k) { if (c.attrs[k]) stats[k] = c.attrs[k]; });
+  stats.attacks = c.attacks.map(function(a) {
+    return { name: a.name, dmg: a.dmg, range: a.range, effect: a.effect };
+  });
+
+  state.team[slot] = {
+    name:     c.name,
+    type:     c.type,
+    taille:   c.taille,
+    talent:   talentVal,
+    partner:  false,
+    notes:    '',
+    stats:    stats
+  };
+
+  saveState();
+  closeAddForm();
+  renderTeam();
+  selectSlot(slot);
+}</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
     <div class="mj-note-box-title">Message du MJ</div>
