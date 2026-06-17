@@ -407,11 +407,20 @@ function buildTeam(rec) {
     });
     h += '</div>';
 
-    /* Attaques — colonne 1 uniquement */
+    /* Attaques — colonne 1 uniquement, normalisation stricte */
     var attacks = s.attacks;
     if (attacks) {
-      var atk_arr = Array.isArray(attacks) ? attacks : Object.values(attacks);
-      var valid   = atk_arr.filter(function(a){ return a && a.name; });
+      var atk_arr;
+      if (Array.isArray(attacks)) {
+        atk_arr = attacks;
+      } else {
+        // Firebase objet indexe — trier par cle numerique
+        atk_arr = Object.keys(attacks)
+          .filter(function(k){ return !isNaN(parseInt(k,10)); })
+          .sort(function(a,b){ return parseInt(a,10)-parseInt(b,10); })
+          .map(function(k){ return attacks[k]; });
+      }
+      var valid = atk_arr.filter(function(a){ return a && a.name; });
       if (valid.length) {
         h += '<div class="pk-atks">';
         valid.forEach(function(a) {
