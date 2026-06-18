@@ -1006,6 +1006,12 @@
   .beast-pnj-sub { transition:opacity .15s; }
 
   .tag-alpha9 { background:rgba(139,32,32,.2); color:#e07070; border:1px solid rgba(139,32,32,.5); }
+
+  .groupe-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px;
+    align-items:start; }
+  .groupe-col-title { font-family:var(--mono); font-size:10px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--muted); margin-bottom:12px;
+    padding-bottom:6px; border-bottom:1px solid var(--border); }
 </style>
 </head>
 <body>
@@ -1155,7 +1161,10 @@
     <div class="section" id="tab-groupe">
   <div class="page-title">Le Groupe</div>
   <div class="page-tagline">4 Dresseurs · Pokémon partenaires · Style Deadlands</div>
-  <div class="pj-acc-list">
+  <div class="groupe-grid">
+  <div>
+    <div class="groupe-col-title">Dresseurs</div>
+<div class="pj-acc-list">
     
 <div class="pnj-card" id="pj-acc-1">
         <div class="pnj-header" onclick="togglePjAcc('pj-acc-1')">
@@ -1265,9 +1274,10 @@
       </div>
       
   </div>
-
-
-      <div class="section-title" style="margin-top:32px;margin-bottom:16px">Pokémon Partenaires</div>
+  </div>
+  <div>
+    <div class="groupe-col-title">Pokémon Partenaires</div>
+<div class="section-title" style="margin-top:32px;margin-bottom:16px">Pokémon Partenaires</div>
       <div class="pnj-card" id="pk-acc-analyste">
         <div class="pnj-header" onclick="togglePnj('pk-acc-analyste')">
           <div>
@@ -1458,7 +1468,10 @@
           <p style="font-size:12px;color:var(--muted);margin-top:10px"><em>Abra dormait dans une cage trop petite chez un dresseur qui ne comprenait pas ce qu'il avait. Il n'a pas choisi Kael. Il a juste arr&ecirc;t&eacute; de se t&eacute;l&eacute;porter quand Kael a ouvert la cage. C'est suffisant pour commencer.</em></p>
         </div>
       </div>
-    </div><div class="section" id="tab-pnj">
+    </div><div class="section"
+  </div>
+</div>
+id="tab-pnj">
       <div class="page-title">Fiches PNJ</div>
       <div class="page-tagline">Organis&eacute;es par sc&eacute;nario</div>
 
