@@ -560,11 +560,13 @@ a { color: inherit; }
   .pj-banner {
     position: relative;
     width: 220px;
+    max-height: 200px;
     flex-shrink: 0;
     background: var(--surface);
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
   .pj-banner-img {
     width: 100%;
@@ -621,7 +623,8 @@ a { color: inherit; }
   /* Layout principal : bannière latérale + contenu */
   .player-body {
     display: flex;
-    flex: 1;
+    max-height: 200px;
+    flex-shrink: 0;
     overflow: hidden;
   }
   .player-main {
