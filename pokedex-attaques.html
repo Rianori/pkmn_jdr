@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pokedex des Attaques — Savage Pokemon</title>
+<style>
+:root {
+  --bg:#0e0e10;--surface:#141416;--card:#1a1a1e;--border:#2a2a30;
+  --text:#e8e6e0;--muted:#6b6a6a;--amber:#c8922a;--amber-dim:rgba(200,146,42,.25);
+  --amber-glow:rgba(200,146,42,.08);--danger:#8B3300;
+  --radius:6px;--mono:'IBM Plex Mono',monospace;--sans:'Inter',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;}
+
+header{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 24px;background:var(--surface);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;}
+.hd-title{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--amber);}
+.hd-count{font-size:11px;color:var(--muted);margin-left:10px;}
+.hd-right{display:flex;align-items:center;gap:10px;}
+
+/* Barre de contrôles */
+.controls{padding:14px 24px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.search-input{flex:1;min-width:200px;background:var(--card);border:1px solid var(--border);
+  border-radius:4px;color:var(--text);font-family:var(--sans);font-size:13px;
+  padding:7px 12px;outline:none;transition:border-color .15s;}
+.search-input:focus{border-color:var(--amber-dim);}
+.btn{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  background:none;border:1px solid var(--border);border-radius:3px;
+  color:var(--muted);padding:6px 14px;cursor:pointer;transition:color .12s,border-color .12s;}
+.btn:hover{color:var(--amber);border-color:var(--amber-dim);}
+.btn.primary{background:var(--amber-dim);color:var(--amber);border-color:var(--amber-dim);}
+.btn.primary:hover{background:rgba(200,146,42,.4);}
+.btn.danger{color:#e57373;border-color:rgba(139,51,0,.4);}
+.btn.danger:hover{background:rgba(139,51,0,.15);}
+
+/* Table */
+.main{padding:20px 24px;}
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);}
+table{width:100%;border-collapse:collapse;}
+thead th{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);
+  background:var(--surface);white-space:nowrap;cursor:pointer;user-select:none;}
+thead th:hover{color:var(--amber);}
+thead th.sorted{color:var(--amber);}
+thead th .sort-arrow{margin-left:4px;opacity:.5;}
+thead th.sorted .sort-arrow{opacity:1;}
+tbody tr{border-bottom:1px solid #1a1a1e;transition:background .1s;}
+tbody tr:hover{background:var(--card);}
+tbody tr.editing{background:rgba(200,146,42,.05);border-color:var(--amber-dim);}
+tbody td{padding:9px 14px;color:#a8a39a;vertical-align:top;font-size:13px;line-height:1.5;}
+td.atk-name{color:var(--text);font-weight:600;font-family:var(--mono);font-size:12px;min-width:160px;}
+td.atk-dmg{font-family:var(--mono);color:var(--amber);font-size:12px;white-space:nowrap;}
+td.atk-range{white-space:nowrap;min-width:80px;}
+td.atk-effect{min-width:200px;}
+td.atk-actions{white-space:nowrap;text-align:right;padding-right:10px;}
+
+/* Inputs inline édition */
+.td-input{width:100%;background:var(--surface);border:1px solid var(--amber-dim);
+  border-radius:3px;color:var(--text);font-size:12px;padding:3px 7px;outline:none;}
+.td-input.mono{font-family:var(--mono);color:var(--amber);}
+.td-input.name-input{font-family:var(--mono);font-weight:600;}
+
+/* Boutons action par ligne */
+.row-btn{font-family:var(--mono);font-size:9px;background:none;border:1px solid var(--border);
+  border-radius:2px;color:var(--muted);padding:2px 7px;cursor:pointer;margin-left:4px;
+  transition:color .1s,border-color .1s;}
+.row-btn:hover{color:var(--amber);border-color:var(--amber-dim);}
+.row-btn.save{color:#4caf6e;border-color:rgba(45,110,53,.4);}
+.row-btn.save:hover{background:rgba(45,110,53,.1);}
+.row-btn.del{color:#e57373;border-color:rgba(139,51,0,.3);}
+.row-btn.del:hover{background:rgba(139,51,0,.1);}
+
+/* Modal ajout */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;
+  align-items:center;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px;width:100%;max-width:520px;}
+.modal-title{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--amber);margin-bottom:16px;}
+.field{margin-bottom:12px;}
+.field label{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-bottom:4px;}
+.field input,.field textarea{width:100%;background:var(--surface);border:1px solid var(--border);
+  border-radius:3px;color:var(--text);font-size:13px;padding:7px 10px;outline:none;
+  transition:border-color .12s;}
+.field input:focus,.field textarea:focus{border-color:var(--amber-dim);}
+.field textarea{resize:vertical;min-height:60px;}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
+.empty{text-align:center;padding:40px;color:var(--muted);font-size:13px;font-style:italic;}
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:center">
+    <span class="hd-title">Pok&eacute;dex des Attaques</span>
+    <span class="hd-count" id="hd-count"></span>
+  </div>
+  <div class="hd-right">
+    <button class="btn primary" onclick="openModal()">+ Ajouter</button>
+    <button class="btn" onclick="exportData()">&#8659; Exporter</button>
+    <a href="mj.html" style="font-family:var(--mono);font-size:11px;color:var(--muted);
+      text-decoration:none;border:1px solid var(--border);border-radius:2px;padding:5px 12px;">&#8592; MJ</a>
+  </div>
+</header>
+
+<div class="controls">
+  <input class="search-input" id="search" type="text" placeholder="Rechercher une attaque, dommages, effet..." oninput="renderTable()">
+  <button class="btn" onclick="sortBy('name')">Nom</button>
+  <button class="btn" onclick="sortBy('dmg')">Dommages</button>
+  <button class="btn" onclick="clearSearch()">&#10005; Effacer</button>
+</div>
+
+<div class="main">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th onclick="sortBy('name')">Attaque <span class="sort-arrow" id="arrow-name"></span></th>
+          <th onclick="sortBy('dmg')">Dommages <span class="sort-arrow" id="arrow-dmg"></span></th>
+          <th onclick="sortBy('range')">Port&eacute;e <span class="sort-arrow" id="arrow-range"></span></th>
+          <th>Effet</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="empty" id="empty" style="display:none">Aucune attaque trouv&eacute;e.</div>
+  </div>
+</div>
+
+<!-- Modal ajout -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title">Nouvelle attaque</div>
+    <div class="field"><label>Nom de l'attaque *</label><input id="f-name" type="text" placeholder="Ex: Lance-Flammes"></div>
+    <div class="field"><label>Dommages</label><input id="f-dmg" type="text" placeholder="Ex: 2d8, FOR+d6"></div>
+    <div class="field"><label>Port&eacute;e</label><input id="f-range" type="text" placeholder="Ex: 12&quot;/24&quot;, M&ecirc;l&eacute;e"></div>
+    <div class="field"><label>Effet</label><textarea id="f-effect" placeholder="Description de l'effet..."></textarea></div>
+    <div class="field"><label>Source (Pok&eacute;mon)</label><input id="f-source" type="text" placeholder="Optionnel"></div>
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal()">Annuler</button>
+      <button class="btn primary" onclick="addAttack()">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+var FB_NODE = FB + '/attaques.json';
+
+var _sortKey = 'name';
+var _sortAsc = true;
+var _editing = {};  // id -> true
+
+/* Données initiales extraites du bestiaire */
+var SEED = [{"name": "Acide", "dmg": "2d6", "range": "8\"/16\"", "effect": "Armure réduite de 2 pts", "source": "Tentacruel PSI-B"}, {"name": "Acide Nitrique", "dmg": "3d6", "range": "12\"/24\"", "effect": "Armure réduite de 4 pts par touche", "source": "Tentacruel personnel de Holt"}, {"name": "Acide végétal", "dmg": "2d6 (acide)", "range": "Zone 3\"", "effect": "Armure réduite de 2 pts par touche", "source": "Florizarre ★ ÉLITE"}, {"name": "Aile Glacée", "dmg": "Str+d12 (glace)", "range": "Mêlée 4\"", "effect": "Gel partiel — Allure ÷2 pour 1d4 rounds si touché", "source": "Artikodin ★★ BOSS LÉGENDAIRE"}, {"name": "Assimilation Immédiate", "dmg": "Force opposé", "range": "Contact", "effect": "Échec : enlise la cible — 2d6 corrosion/tour", "source": "La Chimère — Démolosse Alpha Fusíonné"}, {"name": "Attraction", "dmg": "Force d8 opp.", "range": "Zone 4\"", "effect": "Échec : tiré 2\" vers Magnéton", "source": "Magnéton PSI-B"}, {"name": "Autodestruction", "dmg": "4d6", "range": "Zone 2\"", "effect": "Usage unique à KO — ou si délibérément activé", "source": "Voltorbe sauvage"}, {"name": "Autodestruction ⚠", "dmg": "6d6", "range": "Zone 3\"", "effect": "UNIQUE — Electrode détruit", "source": "Electrode PSI-B"}, {"name": "Autotomie", "dmg": "—", "range": "—", "effect": "+2 AGI et Allure pendant 3 rounds", "source": "Électrode (Major Bob)"}, {"name": "Balayage", "dmg": "d6", "range": "Zone 2\"", "effect": "Toutes cibles en mêlée Renversées. Agil. d8 diff. 4 pour esquiver", "source": "Machopeur ★ ÉLITE"}, {"name": "Barrière Psy", "dmg": "—", "range": "Contact", "effect": "+3 Parade pour Kael ou Abra ce round. Action standard.", "source": "?"}, {"name": "Berceuse", "dmg": "Trempe d8 opp.", "range": "Zone 6\"", "effect": "Défensif uniquement. Cible endormie 1d6 rounds (affecte ennemis ET alliés)", "source": "Mélofée (sanctuaire)"}, {"name": "Blizzard", "dmg": "2d8 (froid)", "range": "Zone 6\" devant", "effect": "Vigueur diff. 4 ou Fatigué (hypothermie cumulative)", "source": "Lokhlass ★ ÉLITE"}, {"name": "Blizzard légendaire", "dmg": "4d10", "range": "Zone 12\"", "effect": "Vigueur diff. 8 ou Hypothermie permanente (−2 cumulatif/round, mort à −6)", "source": "Artikodin ★★ BOSS LÉGENDAIRE"}, {"name": "Bouclier Psy", "dmg": "—", "range": "—", "effect": "Jusqu'à 3 dégâts de toute attaque mentale absorbés ce round", "source": "Alakazam ★ ÉLITE"}, {"name": "Brume Toxique", "dmg": "Vigor d6 opp.", "range": "Zone 2\"", "effect": "Échec : Fatigué −1 (3 rounds)", "source": "Fantominus (Gastly)"}, {"name": "Cage Éclair", "dmg": "d6", "range": "8\"/16\"", "effect": "Ralenti (Allure ÷2)", "source": "Electrode PSI-B"}, {"name": "Cage-Éclair", "dmg": "2d6", "range": "Zone 3x3", "effect": "Paralysie possible", "source": "Électrode (Major Bob)"}, {"name": "Carapace défensive", "dmg": "—", "range": "—", "effect": "Action : +4 Armure et immunité Secousse ce round. Ne peut pas attaquer", "source": "Tortank ★ ÉLITE"}, {"name": "Cascade", "dmg": "2d6", "range": "Charge", "effect": "Renversé si Robustesse non atteinte. Uniquement depuis l'eau", "source": "Akwakwak"}, {"name": "Champ magnétique", "dmg": "—", "range": "Zone 3\"", "effect": "Équipement métallique ne fonctionne plus (1 round). Armes métalliques : −2 aux jets", "source": "Magnéti (sauvage)"}, {"name": "Charge", "dmg": "FOR+d6", "range": "Mêlée", "effect": "Initiative +2 si charge de 4\" ou plus", "source": "?"}, {"name": "Charge Bulldozer", "dmg": "Str+d10", "range": "Charge", "effect": "Renversé automatique. Propulsé de 4\". Détruit obstacles légers", "source": "Tortank ★ ÉLITE"}, {"name": "Charge du titan", "dmg": "Str+d12", "range": "Charge 4\"+", "effect": "Renversé automatique. Détruit murs légers", "source": "Ronflex Gardien ★ ÉLITE"}, {"name": "Charge en banc", "dmg": "d6 (×8)", "range": "Charge en eau", "effect": "Traités comme une seule entité. +1 dommages par 2 Lippoutous supplémentaires", "source": "Lippoutou (banc)"}, {"name": "Charge foudre", "dmg": "Str+d6 (élec)", "range": "Charge 4\"+", "effect": "Secoué si Robustesse non atteinte", "source": "Minidraco"}, {"name": "Charge Roche", "dmg": "Str+d6", "range": "Mêlée", "effect": "Renversé si Relance", "source": "Racaillou (Geodude)"}, {"name": "Charme", "dmg": "Persuasion d10", "range": "Vue 6\"", "effect": "Cible fait une action au choix de Drevin (résistance Âme)", "source": "Togekiss (Drevin)"}, {"name": "Choc Mental", "dmg": "2d6", "range": "8\"/16\"", "effect": "Psy — ignore armure physique. Tir d10.", "source": "?"}, {"name": "Chute Embuscade", "dmg": "FOR+d4", "range": "Contact", "effect": "Discrétion d8 réussie : +2 au jet de Combat", "source": "Smogo «Sangsue»"}, {"name": "Close Combat", "dmg": "FOR+d8", "range": "Zone adjacente", "effect": "Touche toutes les cibles adjacentes", "source": "Braségali (Nessa)"}, {"name": "Compétences imitées", "dmg": "Variable", "range": "Variable", "effect": "Utilise les compétences du Pokémon imité à -1 dé", "source": "Métamorph (Alban)"}, {"name": "Conversion 2", "dmg": "—", "range": "—", "effect": "Change sa résistance de type 1x/combat", "source": "Porygon-Z (Nessa)"}, {"name": "Corps ardent", "dmg": "d4", "range": "Contact", "effect": "Réflexif : tout attaquant en mêlée sans protection subit ces dégâts", "source": "Tétarte (sauvage)"}, {"name": "Corps-à-Corps", "dmg": "FOR+d6 bonus", "range": "Mêlée", "effect": "Si Secousse sur cible, d6 bonus auto", "source": "Mackogneur (Alban)"}, {"name": "Coup d'Os", "dmg": "Str+d4", "range": "Mêlée", "effect": "—", "source": "Osselait (Cubone)"}, {"name": "Coup de queue", "dmg": "d4", "range": "Mêlée", "effect": "Uniquement défensif. −1 Parade à la cible", "source": "Germignon égaré"}, {"name": "Coup Direct", "dmg": "Str+d8", "range": "Mêlée", "effect": "Renversé si Robustesse non atteinte", "source": "Kangourex (Kangaskhan)"}, {"name": "Coupure", "dmg": "Str+d6", "range": "Mêlée", "effect": "Critique sur Relance (+d6 dommages)", "source": "Charkos (Charmeleon)"}, {"name": "Coupvent", "dmg": "Str+d6", "range": "8\"", "effect": "Attaque tranchante à distance", "source": "Absol (×2) — Pokémon de Holt"}, {"name": "Course folle", "dmg": "Str+d6", "range": "Charge 6\"+", "effect": "Renversé si Robustesse non atteinte. Se déplace en ligne droite quelle que soit la direction", "source": "Doduo"}, {"name": "Cri", "dmg": "Trempe d6 opp.", "range": "Zone 3\"", "effect": "Échec : Distrait −2 (1 round)", "source": "Dodrio PSI-B"}, {"name": "Cri plaintif", "dmg": "Trempe d6", "range": "Zone 3\"", "effect": "Échec : Secoué (moral)", "source": "Osselait (Cubone)"}, {"name": "Cru-Aile", "dmg": "FOR+d10", "range": "Mêlée", "effect": "Combat d10, initiative +4 ce round", "source": "Électhor (Bastien Volt)"}, {"name": "Danse Pluie", "dmg": "—", "range": "Zone 10 cases", "effect": "+2 dégâts Pokémon Eau alliés pendant 3 rounds", "source": "Lokhlass (Ondine)"}, {"name": "Double Bec", "dmg": "Str+d4 (×2)", "range": "Mêlée", "effect": "2 attaques simultanées à −2 chacune", "source": "Doduo"}, {"name": "Draco-Météore", "dmg": "4d8", "range": "12\"/24\"", "effect": "Tir d10 — -2 Intellect Volt après usage", "source": "Dracolosse (Bastien Volt)"}, {"name": "Dracocharge", "dmg": "Str+d12", "range": "Charge", "effect": "Renversé automatique si Robustesse non atteinte", "source": "Dracolosse vieillissant (Dragonite)"}, {"name": "Dracogriffe", "dmg": "Str+d10", "range": "Mêlée", "effect": "Perce Armure 2. Relance : prise (immobilisé)", "source": "Dracaufeu ★ ÉLITE"}, {"name": "Embuscade", "dmg": "Str+d6", "range": "Mêlée", "effect": "Utilisable uniquement depuis camouflage. Surprise automatique si non détectée", "source": "Sabelette"}, {"name": "Escalade roche", "dmg": "2d8", "range": "8\"", "effect": "Projette des éclats rocheux arrachés aux murs", "source": "Rhinoféros ★ ÉLITE"}, {"name": "Explosion", "dmg": "4d8", "range": "Zone 4 cases", "effect": "Électrode KO après usage", "source": "Électrode (Major Bob)"}, {"name": "Explosion (désespoir)", "dmg": "4d6", "range": "Zone 2\"", "effect": "Usage unique à la mise KO. Smogo détruit", "source": "Smogo (Koffing)"}, {"name": "Explosion (KO)", "dmg": "2d6", "range": "Zone 2\"", "effect": "Unique — à sa mise KO seulement", "source": "Racaillou (Geodude)"}, {"name": "Explosion Feu", "dmg": "4d6", "range": "Zone 4\"", "effect": "Armure ordinaire ignorée. Tout dans la zone En Feu si Relance", "source": "Dracaufeu ★ ÉLITE"}, {"name": "Explosion finale (KO)", "dmg": "3d6 (acide)", "range": "Zone 3\"", "effect": "À sa mise KO. Armure ignorée", "source": "Grotadmorv"}, {"name": "Faux-Chage", "dmg": "—", "range": "—", "effect": "Retraite sans jet de désengagement", "source": "Noctali (Drevin)"}, {"name": "Flammèche", "dmg": "2d6", "range": "12\"/24\"", "effect": "En Feu si Relance (d6/round)", "source": "Ponyta"}, {"name": "Fouet Lianes", "dmg": "Str+d6", "range": "Mêlée 3\"", "effect": "Entrave −2 Agilité si Relance", "source": "Tentacruel PSI-B"}, {"name": "Fouet ×3", "dmg": "Str+d6", "range": "Mêlée 3\"", "effect": "3 cibles simultanées", "source": "Tentacruel personnel de Holt"}, {"name": "Frappe de Masse", "dmg": "FOR+d8", "range": "Mêlée", "effect": "Renverse si Robustesse non atteinte", "source": "Grotadmorv «Amas Osseux»"}, {"name": "Griffe", "dmg": "Str+d4", "range": "Mêlée", "effect": "−1 Parade jusqu'au prochain round", "source": "Miaouss (Meowth)"}, {"name": "Harcèlement", "dmg": "—", "range": "Zone 2\"", "effect": "Vol en nuée : cible Distraite (−1 à ses jets) jusqu'au round suivant", "source": "Piafabec"}, {"name": "Hurlement du Dragon", "dmg": "Trempe d8 opp.", "range": "Zone 6\"", "effect": "Échec : Secoué. 1 fois/combat", "source": "Minidraco"}, {"name": "Hydrocanon", "dmg": "3d8", "range": "16\"/32\"", "effect": "Perce Armure 4. Renversé si Robustesse non atteinte", "source": "Tortank ★ ÉLITE"}, {"name": "Hypnose", "dmg": "Trempe d6 opp.", "range": "Zone 2\"", "effect": "Échec : dort 1d4 rounds", "source": "Fantominus (Gastly)"}, {"name": "Intimidation", "dmg": "Intimidation d8", "range": "Zone 3\"", "effect": "-2 Parade adverse 1 round", "source": "Mackogneur (Alban)"}, {"name": "Jackpot", "dmg": "2d4", "range": "Mêlée", "effect": "Relance : Secoué + perte 1d4×10¥", "source": "Miaouss (Meowth)"}, {"name": "Jet d'Eau", "dmg": "2d6", "range": "8\"/16\"", "effect": "Pousse la cible d'1 case", "source": "?"}, {"name": "Jet de pierre", "dmg": "d6", "range": "8\"/16\"/32\"", "effect": "Secoué si Relance", "source": "Racaillou (Geodude)"}, {"name": "Jet de Poison", "dmg": "2d6+Poison", "range": "12\"/24\"", "effect": "Fatigué −1 si Relance, cumul ×3", "source": "Nidoking — Agent Élite d'Ashford ★ JOKER"}, {"name": "Jet de sable", "dmg": "—", "range": "Zone 2\"", "effect": "Aveuglé jusqu'à action complète pour se nettoyer les yeux. −4 à tous les jets visuels", "source": "Sabelette"}, {"name": "Korne", "dmg": "Str+d8", "range": "Charge 4\"+", "effect": "Perce Armure 4. Renversé automatique", "source": "Rhinocorne"}, {"name": "Lance-Flamme", "dmg": "2d6", "range": "8\"/16\"", "effect": "En Feu si Relance", "source": "Charkos (Charmeleon)"}, {"name": "Lancer d'Os", "dmg": "2d4", "range": "12\"/24\"", "effect": "−2 Parade si Relance", "source": "Osselait (Cubone)"}, {"name": "Lianes multiples", "dmg": "Str+d6", "range": "8\" dans toutes directions", "effect": "Attrape jusqu'à 4 cibles simultanément. For d10 opp. pour se dégager", "source": "Florizarre ★ ÉLITE"}, {"name": "Lèche-Songe", "dmg": "d6 directs", "range": "Mêlée", "effect": "Cible endormie seul., ignore Robustesse", "source": "Fantominus (Gastly)"}, {"name": "Malédiction", "dmg": "d4/round", "range": "Contact", "effect": "Dommages continus jusqu'à jet de Trempe d8 réussi (action complète)", "source": "Ectoplasma ★ ÉLITE"}, {"name": "Morsure", "dmg": "FOR+d8", "range": "Mêlée", "effect": "Combat d8 — chance de Secousse", "source": "?"}, {"name": "Morsure (essaim)", "dmg": "d6 (×3 cibles)", "range": "Zone 1\"", "effect": "Un essaim attaque toutes créatures dans sa zone", "source": "Rattata (essaim)"}, {"name": "Morsure ancienne", "dmg": "Str+d8", "range": "Mêlée", "effect": "Perce Armure 2. Relance : membre mordu entravé (−2 Agilité)", "source": "Ptéra (fossile)"}, {"name": "Morsure ardente", "dmg": "Str+d6 (feu)", "range": "Mêlée", "effect": "Normale", "source": "Tétarte (sauvage)"}, {"name": "Morsure Hémorragique", "dmg": "FOR+d4", "range": "Mêlée", "effect": "1 dégât automatique/tour jusqu'à jet Soins réussi", "source": "Nosferalto «Écorché»"}, {"name": "Mur-Lumière", "dmg": "—", "range": "—", "effect": "Parade +4 pour toute l'équipe pendant 3 rounds", "source": "Dracolosse (Bastien Volt)"}, {"name": "Mâchouille", "dmg": "FOR+d8", "range": "Mêlée", "effect": "Chance de Secousse", "source": "Noctali (Drevin)"}, {"name": "Mégacorne", "dmg": "Str+d10", "range": "Mêlée", "effect": "Perce Armure 4. Renversé si Robustesse non atteinte", "source": "Nidoking — Agent Élite d'Ashford ★ JOKER"}, {"name": "Mégapoing", "dmg": "Str+d10", "range": "Mêlée", "effect": "Perce Armure 2. Une fois par combat", "source": "Kangourex (Kangaskhan)"}, {"name": "Métamorphose Partielle", "dmg": "Trempe TN6", "range": "Zone 5\"", "effect": "Échec : Secouué (Peur) — la forme change à chaque round", "source": "La Chimère — Démolosse Alpha Fusíonné"}, {"name": "Nuage acide", "dmg": "Vigueur d8 opp.", "range": "Zone 3\" autour", "effect": "Permanent : zone toujours toxique. Vigueur diff. 4/round", "source": "Grotadmorv"}, {"name": "Nuage de Décomposition", "dmg": "—", "range": "Zone contact", "effect": "Vigueur TN6 ou Secouué par l'odeur", "source": "Grotadmorv «Amas Osseux»"}, {"name": "Oeuf-soin", "dmg": "Soin 2d6", "range": "Contact", "effect": "Soigne un allié à portée — retire 1 Blessure sur jet de Vigueur diff. 4", "source": "Leveinard (Chansey)"}, {"name": "Ombre Portée", "dmg": "2d6 (Spectre)", "range": "Mêlée", "effect": "Ignore l'Armure physique. Secoué si Relance", "source": "Ectoplasma ★ ÉLITE"}, {"name": "Onde de Choc", "dmg": "2d6", "range": "12\"", "effect": "Ne rate jamais — pas de jet pour toucher", "source": "Raichu (Major Bob)"}, {"name": "Pendule (1×/combat)", "dmg": "Ruse d6 opp.", "range": "Ligne de vue", "effect": "Échec : Soumis (obéit à un ordre simple)", "source": "Hypnomade PSI-B (Hypno) ★"}, {"name": "Picodon", "dmg": "2d4", "range": "8\"/16\"", "effect": "Caillou projeté. Zone si Relance (touche adjacents)", "source": "Ptéra (fossile)"}, {"name": "Picpic", "dmg": "d4", "range": "Mêlée", "effect": "×2 attaques. Distraction (+2 à la prochaine attaque d'un allié sur la cible)", "source": "Piafabec"}, {"name": "Piratage réseau", "dmg": "Piratage d10", "range": "Systèmes adjacents", "effect": "Connecte aux systèmes numériques en 1 action", "source": "Porygon-Z (Nessa)"}, {"name": "Pistolet à O", "dmg": "d4", "range": "6\"", "effect": "Défensif uniquement. Stari ne combat jamais en premier", "source": "Stari"}, {"name": "Piétinement", "dmg": "Str+d6", "range": "Zone 1\"", "effect": "Cible Renversée = vulnérable. Frappe toutes cibles adjacentes", "source": "Rhinocorne"}, {"name": "Plongée", "dmg": "FOR+d6", "range": "Mêlée", "effect": "Initiative +2 si attaque depuis le vol", "source": "Nosferalto «Écorché»"}, {"name": "Poing Fantôme", "dmg": "2d6 (spectre)", "range": "Mêlée", "effect": "Ignore Armure physique", "source": "Gengar ★ ÉLITE"}, {"name": "Poing Karaté", "dmg": "Str+d8", "range": "Mêlée", "effect": "Perce Armure 4. Critique sur Relance (+d8)", "source": "Machopeur ★ ÉLITE"}, {"name": "Poing-de-Feu", "dmg": "FOR+d6+d6 feu", "range": "Mêlée", "effect": "Brûlure TN6 Vigueur", "source": "Braségali (Nessa)"}, {"name": "Poing-Éclair", "dmg": "FOR+d6", "range": "Mêlée", "effect": "Combat d10, initiative +2 ce tour", "source": "Mackogneur (Alban)"}, {"name": "Poudre Dodo", "dmg": "Trempe d6 opp.", "range": "Zone 2\"", "effect": "Échec : dort 1d4 rounds", "source": "Papilusion (Butterfree)"}, {"name": "Poudre Toxique", "dmg": "Vigueur d6 opp.", "range": "Zone 2\"", "effect": "Échec : Fatigué −1 (1d6 rounds)", "source": "Papilusion (Butterfree)"}, {"name": "Projectiles Shrapnel", "dmg": "2d6", "range": "4\"/8\"/16\"", "effect": "Os et acier projectés — Tir d6", "source": "Grotadmorv «Amas Osseux»"}, {"name": "Psyko", "dmg": "2d8", "range": "12\"/24\"", "effect": "Secoué + −2 Ruse jusqu'au prochain round", "source": "Hypnomade PSI-B (Hypno) ★"}, {"name": "Repli rapide", "dmg": "—", "range": "—", "effect": "Nage à 10\" en réaction. Action gratuite si touché", "source": "Akwakwak"}, {"name": "Requiem", "dmg": "—", "range": "Vue 12\"", "effect": "Cible change de Pokémon en 3 rounds ou KO auto", "source": "Lokhlass (Ondine)"}, {"name": "Ronflement tactique", "dmg": "Trempe d8 opp.", "range": "Zone 4\"", "effect": "Volontaire : Secoué si échec. Utilisable éveillé", "source": "Ronflex Gardien ★ ÉLITE"}, {"name": "Rugissement", "dmg": "Trempe d6 opp.", "range": "Zone 2\"", "effect": "Échec : −1 Force ce round", "source": "Évoli sauvage"}, {"name": "Rugissement ancien", "dmg": "Trempe d10 opp.", "range": "Zone 6\"", "effect": "Échec : Secoué + Vulnérable. Une fois par combat", "source": "Dracolosse Vex ★★ BOSS (Histoire III)"}, {"name": "Ruée Flamboyante", "dmg": "Str+d6 (feu)", "range": "Mêlée", "effect": "Armure ordinaire ignorée", "source": "Ponyta"}, {"name": "Signal Faisceau", "dmg": "Intellect TN6", "range": "Zone 3x3", "effect": "Distrait 2 rounds si échec", "source": "Porygon-Z (Nessa)"}, {"name": "Soin", "dmg": "Guérison d8", "range": "Contact", "effect": "Retire 1 Blessure allié — 1x/combat par cible", "source": "Togekiss (Drevin)"}, {"name": "Soin (PSI interne)", "dmg": "Soin d6", "range": "Zone 4\"", "effect": "Soigne 1 autre Pokemon PSI-B dans la zone (retire Secoué)", "source": "Alakazam ★ ÉLITE"}, {"name": "Sonicboom", "dmg": "20 PV fixes", "range": "Longue portée", "effect": "Ignore l'armure", "source": "Électrode (Major Bob)"}, {"name": "Souffle sacré", "dmg": "3d10", "range": "Ligne 30\"", "effect": "Ligne droite. Ignore toute Armure. Une fois par combat", "source": "Sulfura ★★ BOSS LÉGENDAIRE"}, {"name": "Soumission", "dmg": "Str+d6", "range": "Mêlée", "effect": "Saisie automatique si touché. Force d12 opp. pour briser", "source": "Machopeur ★ ÉLITE"}, {"name": "Spores PSI-B", "dmg": "Trempe d8 opp.", "range": "Zone 6\"", "effect": "Échec : sous influence PSI-B partielle (−2 à tous les jets, 1d4 rounds)", "source": "Florizarre ★ ÉLITE"}, {"name": "Succion Toxique", "dmg": "1 Blessure/tour", "range": "Contact", "effect": "Jet Vigueur TN6 ou dégâts continus", "source": "Smogo «Sangsue»"}, {"name": "Suggestion psychique", "dmg": "Ruse d10 opp.", "range": "Zone 8\"", "effect": "Échec : cible exécute un ordre simple ce round. Résistance +2 si dresseur loyal présent", "source": "Dracolosse Vex ★★ BOSS (Histoire III)"}, {"name": "Surf", "dmg": "2d6", "range": "Zone 3x3", "effect": "Pousse les cibles — Force vs Force", "source": "Amphinobi (Bastien Volt)"}, {"name": "Séisme", "dmg": "2d6", "range": "Zone 3\"", "effect": "Agilité d6 diff. 4 ou Renversé", "source": "Tauros (Pokémon de Yael Ors)"}, {"name": "Séisme local", "dmg": "d6", "range": "Zone 2\"", "effect": "Agil. d6 diff. 4 ou Renversé. Uniquement sous terre", "source": "Taupiqueur"}, {"name": "Séismevent", "dmg": "2d10", "range": "Zone 8\" au sol", "effect": "Vol créant une onde de choc. Renversé si Robustesse non atteinte", "source": "Sulfura ★★ BOSS LÉGENDAIRE"}, {"name": "Tempête de feu", "dmg": "4d8", "range": "Zone 6\"", "effect": "Tout ce qui est dans la zone. Jet d'Agilité d10 diff. 6 ou En Feu (d8/round)", "source": "Sulfura ★★ BOSS LÉGENDAIRE"}, {"name": "Tempête de grêle", "dmg": "2d8/round", "range": "Zone 20\"", "effect": "Active pendant 1d4 rounds. Toutes créatures dans la zone affectées", "source": "Artikodin ★★ BOSS LÉGENDAIRE"}, {"name": "Tempête électrique", "dmg": "3d6/round", "range": "Zone 30\"", "effect": "Dure 1d6 rounds. Tout équipement électronique dans la zone hors service", "source": "Électhor ★★ BOSS LÉGENDAIRE"}, {"name": "Tentacule", "dmg": "Str+d8", "range": "Mêlée", "effect": "Saisie — Str d10 opp. pour se dégager", "source": "Tentacruel PSI-B"}, {"name": "Tir de Boue Toxique", "dmg": "3d6 + poison", "range": "10\"/20\"/40\"", "effect": "Zone petite — Vigueur TN6 ou Empoisonné", "source": "La Chimère — Démolosse Alpha Fusíonné"}, {"name": "Tonnerre", "dmg": "2d4", "range": "8\"/16\"", "effect": "Normale", "source": "Magnéti (sauvage)"}, {"name": "Tonnerre (stress)", "dmg": "3d6", "range": "Zone 4\"", "effect": "Déclenche involontairement sous forte émotion. Affecte amis et ennemis", "source": "Pikachu abandonné"}, {"name": "Tonnerre légendaire", "dmg": "5d8", "range": "Zone 8\"", "effect": "Ignore Armure conductrice. Secoué automatique même si dommages encaissés", "source": "Électhor ★★ BOSS LÉGENDAIRE"}, {"name": "Tranche", "dmg": "Str+d8", "range": "Mêlée", "effect": "Tout ce qui est à portée", "source": "Ronflex (Snorlax)"}, {"name": "Tranche Laser", "dmg": "2d6+2", "range": "12\"/24\"", "effect": "Ignore armure non-métal", "source": "Porygon-Z (Nessa)"}, {"name": "Tranche-Aile", "dmg": "Str+d8", "range": "Mêlée", "effect": "Portée 3\" grâce aux ailes. Touche toutes cibles dans l'arc", "source": "Dracaufeu ★ ÉLITE"}, {"name": "Tranche-Air", "dmg": "FOR+d8", "range": "Zone 3 cases en ligne", "effect": "Combat d8", "source": "Électhor (Bastien Volt)"}, {"name": "Tranche-Nuit", "dmg": "FOR+d6", "range": "Mêlée", "effect": "Combat d8", "source": "Noctali (Drevin)"}, {"name": "Tranche-Sol", "dmg": "Str+d6", "range": "Mêlée", "effect": "Ignore Armure légère (−2 Armure max)", "source": "Taupiqueur"}, {"name": "Transformation", "dmg": "Subter­fuge d10", "range": "—", "effect": "Imite le Pokémon ciblé — stats de base copiées", "source": "Métamorph (Alban)"}, {"name": "Triple Bec", "dmg": "Str+d6 (×3)", "range": "Mêlée", "effect": "3 têtes = 3 attaques à −2", "source": "Dodrio PSI-B"}, {"name": "Tsunami mineur", "dmg": "2d10", "range": "Zone 8\" (en eau)", "effect": "Renversé si Robustesse non atteinte. Uniquement dans les conduits aquatiques", "source": "Lokhlass ★ ÉLITE"}, {"name": "Tunnel", "dmg": "—", "range": "—", "effect": "Disparaît sous terre (action complète). Réapparaît à 6\" et attaque en surprise", "source": "Taupiqueur"}, {"name": "Télékinésie", "dmg": "Force d10 opp.", "range": "12\"", "effect": "Échec : cible déplacée de 4\" dans n'importe quelle direction", "source": "Alakazam ★ ÉLITE"}, {"name": "Téléport", "dmg": "—", "range": "—", "effect": "Action gratuite : se repositionne à 10\" n'importe où en ligne de vue", "source": "Abra sauvage"}, {"name": "Téléportation", "dmg": "—", "range": "20\"", "effect": "Se déplace sans déclencher d'attaque d'opportunité. Action de mouvement.", "source": "?"}, {"name": "Ultimapoing", "dmg": "FOR+d8+d6 électrique", "range": "Mêlée", "effect": "Contact obligatoire", "source": "Raichu (Major Bob)"}, {"name": "Ultimawashi", "dmg": "FOR+d10", "range": "Zone 2 cases autour", "effect": "Combat d10", "source": "Raichu (Major Bob)"}, {"name": "Ultralaser", "dmg": "4d8", "range": "24\"/48\"", "effect": "Ligne — toutes créatures dans la ligne affectées. Secoué le round suivant (surcharge)", "source": "Dracolosse vieillissant (Dragonite)"}, {"name": "Ultrason", "dmg": "Trempe d6 opp.", "range": "Zone 4\"", "effect": "Échec : Confus (−2 à tous les jets) jusqu'à fin round", "source": "Nosferapti"}, {"name": "Vampigraine", "dmg": "d4 directs", "range": "Mêlée", "effect": "Récupère l'équivalent en PV. Ignore Armure", "source": "Nosferapti"}, {"name": "Vent arrière", "dmg": "For d8 opp.", "range": "Zone 6\" devant", "effect": "Échec : repoussé de 3\" et Secoué", "source": "Ptéra (fossile)"}, {"name": "Vent Sacré", "dmg": "2d6", "range": "Zone 2x2", "effect": "Chance de Secouer", "source": "Togekiss (Drevin)"}, {"name": "Vive-Attaque", "dmg": "d6", "range": "Mêlée", "effect": "Priorité — agit toujours en premier", "source": "Évoli sauvage"}, {"name": "Voix du nord", "dmg": "Trempe d10 opp.", "range": "Zone 8\"", "effect": "Échec : fuit d'instinct (terreur absolue). 1×/combat", "source": "Artikodin ★★ BOSS LÉGENDAIRE"}, {"name": "Vol-Vie", "dmg": "d8 directs", "range": "Mêlée", "effect": "Ignore Robustesse. Récupère les dommages en HP", "source": "Gengar ★ ÉLITE"}, {"name": "Éclaboussure toxique", "dmg": "Vigueur d6 opp.", "range": "Zone 2\"", "effect": "Échec : Fatigué −1 (cumulatif par round)", "source": "Tadmorv (colonie)"}, {"name": "Éclair", "dmg": "2d6", "range": "12\"/24\"", "effect": "Secoué si Relance", "source": "Pikachu abandonné"}, {"name": "Éclair de précision", "dmg": "4d6", "range": "50\" (ligne droite)", "effect": "Ligne = toutes cibles dans la trajectoire. Ignore couverture légère", "source": "Électhor ★★ BOSS LÉGENDAIRE"}, {"name": "Éclair Lune", "dmg": "d6", "range": "8\"", "effect": "Attaque de lumière pure. Ignores les immunités PSI", "source": "Mélofée (sanctuaire)"}, {"name": "Écrase", "dmg": "Str+d4", "range": "Mêlée", "effect": "Attaque défensive uniquement", "source": "Leveinard (Chansey)"}, {"name": "Écrasement", "dmg": "Str+d10", "range": "Mêlée", "effect": "Zone 2\" — touche tout ce qui est adjacent. Renversé automatique si Robustesse non atteinte", "source": "Ronflex Alpha ★★ BOSS"}, {"name": "Écrasement toxique", "dmg": "Str+d6 (poison)", "range": "Mêlée", "effect": "Armure réduite de 1 par touche (cumulatif)", "source": "Grotadmorv"}, {"name": "Étreinte gelée", "dmg": "Str+d8 (froid)", "range": "Mêlée", "effect": "Saisie + Allure ÷2 (gel partiel). For d12 opp. pour se dégager", "source": "Lokhlass ★ ÉLITE"}];
+
+var attacks = [];
+
+/* ── Init ──────────────────────────────────────────────────────────────── */
+function init() {
+  fetch(FB_NODE)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data && Array.isArray(data) && data.length) {
+        attacks = data;
+      } else if (data && typeof data === 'object' && !Array.isArray(data)) {
+        // Firebase peut renvoyer un objet
+        attacks = Object.values(data).filter(function(a){ return a && a.name; });
+      } else {
+        // Premier chargement : utiliser les données du bestiaire
+        attacks = SEED.map(function(a, i) { return Object.assign({id: i+1}, a); });
+        save();
+      }
+      renderTable();
+    })
+    .catch(function() {
+      attacks = SEED.map(function(a, i) { return Object.assign({id: i+1}, a); });
+      renderTable();
+    });
+}
+
+function save() {
+  fetch(FB_NODE, {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(attacks)
+  }).catch(function(){});
+}
+
+/* ── Rendu table ───────────────────────────────────────────────────────── */
+function renderTable() {
+  var q = (document.getElementById('search').value || '').toLowerCase();
+  var filtered = attacks.filter(function(a) {
+    return !q || a.name.toLowerCase().indexOf(q) >= 0
+              || (a.dmg||'').toLowerCase().indexOf(q) >= 0
+              || (a.effect||'').toLowerCase().indexOf(q) >= 0
+              || (a.range||'').toLowerCase().indexOf(q) >= 0;
+  });
+
+  filtered.sort(function(a,b) {
+    var va = (a[_sortKey]||'').toLowerCase();
+    var vb = (b[_sortKey]||'').toLowerCase();
+    return _sortAsc ? va.localeCompare(vb,'fr') : vb.localeCompare(va,'fr');
+  });
+
+  var tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+  document.getElementById('empty').style.display = filtered.length ? 'none' : 'block';
+  document.getElementById('hd-count').textContent = ' — ' + filtered.length + ' / ' + attacks.length + ' attaques';
+
+  filtered.forEach(function(a) {
+    var tr = document.createElement('tr');
+    if (_editing[a.id]) {
+      tr.className = 'editing';
+      tr.innerHTML =
+        '<td><input class="td-input name-input" id="e-name-' + a.id + '" value="' + esc(a.name) + '"></td>'
+        + '<td><input class="td-input mono" id="e-dmg-' + a.id + '" value="' + esc(a.dmg||'') + '" style="max-width:120px"></td>'
+        + '<td><input class="td-input" id="e-range-' + a.id + '" value="' + esc(a.range||'') + '" style="max-width:100px"></td>'
+        + '<td><input class="td-input" id="e-effect-' + a.id + '" value="' + esc(a.effect||'') + '"></td>'
+        + '<td class="atk-actions">'
+        + '<button class="row-btn save" onclick="saveEdit(' + a.id + ')">&#10003;</button>'
+        + '<button class="row-btn" onclick="cancelEdit(' + a.id + ')">&#10005;</button>'
+        + '</td>';
+    } else {
+      tr.innerHTML =
+        '<td class="atk-name">' + esc(a.name) + '</td>'
+        + '<td class="atk-dmg">'   + esc(a.dmg||'&mdash;') + '</td>'
+        + '<td class="atk-range">' + esc(a.range||'&mdash;') + '</td>'
+        + '<td class="atk-effect">' + esc(a.effect||'') + '</td>'
+        + '<td class="atk-actions">'
+        + '<button class="row-btn" onclick="startEdit(' + a.id + ')">&#9998;</button>'
+        + '<button class="row-btn del" onclick="deleteAttack(' + a.id + ')">&#10007;</button>'
+        + '</td>';
+    }
+    tbody.appendChild(tr);
+  });
+
+  updateArrows();
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── Tri ───────────────────────────────────────────────────────────────── */
+function sortBy(key) {
+  if (_sortKey === key) { _sortAsc = !_sortAsc; }
+  else { _sortKey = key; _sortAsc = true; }
+  renderTable();
+}
+
+function updateArrows() {
+  ['name','dmg','range'].forEach(function(k) {
+    var el = document.getElementById('arrow-' + k);
+    if (!el) return;
+    if (_sortKey === k) el.textContent = _sortAsc ? '▲' : '▼';
+    else el.textContent = '';
+    el.closest('th').classList.toggle('sorted', _sortKey === k);
+  });
+}
+
+function clearSearch() {
+  document.getElementById('search').value = '';
+  renderTable();
+}
+
+/* ── Edition inline ────────────────────────────────────────────────────── */
+function startEdit(id) {
+  _editing[id] = true;
+  renderTable();
+  var el = document.getElementById('e-name-' + id);
+  if (el) el.focus();
+}
+
+function cancelEdit(id) {
+  delete _editing[id];
+  renderTable();
+}
+
+function saveEdit(id) {
+  var idx = attacks.findIndex(function(a){ return a.id === id; });
+  if (idx < 0) return;
+  var name = (document.getElementById('e-name-' + id)||{}).value || '';
+  if (!name.trim()) { alert('Le nom est requis.'); return; }
+  attacks[idx].name   = name.trim();
+  attacks[idx].dmg    = (document.getElementById('e-dmg-'   + id)||{}).value || '';
+  attacks[idx].range  = (document.getElementById('e-range-' + id)||{}).value || '';
+  attacks[idx].effect = (document.getElementById('e-effect-'+ id)||{}).value || '';
+  delete _editing[id];
+  save();
+  renderTable();
+}
+
+function deleteAttack(id) {
+  var a = attacks.find(function(x){ return x.id === id; });
+  if (!a) return;
+  if (!confirm('Supprimer "' + a.name + '" ?')) return;
+  attacks = attacks.filter(function(x){ return x.id !== id; });
+  save();
+  renderTable();
+}
+
+/* ── Ajout ─────────────────────────────────────────────────────────────── */
+function openModal() {
+  ['f-name','f-dmg','f-range','f-effect','f-source'].forEach(function(id){
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('modal-bg').classList.add('open');
+  document.getElementById('f-name').focus();
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-bg')) {
+    document.getElementById('modal-bg').classList.remove('open');
+  }
+}
+
+function addAttack() {
+  var name = document.getElementById('f-name').value.trim();
+  if (!name) { alert('Le nom est requis.'); return; }
+  var maxId = attacks.reduce(function(m, a){ return Math.max(m, a.id||0); }, 0);
+  attacks.push({
+    id:     maxId + 1,
+    name:   name,
+    dmg:    document.getElementById('f-dmg').value.trim(),
+    range:  document.getElementById('f-range').value.trim(),
+    effect: document.getElementById('f-effect').value.trim(),
+    source: document.getElementById('f-source').value.trim()
+  });
+  attacks.sort(function(a,b){ return a.name.localeCompare(b.name,'fr'); });
+  save();
+  closeModal();
+  renderTable();
+}
+
+/* ── Export JSON ───────────────────────────────────────────────────────── */
+function exportData() {
+  var blob = new Blob([JSON.stringify(attacks, null, 2)], {type:'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'attaques-pokemon.json';
+  a.click();
+}
+
+init();
+</script>
+</body>
+</html>
