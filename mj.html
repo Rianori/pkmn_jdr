@@ -1000,12 +1000,9 @@
 
   .tag-alpha9 { background:rgba(139,32,32,.2); color:#e07070; border:1px solid rgba(139,32,32,.5); }
 
-  .groupe-grid { display:grid; grid-template-columns:1fr 1fr;
-    gap:24px; align-items:start; }
-
   .pnj-scenario-acc { cursor:pointer; user-select:none; display:flex;
     align-items:center; gap:12px; margin:28px 0 0; padding-bottom:8px;
-    border-bottom:2px solid var(--amber-dim); transition:opacity .12s; }
+    border-bottom:2px solid var(--amber-dim); }
   .pnj-scenario-acc:hover { opacity:.85; }
   .pnj-scenario-acc .chapter-chevron { margin-left:auto; font-size:12px;
     color:var(--amber); transition:transform .2s; }
@@ -1161,9 +1158,7 @@
     <div class="section" id="tab-groupe">
   <div class="page-title">Le Groupe</div>
   <div class="page-tagline">4 Dresseurs · Pokémon partenaires · Style Deadlands</div>
-  <div class="groupe-grid">
-  <div>
-<div class="pj-acc-list">
+  <div class="pj-acc-list">
     
 <div class="pnj-card" id="pj-acc-1">
         <div class="pnj-header" onclick="togglePjAcc('pj-acc-1')">
@@ -1273,9 +1268,9 @@
       </div>
       
   </div>
-  </div>
-  <div>
 
+
+      <div class="section-title" style="margin-top:32px;margin-bottom:16px">Pokémon Partenaires</div>
       <div class="pnj-card" id="pk-acc-analyste">
         <div class="pnj-header" onclick="togglePnj('pk-acc-analyste')">
           <div>
@@ -1466,13 +1461,12 @@
           <p style="font-size:12px;color:var(--muted);margin-top:10px"><em>Abra dormait dans une cage trop petite chez un dresseur qui ne comprenait pas ce qu'il avait. Il n'a pas choisi Kael. Il a juste arr&ecirc;t&eacute; de se t&eacute;l&eacute;porter quand Kael a ouvert la cage. C'est suffisant pour commencer.</em></p>
         </div>
       </div>
-  </div>
-</div></div><div class="section" id="tab-pnj">
+    </div><div class="section" id="tab-pnj">
       <div class="page-title">Fiches PNJ</div>
       <div class="page-tagline">Organis&eacute;es par sc&eacute;nario</div>
 
-      <div class="pnj-scenario-acc" id="scn-btn-scn1" onclick="toggleScenario('scn1')"><span class="pnj-scenario-num">Sc&eacute;nario 01</span><span class="pnj-scenario-name">La Ville Morte</span><span class="chapter-chevron">&#9654;</span></div>
-<div class="pnj-scenario-body" id="scn-body-scn1">
+      <div class="pnj-scenario-acc open" id="scn-btn-scn1" onclick="toggleScenario('scn1')"><span class="pnj-scenario-num">Sc&eacute;nario 01</span><span class="pnj-scenario-name">La Ville Morte</span><span class="chapter-chevron">&#9654;</span></div>
+<div class="pnj-scenario-body open" id="scn-body-scn1">
       <div class="section-title" style="margin-bottom:12px">Alli&eacute;s &mdash; Jokers</div>
       <div class="pnj-card" id="pnj-kaito">
         <div class="pnj-header" onclick="togglePnj('pnj-kaito')">
@@ -1616,10 +1610,9 @@
           <p style="font-size:12px;color:var(--muted)"><em>Aucun Pokémon (le sien est mort dans le réacteur — sa Pokéball vide est dans sa poche). N'attaque les PJ que si directement ordonné. Déclencheur : un PJ remarque la Pokéball vide et pose la question. Jet Trempe d6 — succès : il coopère discrètement.</em></p>
         </div>
       </div>
-
-      </div>
-<div class="pnj-scenario-acc" id="scn-btn-scn2" onclick="toggleScenario('scn2')"><span class="pnj-scenario-num">Sc&eacute;nario 02</span><span class="pnj-scenario-name">Le Grand Tournoi de Carmin sur Mer</span><span class="chapter-chevron">&#9654;</span></div>
-<div class="pnj-scenario-body" id="scn-body-scn2">
+</div>
+<div class="pnj-scenario-acc open" id="scn-btn-scn2" onclick="toggleScenario('scn2')"><span class="pnj-scenario-num">Sc&eacute;nario 02</span><span class="pnj-scenario-name">Le Grand Tournoi de Carmin sur Mer</span><span class="chapter-chevron">&#9654;</span></div>
+<div class="pnj-scenario-body open" id="scn-body-scn2">
       <div class="section-title" style="margin-bottom:12px">Antagonistes</div>
       <div class="pnj-card" id="pnj-drevin">
         <div class="pnj-header" onclick="togglePnj('pnj-drevin')">
@@ -1723,11 +1716,8 @@
       </div>
 
     </div>
-
-    
-
-    <div class="section" </div>
-id="tab-bestiaire">
+</div>
+<div class="section" id="tab-bestiaire">
   <div class="page-title">Bestiaire</div>
   <div class="page-tagline">65 entrées · Pokémon Kanto</div>
 
