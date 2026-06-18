@@ -40,11 +40,12 @@ a { color: inherit; }
 
 
 .player-header {
-  padding: 18px 24px 14px;
+  padding: 10px 20px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
   position: sticky;
   top: 0;
@@ -704,91 +705,217 @@ a { color: inherit; }
   }
   .gear-item-input:hover { border-bottom-color: var(--border); }
   .gear-item-input:focus { border-bottom-color: var(--amber-dim); }
+
+  /* Edition inline stats Pokemon */
+  .pk-edit-row { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+  .pk-edit-label { font-family:var(--mono); font-size:9px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--muted); width:80px; flex-shrink:0; }
+  .pk-edit-input { flex:1; background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-family:var(--mono); font-size:12px;
+    padding:3px 7px; outline:none; transition:border-color .12s; }
+  .pk-edit-input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit { display:flex; gap:6px; margin-bottom:4px; }
+  .pk-atk-edit input { background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-size:11px; padding:3px 7px;
+    outline:none; transition:border-color .12s; }
+  .pk-atk-edit input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit .atk-name { flex:2; }
+  .pk-atk-edit .atk-dmg  { flex:1; }
+  .pk-atk-add { font-family:var(--mono); font-size:10px; background:none;
+    border:1px dashed var(--border); border-radius:3px; color:var(--muted);
+    padding:3px 10px; cursor:pointer; margin-top:3px; transition:color .12s,border-color .12s; }
+  .pk-atk-add:hover { color:var(--amber); border-color:var(--amber-dim); }
+  .pk-atk-del { background:none; border:none; color:var(--muted); cursor:pointer;
+    font-size:14px; padding:0 3px; flex-shrink:0; transition:color .12s; }
+  .pk-atk-del:hover { color:var(--danger); }
+
+  .pk-edit-row { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+  .pk-edit-label { font-family:var(--mono); font-size:9px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--muted); width:80px; flex-shrink:0; }
+  .pk-edit-input { flex:1; background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-family:var(--mono); font-size:12px;
+    padding:3px 7px; outline:none; transition:border-color .12s; }
+  .pk-edit-input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit { display:flex; gap:6px; margin-bottom:4px; }
+  .pk-atk-edit input { background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-size:11px; padding:3px 7px;
+    outline:none; transition:border-color .12s; }
+  .pk-atk-edit input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit .atk-name { flex:2; }
+  .pk-atk-edit .atk-dmg  { flex:1; }
+  .pk-notes-ta { width:100%; min-height:80px; background:var(--surface);
+    border:1px solid var(--border); border-radius:4px; color:var(--text);
+    font-size:13px; padding:10px; resize:vertical; outline:none; }
+
+  .btn-edit { background:none; color:var(--muted); border:1px solid var(--border);
+    border-radius:4px; font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+    padding:4px 10px; cursor:pointer; transition:color .12s,border-color .12s; }
+  .btn-edit:hover { color:var(--amber); border-color:var(--amber-dim); }
+  .btn-save { background:var(--amber-dim); color:var(--amber); border:1px solid var(--amber-dim);
+    border-radius:4px; font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+    padding:4px 10px; cursor:pointer; transition:background .12s; }
+  .btn-save:hover { background:rgba(200,146,42,.4); }
+  .pk-edit-input[disabled], .pk-atk-edit input[disabled], .pk-notes-ta[disabled] {
+    opacity:.6; cursor:default; background:transparent; border-color:transparent; }
+
+  /* ── BESTIAIRE PICKER ── */
+  .add-mode-tabs { display:flex; gap:8px; margin-bottom:16px; }
+  .add-mode-tab { font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+    text-transform:uppercase; background:none; border:1px solid var(--border);
+    border-radius:3px; color:var(--muted); padding:5px 14px; cursor:pointer;
+    transition:color .12s,border-color .12s; }
+  .add-mode-tab.active { color:var(--amber); border-color:var(--amber-dim);
+    background:var(--amber-glow); }
+  .add-form-section { display:none; }
+  .add-form-section.active { display:block; }
+  .bst-search { width:100%; background:var(--surface); border:1px solid var(--border);
+    border-radius:4px; color:var(--text); font-size:13px; padding:8px 12px;
+    outline:none; margin-bottom:10px; transition:border-color .15s; }
+  .bst-search:focus { border-color:var(--amber-dim); }
+  .bst-picker-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+    gap:8px; max-height:320px; overflow-y:auto; }
+  .bst-pick-card { background:var(--surface); border:1px solid var(--border);
+    border-radius:4px; padding:10px 12px; cursor:pointer;
+    transition:border-color .15s,background .15s; }
+  .bst-pick-card:hover { border-color:var(--amber-dim); background:var(--amber-glow); }
+  .bst-pick-name { font-family:var(--mono); font-size:12px; font-weight:700;
+    color:var(--text); margin-bottom:3px; }
+  .bst-pick-meta { font-size:10px; color:var(--muted); margin-bottom:5px; }
+  .bst-pick-stats { display:flex; flex-wrap:wrap; gap:3px; }
+  .bst-pick-stat { font-family:var(--mono); font-size:9px; background:var(--card);
+    border:1px solid var(--border); border-radius:2px; padding:1px 5px; color:var(--muted); }
+  .bst-pick-stat span { color:var(--amber); }
+  .bst-selected { border-color:var(--amber) !important; background:var(--amber-glow) !important; }
+  .bst-loading { text-align:center; color:var(--muted); font-size:12px; padding:20px; }
+
+  /* ── TALENT PICKER ── */
+  .bst-detail-panel { margin-top:12px; border:1px solid var(--border); border-radius:4px; overflow:hidden; }
+  .bst-detail-header { padding:12px 14px 8px; background:var(--card); border-bottom:1px solid var(--border); }
+  .bst-detail-name { font-family:var(--mono); font-size:15px; font-weight:700; color:var(--amber); margin-bottom:2px; }
+  .bst-detail-meta { font-size:10px; color:var(--muted); margin-bottom:6px; }
+  .bst-detail-desc { font-size:11px; font-style:italic; color:var(--muted); line-height:1.5; margin-bottom:8px; }
+  .bst-detail-body { padding:12px 14px; }
+  .bst-attrs { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
+  .bst-attr { font-family:var(--mono); font-size:10px; background:var(--surface);
+    border:1px solid var(--border); border-radius:2px; padding:3px 7px; }
+  .bst-attr span { color:var(--amber); font-weight:600; }
+  .bst-atk-table { width:100%; border-collapse:collapse; font-size:11px; margin-bottom:10px; }
+  .bst-atk-table th { font-family:var(--mono); font-size:8px; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--muted); text-align:left;
+    padding:3px 6px; border-bottom:1px solid var(--border); }
+  .bst-atk-table td { padding:4px 6px; border-bottom:1px solid #1e1e22;
+    color:#a8a39a; vertical-align:top; line-height:1.4; }
+  .bst-atk-table tr:last-child td { border-bottom:none; }
+  .bst-atk-name { color:var(--text); font-weight:600; }
+  .bst-atk-dmg  { font-family:var(--mono); color:var(--amber); }
+  .bst-talent-lbl { font-family:var(--mono); font-size:9px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--muted); margin:10px 0 6px;
+    padding-bottom:4px; border-bottom:1px solid var(--border); display:block; }
+  .bst-talent-list { display:flex; flex-direction:column; gap:5px; }
+  .bst-talent-opt { display:flex; align-items:flex-start; gap:8px;
+    padding:8px 10px; border:1px solid var(--border); border-radius:3px;
+    cursor:pointer; transition:border-color .12s, background .12s; background:var(--surface); }
+  .bst-talent-opt:hover { border-color:var(--amber-dim); background:var(--amber-glow); }
+  .bst-talent-opt.selected { border-color:var(--amber); background:var(--amber-glow); }
+  .bst-talent-opt input[type=radio] { flex-shrink:0; margin-top:2px; accent-color:var(--amber); }
+  .bst-talent-name { font-size:11px; font-weight:600; color:var(--text); display:block; margin-bottom:2px; }
+  .bst-talent-desc { font-size:10px; color:var(--muted); line-height:1.4; }
+  .bst-confirm-row { display:flex; gap:8px; margin-top:12px; justify-content:flex-end; }
+  .bst-confirm-btn { font-family:var(--mono); font-size:10px; background:var(--amber-dim);
+    border:none; border-radius:3px; color:var(--amber); padding:6px 16px; cursor:pointer; }
+  .bst-confirm-btn:hover { background:rgba(200,146,42,.4); }
+  .bst-confirm-btn:disabled { opacity:.4; cursor:default; }
+
+  .pk-atk-edit-row { display:grid; grid-template-columns:2fr 1fr 1fr 2fr; gap:5px; margin-bottom:5px; }
+  .pk-atk-edit-row input { background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-size:11px; padding:3px 7px;
+    outline:none; transition:border-color .12s; width:100%; }
+  .pk-atk-edit-row input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit-row input::placeholder { color:var(--muted); opacity:.6; }
 </style>
 </head>
 <body>
 <div class="player-shell">
   <header class="player-header">
     <div class="hd-photo-wrap">
-      <img class="hd-photo" src="img/pistolero.png" alt="">
+      <img class="hd-photo" src="img/analyste.png" alt="">
       <div class="hd-identity">
-        <div class="hd-nom">Lidia Fireheart</div>
-        <div class="hd-role">Ancien agent de terrain de la Ligue</div>
+        <div class="hd-nom">Magdalena Hell</div>
+        <div class="hd-role">Technicienne CT</div>
       </div>
     </div>
     <div class="player-name-wrap" style="display:none">
-      <span class="player-name-display" id="pj-name-display" data-default="Lidia Fireheart" onclick="startEditName()">Lidia Fireheart</span>
+      <span class="player-name-display" id="pj-name-display" data-default="Magdalena Hell" onclick="startEditName()">Magdalena Hell</span>
       <input class="player-name-input" id="pj-name-input" type="text" maxlength="40">
       <button class="edit-name-btn" id="edit-name-btn" onclick="startEditName()" title="Modifier">Edit</button>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <button class="save-json-btn" id="save-json-btn" onclick="exportJSON()" title="T&eacute;l&eacute;charger une sauvegarde JSON">
-        &#8659; Sauvegarder
+      <button class="save-json-btn" id="save-json-btn" onclick="forceSave()" title="T&eacute;l&eacute;charger une sauvegarde JSON">
+        &#9650; Sauvegarder
       </button>
       <a href="index.html" class="player-back">Portail</a>
     </div>
   </header>
   <div class="player-body">
   <div class="pj-banner" id="pj-banner">
-    <img class="pj-banner-img" id="pj-photo-img" src="https://rianori.github.io/pkmn_jdr/img/pistolero.png" alt="">
+    <img class="pj-banner-img" id="pj-photo-img" src="https://rianori.github.io/pkmn_jdr/img/analyste.png" alt="">
     </div>
     <div class="pj-banner-overlay">
-      <div class="pj-banner-name" id="pj-banner-name">Lidia Fireheart</div>
-      <div class="pj-banner-role">Ancien agent de terrain de la Ligue</div>
+      <div class="pj-banner-name" id="pj-banner-name">Magdalena Hell</div>
+      <div class="pj-banner-role">Technicienne en Capsules Techniques</div>
     </div>
   </div>
   <div class="player-main">
     <nav class="player-nav">
     <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
-    <button onclick="showPlayerTab('partner',this)">Arcanin</button>
-    
+    <button onclick="showPlayerTab('partner',this)">Métamorph</button>
     <button onclick="showPlayerTab('team',this)">Equipe</button>
     <button onclick="showPlayerTab('notes',this)">Notes</button>
   </nav>
     <div class="player-content">
     <div class="player-tab active" id="tab-perso">
-      <div class="page-title">Lidia Fireheart</div>
-      <div class="page-tagline">Ancien agent de terrain de la Ligue</div>
+      <div class="page-title">Magdalena Hell</div>
+      <div class="page-tagline">Technicienne en Capsules Techniques</div>
       <div class="stats-grid">
             <div class="stat-block">
               <div class="stat-block-title">Attributs</div>
-              <div class="stat-row"><span class="stat-name">Agilité</span><span class="stat-val">d8</span></div>
-              <div class="stat-row"><span class="stat-name">Ruse</span><span class="stat-val">d6</span></div>
-              <div class="stat-row"><span class="stat-name">Force</span><span class="stat-val">d8</span></div>
+              <div class="stat-row"><span class="stat-name">Agilité</span><span class="stat-val">d6</span></div>
+              <div class="stat-row"><span class="stat-name">Ruse</span><span class="stat-val">d10</span></div>
+              <div class="stat-row"><span class="stat-name">Force</span><span class="stat-val">d4</span></div>
               <div class="stat-row"><span class="stat-name">Trempe</span><span class="stat-val">d6</span></div>
-              <div class="stat-row"><span class="stat-name">Vigueur</span><span class="stat-val">d8</span></div>
+              <div class="stat-row"><span class="stat-name">Vigueur</span><span class="stat-val">d6</span></div>
             </div>
             <div class="stat-block">
               <div class="stat-block-title">Stats dérivées</div>
-              <div class="stat-row"><span class="stat-name">Parade</span><span class="stat-val">6</span></div>
-              <div class="stat-row"><span class="stat-name">Robustesse</span><span class="stat-val">6</span></div>
+              <div class="stat-row"><span class="stat-name">Parade</span><span class="stat-val">4</span></div>
+              <div class="stat-row"><span class="stat-name">Robustesse</span><span class="stat-val">5</span></div>
               <div class="stat-row"><span class="stat-name">Allure</span><span class="stat-val">6"</span></div>
               <div class="stat-row"><span class="stat-name">Dé Joker</span><span class="stat-val">d6</span></div>
               <div class="stat-row"><span class="stat-name">Fate Chips</span><span class="stat-val">3/session</span></div>
             </div>
           </div>
       <div class="pj-body">
-          <p><em>Lidia a été pendant douze ans agent de terrain pour la Ligue. Elle a démissionné après avoir refuser d'exécuter un ordre contre ses valeurs. Elle protège les gens qui méritent d'être protégés à ses yeux.</em></p>
+          <p><em>Ancienne chercheuse renvoyée après avoir signalé des irrégularités dans les protocoles de test sur les Pokémon. Elle se reconvertie en consultante indépendante. Précise et méthodique, elle est incapable de lâcher un problème avant de l'avoir résolu entièrement.</em></p>
           
           <div class="section-title">Compétences</div>
           <div class="stat-block" style="margin-bottom:16px">
-            <div class="stat-row"><span class="stat-name">Athlétisme</span><span class="stat-val">d8</span></div>
+            <div class="stat-row"><span class="stat-name">Athlétisme</span><span class="stat-val">d4</span></div>
             <div class="stat-row"><span class="stat-name">Connaissances Communes</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Perception (Notice)</span><span class="stat-val">d6</span></div>
+            <div class="stat-row"><span class="stat-name">Perception (Notice)</span><span class="stat-val">d8</span></div>
             <div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d4</span></div>
             <div class="stat-row"><span class="stat-name">Discrétion (Sneak)</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Combat (Fightin')</span><span class="stat-val">d8</span></div>
-            <div class="stat-row"><span class="stat-name">Tir (Shootin')</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Intimidation (Overawe)</span><span class="stat-val">d8</span></div>
+            <div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d10</span></div>
+            <div class="stat-row"><span class="stat-name">Sciences (CT/Biologie)</span><span class="stat-val">d8</span></div>
+            <div class="stat-row"><span class="stat-name">Électronique (Tinkerin')</span><span class="stat-val">d8</span></div>
             <div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d6</span></div>
-            <div class="stat-row"><span class="stat-name">Réparation (Repair)</span><span class="stat-val">d4</span></div>
+            <div class="stat-row"><span class="stat-name">Combat (Fightin')</span><span class="stat-val">d4</span></div>
           </div>
           <div class="section-title">Handicaps</div>
-          <div class="hindrance-block"><div class="block-name"><span class="tag tag-majeur">Majeur</span> Loyal</div><div class="block-desc">Ne peut trahir quelqu'un qui lui a accordé sa confiance, même si c'est dans son intérêt.</div></div>
-          <div class="hindrance-block"><div class="block-name"><span class="tag tag-mineur">Mineur</span> Passé encombrant</div><div class="block-desc">Casier d'ancien agent Ligue. −1 à Persuasion avec tout représentant officiel de la Ligue. Des agents pourraient le reconnaître.</div></div>
+          <div class="hindrance-block"><div class="block-name"><span class="tag tag-majeur">Majeur</span> Curieuse</div><div class="block-desc">Impossible de résister à une énigme non résolue. Jet de Trempe d6 diff. 4 pour ignorer une piste non explorée.</div></div>
+          <div class="hindrance-block"><div class="block-name"><span class="tag tag-mineur">Mineur</span> Ennemie</div><div class="block-desc">Un ex-supérieur cherche à ruiner sa réputation. Peut apparaître sous la forme d'un PNJ hostile ou d'un rapport falsifié.</div></div>
           <div class="section-title">Atouts</div>
-          <div class="edge-block"><div class="block-name"><span class="tag tag-combat">Combat</span> Combatif</div><div class="block-desc">Deux attaques de mêlée en un round (−2 à chaque jet). +1 aux dommages en mêlée.</div></div>
-          <div class="edge-block"><div class="block-name"><span class="tag tag-weird">Weird</span> Dur à Cuire </div><div class="block-desc">+2 aux jets de vigeur pour encaisser les Blessures.</div></div>
+          <div class="edge-block"><div class="block-name"><span class="tag tag-background">Background</span> Enquêteur</div><div class="block-desc">+2 aux jets d'Investigation et de Perception sur une scène de crime ou un dossier. Investigation et Ruse comptent comme liées pour la corrélation d'indices.</div></div>
+          <div class="edge-block"><div class="block-name"><span class="tag tag-weird">Weird</span> MacGyver (Atout gratuit Humain)</div><div class="block-desc">Improvise un outil avec les matériaux disponibles sur place (jet de Ruse d8, diff. 4). Résultat = objet fonctionnel pour une tâche précise.</div></div>
           <div class="section-title">Equipement</div>
           <div class="gear-editable" id="gear-editable"></div>
           <div class="gear-add-row">
@@ -799,7 +926,7 @@ a { color: inherit; }
     </div>
     <div class="player-tab" id="tab-partner">
       <div class="page-title">Pokemon partenaire</div>
-      <div class="page-tagline">Arcanin</div>
+      <div class="page-tagline">Metamorph</div>
       <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
         <span style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Blessures</span>
         <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b1" onchange="saveBlessures()"> Blessure 1 (-1)</label>
@@ -808,57 +935,55 @@ a { color: inherit; }
       </div>
       <div id="partner-pk-card" style="display:none"><div class="pk-card">
     <div class="pk-card-header">
-      <div class="pk-owner">Partenaire de · Dresseur #2 · Lidia Fireheart</div>
-      <div class="pk-name">Arcanin</div>
-      <div class="pk-species">Arcanin — Loyauté sans condition, puissance sans retenue</div>
+      <div class="pk-owner">Partenaire de · Dresseur #1 · Magdalena Hell</div>
+      <div class="pk-name">Métamorph</div>
+      <div class="pk-species">Ditto — Transformation et mimicry analytique</div>
       <div class="pk-meta-row">
-        <span class="tag tag-psi" style="background:#1a0808;color:#d06040;">Feu</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Grand (+1)</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° 59</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Normal</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Petit (−1)</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° 132</span>
         <span class="tag tag-edge">Extra spécial · 2 Blessures</span>
       </div>
     </div>
     <div class="pk-body">
-      <div class="pk-lore">Arcanin était blessé sur le bord d'une route quand Lidia est apparue. Contre sa nature, Arcanin n'a pas fui quand Lidia s'est approchée de lui. 
-          Depuis, ils ne se quittent plus. Arcanin ne comprend pas les nuances morales de son dresseur — mais il comprend à qui il fait confiance. Et il protège cette personne comme si sa vie en dépendait. Elle en dépend souvent.</div>
+      <div class="pk-lore">Métamorph est le seul Pokémon que Magdalena Hell ait jamais voulu. Pas parce qu'il est puissant — en forme de base, il ne l'est pas. Parce qu'il observe, absorbe, et retient. Pour une scientifique qui passe sa vie à analyser ce que les autres ratent, c'est le partenaire le plus honnête qui soit.</div>
 
-      <div class="pk-section-lbl">Attributs & Stats</div>
+      <div class="pk-section-lbl">Attributs & Stats (forme de base)</div>
       <div class="pk-stats-row">
-        <div class="pk-stat">Agilité <span class="val">d10</span></div>
-        <div class="pk-stat">Ruse <span class="val">d4</span></div>
-        <div class="pk-stat">Force <span class="val">d10</span></div>
-        <div class="pk-stat">Trempe <span class="val">d8</span></div>
-        <div class="pk-stat">Vigueur <span class="val">d10</span></div>
-        <div class="pk-stat">Parade <span class="val">7</span></div>
-        <div class="pk-stat">Robustesse <span class="val">8</span></div>
-        <div class="pk-stat">Allure <span class="val">10"</span></div>
+        <div class="pk-stat">Agilité <span class="val">d6</span></div>
+        <div class="pk-stat">Ruse <span class="val">d8</span></div>
+        <div class="pk-stat">Force <span class="val">d4</span></div>
+        <div class="pk-stat">Trempe <span class="val">d6</span></div>
+        <div class="pk-stat">Vigueur <span class="val">d6</span></div>
+        <div class="pk-stat">Parade <span class="val">3</span></div>
+        <div class="pk-stat">Robustesse <span class="val">4</span></div>
+        <div class="pk-stat">Allure <span class="val">6"</span></div>
       </div>
 
-      <div class="pk-section-lbl">Attaques</div>
+      <div class="pk-section-lbl">Attaques (forme de base)</div>
       <table class="pk-atk-table">
         <tr><th>Attaque</th><th>Domm.</th><th>Portée</th><th>Effet</th></tr>
-        <tr><td class="pk-atk-name">Morsure ardente</td><td class="pk-atk-dmg">Str+d8 🔥</td><td>Mêlée</td><td>Armure ordinaire ignorée. En Feu si Relance (d6/round)</td></tr>
-        <tr><td class="pk-atk-name">Lance-Flamme</td><td class="pk-atk-dmg">3d6</td><td>12"/24"</td><td>Zone cône optionnelle. Barrage de feu possible au sol</td></tr>
-        <tr><td class="pk-atk-name">Charge éclair</td><td class="pk-atk-dmg">Str+d10</td><td>Charge 4"+</td><td>Renversé si Robustesse non atteinte. +2 domm. si charge 8"+</td></tr>
-        <tr><td class="pk-atk-name">Rugissement</td><td class="pk-atk-dmg">Trempe d8 opp.</td><td>Zone 4"</td><td>Échec : Secoué. Relance : Secoué + Vulnérable ce round</td></tr>
+        <tr><td class="pk-atk-name">Copie</td><td class="pk-atk-dmg">—</td><td>—</td><td>Observe 1 round → transformation disponible au suivant</td></tr>
+        <tr><td class="pk-atk-name">Claquement</td><td class="pk-atk-dmg">Str+d4</td><td>Mêlée</td><td>Base uniquement — rarement utilisé</td></tr>
+        <tr><td class="pk-atk-name">Imitation</td><td class="pk-atk-dmg">Variable</td><td>Variable</td><td>Transformé : utilise les attaques du Pokémon copié</td></tr>
       </table>
 
       <div class="pk-section-lbl">Capacités spéciales</div>
       <div class="pk-capa">
-        <div class="pk-capa-name">Flair de traqueur (Passif)</div>
-        <div class="pk-capa-desc">Piste une cible par odeur sur 2km si piste &lt; 24h. Perception d8 diff. 4. Relance : sait depuis combien de temps et si la cible était seule. En sous-sol : ventilation artificielle −2 au jet.</div>
+        <div class="pk-capa-name">Transformation (action complète)</div>
+        <div class="pk-capa-desc">Copie un Pokémon observé 1 round complet. Adopte tous ses attributs, compétences, attaques et Robustesse — conserve ses Blessures actuelles. Dure jusqu'à fin combat ou KO. Limite : ne copie pas les capacités narratives uniques (Empathie Pokémon, coffre-fort vivant, etc.).</div>
       </div>
       <div class="pk-capa">
-        <div class="pk-capa-name">Loyauté absolue (Passif — miroir du Pistolero)</div>
-        <div class="pk-capa-desc">Quand Lidia Fireheart est Secoué ou Blessé, Arcanin peut s'interposer (action gratuite, sa Parade utilisée). S'il reçoit l'attaque à la place, Arcanin absorbe les dégâts. Une fois par round.</div>
+        <div class="pk-capa-name">Mémoire d'observation (Passif)</div>
+        <div class="pk-capa-desc">Retient jusqu'à 3 formes copiées par session. Peut repasser à une forme déjà copiée en action de mouvement. Hors combat, peut maintenir une forme humanoïde indéfiniment — calculatrice, objet de laboratoire, animal banal.</div>
       </div>
       <div class="pk-capa">
-        <div class="pk-capa-name">Crinière ardente (Passif)</div>
-        <div class="pk-capa-desc">Toute attaque en mêlée sans protection thermique inflige d4 dégâts de feu réflexifs à l'attaquant. Les agents d'Ashford en équipement standard ne sont pas protégés.</div>
+        <div class="pk-capa-name">Analyse structurelle (Passif — synergie)</div>
+        <div class="pk-capa-desc">Quand Magdalena Hell effectue un jet de Sciences ou d'Électronique sur un Pokémon ou une CT, Métamorph donne +1 au jet s'il a déjà copié ce type de Pokémon dans la session. Cumulable avec l'analyseur de CT (+2) pour un total de +3.</div>
       </div>
       <div class="pk-capa">
-        <div class="pk-capa-name">Sprint légendaire (1 fois / combat)</div>
-        <div class="pk-capa-desc">Se déplace de 20" en ligne droite, traversant obstacles mineurs. Peut enchaîner une Charge éclair en bonus à l'arrivée. Allure réduite à 6" le round suivant.</div>
+        <div class="pk-capa-name">Fragilité de forme (Contrainte)</div>
+        <div class="pk-capa-desc">Une Blessure en forme transformée = retour forme de base + Secoué. Ne peut pas se retransformer ce round.</div>
       </div>
 
       <div class="pk-section-lbl">Blessures</div>
@@ -866,7 +991,7 @@ a { color: inherit; }
         <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 1</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Légère −1</div></div>
         <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 2</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Grave −2</div></div>
         <div class="pk-wound-box ko"><span class="pk-wound-lbl">Hors combat</span><span class="pk-wound-check">○</span></div>
-        <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check"></span></div>
+        <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check" style="font-size:11px;color:var(--muted);font-style:italic"></span></div>
       </div>
 
       
@@ -874,57 +999,55 @@ a { color: inherit; }
   </div></div>
       <div class="pk-card">
     <div class="pk-card-header">
-      <div class="pk-owner">Partenaire de · Dresseur #2 · Lidia Fireheart</div>
-      <div class="pk-name">Arcanin</div>
-      <div class="pk-species">Arcanin — Loyauté sans condition, puissance sans retenue</div>
+      <div class="pk-owner">Partenaire de · Dresseur #1 · Magdalena Hell</div>
+      <div class="pk-name">Métamorph</div>
+      <div class="pk-species">Ditto — Transformation et mimicry analytique</div>
       <div class="pk-meta-row">
-        <span class="tag tag-psi" style="background:#1a0808;color:#d06040;">Feu</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Grand (+1)</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° 59</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Normal</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Petit (−1)</span>
+        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° 132</span>
         <span class="tag tag-edge">Extra spécial · 2 Blessures</span>
       </div>
     </div>
     <div class="pk-body">
-      <div class="pk-lore">Arcanin était blessé sur le bord d'une route quand Lidia est apparue. Contre sa nature, Arcanin n'a pas fui quand Lidia s'est approchée de lui. 
-          Depuis, ils ne se quittent plus. Arcanin ne comprend pas les nuances morales de son dresseur — mais il comprend à qui il fait confiance. Et il protège cette personne comme si sa vie en dépendait. Elle en dépend souvent.</div>
+      <div class="pk-lore">Métamorph est le seul Pokémon que Magdalena Hell ait jamais voulu. Pas parce qu'il est puissant — en forme de base, il ne l'est pas. Parce qu'il observe, absorbe, et retient. Pour une scientifique qui passe sa vie à analyser ce que les autres ratent, c'est le partenaire le plus honnête qui soit.</div>
 
-      <div class="pk-section-lbl">Attributs & Stats</div>
+      <div class="pk-section-lbl">Attributs & Stats (forme de base)</div>
       <div class="pk-stats-row">
-        <div class="pk-stat">Agilité <span class="val">d10</span></div>
-        <div class="pk-stat">Ruse <span class="val">d4</span></div>
-        <div class="pk-stat">Force <span class="val">d10</span></div>
-        <div class="pk-stat">Trempe <span class="val">d8</span></div>
-        <div class="pk-stat">Vigueur <span class="val">d10</span></div>
-        <div class="pk-stat">Parade <span class="val">7</span></div>
-        <div class="pk-stat">Robustesse <span class="val">8</span></div>
-        <div class="pk-stat">Allure <span class="val">10"</span></div>
+        <div class="pk-stat">Agilité <span class="val">d6</span></div>
+        <div class="pk-stat">Ruse <span class="val">d8</span></div>
+        <div class="pk-stat">Force <span class="val">d4</span></div>
+        <div class="pk-stat">Trempe <span class="val">d6</span></div>
+        <div class="pk-stat">Vigueur <span class="val">d6</span></div>
+        <div class="pk-stat">Parade <span class="val">3</span></div>
+        <div class="pk-stat">Robustesse <span class="val">4</span></div>
+        <div class="pk-stat">Allure <span class="val">6"</span></div>
       </div>
 
-      <div class="pk-section-lbl">Attaques</div>
+      <div class="pk-section-lbl">Attaques (forme de base)</div>
       <table class="pk-atk-table">
         <tr><th>Attaque</th><th>Domm.</th><th>Portée</th><th>Effet</th></tr>
-        <tr><td class="pk-atk-name">Morsure ardente</td><td class="pk-atk-dmg">Str+d8 🔥</td><td>Mêlée</td><td>Armure ordinaire ignorée. En Feu si Relance (d6/round)</td></tr>
-        <tr><td class="pk-atk-name">Lance-Flamme</td><td class="pk-atk-dmg">3d6</td><td>12"/24"</td><td>Zone cône optionnelle. Barrage de feu possible au sol</td></tr>
-        <tr><td class="pk-atk-name">Charge éclair</td><td class="pk-atk-dmg">Str+d10</td><td>Charge 4"+</td><td>Renversé si Robustesse non atteinte. +2 domm. si charge 8"+</td></tr>
-        <tr><td class="pk-atk-name">Rugissement</td><td class="pk-atk-dmg">Trempe d8 opp.</td><td>Zone 4"</td><td>Échec : Secoué. Relance : Secoué + Vulnérable ce round</td></tr>
+        <tr><td class="pk-atk-name">Copie</td><td class="pk-atk-dmg">—</td><td>—</td><td>Observe 1 round → transformation disponible au suivant</td></tr>
+        <tr><td class="pk-atk-name">Claquement</td><td class="pk-atk-dmg">Str+d4</td><td>Mêlée</td><td>Base uniquement — rarement utilisé</td></tr>
+        <tr><td class="pk-atk-name">Imitation</td><td class="pk-atk-dmg">Variable</td><td>Variable</td><td>Transformé : utilise les attaques du Pokémon copié</td></tr>
       </table>
 
       <div class="pk-section-lbl">Capacités spéciales</div>
       <div class="pk-capa">
-        <div class="pk-capa-name">Flair de traqueur (Passif)</div>
-        <div class="pk-capa-desc">Piste une cible par odeur sur 2km si piste &lt; 24h. Perception d8 diff. 4. Relance : sait depuis combien de temps et si la cible était seule. En sous-sol : ventilation artificielle −2 au jet.</div>
+        <div class="pk-capa-name">Transformation (action complète)</div>
+        <div class="pk-capa-desc">Copie un Pokémon observé 1 round complet. Adopte tous ses attributs, compétences, attaques et Robustesse — conserve ses Blessures actuelles. Dure jusqu'à fin combat ou KO. Limite : ne copie pas les capacités narratives uniques (Empathie Pokémon, coffre-fort vivant, etc.).</div>
       </div>
       <div class="pk-capa">
-        <div class="pk-capa-name">Loyauté absolue (Passif — miroir du Pistolero)</div>
-        <div class="pk-capa-desc">Quand Lidia Fireheart est Secoué ou Blessé, Arcanin peut s'interposer (action gratuite, sa Parade utilisée). S'il reçoit l'attaque à la place, Arcanin absorbe les dégâts. Une fois par round.</div>
+        <div class="pk-capa-name">Mémoire d'observation (Passif)</div>
+        <div class="pk-capa-desc">Retient jusqu'à 3 formes copiées par session. Peut repasser à une forme déjà copiée en action de mouvement. Hors combat, peut maintenir une forme humanoïde indéfiniment — calculatrice, objet de laboratoire, animal banal.</div>
       </div>
       <div class="pk-capa">
-        <div class="pk-capa-name">Crinière ardente (Passif)</div>
-        <div class="pk-capa-desc">Toute attaque en mêlée sans protection thermique inflige d4 dégâts de feu réflexifs à l'attaquant. Les agents d'Ashford en équipement standard ne sont pas protégés.</div>
+        <div class="pk-capa-name">Analyse structurelle (Passif — synergie)</div>
+        <div class="pk-capa-desc">Quand Magdalena Hell effectue un jet de Sciences ou d'Électronique sur un Pokémon ou une CT, Métamorph donne +1 au jet s'il a déjà copié ce type de Pokémon dans la session. Cumulable avec l'analyseur de CT (+2) pour un total de +3.</div>
       </div>
       <div class="pk-capa">
-        <div class="pk-capa-name">Sprint légendaire (1 fois / combat)</div>
-        <div class="pk-capa-desc">Se déplace de 20" en ligne droite, traversant obstacles mineurs. Peut enchaîner une Charge éclair en bonus à l'arrivée. Allure réduite à 6" le round suivant.</div>
+        <div class="pk-capa-name">Fragilité de forme (Contrainte)</div>
+        <div class="pk-capa-desc">Une Blessure en forme transformée = retour forme de base + Secoué. Ne peut pas se retransformer ce round.</div>
       </div>
 
       <div class="pk-section-lbl">Blessures</div>
@@ -932,7 +1055,7 @@ a { color: inherit; }
         <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 1</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Légère −1</div></div>
         <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 2</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Grave −2</div></div>
         <div class="pk-wound-box ko"><span class="pk-wound-lbl">Hors combat</span><span class="pk-wound-check">○</span></div>
-        <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check"></span></div>
+        <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check" style="font-size:11px;color:var(--muted);font-style:italic"></span></div>
       </div>
 
       
@@ -944,38 +1067,15 @@ a { color: inherit; }
       <div class="page-tagline">6 slots - partenaire fixe en slot 0</div>
       <div class="team-grid" id="team-grid"></div>
       <div class="pk-add-form" id="pk-add-form">
-        <div class="section-title">Ajouter - <span id="add-slot-num"></span></div>
+        <div class="section-title">Ajouter un Pok&eacute;mon &mdash; <span id="add-slot-num"></span></div>
         <input type="hidden" id="add-slot-hidden">
-        <div class="form-row">
-          <div><label>Nom</label><input type="text" id="pk-add-name" placeholder="Ex : Racaillou"></div>
-          <div><label>Type(s)</label><input type="text" id="pk-add-type" placeholder="Ex : Roche/Sol"></div>
+        <input class="bst-search" id="bst-search" type="text" placeholder="Rechercher dans le bestiaire..." oninput="filterBstPicker()">
+        <div class="bst-picker-grid" id="bst-picker-grid">
+          <div class="bst-loading">Chargement du bestiaire...</div>
         </div>
-        <label>Talent / Capacite speciale</label>
-        <input type="text" id="pk-add-talent" placeholder="Ex : Levitation, Torrent, Intimidation..." style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:13px;padding:8px 12px;margin-bottom:8px">
-        <label>Notes</label>
-        <textarea id="pk-add-notes" placeholder="Statut, PV actuels..."></textarea>
-        <label style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px;display:block">Stats de base</label>
-        <div class="pk-stats-grid">
-          <div class="pk-stat-field"><label>FOR</label><input type="text" id="pk-stat-for" placeholder="d8"></div>
-          <div class="pk-stat-field"><label>AGI</label><input type="text" id="pk-stat-agi" placeholder="d6"></div>
-          <div class="pk-stat-field"><label>VIG</label><input type="text" id="pk-stat-vig" placeholder="d6"></div>
-          <div class="pk-stat-field"><label>RUS</label><input type="text" id="pk-stat-rus" placeholder="d4"></div>
-          <div class="pk-stat-field"><label>Parade</label><input type="text" id="pk-stat-parade" placeholder="5"></div>
-          <div class="pk-stat-field"><label>Robustesse</label><input type="text" id="pk-stat-robustesse" placeholder="5"></div>
-        </div>
-        <div class="pk-stat-field" style="margin-top:6px"><label>Allure</label><input type="text" id="pk-stat-allure" placeholder='6"' style="max-width:120px"></div>
-        <div class="pk-attacks-area">
-          <label style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin:8px 0 5px">Attaques</label>
-          <div id="pk-attacks-container">
-            <div class="pk-attack-row" id="atk-row-1">
-              <input type="text" id="pk-atk-name-1" placeholder="Attaque 1">
-              <input type="text" id="pk-atk-dmg-1" placeholder="Degats" style="max-width:90px">
-            </div>
-          </div>
-          <button class="pk-attack-add" onclick="addAttackRow()">+ Attaque</button>
-        </div>
-        <div style="display:flex;gap:8px">
-          <button class="btn-primary" onclick="addPokemon()">Ajouter</button>
+        <div class="bst-detail-panel" id="bst-detail-panel"></div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+          <button class="btn-primary" id="bst-add-btn" onclick="addFromBestiaire()" disabled style="opacity:.4">Ajouter</button>
           <button class="btn-ghost" onclick="closeAddForm()">Annuler</button>
         </div>
       </div>
@@ -1007,7 +1107,11 @@ a { color: inherit; }
 </div>
 <script>
 
-var PLAYER_KEY = 'pistolero';
+var PLAYER_KEY = 'test-bestiaire';
+
+/* ══════════════════
+
+var PLAYER_KEY = 'test-bestiaire';
 
 /* ══════════════════════════════════════════════════════
    FIREBASE — remplace JSONBin
@@ -1044,62 +1148,23 @@ function fbListen(path, cb) {
 }
 
 /* ── Sync cloud : remplace _syncCloud() ── */
-function _syncCloud() {
-  var gear = loadGear();
-  fbSet('notes',   state.notes);
-  fbSet('team',    state.team);
-  fbSet('gear',    gear);
-  fbSet('updated', Date.now());
-}
+
 
 /* ── Chargement initial depuis Firebase : remplace loadNotesFromCloud() ── */
-function loadNotesFromCloud() {
-  fbGet('').then(function(rec) {
-    if (!rec) return;
-    if (rec.notes && rec.notes.length) {
-      state.notes = rec.notes;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        team: state.team, notes: state.notes
-      }));
-      renderNoteList();
-      var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
-      if (id) openNote(id);
-    }
-    if (rec.team) {
-      for (var i = 1; i < 6; i++) {
-        state.team[i] = rec.team[i] || null;
-      }
-      renderTeam();
-    }
-    if (rec.gear) {
-      localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(rec.gear));
-      renderGear();
-    }
-    /* Message MJ */
-    if (rec.mj_note) {
-      var read = localStorage.getItem(STORAGE_KEY + '_mj_note_read');
-      if (rec.mj_note !== read) showMjNotePopup(rec.mj_note);
-    }
-  });
-}
+
 
 /* ── Écoute temps réel : si le MJ envoie un message ── */
 
 
 /* ── Init : remplace initPlayerBin() ── */
-function initPlayerBin() {
-  loadNotesFromCloud();
-  listenMjNote();
-  /* Enregistrer la présence du joueur */
-  fbSet('slug', PLAYER_KEY);
-}
+
 
 /* Fonctions JSONBin devenues inutiles — stubs vides */
 function _getOrCreateBin(cb) { if (cb) cb('firebase'); }
 function _registerInCentral() {}
 
 var STORAGE_KEY = 'jdr_player_' + PLAYER_KEY;
-var PARTNER_NAME_ASCII = 'Arcanin';
+var PARTNER_NAME_ASCII = 'Metamorph';
 var JSONBIN_KEY = '$2a$10$Ry6RRhIB06qneHc4RHKo0Oc/WPpteZZlQYOVu5i6PZVZ/d50jXY.C';
 var JSONBIN_URL = 'https://api.jsonbin.io/v3';
 
@@ -1165,19 +1230,9 @@ function selectSlot(i) {
   if (!state.team[i] && i>0) openAddForm(i); else closeAddForm();
 }
 
-function openAddForm(slot) {
-  document.getElementById('pk-add-form').classList.add('open');
-  document.getElementById('add-slot-num').textContent = 'Slot #' + slot;
-  document.getElementById('add-slot-hidden').value = slot;
-  document.getElementById('pk-add-name').focus();
-}
 
-function closeAddForm() {
-  document.getElementById('pk-add-form').classList.remove('open');
-  document.getElementById('pk-add-name').value = '';
-  document.getElementById('pk-add-type').value = '';
-  document.getElementById('pk-add-notes').value = '';
-}
+
+
 
 
 
@@ -1190,7 +1245,7 @@ function removePokemon(i) {
 
 
 
-function updatePkNotes(val) { state.team[state.activeSlot].notes=val; saveState(); }
+
 
 var noteTimer = null;
 
@@ -1283,26 +1338,13 @@ function exportNote() {
 
 function wordCount(s) { return (s||'').trim().split(/\s+/).filter(function(w){return w;}).length; }
 
-function saveBlessures() {
-  var b={b1:document.getElementById('b1').checked,b2:document.getElementById('b2').checked,bko:document.getElementById('bko').checked};
-  localStorage.setItem(STORAGE_KEY+'_blessures',JSON.stringify(b));
-}
 
-function loadBlessures() {
-  try{var b=JSON.parse(localStorage.getItem(STORAGE_KEY+'_blessures')||'{}');
-    document.getElementById('b1').checked=b.b1||false;
-    document.getElementById('b2').checked=b.b2||false;
-    document.getElementById('bko').checked=b.bko||false;
-  }catch(e){}
-}
 
-var DEFAULT_NAME_JS = 'Lidia Fireheart';
 
-function loadPlayerName() {
-  var saved=localStorage.getItem(STORAGE_KEY+'_name');
-  var el=document.getElementById('pj-name-display');
-  if (el) el.textContent=saved||document.getElementById('pj-name-display').getAttribute('data-default');
-}
+
+var DEFAULT_NAME_JS = 'Magdalena Hell';
+
+
 
 function startEditName() {
   var disp=document.getElementById('pj-name-display'),input=document.getElementById('pj-name-input'),btn=document.getElementById('edit-name-btn');
@@ -1333,7 +1375,7 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 /* ---- EQUIPEMENT EDITABLE ---- */
-var DEFAULT_GEAR = ["Revolver Magnum .44 (2d6+1, Portee 12/24/48)", "Fusil a pompe scie (1-3d6, portee courte)", "Gilet pare-balles leger (Armure +2)", "3 recharges standard", "Menottes x2", "300 "];
+var DEFAULT_GEAR = ["Analyseur de CT portable (+2 aux jets de Sciences sur toute CT)","Carnet de terrain chiffr\u00e9","Lampe frontale haute puissance","Pok\u00e9dex modifi\u00e9 (acc\u00e8s aux bases de donn\u00e9es de recherche)","Marteau d'alpiniste (arme improvis\u00e9e, Str+d4)","500\u00a5 en esp\u00e8ces"];
 
 function loadGear() {
   try {
@@ -1380,111 +1422,22 @@ function gearInputKey(e) {
 /* ---- STATS POKEMON FORMULAIRE ---- */
 var pkAttackCount = 1;
 
-function addAttackRow() {
-  pkAttackCount++;
-  var talentEl = document.getElementById('pk-add-talent'); if (talentEl) talentEl.value = '';
-  var container = document.getElementById('pk-attacks-container');
-  if (!container || pkAttackCount > 4) return;
-  var row = document.createElement('div');
-  row.className = 'pk-attack-row';
-  row.id = 'atk-row-' + pkAttackCount;
-  row.innerHTML = '<input type="text" id="pk-atk-name-' + pkAttackCount + '" placeholder="Attaque ' + pkAttackCount + '">'
-    + '<input type="text" id="pk-atk-dmg-' + pkAttackCount + '" placeholder="Degats" style="max-width:90px">'
-    + '<button class="pk-attack-del" onclick="removeAttackRow(' + pkAttackCount + ')">x</button>';
-  container.appendChild(row);
-}
+
 
 function removeAttackRow(n) {
   var row = document.getElementById('atk-row-' + n);
   if (row) row.remove();
 }
 
-function collectPkStats() {
-  var stats = {};
-  ['for','agi','vig','rus','parade','robustesse','allure'].forEach(function(s) {
-    var el = document.getElementById('pk-stat-' + s);
-    if (el) stats[s] = el.value.trim();
-  });
-  var attacks = [];
-  for (var i = 1; i <= 4; i++) {
-    var n = document.getElementById('pk-atk-name-' + i);
-    var d = document.getElementById('pk-atk-dmg-' + i);
-    if (n && n.value.trim()) attacks.push({ name: n.value.trim(), dmg: d ? d.value.trim() : '' });
-  }
-  stats.attacks = attacks;
-  return stats;
-}
 
-function resetPkStatsForm() {
-  ['for','agi','vig','rus','parade','robustesse','allure'].forEach(function(s) {
-    var el = document.getElementById('pk-stat-' + s);
-    if (el) el.value = '';
-  });
-  var container = document.getElementById('pk-attacks-container');
-  if (container) {
-    var rows = container.querySelectorAll('.pk-attack-row:not(#atk-row-1)');
-    rows.forEach(function(r) { r.remove(); });
-    pkAttackCount = 1;
-    var n1 = document.getElementById('pk-atk-name-1');
-    var d1 = document.getElementById('pk-atk-dmg-1');
-    if (n1) n1.value = '';
-    if (d1) d1.value = '';
-  }
-}
+
+
 
 /* Override addPokemon pour inclure les stats */
-function addPokemon() {
-  var slot = parseInt(document.getElementById('add-slot-hidden').value);
-  var name = document.getElementById('pk-add-name').value.trim();
-  var type = document.getElementById('pk-add-type').value.trim();
-  var notes = document.getElementById('pk-add-notes').value.trim();
-  if (!name) { document.getElementById('pk-add-name').focus(); return; }
-  var pkStats = collectPkStats();
-  var talent = document.getElementById('pk-add-talent'); var talentVal = talent ? talent.value.trim() : '';
-  state.team[slot] = { name: name, type: type, notes: notes, talent: talentVal, partner: false, stats: pkStats };
-  saveState();
-  closeAddForm();
-  resetPkStatsForm();
-  renderTeam();
-}
+
 
 /* Override renderPanel pour afficher les stats */
-function renderPanel() {
-  var panel = document.getElementById('team-panel');
-  if (!panel) return;
-  var slot = state.team[state.activeSlot];
-  if (!slot) { selectSlot(0); return; }
-  if (state.activeSlot === 0) {
-    var pk = document.getElementById('partner-pk-card');
-    if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
-    return;
-  }
-  var statsHtml = '';
-  if (slot.talent) { statsHtml += '<div style="margin-bottom:8px"><span style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Talent</span> <span style="font-size:13px;color:var(--amber)">' + escHtml(slot.talent) + '</span></div>'; }
-  if (slot.stats) {
-    var s = slot.stats;
-    var statLine = ['for','agi','vig','rus','parade','robustesse','allure']
-      .filter(function(k) { return s[k]; })
-      .map(function(k) { return '<span style="font-family:var(--mono);font-size:11px;background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:2px 7px;">' + k.toUpperCase() + ' ' + s[k] + '</span>'; })
-      .join(' ');
-    statsHtml += '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">' + statLine + '</div>';
-    if (s.attacks && s.attacks.length) {
-      statsHtml += '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px">Attaques</div>';
-      s.attacks.forEach(function(a) {
-        statsHtml += '<div style="font-size:12px;color:var(--text);margin-bottom:3px">' + escHtml(a.name) + (a.dmg ? ' <span style="color:var(--muted)">- ' + escHtml(a.dmg) + '</span>' : '') + '</div>';
-      });
-    }
-  }
-  panel.innerHTML = '<div class="team-panel-header">'
-    + '<span class="team-panel-name">' + escHtml(slot.name) + '</span>'
-    + '<span style="font-size:12px;color:var(--muted)">' + escHtml(slot.type) + '</span>'
-    + '<button class="btn-danger" style="margin-left:auto" onclick="removePokemon(' + state.activeSlot + ')">Retirer</button>'
-    + '</div><div class="team-panel-body">'
-    + (statsHtml ? '<div style="margin-bottom:12px">' + statsHtml + '</div>' : '')
-    + '<div class="section-title" style="margin-bottom:8px">Notes de session</div>'
-    + '<textarea style="width:100%;min-height:100px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-size:13px;padding:10px;resize:vertical" oninput="updatePkNotes(this.value)">' + escHtml(slot.notes || '') + '</textarea>'
-    + '</div>';
-}
+
 
 /* ---- NOTE DU MJ (pop-up) ---- */
 function checkMjNote() {
@@ -1602,41 +1555,7 @@ function _updateBannerName() {
 }
 
 /* ── EXPORT JSON ── */
-function exportJSON() {
-  var nom    = (document.getElementById('pj-name-display') || {}).textContent || PLAYER_KEY;
-  var gear   = loadGear();
-  var date   = new Date().toISOString().slice(0,10);
 
-  var data = {
-    joueur:    PLAYER_KEY,
-    nom:       nom,
-    date:      date,
-    equipe:    state.team,
-    notes:     state.notes,
-    equipement: gear
-  };
-
-  var json   = JSON.stringify(data, null, 2);
-  var blob   = new Blob([json], { type: 'application/json' });
-  var url    = URL.createObjectURL(blob);
-  var a      = document.createElement('a');
-  a.href     = url;
-  a.download = 'sauvegarde_' + PLAYER_KEY + '_' + date + '.json';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-
-  var btn = document.getElementById('save-json-btn');
-  if (btn) {
-    btn.classList.add('saved');
-    btn.innerHTML = '&#10003; Sauvegard&eacute;';
-    setTimeout(function() {
-      btn.classList.remove('saved');
-      btn.innerHTML = '&#8659; Sauvegarder';
-    }, 2000);
-  }
-}
 
 
 function listenMjNote() {
@@ -1700,7 +1619,767 @@ function renderGear() {
     li.appendChild(del);
     container.appendChild(li);
   });
-}</script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ── TOUT FIREBASE — plus de localStorage pour les données joueur ── */
+
+
+
+function saveBlessures() {
+  _syncCloud();
+}
+
+function loadBlessures() {
+  /* chargé depuis Firebase dans loadNotesFromCloud */
+}
+
+function loadPlayerName() {
+  /* chargé depuis Firebase dans loadNotesFromCloud */
+  var el  = document.getElementById('pj-name-display');
+  var def = el ? el.getAttribute('data-default') : '';
+  if (el && !el.textContent) el.textContent = def;
+}
+
+function loadNotesFromCloud() {
+  fbGet('').then(function(rec) {
+    if (!rec) return;
+
+    /* Notes */
+    if (rec.notes && rec.notes.length) {
+      state.notes = rec.notes;
+      renderNoteList();
+      var id = state.activeNote || state.notes[0].id;
+      if (id) openNote(id);
+    }
+
+    /* Equipe */
+    if (rec.team) {
+      for (var i = 1; i < 6; i++) {
+        state.team[i] = rec.team[i] || null;
+      }
+      renderTeam();
+    }
+
+    /* Equipement */
+    if (rec.gear) {
+      localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(rec.gear));
+      renderGear();
+    }
+
+    /* Nom du joueur */
+    if (rec.nom) {
+      var el = document.getElementById('pj-name-display');
+      if (el) el.textContent = rec.nom;
+    }
+
+    /* Blessures */
+    if (rec.blessures) {
+      var b = rec.blessures;
+      if (document.getElementById('b1'))  document.getElementById('b1').checked  = b.b1  || false;
+      if (document.getElementById('b2'))  document.getElementById('b2').checked  = b.b2  || false;
+      if (document.getElementById('bko')) document.getElementById('bko').checked = b.bko || false;
+    }
+
+    /* Message MJ */
+    if (rec.mj_note) {
+      var dismissed = localStorage.getItem(STORAGE_KEY + '_mj_note_dismissed');
+      if (rec.mj_note !== dismissed) showMjNotePopup(rec.mj_note);
+    }
+  });
+}
+function savePlayerName() { _syncCloud(); }
+
+/* ── BESTIAIRE PICKER ── */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ── BESTIAIRE PICKER v2 — structure unifiée ── */
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ══════════════════════════════════════════════════════
+   BESTIAIRE PICKER — flux unique
+   1. Grille → 2. Fiche + talent → 3. Ajouter
+   ══════════════════════════════════════════════════════ */
+
+var _bstData    = null;
+var _bstCurrent = null;
+
+function openAddForm(slot) {
+  var form = document.getElementById('pk-add-form');
+  form.classList.add('open');
+  document.getElementById('add-slot-num').textContent = 'Slot #' + slot;
+  document.getElementById('add-slot-hidden').value = slot;
+  document.getElementById('bst-detail-panel').innerHTML = '';
+  document.getElementById('bst-add-btn').disabled = true;
+  document.getElementById('bst-add-btn').style.opacity = '.4';
+  _bstCurrent = null;
+  if (!_bstData) {
+    loadBestiaire();
+  } else {
+    renderBstPicker(_bstData);
+  }
+}
+
+function closeAddForm() {
+  document.getElementById('pk-add-form').classList.remove('open');
+  document.getElementById('bst-search').value = '';
+  document.getElementById('bst-detail-panel').innerHTML = '';
+  _bstCurrent = null;
+}
+
+function loadBestiaire() {
+  var grid = document.getElementById('bst-picker-grid');
+  grid.innerHTML = '<div class="bst-loading">Chargement...</div>';
+  fetch('mj.html')
+    .then(function(r) { return r.text(); })
+    .then(function(txt) {
+      _bstData = parseBestCards(txt);
+      renderBstPicker(_bstData);
+    })
+    .catch(function() {
+      grid.innerHTML = '<div class="bst-loading">Erreur de chargement.</div>';
+    });
+}
+
+function parseBestCards(html) {
+  var cards = [];
+  var doc = (new DOMParser()).parseFromString(html, 'text/html');
+  doc.querySelectorAll('.beast-card').forEach(function(card) {
+    var nameEl = card.querySelector('.beast-name');
+    var metaEl = card.querySelector('.beast-meta');
+    if (!nameEl) return;
+    var metaTxt = metaEl ? metaEl.textContent : '';
+    var tagEl   = metaEl ? metaEl.querySelector('[class^="tag"]') : null;
+    var categorie = tagEl ? tagEl.textContent.trim() : '';
+    var rest  = metaTxt.replace(categorie,'').replace(/^\s*[·\-]\s*/,'').trim();
+    var parts = rest.split(/\s*[·\-]\s*/);
+    var type   = parts[0] ? parts[0].trim() : '';
+    var taille = parts[1] ? parts[1].trim() : '';
+    var descEl = card.querySelector('p');
+    var attrs  = {};
+    var statMap = {AGI:'agi',FOR:'for',VIG:'vig',RUS:'rus',TREMP:'tremp',
+                   Parade:'parade',Robustesse:'robustesse',Allure:'allure'};
+    card.querySelectorAll('.stat-pill').forEach(function(pill) {
+      var val = pill.querySelector('span');
+      if (!val) return;
+      var key = pill.textContent.replace(val.textContent,'').trim();
+      var fk  = statMap[key];
+      if (fk) attrs[fk] = val.textContent.trim();
+    });
+    var attacks = [];
+    card.querySelectorAll('.atk-table tr').forEach(function(row) {
+      var cells = row.querySelectorAll('td');
+      if (cells.length >= 2) {
+        attacks.push({
+          name:   cells[0] ? cells[0].textContent.trim() : '',
+          dmg:    cells[1] ? cells[1].textContent.trim() : '',
+          range:  cells[2] ? cells[2].textContent.trim() : '',
+          effect: cells[3] ? cells[3].textContent.trim() : ''
+        });
+      }
+    });
+    var talents = [];
+    card.querySelectorAll('.capa-list li').forEach(function(li) {
+      var n = li.querySelector('.capa-name');
+      if (!n) return;
+      var d = li.textContent.replace(n.textContent,'').replace(/^\s*:\s*/,'').trim();
+      talents.push({ name: n.textContent.trim(), desc: d });
+    });
+    cards.push({ name: nameEl.textContent.trim(), categorie: categorie,
+      type: type, taille: taille,
+      desc: descEl ? descEl.textContent.trim() : '',
+      attrs: attrs, attacks: attacks, talents: talents });
+  });
+  return cards;
+}
+
+function filterBstPicker() {
+  if (_bstData) renderBstPicker(_bstData);
+}
+
+function renderBstPicker(cards) {
+  var grid = document.getElementById('bst-picker-grid');
+  var q = ((document.getElementById('bst-search')||{}).value||'').toLowerCase();
+  grid.innerHTML = '';
+  var filtered = cards.filter(function(c) {
+    return !q || c.name.toLowerCase().indexOf(q) >= 0
+              || c.type.toLowerCase().indexOf(q) >= 0;
+  });
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="bst-loading">Aucun r\u00e9sultat.</div>';
+    return;
+  }
+  var SL = {agi:'AGI',rus:'RUS',for:'FOR',tremp:'TREMP',vig:'VIG',
+            parade:'PAR',robustesse:'ROB',allure:'ALL'};
+  filtered.forEach(function(c) {
+    var div = document.createElement('div');
+    div.className = 'bst-pick-card';
+    var statsHtml = Object.keys(SL).filter(function(k){ return c.attrs[k]; })
+      .map(function(k){ return '<div class="bst-pick-stat">' + SL[k]
+        + ' <span>' + c.attrs[k] + '</span></div>'; }).join('');
+    div.innerHTML =
+      '<div class="bst-pick-name">' + c.name + '</div>'
+      + '<div class="bst-pick-meta">' + c.type
+      + (c.taille ? ' &middot; ' + c.taille : '') + '</div>'
+      + '<div class="bst-pick-stats">' + statsHtml + '</div>'
+      + (c.talents.length
+          ? '<div style="font-size:9px;color:var(--muted);margin-top:3px">'
+            + c.talents.length + ' talent' + (c.talents.length > 1 ? 's' : '') + '</div>'
+          : '');
+    div.addEventListener('click', (function(card, el){
+      return function(){ showBstDetail(card, el); };
+    })(c, div));
+    grid.appendChild(div);
+  });
+}
+
+function showBstDetail(c, el) {
+  document.querySelectorAll('.bst-selected').forEach(function(d){ d.classList.remove('bst-selected'); });
+  el.classList.add('bst-selected');
+  _bstCurrent = c;
+
+  var SL = {agi:'AGI',rus:'RUS',for:'FOR',tremp:'TREMP',vig:'VIG',
+            parade:'Parade',robustesse:'Robustesse',allure:'Allure'};
+
+  var attrsHtml = '<div class="bst-attrs">'
+    + Object.keys(SL).filter(function(k){ return c.attrs[k]; })
+      .map(function(k){ return '<div class="bst-attr">' + SL[k]
+        + ' <span>' + c.attrs[k] + '</span></div>'; }).join('')
+    + '</div>';
+
+  var atksHtml = '';
+  if (c.attacks.length) {
+    atksHtml = '<table class="bst-atk-table">'
+      + '<tr><th>Attaque</th><th>Dommages</th><th>Port\u00e9e</th><th>Effet</th></tr>';
+    c.attacks.forEach(function(a) {
+      atksHtml += '<tr><td class="bst-atk-name">' + a.name + '</td>'
+        + '<td class="bst-atk-dmg">' + a.dmg + '</td>'
+        + '<td>' + (a.range||'') + '</td>'
+        + '<td>' + (a.effect||'') + '</td></tr>';
+    });
+    atksHtml += '</table>';
+  }
+
+  var talentsHtml = '';
+  if (c.talents.length) {
+    talentsHtml = '<span class="bst-talent-lbl">Talent</span>'
+      + '<div class="bst-talent-list" id="bst-talent-list">';
+    c.talents.forEach(function(t, i) {
+      talentsHtml += '<label class="bst-talent-opt' + (i===0?' selected':'') + '">'
+        + '<input type="radio" name="bst-talent" value="' + i + '"'
+        + (i===0?' checked':'') + '>'
+        + '<span><span class="bst-talent-name">' + t.name + '</span>'
+        + (t.desc ? '<span class="bst-talent-desc">' + t.desc + '</span>' : '')
+        + '</span></label>';
+    });
+    talentsHtml += '</div>';
+  }
+
+  var panel = document.getElementById('bst-detail-panel');
+  panel.innerHTML =
+    '<div class="bst-detail-header">'
+    + '<div class="bst-detail-name">' + c.name + '</div>'
+    + '<div class="bst-detail-meta">'
+    + c.type + (c.taille ? ' &middot; ' + c.taille : '')
+    + '</div>'
+    + (c.desc ? '<div class="bst-detail-desc">' + c.desc + '</div>' : '')
+    + '</div>'
+    + '<div class="bst-detail-body">'
+    + '<span class="bst-talent-lbl" style="margin-top:0">Attributs</span>'
+    + attrsHtml + atksHtml + talentsHtml
+    + '</div>';
+
+  panel.querySelectorAll('input[type=radio]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      panel.querySelectorAll('.bst-talent-opt').forEach(function(o){ o.classList.remove('selected'); });
+      this.closest('.bst-talent-opt').classList.add('selected');
+    });
+  });
+
+  var btn = document.getElementById('bst-add-btn');
+  btn.disabled = false;
+  btn.style.opacity = '1';
+}
+
+
+
+function addFromBestiaire() {
+  if (!_bstCurrent) return;
+  var c    = _bstCurrent;
+  var slot = parseInt(document.getElementById('add-slot-hidden').value);
+
+  var talentVal  = '';
+  var talentDesc = '';
+  var radios = document.querySelectorAll('input[name="bst-talent"]');
+  radios.forEach(function(r) {
+    if (r.checked) {
+      var t = c.talents[parseInt(r.value)];
+      talentVal  = t.name;
+      talentDesc = t.desc || '';
+    }
+  });
+
+  var stats = {};
+  var statKeys = ['for','agi','vig','rus','tremp','parade','robustesse','allure'];
+  statKeys.forEach(function(k) { if (c.attrs[k]) stats[k] = c.attrs[k]; });
+  stats.attacks = c.attacks.map(function(a) {
+    return { name:a.name, dmg:a.dmg, range:a.range, effect:a.effect };
+  });
+
+  state.team[slot] = {
+    name:        c.name,
+    type:        c.type,
+    taille:      c.taille,
+    talent:      talentVal,
+    talent_desc: talentDesc,
+    partner:     false,
+    notes:       '',
+    stats:       stats
+  };
+
+  saveState();
+  closeAddForm();
+  renderTeam();
+  selectSlot(slot);
+}
+function renderPanel() {
+  var panel = document.getElementById('team-panel');
+  if (!panel) return;
+  var slot = state.team[state.activeSlot];
+  if (!slot) {
+    panel.innerHTML = '<div style="padding:28px;text-align:center;color:var(--muted);font-size:13px">Cliquez sur un slot pour ajouter un Pok\u00e9mon.</div>';
+    return;
+  }
+  if (state.activeSlot === 0) {
+    var pk = document.getElementById('partner-pk-card');
+    if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
+    return;
+  }
+
+  var idx     = state.activeSlot;
+  var s       = slot.stats || {};
+  var attacks = s.attacks || [];
+  if (!Array.isArray(attacks)) attacks = Object.values(attacks);
+
+  var DEF = 'd4';
+
+  // ── Attributs — 2 rangées ──────────────────────────────────────────────
+  // Rangée 1 : FOR AGI VIG RUS TREMP (abrégés, majuscules)
+  // Rangée 2 : Parade Robustesse Allure (noms complets, minuscules)
+  var ROW1 = [{k:'for',l:'FOR'},{k:'agi',l:'AGI'},{k:'vig',l:'VIG'},
+              {k:'rus',l:'RUS'},{k:'tremp',l:'TREMP'}];
+  var ROW2 = [{k:'parade',l:'Parade'},{k:'robustesse',l:'Robustesse'},{k:'allure',l:'Allure'}];
+
+  var statsHtml =
+    '<div class="pk-stats-row" style="margin-bottom:4px">'
+    + ROW1.map(function(x){
+        return '<div class="pk-stat">' + x.l + ' <span class="val">' + escHtml(s[x.k]||DEF) + '</span></div>';
+      }).join('')
+    + '</div>'
+    + '<div class="pk-stats-row">'
+    + ROW2.map(function(x){
+        return '<div class="pk-stat">' + x.l + ' <span class="val">' + escHtml(s[x.k]||DEF) + '</span></div>';
+      }).join('')
+    + '</div>';
+
+  // ── Talent — nom : description ─────────────────────────────────────────
+  var talentHtml = '';
+  if (slot.talent) {
+    talentHtml = '<div class="pk-section-lbl">Talent</div>'
+      + '<div class="pk-capa"><span class="pk-capa-name">' + escHtml(slot.talent) + '</span>'
+      + (slot.talent_desc
+          ? '<span class="pk-capa-desc"> : ' + escHtml(slot.talent_desc) + '</span>'
+          : '')
+      + '</div>';
+  }
+
+  // ── Attaques 4 colonnes ────────────────────────────────────────────────
+  var validAtks = attacks.filter(function(a){ return a && a.name; });
+  var atksHtml = '';
+  if (validAtks.length) {
+    atksHtml = '<div class="pk-section-lbl">Attaques</div>'
+      + '<table class="pk-atk-table">'
+      + '<tr><th>Attaque</th><th>Dommages</th><th>Port\u00e9e</th><th>Effet</th></tr>';
+    validAtks.forEach(function(a) {
+      atksHtml += '<tr>'
+        + '<td class="pk-atk-name">' + escHtml(a.name)       + '</td>'
+        + '<td class="pk-atk-dmg">'  + escHtml(a.dmg||'')    + '</td>'
+        + '<td>'                      + escHtml(a.range||'')  + '</td>'
+        + '<td>'                      + escHtml(a.effect||'') + '</td>'
+        + '</tr>';
+    });
+    atksHtml += '</table>';
+  }
+
+  var notesHtml = slot.notes
+    ? '<div class="pk-note">' + escHtml(slot.notes) + '</div>'
+    : '';
+
+  // ── Mode édition ───────────────────────────────────────────────────────
+  var EDIT_KEYS = ['for','agi','vig','rus','tremp','parade','robustesse','allure'];
+  var EDIT_LBL  = {for:'FOR',agi:'AGI',vig:'VIG',rus:'RUS',tremp:'TREMP',
+                   parade:'Parade',robustesse:'Robustesse',allure:'Allure'};
+  var editStatsHtml = '<div class="pk-stats-grid">';
+  EDIT_KEYS.forEach(function(k) {
+    editStatsHtml += '<div class="pk-stat-field"><label>' + EDIT_LBL[k] + '</label>'
+      + '<input class="pk-edit-input" type="text" data-idx="' + idx + '" data-key="' + k + '"'
+      + ' value="' + escHtml(s[k]||DEF) + '" maxlength="20"></div>';
+  });
+  editStatsHtml += '</div>';
+
+  var editAtksHtml = '';
+  for (var ai = 0; ai < Math.max(attacks.length + 1, 4); ai++) {
+    var atk = attacks[ai] || {name:'',dmg:'',range:'',effect:''};
+    editAtksHtml += '<div class="pk-atk-edit-row">'
+      + '<input type="text" placeholder="Attaque"'
+      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="name"'
+      + ' value="' + escHtml(atk.name||'') + '" maxlength="50">'
+      + '<input type="text" placeholder="Dmg"'
+      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="dmg"'
+      + ' value="' + escHtml(atk.dmg||'') + '" maxlength="20">'
+      + '<input type="text" placeholder="Port\u00e9e"'
+      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="range"'
+      + ' value="' + escHtml(atk.range||'') + '" maxlength="30">'
+      + '<input type="text" placeholder="Effet"'
+      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="effect"'
+      + ' value="' + escHtml(atk.effect||'') + '" maxlength="80">'
+      + '</div>';
+  }
+
+  // ── HTML final ─────────────────────────────────────────────────────────
+  panel.innerHTML =
+    '<div class="pk-card">'
+    + '<div class="pk-card-header">'
+    + '<div class="pk-owner">Slot #' + idx + '</div>'
+    + '<div class="pk-name">' + escHtml(slot.name) + '</div>'
+    + '<div class="pk-meta-row">'
+    + (slot.type   ? '<span class="tag tag-weird">'   + escHtml(slot.type)   + '</span>' : '')
+    + (slot.taille ? '<span class="tag tag-sauvage">' + escHtml(slot.taille) + '</span>' : '')
+    + '</div></div>'
+
+    // Lecture
+    + '<div class="pk-body" id="pk-panel-read">'
+    + talentHtml
+    + '<div class="pk-section-lbl">Attributs</div>'
+    + statsHtml
+    + atksHtml
+    + notesHtml
+    + '</div>'
+
+    // Edition
+    + '<div class="pk-body" id="pk-panel-edit" style="display:none">'
+    + '<div class="pk-section-lbl">Talent</div>'
+    + '<input class="pk-edit-input" type="text" id="pk-talent-input"'
+    + ' style="width:100%;margin-bottom:4px"'
+    + ' data-idx="' + idx + '" data-key="talent"'
+    + ' value="' + escHtml(slot.talent||'') + '" maxlength="80" placeholder="Nom du talent">'
+    + '<input class="pk-edit-input" type="text" id="pk-talent-desc-input"'
+    + ' style="width:100%;margin-bottom:10px"'
+    + ' data-idx="' + idx + '" data-key="talent_desc"'
+    + ' value="' + escHtml(slot.talent_desc||'') + '" maxlength="200" placeholder="Description du talent...">'
+    + '<div class="pk-section-lbl">Attributs</div>'
+    + editStatsHtml
+    + '<div class="pk-section-lbl" style="margin-top:10px">Attaques</div>'
+    + editAtksHtml
+    + '<div class="pk-section-lbl" style="margin-top:10px">Notes</div>'
+    + '<textarea class="pk-notes-ta">' + escHtml(slot.notes||'') + '</textarea>'
+    + '</div>'
+    + '</div>'
+
+    + '<div style="display:flex;gap:6px;margin-top:10px;justify-content:flex-end">'
+    + '<button class="btn-edit" id="pk-btn-edit">Modifier</button>'
+    + '<button class="btn-save" id="pk-btn-save" style="display:none">Sauvegarder</button>'
+    + '<button class="btn-danger" id="pk-btn-del">Retirer</button>'
+    + '</div>';
+
+  panel.querySelector('#pk-btn-edit').addEventListener('click', function() {
+    document.getElementById('pk-panel-read').style.display = 'none';
+    document.getElementById('pk-panel-edit').style.display = '';
+    this.style.display = 'none';
+    panel.querySelector('#pk-btn-save').style.display = '';
+  });
+
+  panel.querySelector('#pk-btn-save').addEventListener('click', function() {
+    var curIdx = parseInt(panel.querySelector('[data-idx]').dataset.idx);
+    if (!state.team[curIdx]) return;
+    if (!state.team[curIdx].stats) state.team[curIdx].stats = {};
+
+    var ti = document.getElementById('pk-talent-input');
+    if (ti) state.team[curIdx].talent = ti.value.trim();
+    var tdi = document.getElementById('pk-talent-desc-input');
+    if (tdi) state.team[curIdx].talent_desc = tdi.value.trim();
+
+    panel.querySelectorAll('.pk-edit-input').forEach(function(inp) {
+      if (inp.dataset.key && inp.dataset.key !== 'talent' && inp.dataset.key !== 'talent_desc') {
+        state.team[curIdx].stats[inp.dataset.key] = inp.value.trim();
+      }
+    });
+
+    var atksMap = {};
+    panel.querySelectorAll('.pk-atk-edit-row input').forEach(function(inp) {
+      var ai = inp.dataset.ai; var field = inp.dataset.field;
+      if (ai === undefined) return;
+      if (!atksMap[ai]) atksMap[ai] = {name:'',dmg:'',range:'',effect:''};
+      atksMap[ai][field] = inp.value.trim();
+    });
+    var newAtks = [];
+    Object.keys(atksMap).sort().forEach(function(ai) {
+      if (atksMap[ai].name) newAtks.push(atksMap[ai]);
+    });
+    state.team[curIdx].stats.attacks = newAtks;
+
+    var ta = panel.querySelector('.pk-notes-ta');
+    if (ta) state.team[curIdx].notes = ta.value;
+
+    saveState();
+    document.getElementById('pk-panel-read').style.display = '';
+    document.getElementById('pk-panel-edit').style.display = 'none';
+    this.style.display = 'none';
+    panel.querySelector('#pk-btn-edit').style.display = '';
+    renderPanel();
+  });
+
+  panel.querySelector('#pk-btn-del').addEventListener('click', function() {
+    removePokemon(state.activeSlot);
+  });
+}
+function forceSave() {
+  /* Push complet vers Firebase — PAS de flag _writing
+     Les autres appareils recevront l'update et re-renderont */
+  var gear = loadGear();
+  var nom  = (document.getElementById('pj-name-display') || {}).textContent || '';
+  var b1   = document.getElementById('b1')  ? document.getElementById('b1').checked  : false;
+  var b2   = document.getElementById('b2')  ? document.getElementById('b2').checked  : false;
+  var bko  = document.getElementById('bko') ? document.getElementById('bko').checked : false;
+
+  fbSet('notes',     state.notes);
+  fbSet('team',      state.team);
+  fbSet('gear',      gear);
+  fbSet('nom',       nom);
+  fbSet('blessures', {b1:b1, b2:b2, bko:bko});
+  fbSet('updated',   Date.now());
+
+  /* Feedback visuel */
+  var btn = document.getElementById('save-json-btn');
+  if (!btn) return;
+  var orig = btn.innerHTML;
+  btn.innerHTML = '&#10003; Sauvegard\u00e9';
+  btn.style.color = '#4caf6e';
+  btn.style.borderColor = 'rgba(45,110,53,.4)';
+  setTimeout(function() {
+    btn.innerHTML = orig;
+    btn.style.color = '';
+    btn.style.borderColor = '';
+  }, 2000);
+}
+function applyRemoteUpdate(rec) {
+  if (!rec) return;
+
+  /* Equipe — forcer le re-render sans comparaison */
+  if (rec.team) {
+    for (var i = 1; i < 6; i++) {
+      state.team[i] = rec.team[i] || null;
+    }
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(
+      {team:state.team, notes:state.notes, activeNote:state.activeNote}
+    )); } catch(e) {}
+    renderTeam();
+  }
+
+  /* Notes — forcer le re-render */
+  if (rec.notes) {
+    state.notes = rec.notes;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(
+      {team:state.team, notes:state.notes, activeNote:state.activeNote}
+    )); } catch(e) {}
+    renderNoteList();
+    var id = state.activeNote;
+    if (id) openNote(id);
+  }
+
+  /* Equipement */
+  if (rec.gear) {
+    localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(rec.gear));
+    renderGear();
+  }
+
+  /* Nom */
+  if (rec.nom) {
+    var el = document.getElementById('pj-name-display');
+    if (el) el.textContent = rec.nom;
+  }
+
+  /* Blessures */
+  if (rec.blessures) {
+    var b = rec.blessures;
+    if (document.getElementById('b1'))  document.getElementById('b1').checked  = b.b1  || false;
+    if (document.getElementById('b2'))  document.getElementById('b2').checked  = b.b2  || false;
+    if (document.getElementById('bko')) document.getElementById('bko').checked = b.bko || false;
+  }
+}
+function startRealtime() {
+  if (_sseSource) { _sseSource.close(); }
+  _sseSource = new EventSource(FB_PATH + '.json');
+
+  _sseSource.addEventListener('put', function(e) {
+    try {
+      var payload = JSON.parse(e.data);
+      var rec = payload.path === '/' ? payload.data : null;
+      // Mise a jour partielle
+      if (payload.path !== '/' && payload.path) {
+        var key = payload.path.replace(/^\//, '');
+        if (!rec) rec = {};
+        rec[key] = payload.data;
+      }
+      if (_writing) return;  // Ignorer nos propres ecritures
+      if (rec) applyRemoteUpdate(rec);
+    } catch(ex) {}
+  });
+
+  _sseSource.addEventListener('patch', function(e) {
+    try {
+      if (_writing) return;
+      var payload = JSON.parse(e.data);
+      if (payload.data) applyRemoteUpdate(payload.data);
+    } catch(ex) {}
+  });
+
+  _sseSource.addEventListener('error', function() {
+    // Firebase reconnecte automatiquement
+  });
+}
+function _syncCloud() {
+  var gear = loadGear();
+  var nom  = (document.getElementById('pj-name-display') || {}).textContent || '';
+  var b1   = document.getElementById('b1')  ? document.getElementById('b1').checked  : false;
+  var b2   = document.getElementById('b2')  ? document.getElementById('b2').checked  : false;
+  var bko  = document.getElementById('bko') ? document.getElementById('bko').checked : false;
+  _writing = true;
+  fbSet('notes',     state.notes);
+  fbSet('team',      state.team);
+  fbSet('gear',      gear);
+  fbSet('nom',       nom);
+  fbSet('blessures', {b1:b1, b2:b2, bko:bko});
+  fbSet('updated',   Date.now());
+  // Relacher le flag apres un court delai (les writes sont async)
+  setTimeout(function() { _writing = false; }, 1500);
+}
+function initPlayerBin() {
+  loadNotesFromCloud();
+  listenMjNote();
+  fbSet('slug', PLAYER_KEY);
+  startRealtime();
+}
+function initPartnerStats() {
+  var tab = document.getElementById('tab-partner');
+  if (!tab) return;
+
+  var FR_MAP = {
+    'agilit\u00e9':'agi','agilite':'agi','force':'for','vigueur':'vig',
+    'ruse':'rus','trempe':'tremp','parade':'parade',
+    'robustesse':'robustesse','allure':'allure'
+  };
+
+  var stats = {};
+
+  /* Stats depuis .pk-stat > .val */
+  tab.querySelectorAll('.pk-stat').forEach(function(el) {
+    var valEl = el.querySelector('.val');
+    if (!valEl) return;
+    var label = el.textContent.replace(valEl.textContent,'').trim().toLowerCase();
+    var key   = FR_MAP[label];
+    if (key) stats[key] = valEl.textContent.trim();
+  });
+
+  /* Attaques UNIQUEMENT depuis .pk-atk-table */
+  var attacks = [];
+  tab.querySelectorAll('.pk-atk-table tr').forEach(function(row) {
+    var cells = row.querySelectorAll('td');
+    if (cells.length >= 2 && cells[0].classList.contains('pk-atk-name')) {
+      attacks.push({
+        name:   cells[0].textContent.trim(),
+        dmg:    cells[1] ? cells[1].textContent.trim() : '',
+        range:  cells[2] ? cells[2].textContent.trim() : '',
+        effect: cells[3] ? cells[3].textContent.trim() : ''
+      });
+    }
+  });
+  if (attacks.length) stats.attacks = attacks;
+
+  /* Talents depuis .pk-capa (Capacites speciales) */
+  var talents = [];
+  tab.querySelectorAll('.pk-capa').forEach(function(el) {
+    var n = el.querySelector('.pk-capa-name');
+    var d = el.querySelector('.pk-capa-desc');
+    if (n) talents.push({
+      name: n.textContent.trim(),
+      desc: d ? d.textContent.trim() : ''
+    });
+  });
+
+  /* Type */
+  var typeEl = tab.querySelector('.pk-meta-row .tag, .tag');
+  var ptype  = typeEl ? typeEl.textContent.trim() : '';
+
+  /* Premier talent comme talent principal */
+  var talent     = talents.length ? talents[0].name : '';
+  var talentDesc = talents.length ? talents[0].desc : '';
+
+  /* Stocker TOUS les talents dans stats.talents */
+  if (talents.length) stats.talents = talents;
+
+  state.team[0].stats       = stats;
+  state.team[0].talent      = talent;
+  state.team[0].talent_desc = talentDesc;
+  if (ptype) state.team[0].type = ptype;
+
+  fbSet('team', state.team);
+}
+var _writing = false;
+var _sseSource = null;
+</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
     <div class="mj-note-box-title">Message du MJ</div>
