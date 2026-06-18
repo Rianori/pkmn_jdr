@@ -595,11 +595,14 @@ a { color: inherit; }
     opacity: .6;
   }
   .pj-banner-overlay {
-    padding: 14px 24px 16px;
+    padding: 20px 20px;
     background: var(--surface);
-    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
     flex-shrink: 0;
-    width: 100%;
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
   .pj-banner-name {
     font-family: var(--mono);
@@ -874,13 +877,11 @@ a { color: inherit; }
   <div class="player-body">
   <div class="pj-banner" id="pj-banner">
     <img class="pj-banner-img" id="pj-photo-img" src="https://rianori.github.io/pkmn_jdr/img/analyste.png" alt="">
-    </div>
-    
   </div>
   <div class="pj-banner-overlay">
       <div class="pj-banner-name" id="pj-banner-name">Magdalena Hell</div>
       <div class="pj-banner-role">Technicienne en Capsules Techniques</div>
-    </div>
+  </div>
   <div class="player-main">
     <nav class="player-nav">
     <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
