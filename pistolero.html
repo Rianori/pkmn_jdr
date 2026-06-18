@@ -833,6 +833,20 @@ a { color: inherit; }
   .pk-atk-edit-row input:focus { border-color:var(--amber-dim); }
   .pk-atk-edit-row input::placeholder { color:var(--muted); opacity:.6; }
 
+
+  /* Autocomplete attaques */
+  .atk-ac-wrap { position:relative; flex:2; }
+  .atk-ac-wrap input { width:100%; }
+  .atk-ac-list { display:none; position:absolute; top:100%; left:0; right:0; z-index:200;
+    background:var(--card); border:1px solid var(--amber-dim); border-radius:3px;
+    max-height:200px; overflow-y:auto; box-shadow:0 4px 16px rgba(0,0,0,.4); }
+  .atk-ac-list.open { display:block; }
+  .atk-ac-item { padding:7px 10px; cursor:pointer; border-bottom:1px solid var(--border);
+    font-size:12px; }
+  .atk-ac-item:last-child { border-bottom:none; }
+  .atk-ac-item:hover { background:var(--amber-glow); }
+  .atk-ac-name { font-family:var(--mono); font-weight:600; color:var(--text); }
+  .atk-ac-meta { font-size:10px; color:var(--muted); margin-top:1px; }
 </style>
 </head>
 <body>
@@ -1991,207 +2005,7 @@ function addFromBestiaire() {
   renderTeam();
   selectSlot(slot);
 }
-function renderPanel() {
-  var panel = document.getElementById('team-panel');
-  if (!panel) return;
-  var slot = state.team[state.activeSlot];
-  if (!slot) {
-    panel.innerHTML = '<div style="padding:28px;text-align:center;color:var(--muted);font-size:13px">Cliquez sur un slot pour ajouter un Pok\u00e9mon.</div>';
-    return;
-  }
-  if (state.activeSlot === 0) {
-    var pk = document.getElementById('partner-pk-card');
-    if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
-    return;
-  }
 
-  var idx     = state.activeSlot;
-  var s       = slot.stats || {};
-  var attacks = s.attacks || [];
-  if (!Array.isArray(attacks)) attacks = Object.values(attacks);
-
-  var DEF = 'd4';
-
-  // ── Attributs — 2 rangées ──────────────────────────────────────────────
-  // Rangée 1 : FOR AGI VIG RUS TREMP (abrégés, majuscules)
-  // Rangée 2 : Parade Robustesse Allure (noms complets, minuscules)
-  var ROW1 = [{k:'for',l:'FOR'},{k:'agi',l:'AGI'},{k:'vig',l:'VIG'},
-              {k:'rus',l:'RUS'},{k:'tremp',l:'TREMP'}];
-  var ROW2 = [{k:'parade',l:'Parade'},{k:'robustesse',l:'Robustesse'},{k:'allure',l:'Allure'}];
-
-  var statsHtml =
-    '<div class="pk-stats-row" style="margin-bottom:4px">'
-    + ROW1.map(function(x){
-        return '<div class="pk-stat">' + x.l + ' <span class="val">' + escHtml(s[x.k]||DEF) + '</span></div>';
-      }).join('')
-    + '</div>'
-    + '<div class="pk-stats-row">'
-    + ROW2.map(function(x){
-        return '<div class="pk-stat">' + x.l + ' <span class="val">' + escHtml(s[x.k]||DEF) + '</span></div>';
-      }).join('')
-    + '</div>';
-
-  // ── Talent — nom : description ─────────────────────────────────────────
-  var talentHtml = '';
-  if (slot.talent) {
-    talentHtml = '<div class="pk-section-lbl">Talent</div>'
-      + '<div class="pk-capa"><span class="pk-capa-name">' + escHtml(slot.talent) + '</span>'
-      + (slot.talent_desc
-          ? '<span class="pk-capa-desc"> : ' + escHtml(slot.talent_desc) + '</span>'
-          : '')
-      + '</div>';
-  }
-
-  // ── Attaques 4 colonnes ────────────────────────────────────────────────
-  var validAtks = attacks.filter(function(a){ return a && a.name; });
-  var atksHtml = '';
-  if (validAtks.length) {
-    atksHtml = '<div class="pk-section-lbl">Attaques</div>'
-      + '<table class="pk-atk-table">'
-      + '<tr><th>Attaque</th><th>Dommages</th><th>Port\u00e9e</th><th>Effet</th></tr>';
-    validAtks.forEach(function(a) {
-      atksHtml += '<tr>'
-        + '<td class="pk-atk-name">' + escHtml(a.name)       + '</td>'
-        + '<td class="pk-atk-dmg">'  + escHtml(a.dmg||'')    + '</td>'
-        + '<td>'                      + escHtml(a.range||'')  + '</td>'
-        + '<td>'                      + escHtml(a.effect||'') + '</td>'
-        + '</tr>';
-    });
-    atksHtml += '</table>';
-  }
-
-  var notesHtml = slot.notes
-    ? '<div class="pk-note">' + escHtml(slot.notes) + '</div>'
-    : '';
-
-  // ── Mode édition ───────────────────────────────────────────────────────
-  var EDIT_KEYS = ['for','agi','vig','rus','tremp','parade','robustesse','allure'];
-  var EDIT_LBL  = {for:'FOR',agi:'AGI',vig:'VIG',rus:'RUS',tremp:'TREMP',
-                   parade:'Parade',robustesse:'Robustesse',allure:'Allure'};
-  var editStatsHtml = '<div class="pk-stats-grid">';
-  EDIT_KEYS.forEach(function(k) {
-    editStatsHtml += '<div class="pk-stat-field"><label>' + EDIT_LBL[k] + '</label>'
-      + '<input class="pk-edit-input" type="text" data-idx="' + idx + '" data-key="' + k + '"'
-      + ' value="' + escHtml(s[k]||DEF) + '" maxlength="20"></div>';
-  });
-  editStatsHtml += '</div>';
-
-  var editAtksHtml = '';
-  for (var ai = 0; ai < Math.max(attacks.length + 1, 4); ai++) {
-    var atk = attacks[ai] || {name:'',dmg:'',range:'',effect:''};
-    editAtksHtml += '<div class="pk-atk-edit-row">'
-      + '<input type="text" placeholder="Attaque"'
-      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="name"'
-      + ' value="' + escHtml(atk.name||'') + '" maxlength="50">'
-      + '<input type="text" placeholder="Dmg"'
-      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="dmg"'
-      + ' value="' + escHtml(atk.dmg||'') + '" maxlength="20">'
-      + '<input type="text" placeholder="Port\u00e9e"'
-      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="range"'
-      + ' value="' + escHtml(atk.range||'') + '" maxlength="30">'
-      + '<input type="text" placeholder="Effet"'
-      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="effect"'
-      + ' value="' + escHtml(atk.effect||'') + '" maxlength="80">'
-      + '</div>';
-  }
-
-  // ── HTML final ─────────────────────────────────────────────────────────
-  panel.innerHTML =
-    '<div class="pk-card">'
-    + '<div class="pk-card-header">'
-    + '<div class="pk-owner">Slot #' + idx + '</div>'
-    + '<div class="pk-name">' + escHtml(slot.name) + '</div>'
-    + '<div class="pk-meta-row">'
-    + (slot.type   ? '<span class="tag tag-weird">'   + escHtml(slot.type)   + '</span>' : '')
-    + (slot.taille ? '<span class="tag tag-sauvage">' + escHtml(slot.taille) + '</span>' : '')
-    + '</div></div>'
-
-    // Lecture
-    + '<div class="pk-body" id="pk-panel-read">'
-    + talentHtml
-    + '<div class="pk-section-lbl">Attributs</div>'
-    + statsHtml
-    + atksHtml
-    + notesHtml
-    + '</div>'
-
-    // Edition
-    + '<div class="pk-body" id="pk-panel-edit" style="display:none">'
-    + '<div class="pk-section-lbl">Talent</div>'
-    + '<input class="pk-edit-input" type="text" id="pk-talent-input"'
-    + ' style="width:100%;margin-bottom:4px"'
-    + ' data-idx="' + idx + '" data-key="talent"'
-    + ' value="' + escHtml(slot.talent||'') + '" maxlength="80" placeholder="Nom du talent">'
-    + '<input class="pk-edit-input" type="text" id="pk-talent-desc-input"'
-    + ' style="width:100%;margin-bottom:10px"'
-    + ' data-idx="' + idx + '" data-key="talent_desc"'
-    + ' value="' + escHtml(slot.talent_desc||'') + '" maxlength="200" placeholder="Description du talent...">'
-    + '<div class="pk-section-lbl">Attributs</div>'
-    + editStatsHtml
-    + '<div class="pk-section-lbl" style="margin-top:10px">Attaques</div>'
-    + editAtksHtml
-    + '<div class="pk-section-lbl" style="margin-top:10px">Notes</div>'
-    + '<textarea class="pk-notes-ta">' + escHtml(slot.notes||'') + '</textarea>'
-    + '</div>'
-    + '</div>'
-
-    + '<div style="display:flex;gap:6px;margin-top:10px;justify-content:flex-end">'
-    + '<button class="btn-edit" id="pk-btn-edit">Modifier</button>'
-    + '<button class="btn-save" id="pk-btn-save" style="display:none">Sauvegarder</button>'
-    + '<button class="btn-danger" id="pk-btn-del">Retirer</button>'
-    + '</div>';
-
-  panel.querySelector('#pk-btn-edit').addEventListener('click', function() {
-    document.getElementById('pk-panel-read').style.display = 'none';
-    document.getElementById('pk-panel-edit').style.display = '';
-    this.style.display = 'none';
-    panel.querySelector('#pk-btn-save').style.display = '';
-  });
-
-  panel.querySelector('#pk-btn-save').addEventListener('click', function() {
-    var curIdx = parseInt(panel.querySelector('[data-idx]').dataset.idx);
-    if (!state.team[curIdx]) return;
-    if (!state.team[curIdx].stats) state.team[curIdx].stats = {};
-
-    var ti = document.getElementById('pk-talent-input');
-    if (ti) state.team[curIdx].talent = ti.value.trim();
-    var tdi = document.getElementById('pk-talent-desc-input');
-    if (tdi) state.team[curIdx].talent_desc = tdi.value.trim();
-
-    panel.querySelectorAll('.pk-edit-input').forEach(function(inp) {
-      if (inp.dataset.key && inp.dataset.key !== 'talent' && inp.dataset.key !== 'talent_desc') {
-        state.team[curIdx].stats[inp.dataset.key] = inp.value.trim();
-      }
-    });
-
-    var atksMap = {};
-    panel.querySelectorAll('.pk-atk-edit-row input').forEach(function(inp) {
-      var ai = inp.dataset.ai; var field = inp.dataset.field;
-      if (ai === undefined) return;
-      if (!atksMap[ai]) atksMap[ai] = {name:'',dmg:'',range:'',effect:''};
-      atksMap[ai][field] = inp.value.trim();
-    });
-    var newAtks = [];
-    Object.keys(atksMap).sort().forEach(function(ai) {
-      if (atksMap[ai].name) newAtks.push(atksMap[ai]);
-    });
-    state.team[curIdx].stats.attacks = newAtks;
-
-    var ta = panel.querySelector('.pk-notes-ta');
-    if (ta) state.team[curIdx].notes = ta.value;
-
-    saveState();
-    document.getElementById('pk-panel-read').style.display = '';
-    document.getElementById('pk-panel-edit').style.display = 'none';
-    this.style.display = 'none';
-    panel.querySelector('#pk-btn-edit').style.display = '';
-    renderPanel();
-  });
-
-  panel.querySelector('#pk-btn-del').addEventListener('click', function() {
-    removePokemon(state.activeSlot);
-  });
-}
 
 /* ══════════════════════════════════════════════════════
    SYNC TEMPS REEL — SSE Firebase
@@ -2399,6 +2213,306 @@ function applyRemoteUpdate(rec) {
     if (document.getElementById('b2'))  document.getElementById('b2').checked  = b.b2  || false;
     if (document.getElementById('bko')) document.getElementById('bko').checked = b.bko || false;
   }
+}
+var _pokedexAttaques = null;
+
+function loadPokedexAttaques(cb) {
+  if (_pokedexAttaques) { cb(_pokedexAttaques); return; }
+  /* Firebase /attaques.json */
+  fetch('https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app/attaques.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var arr = Array.isArray(data) ? data
+        : Object.keys(data).filter(function(k){ return !isNaN(parseInt(k)); })
+            .sort(function(a,b){ return parseInt(a)-parseInt(b); })
+            .map(function(k){ return data[k]; });
+      _pokedexAttaques = arr.filter(function(a){ return a && a.name; });
+      cb(_pokedexAttaques);
+    })
+    .catch(function() { cb([]); });
+}
+function closeAllAtkAc() {
+  document.querySelectorAll('.atk-ac-list').forEach(function(l){ l.classList.remove('open'); });
+}
+function initAtkAutocomplete(inputEl, ai, idx) {
+  var list = inputEl.parentElement.querySelector('.atk-ac-list');
+  if (!list) return;
+
+  inputEl.addEventListener('focus', function() {
+    loadPokedexAttaques(function() {
+      filterAtkAc(inputEl, list, ai, idx);
+    });
+  });
+
+  inputEl.addEventListener('input', function() {
+    filterAtkAc(inputEl, list, ai, idx);
+  });
+
+  inputEl.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { list.classList.remove('open'); }
+    if (e.key === 'ArrowDown') {
+      var first = list.querySelector('.atk-ac-item');
+      if (first) first.focus();
+      e.preventDefault();
+    }
+  });
+
+  list.addEventListener('keydown', function(e) {
+    var items = list.querySelectorAll('.atk-ac-item');
+    var focused = document.activeElement;
+    var idx_el = Array.prototype.indexOf.call(items, focused);
+    if (e.key === 'ArrowDown' && idx_el < items.length - 1) {
+      items[idx_el + 1].focus(); e.preventDefault();
+    } else if (e.key === 'ArrowUp') {
+      if (idx_el > 0) items[idx_el - 1].focus();
+      else inputEl.focus();
+      e.preventDefault();
+    } else if (e.key === 'Enter' && focused.classList.contains('atk-ac-item')) {
+      focused.click(); e.preventDefault();
+    } else if (e.key === 'Escape') {
+      list.classList.remove('open'); inputEl.focus();
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!inputEl.parentElement.contains(e.target)) {
+      list.classList.remove('open');
+    }
+  });
+}
+function filterAtkAc(inputEl, list, ai, idx) {
+  if (!_pokedexAttaques) return;
+  var q = inputEl.value.toLowerCase().trim();
+  var results = q
+    ? _pokedexAttaques.filter(function(a){ return a.name.toLowerCase().indexOf(q) >= 0; })
+    : _pokedexAttaques.slice(0, 20);
+
+  if (!results.length) { list.classList.remove('open'); return; }
+
+  list.innerHTML = '';
+  results.slice(0, 15).forEach(function(a) {
+    var item = document.createElement('div');
+    item.className = 'atk-ac-item';
+    item.tabIndex = 0;
+    item.innerHTML =
+      '<div class="atk-ac-name">' + a.name + '</div>'
+      + '<div class="atk-ac-meta">'
+      + (a.dmg   ? a.dmg   + '&nbsp;&nbsp;' : '')
+      + (a.range ? a.range + '&nbsp;&nbsp;' : '')
+      + (a.effect ? a.effect.slice(0,40) + (a.effect.length>40?'…':'') : '')
+      + '</div>';
+
+    item.addEventListener('click', function() {
+      selectAtkAc(a, ai, idx);
+      list.classList.remove('open');
+    });
+    list.appendChild(item);
+  });
+  list.classList.add('open');
+}
+function selectAtkAc(atk, ai, idx) {
+  /* Remplir les 4 inputs de la ligne */
+  var nameEl   = document.querySelector('[data-ai="' + ai + '"][data-field="name"]');
+  var dmgEl    = document.querySelector('[data-ai="' + ai + '"][data-field="dmg"]');
+  var rangeEl  = document.querySelector('[data-ai="' + ai + '"][data-field="range"]');
+  var effectEl = document.querySelector('[data-ai="' + ai + '"][data-field="effect"]');
+  if (nameEl)   nameEl.value   = atk.name   || '';
+  if (dmgEl)    dmgEl.value    = atk.dmg    || '';
+  if (rangeEl)  rangeEl.value  = atk.range  || '';
+  if (effectEl) effectEl.value = atk.effect || '';
+}
+function renderPanel() {
+  var panel = document.getElementById('team-panel');
+  if (!panel) return;
+  var slot = state.team[state.activeSlot];
+  if (!slot) {
+    panel.innerHTML = '<div style="padding:28px;text-align:center;color:var(--muted);font-size:13px">Cliquez sur un slot pour ajouter un Pok\u00e9mon.</div>';
+    return;
+  }
+  if (state.activeSlot === 0) {
+    var pk = document.getElementById('partner-pk-card');
+    if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
+    return;
+  }
+
+  var idx     = state.activeSlot;
+  var s       = slot.stats || {};
+  var attacks = s.attacks || [];
+  if (!Array.isArray(attacks)) attacks = Object.values(attacks);
+
+  var DEF = 'd4';
+  var ROW1 = [{k:'for',l:'FOR'},{k:'agi',l:'AGI'},{k:'vig',l:'VIG'},
+              {k:'rus',l:'RUS'},{k:'tremp',l:'TREMP'}];
+  var ROW2 = [{k:'parade',l:'Parade'},{k:'robustesse',l:'Robustesse'},{k:'allure',l:'Allure'}];
+
+  var statsHtml =
+    '<div class="pk-stats-row" style="margin-bottom:4px">'
+    + ROW1.map(function(x){
+        return '<div class="pk-stat">' + x.l + ' <span class="val">' + escHtml(s[x.k]||DEF) + '</span></div>';
+      }).join('')
+    + '</div>'
+    + '<div class="pk-stats-row">'
+    + ROW2.map(function(x){
+        return '<div class="pk-stat">' + x.l + ' <span class="val">' + escHtml(s[x.k]||DEF) + '</span></div>';
+      }).join('')
+    + '</div>';
+
+  var talentHtml = '';
+  if (slot.talent) {
+    talentHtml = '<div class="pk-section-lbl">Talent</div>'
+      + '<div class="pk-capa"><span class="pk-capa-name">' + escHtml(slot.talent) + '</span>'
+      + (slot.talent_desc ? '<span class="pk-capa-desc"> : ' + escHtml(slot.talent_desc) + '</span>' : '')
+      + '</div>';
+  }
+
+  var validAtks = attacks.filter(function(a){ return a && a.name; });
+  var atksHtml = '';
+  if (validAtks.length) {
+    atksHtml = '<div class="pk-section-lbl">Attaques</div>'
+      + '<table class="pk-atk-table">'
+      + '<tr><th>Attaque</th><th>Dommages</th><th>Port\u00e9e</th><th>Effet</th></tr>';
+    validAtks.forEach(function(a) {
+      atksHtml += '<tr>'
+        + '<td class="pk-atk-name">' + escHtml(a.name)       + '</td>'
+        + '<td class="pk-atk-dmg">'  + escHtml(a.dmg||'')    + '</td>'
+        + '<td>'                      + escHtml(a.range||'')  + '</td>'
+        + '<td>'                      + escHtml(a.effect||'') + '</td>'
+        + '</tr>';
+    });
+    atksHtml += '</table>';
+  }
+
+  var notesHtml = slot.notes ? '<div class="pk-note">' + escHtml(slot.notes) + '</div>' : '';
+
+  /* Mode édition */
+  var EDIT_KEYS = ['for','agi','vig','rus','tremp','parade','robustesse','allure'];
+  var EDIT_LBL  = {for:'FOR',agi:'AGI',vig:'VIG',rus:'RUS',tremp:'TREMP',
+                   parade:'Parade',robustesse:'Robustesse',allure:'Allure'};
+  var editStatsHtml = '<div class="pk-stats-grid">';
+  EDIT_KEYS.forEach(function(k) {
+    editStatsHtml += '<div class="pk-stat-field"><label>' + EDIT_LBL[k] + '</label>'
+      + '<input class="pk-edit-input" type="text" data-idx="' + idx + '" data-key="' + k + '"'
+      + ' value="' + escHtml(s[k]||DEF) + '" maxlength="20"></div>';
+  });
+  editStatsHtml += '</div>';
+
+  /* Attaques éditables avec autocomplete sur le champ "name" */
+  var editAtksHtml = '';
+  for (var ai = 0; ai < Math.max(attacks.length + 1, 4); ai++) {
+    var atk = attacks[ai] || {name:'',dmg:'',range:'',effect:''};
+    editAtksHtml += '<div class="pk-atk-edit-row">'
+      /* Champ nom avec wrapper autocomplete */
+      + '<div class="atk-ac-wrap">'
+      + '<input type="text" placeholder="Attaque"'
+      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="name"'
+      + ' value="' + escHtml(atk.name||'') + '" maxlength="50" autocomplete="off">'
+      + '<div class="atk-ac-list" id="atk-ac-' + ai + '"></div>'
+      + '</div>'
+      + '<input type="text" placeholder="Dmg"'
+      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="dmg"'
+      + ' value="' + escHtml(atk.dmg||'') + '" maxlength="20">'
+      + '<input type="text" placeholder="Port\u00e9e"'
+      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="range"'
+      + ' value="' + escHtml(atk.range||'') + '" maxlength="30">'
+      + '<input type="text" placeholder="Effet"'
+      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="effect"'
+      + ' value="' + escHtml(atk.effect||'') + '" maxlength="80">'
+      + '</div>';
+  }
+
+  panel.innerHTML =
+    '<div class="pk-card">'
+    + '<div class="pk-card-header">'
+    + '<div class="pk-owner">Slot #' + idx + '</div>'
+    + '<div class="pk-name">' + escHtml(slot.name) + '</div>'
+    + (slot.talent ? '<div class="pk-species">' + escHtml(slot.talent) + '</div>' : '')
+    + '<div class="pk-meta-row">'
+    + (slot.type   ? '<span class="tag tag-weird">'   + escHtml(slot.type)   + '</span>' : '')
+    + (slot.taille ? '<span class="tag tag-sauvage">' + escHtml(slot.taille) + '</span>' : '')
+    + '</div></div>'
+    + '<div class="pk-body" id="pk-panel-read">'
+    + talentHtml
+    + '<div class="pk-section-lbl">Attributs</div>'
+    + statsHtml + atksHtml + notesHtml
+    + '</div>'
+    + '<div class="pk-body" id="pk-panel-edit" style="display:none">'
+    + '<div class="pk-section-lbl">Talent</div>'
+    + '<input class="pk-edit-input" type="text" id="pk-talent-input"'
+    + ' style="width:100%;margin-bottom:4px"'
+    + ' data-idx="' + idx + '" data-key="talent"'
+    + ' value="' + escHtml(slot.talent||'') + '" maxlength="80" placeholder="Nom du talent">'
+    + '<input class="pk-edit-input" type="text" id="pk-talent-desc-input"'
+    + ' style="width:100%;margin-bottom:10px"'
+    + ' data-idx="' + idx + '" data-key="talent_desc"'
+    + ' value="' + escHtml(slot.talent_desc||'') + '" maxlength="200" placeholder="Description...">'
+    + '<div class="pk-section-lbl">Attributs</div>'
+    + editStatsHtml
+    + '<div class="pk-section-lbl" style="margin-top:10px">Attaques'
+    + ' <span style="font-size:9px;font-weight:400;color:var(--muted);margin-left:8px">'
+    + 'Tapez pour chercher dans le Pok\u00e9dex</span></div>'
+    + editAtksHtml
+    + '<div class="pk-section-lbl" style="margin-top:10px">Notes</div>'
+    + '<textarea class="pk-notes-ta">' + escHtml(slot.notes||'') + '</textarea>'
+    + '</div>'
+    + '</div>'
+    + '<div style="display:flex;gap:6px;margin-top:10px;justify-content:flex-end">'
+    + '<button class="btn-edit" id="pk-btn-edit">Modifier</button>'
+    + '<button class="btn-save" id="pk-btn-save" style="display:none">Sauvegarder</button>'
+    + '<button class="btn-danger" id="pk-btn-del">Retirer</button>'
+    + '</div>';
+
+  /* Bouton Modifier */
+  panel.querySelector('#pk-btn-edit').addEventListener('click', function() {
+    document.getElementById('pk-panel-read').style.display = 'none';
+    document.getElementById('pk-panel-edit').style.display = '';
+    this.style.display = 'none';
+    panel.querySelector('#pk-btn-save').style.display = '';
+    /* Initialiser l'autocomplete sur chaque champ "name" */
+    panel.querySelectorAll('.atk-ac-wrap input').forEach(function(inp) {
+      var ai2 = parseInt(inp.dataset.ai);
+      initAtkAutocomplete(inp, ai2, idx);
+    });
+  });
+
+  /* Bouton Sauvegarder */
+  panel.querySelector('#pk-btn-save').addEventListener('click', function() {
+    var curIdx = parseInt(panel.querySelector('[data-idx]').dataset.idx);
+    if (!state.team[curIdx]) return;
+    if (!state.team[curIdx].stats) state.team[curIdx].stats = {};
+    var ti  = document.getElementById('pk-talent-input');
+    if (ti) state.team[curIdx].talent = ti.value.trim();
+    var tdi = document.getElementById('pk-talent-desc-input');
+    if (tdi) state.team[curIdx].talent_desc = tdi.value.trim();
+    panel.querySelectorAll('.pk-edit-input').forEach(function(inp) {
+      if (inp.dataset.key && inp.dataset.key !== 'talent' && inp.dataset.key !== 'talent_desc') {
+        state.team[curIdx].stats[inp.dataset.key] = inp.value.trim();
+      }
+    });
+    var atksMap = {};
+    panel.querySelectorAll('.pk-atk-edit-row input, .pk-atk-edit-row .atk-ac-wrap input').forEach(function(inp) {
+      var ai3 = inp.dataset.ai; var field = inp.dataset.field;
+      if (ai3 === undefined) return;
+      if (!atksMap[ai3]) atksMap[ai3] = {name:'',dmg:'',range:'',effect:''};
+      atksMap[ai3][field] = inp.value.trim();
+    });
+    var newAtks = [];
+    Object.keys(atksMap).sort().forEach(function(ai4) {
+      if (atksMap[ai4].name) newAtks.push(atksMap[ai4]);
+    });
+    state.team[curIdx].stats.attacks = newAtks;
+    var ta = panel.querySelector('.pk-notes-ta');
+    if (ta) state.team[curIdx].notes = ta.value;
+    saveState();
+    document.getElementById('pk-panel-read').style.display = '';
+    document.getElementById('pk-panel-edit').style.display = 'none';
+    this.style.display = 'none';
+    panel.querySelector('#pk-btn-edit').style.display = '';
+    renderPanel();
+  });
+
+  panel.querySelector('#pk-btn-del').addEventListener('click', function() {
+    removePokemon(state.activeSlot);
+  });
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
