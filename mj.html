@@ -971,14 +971,7 @@
   .mj-pnote-ok.on{display:inline;}
 
   /* separateur scenario PNJ */
-  .pnj-scenario-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 28px 0 16px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid var(--amber-dim);
-  }
+  .pnj-scenario-header { display:none; }
   .pnj-scenario-header:first-child { margin-top: 0; }
   .pnj-scenario-num {
     font-family: var(--mono);
@@ -1009,6 +1002,16 @@
 
   .groupe-grid { display:grid; grid-template-columns:1fr 1fr;
     gap:24px; align-items:start; }
+
+  .pnj-scenario-acc { cursor:pointer; user-select:none; display:flex;
+    align-items:center; gap:12px; margin:28px 0 0; padding-bottom:8px;
+    border-bottom:2px solid var(--amber-dim); transition:opacity .12s; }
+  .pnj-scenario-acc:hover { opacity:.85; }
+  .pnj-scenario-acc .chapter-chevron { margin-left:auto; font-size:12px;
+    color:var(--amber); transition:transform .2s; }
+  .pnj-scenario-acc.open .chapter-chevron { transform:rotate(90deg); }
+  .pnj-scenario-body { display:none; padding-top:16px; }
+  .pnj-scenario-body.open { display:block; }
 </style>
 </head>
 <body>
@@ -1468,7 +1471,8 @@
       <div class="page-title">Fiches PNJ</div>
       <div class="page-tagline">Organis&eacute;es par sc&eacute;nario</div>
 
-      <div class="pnj-scenario-header"><span class="pnj-scenario-num">Sc&eacute;nario 01</span><span class="pnj-scenario-name">La Ville Morte</span></div>
+      <div class="pnj-scenario-acc" id="scn-btn-scn1" onclick="toggleScenario('scn1')"><span class="pnj-scenario-num">Sc&eacute;nario 01</span><span class="pnj-scenario-name">La Ville Morte</span><span class="chapter-chevron">&#9654;</span></div>
+<div class="pnj-scenario-body" id="scn-body-scn1">
       <div class="section-title" style="margin-bottom:12px">Alli&eacute;s &mdash; Jokers</div>
       <div class="pnj-card" id="pnj-kaito">
         <div class="pnj-header" onclick="togglePnj('pnj-kaito')">
@@ -1613,7 +1617,9 @@
         </div>
       </div>
 
-      <div class="pnj-scenario-header"><span class="pnj-scenario-num">Sc&eacute;nario 02</span><span class="pnj-scenario-name">Le Grand Tournoi de Carmin sur Mer</span></div>
+      </div>
+<div class="pnj-scenario-acc" id="scn-btn-scn2" onclick="toggleScenario('scn2')"><span class="pnj-scenario-num">Sc&eacute;nario 02</span><span class="pnj-scenario-name">Le Grand Tournoi de Carmin sur Mer</span><span class="chapter-chevron">&#9654;</span></div>
+<div class="pnj-scenario-body" id="scn-body-scn2">
       <div class="section-title" style="margin-bottom:12px">Antagonistes</div>
       <div class="pnj-card" id="pnj-drevin">
         <div class="pnj-header" onclick="togglePnj('pnj-drevin')">
@@ -1720,7 +1726,8 @@
 
     
 
-    <div class="section" id="tab-bestiaire">
+    <div class="section" </div>
+id="tab-bestiaire">
   <div class="page-title">Bestiaire</div>
   <div class="page-tagline">65 entrées · Pokémon Kanto</div>
 
@@ -3302,6 +3309,13 @@
 </main>
 
 <script>
+function toggleScenario(id) {
+  var btn  = document.getElementById('scn-btn-' + id);
+  var body = document.getElementById('scn-body-' + id);
+  if (!btn || !body) return;
+  btn.classList.toggle('open');
+  body.classList.toggle('open');
+}
 // ── Navigation principale ────────────────────────────────────────────────
 function showTab(tab, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
