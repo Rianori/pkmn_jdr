@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savage Pokemon</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; background:#0a0a0c; display:flex;
+  align-items:center; justify-content:center;
+  font-family:'IBM Plex Mono',monospace; }
+
+#pokedex {
+  width:260px; background:#c0141c;
+  border-radius:12px 12px 8px 8px;
+  border:2px solid #8a0e14;
+  box-shadow:0 0 0 1px #ff4444 inset;
+  padding:16px 16px 12px;
+}
+
+.pdx-top { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.pdx-eye { width:36px; height:36px; border-radius:50%;
+  background:#222; border:3px solid #444; position:relative; overflow:hidden; }
+.pdx-eye-inner { position:absolute; width:20px; height:20px; border-radius:50%;
+  background:#1a6ef7; top:50%; left:50%; transform:translate(-50%,-50%);
+  transition:background .3s; }
+.pdx-eye-inner.on { background:#4fc3ff; }
+.pdx-dots { display:flex; gap:5px; }
+.pdx-dot { width:10px; height:10px; border-radius:50%; }
+.pdx-dot.r { background:#8a0e14; } .pdx-dot.r.lit { background:#ff4444; }
+.pdx-dot.y { background:#a07000; } .pdx-dot.y.lit { background:#f5c518; }
+.pdx-dot.g { background:#0a5a0a; } .pdx-dot.g.lit { background:#22dd22; }
+.pdx-hinge { height:6px; background:#8a0e14; border-radius:2px; margin-bottom:12px; }
+.pdx-screen-wrap { background:#111; border-radius:4px; border:2px solid #333; padding:2px; }
+.pdx-screen { background:#0d1a0d; border-radius:3px; height:160px;
+  padding:10px; overflow:hidden; position:relative; }
+.pdx-scanline { position:absolute; top:0; left:0; right:0; height:2px;
+  background:rgba(100,255,100,.12); animation:scan 2s linear infinite; pointer-events:none; }
+@keyframes scan { 0%{top:0} 100%{top:100%} }
+
+.pdx-line { font-size:11px; color:#00cc44; line-height:1.6; white-space:nowrap;
+  overflow:hidden; opacity:0; max-width:0; transition:max-width .4s ease,opacity .2s; }
+.pdx-line.shown { opacity:1; max-width:100%; }
+.pdx-line.dim   { color:#005522; }
+.pdx-line.amber { color:#c8922a; }
+.pdx-line.white { color:#cccccc; }
+
+.pdx-cursor { display:inline-block; width:7px; height:12px; background:#00cc44;
+  animation:blink .8s step-end infinite; vertical-align:middle; margin-left:2px; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.pdx-bar-wrap { margin-top:4px; height:6px; background:#001a00; border-radius:2px;
+  overflow:hidden; opacity:0; transition:opacity .3s; }
+.pdx-bar-wrap.shown { opacity:1; }
+.pdx-bar { height:100%; width:0%; background:#00cc44; border-radius:2px;
+  transition:width .05s linear; }
+
+.pdx-bottom { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+.pdx-dpad { width:36px; height:36px; background:#8a0e14; border-radius:4px; }
+.pdx-btns { display:flex; gap:6px; }
+.pdx-btn { width:14px; height:14px; border-radius:50%; background:#8a0e14; }
+.pdx-btn.lit { background:#ff9900; }
+</style>
+</head>
+<body>
+
+<div id="pokedex">
+  <div class="pdx-top">
+    <div class="pdx-eye"><div class="pdx-eye-inner" id="eye"></div></div>
+    <div class="pdx-dots">
+      <div class="pdx-dot r" id="dot-r"></div>
+      <div class="pdx-dot y" id="dot-y"></div>
+      <div class="pdx-dot g" id="dot-g"></div>
+    </div>
+  </div>
+  <div class="pdx-hinge"></div>
+  <div class="pdx-screen-wrap">
+    <div class="pdx-screen">
+      <div class="pdx-scanline"></div>
+      <div id="lines"></div>
+      <div class="pdx-bar-wrap" id="bar-wrap"><div class="pdx-bar" id="bar"></div></div>
+    </div>
+  </div>
+  <div class="pdx-bottom">
+    <div class="pdx-dpad"></div>
+    <div class="pdx-btns">
+      <div class="pdx-btn" id="btn1"></div>
+      <div class="pdx-btn" id="btn2"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var LINES = [
+  { text: 'SAVAGE POKEMON v2.0',  cls: 'white', delay: 0 },
+  { text: 'Prof Rianori - 2026',  cls: 'dim',   delay: 300 },
+  { text: '\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500', cls: 'dim', delay: 500 },
+  { text: 'System check ...',     cls: '',       delay: 900 },
+  { text: '> Character  [OK]',    cls: 'dim',    delay: 1300 },
+  { text: '> Pkmn Team  [OK]',    cls: 'dim',    delay: 1700 },
+  { text: '> Connexion  [OK]',    cls: 'dim',    delay: 2100 },
+  { text: 'Loading adventure...', cls: 'amber',  delay: 2600, bar: true },
+  { text: 'READY.',               cls: 'white',  delay: 4800, blink: true },
+];
+
+setTimeout(function(){ document.getElementById('eye').classList.add('on'); }, 200);
+setTimeout(function(){ document.getElementById('dot-r').classList.add('lit'); }, 400);
+setTimeout(function(){ document.getElementById('dot-y').classList.add('lit'); }, 600);
+setTimeout(function(){ document.getElementById('dot-g').classList.add('lit'); }, 800);
+
+LINES.forEach(function(l) {
+  setTimeout(function() {
+    var el = document.createElement('div');
+    el.className = 'pdx-line' + (l.cls ? ' ' + l.cls : '');
+    el.innerHTML = l.text + (l.blink ? '<span class="pdx-cursor"></span>' : '');
+    document.getElementById('lines').appendChild(el);
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){ el.classList.add('shown'); });
+    });
+    if (l.bar) {
+      var bw = document.getElementById('bar-wrap');
+      var bar = document.getElementById('bar');
+      bw.classList.add('shown');
+      var pct = 0;
+      var iv = setInterval(function(){
+        pct++; bar.style.width = pct + '%';
+        if (pct >= 100) clearInterval(iv);
+      }, 22);
+    }
+  }, l.delay);
+});
+
+setTimeout(function(){
+  document.getElementById('btn1').classList.add('lit');
+  document.getElementById('btn2').classList.add('lit');
+}, 5000);
+
+// Redirection vers index.html après READY
+setTimeout(function(){
+  window.location.href = 'index.html';
+}, 5800);
+</script>
+</body>
+</html>
