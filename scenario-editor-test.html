@@ -99,6 +99,19 @@ header { display:flex; align-items:center; gap:16px; padding:14px 24px;
 .add-acte-btn:hover { border-color:var(--amber-dim); color:var(--amber); }
 
 .empty-state { text-align:center; padding:60px 20px; color:var(--muted); font-size:13px; }
+
+  .intro-conclu-block { border:1px solid var(--amber-dim); border-radius:var(--radius);
+    margin-bottom:20px; overflow:hidden; background:rgba(200,146,42,.03); }
+  .intro-conclu-header { display:flex; align-items:center; gap:10px; padding:12px 18px;
+    background:var(--card); border-bottom:1px solid var(--border); }
+  .intro-conclu-label { font-family:var(--mono); font-size:10px; font-weight:700;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--amber); flex-shrink:0; }
+  .intro-conclu-cols { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+  .add-conclu-btn { font-family:var(--mono); font-size:11px; letter-spacing:.04em;
+    background:none; border:1px dashed var(--border); border-radius:var(--radius);
+    color:var(--muted); padding:14px 18px; cursor:pointer; width:100%;
+    transition:border-color .15s,color .15s; margin-top:12px; }
+  .add-conclu-btn:hover { border-color:var(--amber-dim); color:var(--amber); }
 </style>
 </head>
 <body>
@@ -116,10 +129,41 @@ header { display:flex; align-items:center; gap:16px; padding:14px 24px;
   <input class="tagline-input" id="sc-tagline" placeholder="Accroche du scenario..." value="Une accroche de demonstration pour valider le concept.">
 </div>
 
-<div class="main" id="actes-container"></div>
+<div class="main">
+  <div class="intro-conclu-block">
+    <div class="intro-conclu-header"><span class="intro-conclu-label">Introduction</span></div>
+    <div class="scene-cols">
+      <div class="scene-col histoire">
+        <span class="scene-col-label">Histoire</span>
+        <textarea class="scene-textarea" id="intro-histoire" placeholder="Mise en place, contexte de depart..."></textarea>
+      </div>
+      <div class="scene-col notes">
+        <span class="scene-col-label">Notes MJ</span>
+        <textarea class="scene-textarea" id="intro-notes" placeholder="Reperes, ambiance, objectifs caches..."></textarea>
+      </div>
+    </div>
+  </div>
+  <div id="actes-container"></div>
+  <div class="intro-conclu-block" id="conclusion-block" style="display:none">
+    <div class="intro-conclu-header"><span class="intro-conclu-label">Conclusion</span>
+      <button class="acte-del-btn" style="margin-left:auto" onclick="removeConclusion()">Retirer</button>
+    </div>
+    <div class="scene-cols">
+      <div class="scene-col histoire">
+        <span class="scene-col-label">Histoire</span>
+        <textarea class="scene-textarea" id="conclu-histoire" placeholder="Resolution, epilogue..."></textarea>
+      </div>
+      <div class="scene-col notes">
+        <span class="scene-col-label">Notes MJ</span>
+        <textarea class="scene-textarea" id="conclu-notes" placeholder="Consequences, suite possible..."></textarea>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div style="max-width:1400px;margin:0 auto;padding:0 24px 40px">
   <button class="add-acte-btn" onclick="addActe()">+ Nouvel Acte</button>
+  <button class="add-conclu-btn" id="add-conclu-btn" onclick="toggleConclusion()">+ Conclusion</button>
 </div>
 
 <script>
@@ -130,8 +174,27 @@ var state = {
   title: 'Scenario de test',
   tagline: '',
   campagne: 0,
+  intro: { histoire: '', notes: '' },
+  conclusion: null,
   actes: []
 };
+
+function toggleConclusion() {
+  if (state.conclusion === null) {
+    state.conclusion = { histoire: '', notes: '' };
+    document.getElementById('conclusion-block').style.display = '';
+    document.getElementById('add-conclu-btn').style.display = 'none';
+  }
+}
+
+function removeConclusion() {
+  if (!confirm('Retirer la conclusion ?')) return;
+  state.conclusion = null;
+  document.getElementById('conclusion-block').style.display = 'none';
+  document.getElementById('add-conclu-btn').style.display = '';
+  document.getElementById('conclu-histoire').value = '';
+  document.getElementById('conclu-notes').value = '';
+}
 
 function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2,7);
@@ -179,6 +242,7 @@ function render() {
   var container = document.getElementById('actes-container');
   if (!state.actes.length) {
     container.innerHTML = '<div class="empty-state">Aucun acte pour le moment. Cliquez sur "+ Nouvel Acte" pour commencer.</div>';
+    attachListeners();
     return;
   }
 
@@ -225,6 +289,15 @@ function render() {
 }
 
 function attachListeners() {
+  var introH = document.getElementById('intro-histoire');
+  var introN = document.getElementById('intro-notes');
+  if (introH) introH.addEventListener('input', function(){ state.intro.histoire = this.value; });
+  if (introN) introN.addEventListener('input', function(){ state.intro.notes = this.value; });
+  var concluH = document.getElementById('conclu-histoire');
+  var concluN = document.getElementById('conclu-notes');
+  if (concluH) concluH.addEventListener('input', function(){ if(state.conclusion) state.conclusion.histoire = this.value; });
+  if (concluN) concluN.addEventListener('input', function(){ if(state.conclusion) state.conclusion.notes = this.value; });
+
   document.querySelectorAll('.acte-title-input').forEach(function(inp) {
     inp.addEventListener('input', function() {
       var acte = state.actes.find(function(a){ return a.id === this.dataset.acte; }.bind(this));
@@ -281,8 +354,17 @@ function loadScenario() {
       if (data) {
         state = data;
         if (!state.actes) state.actes = [];
+        if (!state.intro) state.intro = { histoire:'', notes:'' };
         document.getElementById('sc-title').value = state.title || '';
         document.getElementById('sc-tagline').value = state.tagline || '';
+        document.getElementById('intro-histoire').value = state.intro.histoire || '';
+        document.getElementById('intro-notes').value = state.intro.notes || '';
+        if (state.conclusion) {
+          document.getElementById('conclusion-block').style.display = '';
+          document.getElementById('add-conclu-btn').style.display = 'none';
+          document.getElementById('conclu-histoire').value = state.conclusion.histoire || '';
+          document.getElementById('conclu-notes').value = state.conclusion.notes || '';
+        }
       }
       render();
     })
