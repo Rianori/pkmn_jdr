@@ -1082,24 +1082,14 @@
       </div>
     </div>
     <div class="aside-tab-section" id="aside-bestiaire" style="display:none">
-      <div class="aside-group"><div class="aside-label">Filtres</div>
-        <button onclick="filterBeast('all',this)">Tous</button>
-        <button onclick="filterBeast('sauvage',this)">Sauvages</button>
-        <button onclick="filterBeast('psi',this)">PSI-B</button>
-        <button onclick="filterBeast('allies',this)">Alli&eacute;s</button>
-        <button onclick="filterBeast('elites',this)">&Eacute;lites</button>
-        <button onclick="filterBeast('boss',this)">Boss</button>
-        <button onclick="filterBeast('sc02',this)">Carmin s/ Mer</button>
-        <button onclick="filterBeast('alpha9',this)">Alpha-9</button>
-      </div>
-      <div class="aside-group"><div class="aside-label">Par PNJ (Sc. 02)</div>
-        <button onclick="filterByPnj('all',this)">Tous</button>
-        <button onclick="filterByPnj('drevin',this)">Drevin</button>
-        <button onclick="filterByPnj('alban',this)">Alban</button>
-        <button onclick="filterByPnj('bob',this)">Major Bob</button>
-        <button onclick="filterByPnj('volt',this)">Volt</button>
-        <button onclick="filterByPnj('nessa',this)">Nessa</button>
-        <button onclick="filterByPnj('ondine',this)">Ondine</button>
+            <div class="aside-group"><div class="aside-label">Catégories</div>
+        <button onclick="toggleBgroup('sauvage')">Sauvages</button>
+        <button onclick="toggleBgroup('allies')">Spéciaux</button>
+        <button onclick="toggleBgroup('alpha9')">Alpha-9</button>
+        <button onclick="toggleBgroup('psi')">PSI-B</button>
+        <button onclick="toggleBgroup('elites')">Elite ★</button>
+        <button onclick="toggleBgroup('boss')">Boss ★★ &amp; Légendaires</button>
+        <button onclick="toggleBgroup('sc02')">de Dresseurs</button>
       </div>
     </div>
 
@@ -1235,7 +1225,7 @@
           <div class="edge-block"><div class="block-name"><span class="tag tag-background">Background</span> Vétérinaire Pokémon</div><div class="block-desc">+2 aux jets de Médecine Pokémon. Peut stabiliser un Pokémon à 0 PV en 1 round.</div></div><div class="edge-block"><div class="block-name"><span class="tag tag-background">Survie</span> Pisteur (Tracker)</div><div class="block-desc">Peut suivre une piste jusqu'à 24h. +2 à Survie en milieu naturel.</div></div><div class="edge-block"><div class="block-name"><span class="tag tag-background">Pokémon</span> Lien Profond (Noctali)</div><div class="block-desc">Noctali détecte les émotions hostiles dans un rayon de 30m. +2 à Perception (Notice) pour Téléra et Noctali en équipe.</div></div>
           <div class="hindrance-block"><div class="block-name"><span class="tag tag-majeur">Majeur</span> Protecteur compulsif</div><div class="block-desc">Ne peut pas laisser un Pokémon blessé ou en danger sans intervenir, même si ça compromet la mission. Jet de Trempe d10 diff. 6 pour s'y refuser.</div></div><div class="hindrance-block"><div class="block-name"><span class="tag tag-mineur">Mineur</span> Peur des Pokéball</div><div class="block-desc">Ne capture jamais de Pokémon sauvage. Refuse d'utiliser une Pokéball contre sa volonté.</div></div>
           <div class="pj-team-strip" id="team-strip-pisteur"><span style="font-size:11px;color:var(--muted);font-style:italic">Cliquer Actualiser</span></div>
-          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ancien vétérinaire itinérant qui soignait les Pokémon sauvages. A perdu son agrément après avoir refusé d'euthanasier des Pokémon blessés sur ordre d'un consortium minier.</em></p>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Ancien vétérinaire itinérant qui soignait les Sauvages. A perdu son agrément après avoir refusé d'euthanasier des Pokémon blessés sur ordre d'un consortium minier.</em></p>
         </div>
       </div>
       <div class="pnj-card" id="pj-acc-5">
@@ -2312,7 +2302,7 @@
   </div>
 </div>
 </div>
-  </div></div><div class="beast-cat-group" id="bgroup-allies"><div class="beast-cat-acc" id="bacc-allies" onclick="toggleBgroup('allies')">Alliés &amp; objectifs narratifs <span class="beast-count">8 entrées</span><span class="beast-chevron">▶</span></div><div class="beast-cat-content" id="bcontent-allies">
+  </div></div><div class="beast-cat-group" id="bgroup-allies"><div class="beast-cat-acc" id="bacc-allies" onclick="toggleBgroup('allies')">Spéciaux <span class="beast-count">8 entrées</span><span class="beast-chevron">▶</span></div><div class="beast-cat-content" id="bcontent-allies">
     
     <div class="bestiary-grid"><div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
           <div class="beast-header"><div class="beast-name">Marill — objectif de sauvetage</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Eau/Fée · Petit (−1) · Captif</div></div>
@@ -2507,7 +2497,7 @@
           </div>
         </div>
         </div>
-      </div></div><div class="beast-cat-group" id="bgroup-psi"><div class="beast-cat-acc" id="bacc-psi" onclick="toggleBgroup('psi')">Sous contrôle PSI-B <span class="beast-count">7 entrées</span><span class="beast-chevron">▶</span></div><div class="beast-cat-content" id="bcontent-psi">
+      </div></div><div class="beast-cat-group" id="bgroup-psi"><div class="beast-cat-acc" id="bacc-psi" onclick="toggleBgroup('psi')">PSI-B <span class="beast-count">7 entrées</span><span class="beast-chevron">▶</span></div><div class="beast-cat-content" id="bcontent-psi">
     
     <div class="bestiary-grid"><div class="beast-card cat-psi" data-cat="psi" onclick="toggleBeast(this)">
           <div class="beast-header"><div class="beast-name">Flagadoss PSI-B</div><div class="beast-meta"><span class="tag tag-psi">PSI-B</span> Eau/Psy · Extra</div></div>
@@ -2638,7 +2628,7 @@
             
           </div>
         </div></div>
-  </div></div><div class="beast-cat-group" id="bgroup-elites"><div class="beast-cat-acc" id="bacc-elites" onclick="toggleBgroup('elites')">Pokémon élites <span class="beast-count">10 entrées</span><span class="beast-chevron">▶</span></div><div class="beast-cat-content" id="bcontent-elites">
+  </div></div><div class="beast-cat-group" id="bgroup-elites"><div class="beast-cat-acc" id="bacc-elites" onclick="toggleBgroup('elites')">Elite ★ <span class="beast-count">10 entrées</span><span class="beast-chevron">▶</span></div><div class="beast-cat-content" id="bcontent-elites">
     
     <div class="bestiary-grid"><div class="beast-card cat-sauvage" data-cat="elite" onclick="toggleBeast(this)">
   <div class="beast-header">
@@ -3783,38 +3773,9 @@ function _addScenarioCard(title, sub, num, filename) {
 }
 
 
-function filterBeast(cat, btn) {
-  document.querySelectorAll('.filter-bar .filter-btn').forEach(function(b) { b.classList.remove('active'); });
-  btn.classList.add('active');
-  var pnjBar = document.getElementById('filter-pnj-bar');
-  if (cat === 'all') {
-    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = ''; });
-    document.querySelectorAll('.beast-card').forEach(function(c) { c.style.display = ''; });
-    if (pnjBar) pnjBar.classList.remove('active');
-  } else if (cat === 'sc02') {
-    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = g.id === 'bgroup-sc02' ? '' : 'none'; });
-    if (pnjBar) pnjBar.classList.add('active');
-    filterByPnj('all', pnjBar ? pnjBar.querySelector('button') : null);
-  } else if (cat === 'alpha9') {
-    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = g.id === 'bgroup-alpha9' ? '' : 'none'; });
-  } else {
-    document.querySelectorAll('.beast-cat-group').forEach(function(g) { g.style.display = (g.id === 'bgroup-sc02' || g.id === 'bgroup-alpha9') ? 'none' : ''; });
-    document.querySelectorAll('.beast-card').forEach(function(c) {
-      c.style.display = (c.dataset.cat === cat) ? '' : 'none';
-    });
-    if (pnjBar) pnjBar.classList.remove('active');
-  }
-}
 
-function filterByPnj(slug, btn) {
-  if (btn) {
-    document.querySelectorAll('#filter-pnj-bar .filter-btn').forEach(function(b) { b.classList.remove('active'); });
-    btn.classList.add('active');
-  }
-  document.querySelectorAll('.beast-pnj-sub').forEach(function(s) {
-    s.style.display = (slug === 'all' || s.id === 'bpnj-' + slug) ? '' : 'none';
-  });
-}
+
+
 
 </script>
 
