@@ -1009,6 +1009,13 @@
   .pnj-scenario-acc.open .chapter-chevron { transform:rotate(90deg); }
   .pnj-scenario-body { display:none; padding-top:16px; }
   .pnj-scenario-body.open { display:block; }
+
+  .beast-cat-acc { cursor:pointer; user-select:none; display:flex; align-items:center; gap:8px; }
+  .beast-cat-acc:hover { opacity:.85; }
+  .beast-chevron { margin-left:auto; font-size:10px; color:var(--amber); transition:transform .2s; }
+  .beast-cat-acc.open .beast-chevron { transform:rotate(90deg); }
+  .beast-cat-content { display:none; }
+  .beast-cat-content.open { display:block; }
 </style>
 </head>
 <body>
@@ -1719,12 +1726,8 @@
 </div>
 <div class="section" id="tab-bestiaire">
   <div class="page-title">Bestiaire</div>
-  <div class="page-tagline">65 entrées · Pokémon Kanto</div>
-
-
-
-  <div class="beast-cat-group" id="bgroup-sauvage">
-    <div class="beast-cat-title">Pokémon sauvages <span class="beast-count">32 entrées</span></div>
+  <div class="page-tagline">65 entrées · Pokémon Kanto</div><div class="beast-cat-group" id="bgroup-sauvage"><div class="beast-cat-acc" id="bacc-sauvage" onclick="toggleBgroup('sauvage')">Pokémon sauvages <span class="beast-count">32 entrées</span><span class="beast-chevron">▶</span></div><div class="beast-cat-content" id="bcontent-sauvage">
+    
     <div class="bestiary-grid"><div class="beast-card cat-sauvage" data-cat="sauvage" onclick="toggleBeast(this)">
           <div class="beast-header"><div class="beast-name">Osselait</div><div class="beast-meta"><span class="tag tag-sauvage">Sauvage</span> Sol · Petit (−1) · Extra</div></div>
           <div class="beast-body">
@@ -2309,10 +2312,203 @@
   </div>
 </div>
 </div>
+  </div></div><div class="beast-cat-group" id="bgroup-allies"><div class="beast-cat-acc" id="bacc-allies" onclick="toggleBgroup('allies')">Alliés &amp; objectifs narratifs <span class="beast-count">8 entrées</span><span class="beast-chevron">▶</span></div><div class="beast-cat-content" id="bcontent-allies">
+    
+    <div class="bestiary-grid"><div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Marill — objectif de sauvetage</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Eau/Fée · Petit (−1) · Captif</div></div>
+          <div class="beast-body">
+            
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Ses oreilles agissent comme un radar sous-marin. Sa queue fonctionne comme un flotteur qui lui permet de nager sans couler.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>4</span></div>
+            </div>
+            <ul class="capa-list"><li><span class="capa-name">État d'épuisement</span> : à sa libération, 1 Blessure automatique. Trempe d4. Récupère en 24h de repos.</li></ul>
+          </div>
+        </div>
+<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Abra de Torkel — souvenir</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Psy · Outil narratif uniquement</div></div>
+          <div class="beast-body">
+            
+            <ul class="capa-list"><li><span class="capa-name">Fantôme du lien</span> : la Pokéball vide réagit faiblement (halo bleu) à proximité des Pokémon encore captifs. Outil de détection passive.</li></ul>
+            
+          </div>
+        </div>
+<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Tauros (Pokémon de Yael Ors)</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Normal · Grand (+1) · Transport</div></div>
+          <div class="beast-body">
+            
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Ce Pokémon violent et imprévisible charge rageusement en agitant ses queues. Il ne se calme qu'après avoir tout détruit.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">FOR <span>d12</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>9</span></div><div class="stat-pill">Allure <span>8"</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Charge</td><td class="atk-dmg">Str+d8</td><td>Charge 4"+</td><td>Renversé si Robustesse non atteinte</td></tr>
+              <tr><td class="atk-name">Séisme</td><td class="atk-dmg">2d6</td><td>Zone 3"</td><td>Agilité d6 diff. 4 ou Renversé</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Bête de somme</span> : charge 200kg sans malus. Transport inter-cité en 4h.</li></ul>
+          </div>
+        </div>
+<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Canarticho</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Normal/Vol · Messager local de Lavanville</div></div>
+  <div class="beast-body">
+    
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Ce Pokémon vit en symbiose avec le poireau qu'il porte. Séparé de lui, il perd tout courage.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">RUS <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>8" (vol)</span></div>
+    </div>
+    <ul class="capa-list">
+      <li><span class="capa-name">Cartographe urbain</span> : connaît tous les passages, entrées de service et accès alternatifs de Lavanville. Peut guider vers n'importe quel bâtiment sans être vu (Discrétion +2 pour la Posse).</li>
+      <li><span class="capa-name">Messager fiable</span> : peut transporter un message de 50 mots jusqu'à 10km. Délai : 1h. Interception difficile (Perception diff. 8 pour les agents d'Ashford).</li>
+      <li><span class="capa-name">Témoin silencieux</span> : a observé les agents d'Ashford pendant des semaines. Investigation diff. 4 pour lui "faire raconter" ce qu'il a vu (mimiques + trajectoires).</li>
+    </ul>
+    
   </div>
-
-  <div class="beast-cat-group" id="bgroup-psi">
-    <div class="beast-cat-title">Sous contrôle PSI-B <span class="beast-count">7 entrées</span></div>
+</div>
+<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Pikachu abandonné</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Électrique · Partenaire potentiel longue durée</div></div>
+  <div class="beast-body">
+    
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Lorsque plusieurs Pikachu se rassemblent, leur énergie électrique peut provoquer des orages qui s'abattent sur la région.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">FOR <span>d4</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>8"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Éclair</td><td class="atk-dmg">2d6</td><td>12"/24"</td><td>Secoué si Relance</td></tr>
+      <tr><td class="atk-name">Tonnerre (stress)</td><td class="atk-dmg">3d6</td><td>Zone 4"</td><td>Déclenche involontairement sous forte émotion. Affecte amis et ennemis</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Décharge de stress</span> : si le Pisteur ou la Causeuse l'apaise (Dressage diff. 4), il se calme et peut être apprivoisé temporairement. Son Éclair devient contrôlé.</li>
+      <li><span class="capa-name">Signal émotionnel</span> : réagit aux PSI-B à 10" en hérissant ses joues. Détecteur passif gratuit.</li>
+      <li><span class="capa-name">Retrouvailles<</li>
+    </ul>
+    
+  </div>
+</div>
+<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Germignon égaré</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Normal · Jeune Pokémon, protection nécessaire</div></div>
+  <div class="beast-body">
+    
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">L'œuf posé sur sa tête est son cadeau de naissance. Il se nourrit de la même chose que lui.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>3</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>6"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Coup de queue</td><td class="atk-dmg">d4</td><td>Mêlée</td><td>Uniquement défensif. −1 Parade à la cible</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Oeuf guérisseur (1× unique)</span> : l'oeuf dans sa queue contient un soin naturel. Action complète pour l'extraire : soigne 2d6 points de Robustesse sur une créature (Fil inclus).</li>
+      <li><span class="capa-name">Fardeau moral</span> : le Pisteur ne peut pas laisser le Germignon en danger (Handicap Protecteur compulsif s'applique automatiquement). Mais il peut aussi le confier à la femme au Marill (objectif émotionnel de l'Acte IV).</li>
+    </ul>
+    
+  </div>
+</div>
+<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Aspicot tisserand</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Insecte/Poison · Outil technique passif</div></div>
+  <div class="beast-body">
+    
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Ce spécimen tisse des toiles renforcées entre les arbres pour piéger ses proies. Plus robuste que ses congénères.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">AGI <span>d4</span></div><div class="stat-pill">VIG <span>d4</span></div><div class="stat-pill">Parade <span>2</span></div><div class="stat-pill">Robustesse <span>3</span></div><div class="stat-pill">Allure <span>2"</span></div>
+    </div>
+    <ul class="capa-list">
+      <li><span class="capa-name">Fil de soie renforcé<</li>
+      <li><span class="capa-name">Soin de Fil</span> : le Pisteur peut utiliser leurs fils comme matériau de remplacement pour soigner Fil après le chapitre 9. Médecine Pokémon diff. 6 = réduit le temps de récupération de Fil de moitié.</li>
+      <li><span class="capa-name">Tisserand discret</span> : peuvent obstruer silencieusement une caméra ou un capteur en 10 minutes (Survie diff. 4 pour guider leur travail).</li>
+    </ul>
+    
+  </div>
+</div>
+<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
+  <div class="beast-header"><div class="beast-name">Mélofée</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Fée/Normal · Présence apaisante, non combattante</div></div>
+  <div class="beast-body">
+    
+    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Le charme en forme de croissant qu'il tient dans la main lui permet de favoriser les rencontres amoureuses.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+      <div class="stat-pill">TRE <span>d10</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>3</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>4"</span></div>
+    </div>
+    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
+      <tr><td class="atk-name">Berceuse</td><td class="atk-dmg">Trempe d8 opp.</td><td>Zone 6"</td><td>Défensif uniquement. Cible endormie 1d6 rounds (affecte ennemis ET alliés)</td></tr>
+      <tr><td class="atk-name">Éclair Lune</td><td class="atk-dmg">d6</td><td>8"</td><td>Attaque de lumière pure. Ignores les immunités PSI</td></tr>
+    </table>
+    <ul class="capa-list">
+      <li><span class="capa-name">Aura de paix</span> : dans un rayon de 4", les jets de Trempe se font à diff. −1. Les effets de peur et de confusion sont réduits d'un rang.</li>
+      <li><span class="capa-name">Soins collectifs (Hors combat)</span> : après 1h dans son sanctuaire, toute la Posse récupère 1 Secousse et −1 Blessure sur jet de Vigueur diff. 4. Une fois par 24h.</li>
+      <li><span class="capa-name">Résistance PSI-B</span> : son aura crée une zone de 4" imperméable aux signaux PSI-B. Les Pokémon PSI-B dans cette zone subissent −2 à tous leurs jets.</li>
+    </ul>
+    
+  </div>
+</div>
+</div>
+  </div></div><div class="beast-cat-group" id="bgroup-alpha9"><div class="beast-cat-acc" id="bacc-alpha9" onclick="toggleBgroup('alpha9')">Complexe Alpha-9 &mdash; Le Complexe Chim&egrave;re<span class="beast-count">4 cr&eacute;atures</span><span class="beast-chevron">▶</span></div><div class="beast-cat-content" id="bcontent-alpha9">
+        
+        <div class="bestiary-grid">
+<div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Smogo &laquo;Sangsue&raquo;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha-9</span> Poison &middot; Mutant &middot; Petit (-1) &middot; Extra</div></div>
+          <div class="beast-body">
+            
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Il vit dans des zones très polluées. Il libère un gaz qui provoque des maux de tête et des nausées.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>4</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Chute Embuscade</td><td class="atk-dmg">FOR+d4</td><td>Contact</td><td>Discr&eacute;tion d8 r&eacute;ussie : +2 au jet de Combat</td></tr><tr><td class="atk-name">Succion Toxique</td><td class="atk-dmg">1 Blessure/tour</td><td>Contact</td><td>Jet Vigueur TN6 ou d&eacute;g&acirc;ts continus</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Discr&eacute;tion d8</span> : Se fondent dans les conduites et tuyaux. Perception TN6 pour les rep&eacute;rer.</li><li><span class="capa-name">Accroch&eacute;</span> : Une fois fix&eacute;, reste attach&eacute; jusqu'&agrave; arrachar&eacute; (Force oppos&eacute; TN6) ou KO.</li></ul>
+            
+          </div>
+        </div>
+          <div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Grotadmorv &laquo;Amas Osseux&raquo;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha-9</span> Poison &middot; Mutant &middot; Grand (+1) &middot; Joker de Zone</div></div>
+          <div class="beast-body">
+            
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Dégageant une puanteur insupportable, il vit dans des égouts et des décharges. Ses poisons sont extrêmement virulents.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d4</span></div><div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>9</span></div><div class="stat-pill">Allure <span>3</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Projectiles Shrapnel</td><td class="atk-dmg">2d6</td><td>4&quot;/8&quot;/16&quot;</td><td>Os et acier project&eacute;s &mdash; Tir d6</td></tr><tr><td class="atk-name">Nuage de D&eacute;composition</td><td class="atk-dmg">&mdash;</td><td>Zone contact</td><td>Vigueur TN6 ou Secouu&eacute; par l'odeur</td></tr><tr><td class="atk-name">Frappe de Masse</td><td class="atk-dmg">FOR+d8</td><td>M&ecirc;l&eacute;e</td><td>Renverse si Robustesse non atteinte</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Corps Amorphe</span> : Armes &agrave; feu perforantes : moiti&eacute; des d&eacute;g&acirc;ts seulement. Armes tranchantes : -1 d&eacute; de d&eacute;g&acirc;ts.</li><li><span class="capa-name">Armure D&eacute;bris</span> : +2 Robustesse (inclus dans le profil). Perd +1 par Blessure encaiss&eacute;e.</li><li><span class="capa-name">Joker de Zone</span> : Wild Die d6. Ne fuit jamais. Reste immobile et attend ses cibles.</li></ul>
+            
+          </div>
+        </div>
+          <div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">Nosferalto &laquo;&Eacute;corch&eacute;&raquo;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha-9</span> Vol &middot; Mutant &middot; Petit (-1) &middot; Extra</div></div>
+          <div class="beast-body">
+            
+            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Il chasse en émettant des ultrasons. Il peut repérer ses proies dans le noir absolu grâce à son ouïe exceptionnelle.</p>
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>2 sol / 8 vol</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Morsure H&eacute;morragique</td><td class="atk-dmg">FOR+d4</td><td>M&ecirc;l&eacute;e</td><td>1 d&eacute;g&acirc;t automatique/tour jusqu'&agrave; jet Soins r&eacute;ussi</td></tr><tr><td class="atk-name">Plong&eacute;e</td><td class="atk-dmg">FOR+d6</td><td>M&ecirc;l&eacute;e</td><td>Initiative +2 si attaque depuis le vol</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">&Eacute;cholocation</span> : Ignore tous malus de visibilit&eacute; (obscurit&eacute;, brume). Les sources lumineuses intenses les d&eacute;sorienternt (-2 &agrave; tous jets pendant 1 round).</li><li><span class="capa-name">Anticoagulant</span> : H&eacute;morragie continue apr&egrave;s morsure. Soins TN4 pour stopper. Deux Smogos actifs simultan&eacute;ment : le PJ ne peut pas r&eacute;cup&eacute;rer naturellement.</li></ul>
+            
+          </div>
+        </div>
+          <div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
+          <div class="beast-header"><div class="beast-name">La Chim&egrave;re &mdash; D&eacute;molosse Alpha Fus&iacute;onn&eacute;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha-9</span> T&eacute;n&egrave;bres &middot; Normal &middot; Mutant &middot; Colossal (+4) &middot; BOSS JOKER</div></div>
+          <div class="beast-body">
+            
+            <div class="stat-inline" style="margin-bottom:8px">
+              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d12+2</span></div><div class="stat-pill">VIG <span>d12</span></div><div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">Robustesse <span>14+ variable</span></div><div class="stat-pill">Allure <span>6&quot;</span></div>
+            </div>
+            <table class="atk-table">
+              <tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr>
+              <tr><td class="atk-name">Assimilation Imm&eacute;diate</td><td class="atk-dmg">Force oppos&eacute;</td><td>Contact</td><td>&Eacute;chec : enlise la cible &mdash; 2d6 corrosion/tour</td></tr><tr><td class="atk-name">Tir de Boue Toxique</td><td class="atk-dmg">3d6 + poison</td><td>10&quot;/20&quot;/40&quot;</td><td>Zone petite &mdash; Vigueur TN6 ou Empoisonn&eacute;</td></tr><tr><td class="atk-name">M&eacute;tamorphose Partielle</td><td class="atk-dmg">Trempe TN6</td><td>Zone 5&quot;</td><td>&Eacute;chec : Secouu&eacute; (Peur) &mdash; la forme change &agrave; chaque round</td></tr>
+            </table>
+            <ul class="capa-list"><li><span class="capa-name">Masse Assimilatrice</span> : R&eacute;sistance = 10 + N objets lourds absorb&eacute;s dans la pi&egrave;ce. D&eacute;marre &agrave; 14. Maximum th&eacute;orique 20. D&eacute;truire les structures = r&eacute;duire sa R&eacute;sistance.</li><li><span class="capa-name">C&oelig;ur Celte</span> : Vuln&eacute;rabilit&eacute; cach&eacute;e. Sciences TN-4 pour localiser. Attaque r&eacute;ussie sur ce point : R&eacute;sistance r&eacute;duite &agrave; 8 d&eacute;finitivement.</li><li><span class="capa-name">Wild Die d12</span> : Boss Joker &mdash; 3 Blessures. R&eacute;g&egrave;n&egrave;re 1 Blessure si Doom Track &ge; 5 au d&eacute;but de son tour.</li></ul>
+            
+          </div>
+        </div>
+        </div>
+      </div></div><div class="beast-cat-group" id="bgroup-psi"><div class="beast-cat-acc" id="bacc-psi" onclick="toggleBgroup('psi')">Sous contrôle PSI-B <span class="beast-count">7 entrées</span><span class="beast-chevron">▶</span></div><div class="beast-cat-content" id="bcontent-psi">
+    
     <div class="bestiary-grid"><div class="beast-card cat-psi" data-cat="psi" onclick="toggleBeast(this)">
           <div class="beast-header"><div class="beast-name">Flagadoss PSI-B</div><div class="beast-meta"><span class="tag tag-psi">PSI-B</span> Eau/Psy · Extra</div></div>
           <div class="beast-body">
@@ -2442,140 +2638,8 @@
             
           </div>
         </div></div>
-  </div>
-
-  <div class="beast-cat-group" id="bgroup-allies">
-    <div class="beast-cat-title">Alliés &amp; objectifs narratifs <span class="beast-count">8 entrées</span></div>
-    <div class="bestiary-grid"><div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
-          <div class="beast-header"><div class="beast-name">Marill — objectif de sauvetage</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Eau/Fée · Petit (−1) · Captif</div></div>
-          <div class="beast-body">
-            
-            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Ses oreilles agissent comme un radar sous-marin. Sa queue fonctionne comme un flotteur qui lui permet de nager sans couler.</p>
-            <div class="stat-inline" style="margin-bottom:8px">
-              <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>4</span></div>
-            </div>
-            <ul class="capa-list"><li><span class="capa-name">État d'épuisement</span> : à sa libération, 1 Blessure automatique. Trempe d4. Récupère en 24h de repos.</li></ul>
-          </div>
-        </div>
-<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
-          <div class="beast-header"><div class="beast-name">Abra de Torkel — souvenir</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Psy · Outil narratif uniquement</div></div>
-          <div class="beast-body">
-            
-            <ul class="capa-list"><li><span class="capa-name">Fantôme du lien</span> : la Pokéball vide réagit faiblement (halo bleu) à proximité des Pokémon encore captifs. Outil de détection passive.</li></ul>
-            
-          </div>
-        </div>
-<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
-          <div class="beast-header"><div class="beast-name">Tauros (Pokémon de Yael Ors)</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Normal · Grand (+1) · Transport</div></div>
-          <div class="beast-body">
-            
-            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Ce Pokémon violent et imprévisible charge rageusement en agitant ses queues. Il ne se calme qu'après avoir tout détruit.</p>
-            <div class="stat-inline" style="margin-bottom:8px">
-              <div class="stat-pill">FOR <span>d12</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>9</span></div><div class="stat-pill">Allure <span>8"</span></div>
-            </div>
-            <table class="atk-table">
-              <tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
-              <tr><td class="atk-name">Charge</td><td class="atk-dmg">Str+d8</td><td>Charge 4"+</td><td>Renversé si Robustesse non atteinte</td></tr>
-              <tr><td class="atk-name">Séisme</td><td class="atk-dmg">2d6</td><td>Zone 3"</td><td>Agilité d6 diff. 4 ou Renversé</td></tr>
-            </table>
-            <ul class="capa-list"><li><span class="capa-name">Bête de somme</span> : charge 200kg sans malus. Transport inter-cité en 4h.</li></ul>
-          </div>
-        </div>
-<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
-  <div class="beast-header"><div class="beast-name">Canarticho</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Normal/Vol · Messager local de Lavanville</div></div>
-  <div class="beast-body">
+  </div></div><div class="beast-cat-group" id="bgroup-elites"><div class="beast-cat-acc" id="bacc-elites" onclick="toggleBgroup('elites')">Pokémon élites <span class="beast-count">10 entrées</span><span class="beast-chevron">▶</span></div><div class="beast-cat-content" id="bcontent-elites">
     
-    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Ce Pokémon vit en symbiose avec le poireau qu'il porte. Séparé de lui, il perd tout courage.</p>
-            <div class="stat-inline" style="margin-bottom:8px">
-      <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">RUS <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>8" (vol)</span></div>
-    </div>
-    <ul class="capa-list">
-      <li><span class="capa-name">Cartographe urbain</span> : connaît tous les passages, entrées de service et accès alternatifs de Lavanville. Peut guider vers n'importe quel bâtiment sans être vu (Discrétion +2 pour la Posse).</li>
-      <li><span class="capa-name">Messager fiable</span> : peut transporter un message de 50 mots jusqu'à 10km. Délai : 1h. Interception difficile (Perception diff. 8 pour les agents d'Ashford).</li>
-      <li><span class="capa-name">Témoin silencieux</span> : a observé les agents d'Ashford pendant des semaines. Investigation diff. 4 pour lui "faire raconter" ce qu'il a vu (mimiques + trajectoires).</li>
-    </ul>
-    
-  </div>
-</div>
-<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
-  <div class="beast-header"><div class="beast-name">Pikachu abandonné</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Électrique · Partenaire potentiel longue durée</div></div>
-  <div class="beast-body">
-    
-    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Lorsque plusieurs Pikachu se rassemblent, leur énergie électrique peut provoquer des orages qui s'abattent sur la région.</p>
-            <div class="stat-inline" style="margin-bottom:8px">
-      <div class="stat-pill">AGI <span>d10</span></div><div class="stat-pill">FOR <span>d4</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>8"</span></div>
-    </div>
-    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
-      <tr><td class="atk-name">Éclair</td><td class="atk-dmg">2d6</td><td>12"/24"</td><td>Secoué si Relance</td></tr>
-      <tr><td class="atk-name">Tonnerre (stress)</td><td class="atk-dmg">3d6</td><td>Zone 4"</td><td>Déclenche involontairement sous forte émotion. Affecte amis et ennemis</td></tr>
-    </table>
-    <ul class="capa-list">
-      <li><span class="capa-name">Décharge de stress</span> : si le Pisteur ou la Causeuse l'apaise (Dressage diff. 4), il se calme et peut être apprivoisé temporairement. Son Éclair devient contrôlé.</li>
-      <li><span class="capa-name">Signal émotionnel</span> : réagit aux PSI-B à 10" en hérissant ses joues. Détecteur passif gratuit.</li>
-      <li><span class="capa-name">Retrouvailles<</li>
-    </ul>
-    
-  </div>
-</div>
-<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
-  <div class="beast-header"><div class="beast-name">Germignon égaré</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Normal · Jeune Pokémon, protection nécessaire</div></div>
-  <div class="beast-body">
-    
-    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">L'œuf posé sur sa tête est son cadeau de naissance. Il se nourrit de la même chose que lui.</p>
-            <div class="stat-inline" style="margin-bottom:8px">
-      <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>3</span></div><div class="stat-pill">Robustesse <span>4</span></div><div class="stat-pill">Allure <span>6"</span></div>
-    </div>
-    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
-      <tr><td class="atk-name">Coup de queue</td><td class="atk-dmg">d4</td><td>Mêlée</td><td>Uniquement défensif. −1 Parade à la cible</td></tr>
-    </table>
-    <ul class="capa-list">
-      <li><span class="capa-name">Oeuf guérisseur (1× unique)</span> : l'oeuf dans sa queue contient un soin naturel. Action complète pour l'extraire : soigne 2d6 points de Robustesse sur une créature (Fil inclus).</li>
-      <li><span class="capa-name">Fardeau moral</span> : le Pisteur ne peut pas laisser le Germignon en danger (Handicap Protecteur compulsif s'applique automatiquement). Mais il peut aussi le confier à la femme au Marill (objectif émotionnel de l'Acte IV).</li>
-    </ul>
-    
-  </div>
-</div>
-<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
-  <div class="beast-header"><div class="beast-name">Aspicot tisserand</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Insecte/Poison · Outil technique passif</div></div>
-  <div class="beast-body">
-    
-    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Ce spécimen tisse des toiles renforcées entre les arbres pour piéger ses proies. Plus robuste que ses congénères.</p>
-            <div class="stat-inline" style="margin-bottom:8px">
-      <div class="stat-pill">AGI <span>d4</span></div><div class="stat-pill">VIG <span>d4</span></div><div class="stat-pill">Parade <span>2</span></div><div class="stat-pill">Robustesse <span>3</span></div><div class="stat-pill">Allure <span>2"</span></div>
-    </div>
-    <ul class="capa-list">
-      <li><span class="capa-name">Fil de soie renforcé<</li>
-      <li><span class="capa-name">Soin de Fil</span> : le Pisteur peut utiliser leurs fils comme matériau de remplacement pour soigner Fil après le chapitre 9. Médecine Pokémon diff. 6 = réduit le temps de récupération de Fil de moitié.</li>
-      <li><span class="capa-name">Tisserand discret</span> : peuvent obstruer silencieusement une caméra ou un capteur en 10 minutes (Survie diff. 4 pour guider leur travail).</li>
-    </ul>
-    
-  </div>
-</div>
-<div class="beast-card cat-special" data-cat="gardien" onclick="toggleBeast(this)">
-  <div class="beast-header"><div class="beast-name">Mélofée</div><div class="beast-meta"><span class="tag tag-gardien">Spécial</span> Fée/Normal · Présence apaisante, non combattante</div></div>
-  <div class="beast-body">
-    
-    <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Le charme en forme de croissant qu'il tient dans la main lui permet de favoriser les rencontres amoureuses.</p>
-            <div class="stat-inline" style="margin-bottom:8px">
-      <div class="stat-pill">TRE <span>d10</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>3</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>4"</span></div>
-    </div>
-    <table class="atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portée</th><th>Effet</th></tr>
-      <tr><td class="atk-name">Berceuse</td><td class="atk-dmg">Trempe d8 opp.</td><td>Zone 6"</td><td>Défensif uniquement. Cible endormie 1d6 rounds (affecte ennemis ET alliés)</td></tr>
-      <tr><td class="atk-name">Éclair Lune</td><td class="atk-dmg">d6</td><td>8"</td><td>Attaque de lumière pure. Ignores les immunités PSI</td></tr>
-    </table>
-    <ul class="capa-list">
-      <li><span class="capa-name">Aura de paix</span> : dans un rayon de 4", les jets de Trempe se font à diff. −1. Les effets de peur et de confusion sont réduits d'un rang.</li>
-      <li><span class="capa-name">Soins collectifs (Hors combat)</span> : après 1h dans son sanctuaire, toute la Posse récupère 1 Secousse et −1 Blessure sur jet de Vigueur diff. 4. Une fois par 24h.</li>
-      <li><span class="capa-name">Résistance PSI-B</span> : son aura crée une zone de 4" imperméable aux signaux PSI-B. Les Pokémon PSI-B dans cette zone subissent −2 à tous leurs jets.</li>
-    </ul>
-    
-  </div>
-</div>
-</div>
-  </div>
-
-  <div class="beast-cat-group" id="bgroup-elites">
-    <div class="beast-cat-title">Pokémon élites <span class="beast-count">10 entrées</span></div>
     <div class="bestiary-grid"><div class="beast-card cat-sauvage" data-cat="elite" onclick="toggleBeast(this)">
   <div class="beast-header">
     <div class="beast-name">Alakazam ★ ÉLITE</div>
@@ -2832,10 +2896,8 @@
   </div>
 </div>
 </div>
-  </div>
-
-  <div class="beast-cat-group" id="bgroup-boss">
-    <div class="beast-cat-title">Boss <span class="beast-count">8 entrées</span></div>
+  </div></div><div class="beast-cat-group" id="bgroup-boss"><div class="beast-cat-acc" id="bacc-boss" onclick="toggleBgroup('boss')">Boss <span class="beast-count">8 entrées</span><span class="beast-chevron">▶</span></div><div class="beast-cat-content" id="bcontent-boss">
+    
     <div class="bestiary-grid"><div class="beast-card cat-boss" data-cat="boss" onclick="toggleBeast(this)">
           <div class="beast-header"><div class="beast-name">Absol — Pokémon de Holt</div><div class="beast-meta"><span class="tag tag-boss">Boss ★★</span> Sinistre · Extra (Jokers si besoin)</div></div>
           <div class="beast-body">
@@ -3030,11 +3092,8 @@
   </div>
 </div>
 </div>
-  </div>
-
-
-      <div class="beast-cat-group" id="bgroup-sc02">
-        <div class="beast-cat-title" style="border-top:2px solid var(--amber-dim)">Sc&eacute;nario 02 &mdash; Le Grand Tournoi de Carmin sur Mer<span class="beast-count">13 Pok&eacute;mon</span></div>
+  </div></div><div class="beast-cat-group" id="bgroup-sc02"><div class="beast-cat-acc" id="bacc-sc02" onclick="toggleBgroup('sc02')">Sc&eacute;nario 02 &mdash; Le Grand Tournoi de Carmin sur Mer<span class="beast-count">13 Pok&eacute;mon</span><span class="beast-chevron">▶</span></div><div class="beast-cat-content" id="bcontent-sc02">
+        
         <div class="beast-pnj-sub" id="bpnj-drevin" style="margin-bottom:16px">
           <div style="font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:6px 0 5px;border-bottom:1px solid var(--border);margin-bottom:8px;">Drevin (Noctali, Togekiss)</div>
           <div class="bestiary-grid">
@@ -3204,76 +3263,24 @@
         </div>
           </div>
         </div>
-      </div>
+      </div></div>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+      
     
-      <div class="beast-cat-group" id="bgroup-alpha9">
-        <div class="beast-cat-title">Complexe Alpha-9 &mdash; Le Complexe Chim&egrave;re<span class="beast-count">4 cr&eacute;atures</span></div>
-        <div class="bestiary-grid">
-<div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
-          <div class="beast-header"><div class="beast-name">Smogo &laquo;Sangsue&raquo;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha-9</span> Poison &middot; Mutant &middot; Petit (-1) &middot; Extra</div></div>
-          <div class="beast-body">
-            
-            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Il vit dans des zones très polluées. Il libère un gaz qui provoque des maux de tête et des nausées.</p>
-            <div class="stat-inline" style="margin-bottom:8px">
-              <div class="stat-pill">AGI <span>d6</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d8</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Allure <span>4</span></div>
-            </div>
-            <table class="atk-table">
-              <tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr>
-              <tr><td class="atk-name">Chute Embuscade</td><td class="atk-dmg">FOR+d4</td><td>Contact</td><td>Discr&eacute;tion d8 r&eacute;ussie : +2 au jet de Combat</td></tr><tr><td class="atk-name">Succion Toxique</td><td class="atk-dmg">1 Blessure/tour</td><td>Contact</td><td>Jet Vigueur TN6 ou d&eacute;g&acirc;ts continus</td></tr>
-            </table>
-            <ul class="capa-list"><li><span class="capa-name">Discr&eacute;tion d8</span> : Se fondent dans les conduites et tuyaux. Perception TN6 pour les rep&eacute;rer.</li><li><span class="capa-name">Accroch&eacute;</span> : Une fois fix&eacute;, reste attach&eacute; jusqu'&agrave; arrachar&eacute; (Force oppos&eacute; TN6) ou KO.</li></ul>
-            
-          </div>
-        </div>
-          <div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
-          <div class="beast-header"><div class="beast-name">Grotadmorv &laquo;Amas Osseux&raquo;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha-9</span> Poison &middot; Mutant &middot; Grand (+1) &middot; Joker de Zone</div></div>
-          <div class="beast-body">
-            
-            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Dégageant une puanteur insupportable, il vit dans des égouts et des décharges. Ses poisons sont extrêmement virulents.</p>
-            <div class="stat-inline" style="margin-bottom:8px">
-              <div class="stat-pill">AGI <span>d4</span></div><div class="stat-pill">FOR <span>d10</span></div><div class="stat-pill">VIG <span>d10</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>9</span></div><div class="stat-pill">Allure <span>3</span></div>
-            </div>
-            <table class="atk-table">
-              <tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr>
-              <tr><td class="atk-name">Projectiles Shrapnel</td><td class="atk-dmg">2d6</td><td>4&quot;/8&quot;/16&quot;</td><td>Os et acier project&eacute;s &mdash; Tir d6</td></tr><tr><td class="atk-name">Nuage de D&eacute;composition</td><td class="atk-dmg">&mdash;</td><td>Zone contact</td><td>Vigueur TN6 ou Secouu&eacute; par l'odeur</td></tr><tr><td class="atk-name">Frappe de Masse</td><td class="atk-dmg">FOR+d8</td><td>M&ecirc;l&eacute;e</td><td>Renverse si Robustesse non atteinte</td></tr>
-            </table>
-            <ul class="capa-list"><li><span class="capa-name">Corps Amorphe</span> : Armes &agrave; feu perforantes : moiti&eacute; des d&eacute;g&acirc;ts seulement. Armes tranchantes : -1 d&eacute; de d&eacute;g&acirc;ts.</li><li><span class="capa-name">Armure D&eacute;bris</span> : +2 Robustesse (inclus dans le profil). Perd +1 par Blessure encaiss&eacute;e.</li><li><span class="capa-name">Joker de Zone</span> : Wild Die d6. Ne fuit jamais. Reste immobile et attend ses cibles.</li></ul>
-            
-          </div>
-        </div>
-          <div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
-          <div class="beast-header"><div class="beast-name">Nosferalto &laquo;&Eacute;corch&eacute;&raquo;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha-9</span> Vol &middot; Mutant &middot; Petit (-1) &middot; Extra</div></div>
-          <div class="beast-body">
-            
-            <p style="font-size:12px;font-style:italic;color:var(--muted);margin-bottom:10px">Il chasse en émettant des ultrasons. Il peut repérer ses proies dans le noir absolu grâce à son ouïe exceptionnelle.</p>
-            <div class="stat-inline" style="margin-bottom:8px">
-              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d6</span></div><div class="stat-pill">VIG <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5</span></div><div class="stat-pill">Allure <span>2 sol / 8 vol</span></div>
-            </div>
-            <table class="atk-table">
-              <tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr>
-              <tr><td class="atk-name">Morsure H&eacute;morragique</td><td class="atk-dmg">FOR+d4</td><td>M&ecirc;l&eacute;e</td><td>1 d&eacute;g&acirc;t automatique/tour jusqu'&agrave; jet Soins r&eacute;ussi</td></tr><tr><td class="atk-name">Plong&eacute;e</td><td class="atk-dmg">FOR+d6</td><td>M&ecirc;l&eacute;e</td><td>Initiative +2 si attaque depuis le vol</td></tr>
-            </table>
-            <ul class="capa-list"><li><span class="capa-name">&Eacute;cholocation</span> : Ignore tous malus de visibilit&eacute; (obscurit&eacute;, brume). Les sources lumineuses intenses les d&eacute;sorienternt (-2 &agrave; tous jets pendant 1 round).</li><li><span class="capa-name">Anticoagulant</span> : H&eacute;morragie continue apr&egrave;s morsure. Soins TN4 pour stopper. Deux Smogos actifs simultan&eacute;ment : le PJ ne peut pas r&eacute;cup&eacute;rer naturellement.</li></ul>
-            
-          </div>
-        </div>
-          <div class="beast-card cat-alpha9" data-cat="alpha9" onclick="toggleBeast(this)">
-          <div class="beast-header"><div class="beast-name">La Chim&egrave;re &mdash; D&eacute;molosse Alpha Fus&iacute;onn&eacute;</div><div class="beast-meta"><span class="tag tag-alpha9">Alpha-9</span> T&eacute;n&egrave;bres &middot; Normal &middot; Mutant &middot; Colossal (+4) &middot; BOSS JOKER</div></div>
-          <div class="beast-body">
-            
-            <div class="stat-inline" style="margin-bottom:8px">
-              <div class="stat-pill">AGI <span>d8</span></div><div class="stat-pill">FOR <span>d12+2</span></div><div class="stat-pill">VIG <span>d12</span></div><div class="stat-pill">Parade <span>7</span></div><div class="stat-pill">Robustesse <span>14+ variable</span></div><div class="stat-pill">Allure <span>6&quot;</span></div>
-            </div>
-            <table class="atk-table">
-              <tr><th>Attaque</th><th>Dommages</th><th>Port&eacute;e</th><th>Effet</th></tr>
-              <tr><td class="atk-name">Assimilation Imm&eacute;diate</td><td class="atk-dmg">Force oppos&eacute;</td><td>Contact</td><td>&Eacute;chec : enlise la cible &mdash; 2d6 corrosion/tour</td></tr><tr><td class="atk-name">Tir de Boue Toxique</td><td class="atk-dmg">3d6 + poison</td><td>10&quot;/20&quot;/40&quot;</td><td>Zone petite &mdash; Vigueur TN6 ou Empoisonn&eacute;</td></tr><tr><td class="atk-name">M&eacute;tamorphose Partielle</td><td class="atk-dmg">Trempe TN6</td><td>Zone 5&quot;</td><td>&Eacute;chec : Secouu&eacute; (Peur) &mdash; la forme change &agrave; chaque round</td></tr>
-            </table>
-            <ul class="capa-list"><li><span class="capa-name">Masse Assimilatrice</span> : R&eacute;sistance = 10 + N objets lourds absorb&eacute;s dans la pi&egrave;ce. D&eacute;marre &agrave; 14. Maximum th&eacute;orique 20. D&eacute;truire les structures = r&eacute;duire sa R&eacute;sistance.</li><li><span class="capa-name">C&oelig;ur Celte</span> : Vuln&eacute;rabilit&eacute; cach&eacute;e. Sciences TN-4 pour localiser. Attaque r&eacute;ussie sur ce point : R&eacute;sistance r&eacute;duite &agrave; 8 d&eacute;finitivement.</li><li><span class="capa-name">Wild Die d12</span> : Boss Joker &mdash; 3 Blessures. R&eacute;g&egrave;n&egrave;re 1 Blessure si Doom Track &ge; 5 au d&eacute;but de son tour.</li></ul>
-            
-          </div>
-        </div>
-        </div>
-      </div>
+      
     </div>
 
 <div class="section" id="tab-notes">
@@ -3299,6 +3306,13 @@
 </main>
 
 <script>
+function toggleBgroup(id) {
+  var acc = document.getElementById('bacc-' + id);
+  var content = document.getElementById('bcontent-' + id);
+  if (!acc || !content) return;
+  acc.classList.toggle('open');
+  content.classList.toggle('open');
+}
 function toggleScenario(id) {
   var btn  = document.getElementById('scn-btn-' + id);
   var body = document.getElementById('scn-body-' + id);
