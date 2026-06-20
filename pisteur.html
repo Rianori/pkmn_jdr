@@ -1426,8 +1426,7 @@ function cancelEditName() {
 
 document.addEventListener('DOMContentLoaded',function(){
   loadState(); state.activeSlot=0; renderTeam(); initNotes(); loadBlessures(); loadPlayerName(); initPartnerStats(); initPlayerBin();
-  _syncCloud(); // push localStorage -> Firebase au chargement
-});
+  });
 
 /* ---- EQUIPEMENT EDITABLE ---- */
 var DEFAULT_GEAR = ["Kit veterinaire de terrain", "Jumelles longue portee", "Corde 15m", "Couteau de survie (Str+d6)", "Pitons x4", "250 "];
