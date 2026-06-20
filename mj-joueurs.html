@@ -144,6 +144,15 @@ header{display:flex;align-items:center;justify-content:space-between;
     line-height:1.5; padding-left:8px; position:relative; }
   .pk-atk-name-only::before { content:'·'; position:absolute; left:0;
     color:var(--amber); }
+
+  .dice-roll-display { margin-top:10px; padding:10px 14px; background:rgba(200,146,42,.06);
+    border:1px solid var(--amber-dim); border-radius:4px; display:none; }
+  .dice-roll-display.show { display:block; }
+  .dice-roll-label { font-family:var(--mono); font-size:8px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+  .dice-roll-value { font-family:var(--mono); font-size:22px; font-weight:700; color:var(--amber); }
+  .dice-roll-detail { font-family:var(--mono); font-size:10px; color:var(--muted); margin-left:8px; }
+  .dice-roll-time { font-size:9px; color:var(--muted); margin-top:2px; }
 </style>
 </head>
 <body>
@@ -166,6 +175,38 @@ header{display:flex;align-items:center;justify-content:space-between;
 </div>
 
 <script>
+/* === ECOUTE DES LANCERS DE DES (test) === */
+function listenDiceRolls(slug) {
+  var src = new EventSource(FB + '/dice_rolls/' + slug + '.json');
+  src.addEventListener('put', function(e) {
+    try {
+      var payload = JSON.parse(e.data);
+      var roll = payload.data;
+      if (!roll || payload.path !== '/') return;
+      showDiceRollOnCard(slug, roll);
+    } catch(ex) {}
+  });
+}
+
+function showDiceRollOnCard(slug, roll) {
+  var card = document.getElementById('card-' + slug);
+  if (!card) return;
+  var disp = card.querySelector('.dice-roll-display');
+  if (!disp) {
+    disp = document.createElement('div');
+    disp.className = 'dice-roll-display';
+    card.appendChild(disp);
+  }
+  var time = new Date(roll.ts).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  var rollsStr = (roll.rolls || []).join(' + ');
+  disp.innerHTML =
+    '<div class="dice-roll-label">Dernier lancer</div>'
+    + '<span class="dice-roll-value">' + roll.total + '</span>'
+    + '<span class="dice-roll-detail">' + roll.notation + ' (' + rollsStr + ')</span>'
+    + '<div class="dice-roll-time">' + time + '</div>';
+  disp.classList.add('show');
+}
+
 var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
 
 var PLAYERS = [
@@ -174,7 +215,8 @@ var PLAYERS = [
   {slug:'causeuse',  nom:'Rizen Dao',       role:'Journaliste investigation', img:'img/causeuse.png'},
   {slug:'pisteur',   nom:'Teleera',         role:'Veterinaire Pokemon',       img:'img/pisteur.png'},
   {slug:'tracker',   nom:'Elias Voss',      role:'Chasseur Anomaux',          img:'img/tracker.png'},
-  {slug:'dresseur',  nom:'Kael Oryn',       role:'Dresseur circuit libre',    img:'img/dresseur.png'}
+  {slug:'dresseur',  nom:'Kael Oryn',       role:'Dresseur circuit libre',    img:'img/dresseur.png'},
+  {slug:'test-bestiaire', nom:'[TEST] Bestiaire', role:'Page de developpement',   img:''}
 ];
 
 var STATIC_DATA = {"analyste": {"edges": [{"tag": "Background", "name": "Enqu\u00eateur"}, {"tag": "Weird", "name": "MacGyver (Atout gratuit Humain)"}], "hindrances": [{"tag": "Majeur", "name": "Curieuse"}, {"tag": "Mineur", "name": "Ennemie"}]}, "pistolero": {"edges": [{"tag": "Combat", "name": "Combatif"}, {"tag": "Weird", "name": "Dur \u00e0 Cuire"}], "hindrances": [{"tag": "Majeur", "name": "Loyal"}, {"tag": "Mineur", "name": "Pass\u00e9 encombrant"}]}, "causeuse": {"edges": [{"tag": "Background", "name": "R\u00e9seau d'informateurs"}, {"tag": "Social", "name": "Charismatique (Atout gratuit Humain)"}], "hindrances": [{"tag": "Majeur", "name": "T\u00eatue"}, {"tag": "Mineur", "name": "Sans le sou"}, {"tag": "Mineur", "name": "Peur des Pok\u00e9ball"}]}, "pisteur": {"edges": [{"tag": "Background", "name": "Empathie Pok\u00e9mon"}, {"tag": "Weird", "name": "Galeries et souterrains (Atout gratuit Humain)"}], "hindrances": [{"tag": "Majeur", "name": "Protecteur compulsif"}, {"tag": "Mineur", "name": "Persona non grata"}, {"tag": "Mineur", "name": "Peur des Pok\u00e9ball"}]}, "tracker": {"edges": [{"tag": "Background", "name": "Sens du Danger"}, {"tag": "Background", "name": "Pisteur Sp&eacute;cialis&eacute;"}, {"tag": "Pok&eacute;mon", "name": "Lien Profond &mdash; Kaiminus"}], "hindrances": [{"tag": "Majeur", "name": "Obsession des Origines"}, {"tag": "Mineur", "name": "R&eacute;putation"}, {"tag": "Mineur", "name": "Documentation Compulsive"}]}, "dresseur": {"edges": [{"tag": "Background", "name": "Maestro"}, {"tag": "Background", "name": "Lecteur de Combat"}, {"tag": "Pok&eacute;mon", "name": "Lien &Eacute;mergent &mdash; Abra"}], "hindrances": [{"tag": "Majeur", "name": "Compte &agrave; R&eacute;gler"}, {"tag": "Mineur", "name": "Arrogance"}, {"tag": "Mineur", "name": "Sans le Sou"}]}};
@@ -349,6 +391,7 @@ setStatus('loading','Connexion Firebase...');
 PLAYERS.forEach(function(p) {
   document.getElementById('grid').appendChild(buildCard(p,null));
   listenPlayer(p);
+  listenDiceRolls(p.slug);
 });
 
 
