@@ -1075,6 +1075,8 @@ a { color: inherit; }
 </div>
 
 <script>
+var _activeDiceBubble = null;
+
 var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
 var params = new URLSearchParams(window.location.search);
 var TABLE_ID = params.get('table') || 'table2';
