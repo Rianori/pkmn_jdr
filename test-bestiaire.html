@@ -872,6 +872,13 @@ a { color: inherit; }
   .dice-bubble-total { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--amber); text-align:center; }
   .dice-bubble-detail { font-family:var(--mono); font-size:9px; color:var(--muted); text-align:center; margin-top:2px; }
   .dice-bubble-detail .explode { color:var(--amber); }
+
+  .stat-row.rollable { cursor:pointer; transition:background .12s; position:relative; border-radius:3px; }
+  .stat-row.rollable:hover { background:var(--amber-glow); }
+  .stat-row.rollable:active { transform:scale(.98); }
+  .stat-row .dice-bubble { left:auto; right:0; transform:none; }
+  .stat-row .dice-bubble.show { transform:translateY(-2px); }
+  .stat-row .dice-bubble::after { left:auto; right:16px; transform:none; }
 </style>
 </head>
 <body>
@@ -2560,19 +2567,7 @@ function rollExplodingDie(faces) {
 
 
 
-function initRollablePills() {
-  document.querySelectorAll('.pk-stat .val, .stat-pill .val').forEach(function(valSpan) {
-    var pill = valSpan.closest('.pk-stat, .stat-pill');
-    if (!pill || pill.classList.contains('rollable')) return;
-    pill.classList.add('rollable');
-    pill.addEventListener('click', function(e) {
-      e.stopPropagation();
-      var notation = valSpan.textContent.trim();
-      if (!/^d\d+/i.test(notation)) return; /* pas un de valide */
-      rollPillDice(pill, notation);
-    });
-  });
-}
+
 function rollPillDice(el, notation) {
   var parsed = parseDieNotation(notation);
   var result = rollExplodingDie(parsed.faces);
@@ -2640,6 +2635,34 @@ function showDiceBubble(el, total, detail, notation, wildTotal, wildDetail) {
     bubble.classList.remove('show');
     setTimeout(function() { bubble.remove(); }, 200);
   }, 3000);
+}
+function initRollablePills() {
+  /* Pills Pokemon (attributs combat) */
+  document.querySelectorAll('.pk-stat .val, .stat-pill .val').forEach(function(valSpan) {
+    var pill = valSpan.closest('.pk-stat, .stat-pill');
+    if (!pill || pill.classList.contains('rollable')) return;
+    var notation = valSpan.textContent.trim();
+    if (!/^d\d+/i.test(notation)) return;
+    pill.classList.add('rollable');
+    pill.addEventListener('click', function(e) {
+      e.stopPropagation();
+      rollPillDice(pill, valSpan.textContent.trim());
+    });
+  });
+
+  /* Lignes attributs/competences du PJ (tab-perso) */
+  document.querySelectorAll('.stat-row').forEach(function(row) {
+    if (row.classList.contains('rollable')) return;
+    var valSpan = row.querySelector('.stat-val');
+    if (!valSpan) return;
+    var notation = valSpan.textContent.trim();
+    if (!/^d\d+/i.test(notation)) return; /* exclut Parade, Robustesse, Allure, Fate Chips... */
+    row.classList.add('rollable');
+    row.addEventListener('click', function(e) {
+      e.stopPropagation();
+      rollPillDice(row, valSpan.textContent.trim());
+    });
+  });
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
