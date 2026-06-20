@@ -1402,8 +1402,7 @@ function cancelEditName() {
 
 document.addEventListener('DOMContentLoaded',function(){
   loadState(); state.activeSlot=0; renderTeam(); initNotes(); loadBlessures(); loadPlayerName(); initPartnerStats(); initPlayerBin();
-  _syncCloud(); // push localStorage -> Firebase au chargement
-});
+  });
 
 /* ---- EQUIPEMENT EDITABLE ---- */
 var DEFAULT_GEAR = ["Carnet de terrain (r\u00e9sistant \u00e0 l'eau)","Appareil photo \u00e0 m\u00e9moire physique","Kit de survie (corde 15m, pitons x4, lampe frontale)","Couteau de survie","Pochette \u00e9tanche documents","250 ₨"];
