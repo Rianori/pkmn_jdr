@@ -2725,33 +2725,7 @@ function rollPillDice(el, notation) {
   showDiceBubble(el, grandTotal, detail, notation, wild.total, wildDetail);
   broadcastDiceRoll(notation, grandTotal, result.rolls, wild.total, wild.rolls, kind);
 }
-function findPokemonAttribute(el, attrCode) {
-  /* Remonte au conteneur du Pokemon (pk-card ou pk-body) et cherche
-     la pill d'attribut correspondante. Gere FR complet et abreges. */
-  var ALIASES = {
-    FOR: ['for','force','str'],
-    AGI: ['agi','agilite','agilit\u00e9'],
-    VIG: ['vig','vigueur'],
-    RUS: ['rus','ruse'],
-    TREMP: ['tremp','trempe']
-  };
-  var wanted = ALIASES[attrCode.toUpperCase()] || [attrCode.toLowerCase()];
 
-  var container = el.closest('.pk-card, .pk-body, [id^="tab-"]');
-  if (!container) container = document;
-
-  var pills = container.querySelectorAll('.pk-stat, .stat-pill');
-  for (var i = 0; i < pills.length; i++) {
-    var pill = pills[i];
-    var valEl = pill.querySelector('.val');
-    if (!valEl) continue;
-    var label = pill.textContent.replace(valEl.textContent, '').trim().toLowerCase();
-    if (wanted.indexOf(label) >= 0) {
-      return valEl.textContent.trim();
-    }
-  }
-  return null;
-}
 
 function parseDamageNotation(text) {
   text = String(text).trim();
@@ -2820,6 +2794,42 @@ function rollDamage(el, text) {
 
   var allDiceRolls = allRolls.reduce(function(a,r){ return a.concat(r.rolls); }, []);
   broadcastDiceRoll(parsed.raw, total, allDiceRolls, null, null, 'damage');
+}
+function findPokemonAttribute(el, attrCode) {
+  var ALIASES = {
+    FOR: ['for','force','str'],
+    AGI: ['agi','agilite','agilit\u00e9'],
+    VIG: ['vig','vigueur'],
+    RUS: ['rus','ruse'],
+    TREMP: ['tremp','trempe']
+  };
+  var wanted = ALIASES[attrCode.toUpperCase()] || [attrCode.toLowerCase()];
+
+  /* Remonter manuellement parent par parent jusqu'a trouver des pills */
+  var node = el;
+  var pills = null;
+  for (var depth = 0; depth < 12 && node; depth++) {
+    if (node.querySelectorAll) {
+      var found = node.querySelectorAll('.pk-stat, .stat-pill');
+      if (found && found.length > 0) { pills = found; break; }
+    }
+    node = node.parentElement;
+  }
+  if (!pills) {
+    /* Dernier recours : chercher dans tout le document */
+    pills = document.querySelectorAll('.pk-stat, .stat-pill');
+  }
+
+  for (var i = 0; i < pills.length; i++) {
+    var pill = pills[i];
+    var valEl = pill.querySelector('.val');
+    if (!valEl) continue;
+    var label = pill.textContent.replace(valEl.textContent, '').trim().toLowerCase();
+    if (wanted.indexOf(label) >= 0) {
+      return valEl.textContent.trim();
+    }
+  }
+  return null;
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
