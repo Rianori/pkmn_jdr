@@ -2774,77 +2774,8 @@ function animateDiceRoll(count, faces, onDone) {
 
   return spinner;
 }
-function showDiceBubble(el, total, detail, notation, wildTotal, wildDetail, facesForAnim) {
-  var existing = el.querySelector('.dice-bubble');
-  if (existing) existing.remove();
 
-  var bubble = document.createElement('div');
-  bubble.className = 'dice-bubble';
 
-  var resultRow = document.createElement('div');
-  resultRow.className = 'dice-bubble-row hidden-during-roll';
-  resultRow.innerHTML =
-    '<div class="dice-bubble-col">'
-    + '<div class="dice-bubble-total">' + total + '</div>'
-    + '<div class="dice-bubble-detail">' + notation + ' : ' + detail + '</div>'
-    + '</div>'
-    + '<div class="dice-bubble-sep"></div>'
-    + '<div class="dice-bubble-col wild">'
-    + '<div class="dice-bubble-total wild">' + wildTotal + '</div>'
-    + '<div class="dice-bubble-detail">d6 : ' + wildDetail + '</div>'
-    + '</div>';
-
-  var spinner = animateDiceRoll(2, facesForAnim || 6, function() {
-    resultRow.classList.remove('hidden-during-roll');
-  });
-  bubble.appendChild(spinner);
-  bubble.appendChild(resultRow);
-
-  el.style.position = 'relative';
-  el.appendChild(bubble);
-
-  requestAnimationFrame(function() {
-    requestAnimationFrame(function() { bubble.classList.add('show'); });
-  });
-
-  setTimeout(function() {
-    bubble.classList.remove('show');
-    setTimeout(function() { bubble.remove(); }, 200);
-  }, 3400);
-}
-function showDamageBubble(el, total, detail, notation, facesForAnim) {
-  var existing = el.querySelector('.dice-bubble');
-  if (existing) existing.remove();
-
-  var bubble = document.createElement('div');
-  bubble.className = 'dice-bubble';
-
-  var resultBlock = document.createElement('div');
-  resultBlock.className = 'dice-bubble-row hidden-during-roll';
-  resultBlock.innerHTML =
-    '<div class="dice-bubble-col">'
-    + '<div class="dice-bubble-total">' + total + '</div>'
-    + '<div class="dice-bubble-detail">' + notation + ' : ' + detail + '</div>'
-    + '</div>';
-
-  var spinner = animateDiceRoll(2, facesForAnim || 6, function() {
-    resultBlock.classList.remove('hidden-during-roll');
-  });
-  bubble.appendChild(spinner);
-  bubble.appendChild(resultBlock);
-
-  el.style.position = 'relative';
-  el.appendChild(bubble);
-
-  requestAnimationFrame(function() {
-    requestAnimationFrame(function() { bubble.classList.add('show'); });
-  });
-
-  setTimeout(function() {
-    bubble.classList.remove('show');
-    setTimeout(function() { bubble.remove(); }, 200);
-  }, 2900);
-}
 function removePokemon(i) {
   if (i === 0) return;
   openReleaseMenu(i);
@@ -2982,7 +2913,94 @@ function openConfirmModal(title, text, onConfirm) {
 
 function closeConfirmModal() {
   document.getElementById('confirm-modal-bg').classList.remove('open');
-}</script>
+}
+function showDiceBubble(el, total, detail, notation, wildTotal, wildDetail, facesForAnim) {
+  var existing = el.querySelector('.dice-bubble');
+  if (existing) existing.remove();
+
+  var bubble = document.createElement('div');
+  bubble.className = 'dice-bubble';
+
+  var resultRow = document.createElement('div');
+  resultRow.className = 'dice-bubble-row hidden-during-roll';
+  resultRow.innerHTML =
+    '<div class="dice-bubble-col">'
+    + '<div class="dice-bubble-total">' + total + '</div>'
+    + '<div class="dice-bubble-detail">' + notation + ' : ' + detail + '</div>'
+    + '</div>'
+    + '<div class="dice-bubble-sep"></div>'
+    + '<div class="dice-bubble-col wild">'
+    + '<div class="dice-bubble-total wild">' + wildTotal + '</div>'
+    + '<div class="dice-bubble-detail">d6 : ' + wildDetail + '</div>'
+    + '</div>';
+
+  var spinner = animateDiceRoll(2, facesForAnim || 6, function() {
+    resultRow.classList.remove('hidden-during-roll');
+  });
+  bubble.appendChild(spinner);
+  bubble.appendChild(resultRow);
+
+  el.style.position = 'relative';
+  el.appendChild(bubble);
+
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() { bubble.classList.add('show'); });
+  });
+
+  registerActiveDiceBubble(bubble);
+}
+function showDamageBubble(el, total, detail, notation, facesForAnim) {
+  var existing = el.querySelector('.dice-bubble');
+  if (existing) existing.remove();
+
+  var bubble = document.createElement('div');
+  bubble.className = 'dice-bubble';
+
+  var resultBlock = document.createElement('div');
+  resultBlock.className = 'dice-bubble-row hidden-during-roll';
+  resultBlock.innerHTML =
+    '<div class="dice-bubble-col">'
+    + '<div class="dice-bubble-total">' + total + '</div>'
+    + '<div class="dice-bubble-detail">' + notation + ' : ' + detail + '</div>'
+    + '</div>';
+
+  var spinner = animateDiceRoll(2, facesForAnim || 6, function() {
+    resultBlock.classList.remove('hidden-during-roll');
+  });
+  bubble.appendChild(spinner);
+  bubble.appendChild(resultBlock);
+
+  el.style.position = 'relative';
+  el.appendChild(bubble);
+
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() { bubble.classList.add('show'); });
+  });
+
+  registerActiveDiceBubble(bubble);
+}
+var _activeDiceBubble = null;
+
+function registerActiveDiceBubble(bubble) {
+  if (_activeDiceBubble && _activeDiceBubble.parentElement) {
+    _activeDiceBubble.classList.remove('show');
+    setTimeout(function() {
+      if (_activeDiceBubble && _activeDiceBubble.parentElement) _activeDiceBubble.remove();
+    }, 200);
+  }
+  _activeDiceBubble = bubble;
+}
+
+document.addEventListener('click', function(e) {
+  if (!_activeDiceBubble) return;
+  if (_activeDiceBubble.contains(e.target)) return;
+  var bubbleToClose = _activeDiceBubble;
+  bubbleToClose.classList.remove('show');
+  setTimeout(function() {
+    if (bubbleToClose.parentElement) bubbleToClose.remove();
+  }, 200);
+  _activeDiceBubble = null;
+});</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
     <div class="mj-note-box-title">Message du MJ</div>
