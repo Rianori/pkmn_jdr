@@ -155,9 +155,48 @@ header{display:flex;align-items:center;justify-content:space-between;
   .dice-roll-sep { color:var(--muted); margin:0 6px; font-size:14px; }
   .dice-roll-detail { font-family:var(--mono); font-size:10px; color:var(--muted); margin-left:8px; }
   .dice-roll-time { font-size:9px; color:var(--muted); margin-top:2px; }
+
+  #mj-auth-overlay { position:fixed; inset:0; background:#0e0e0f; z-index:9999;
+    display:flex; align-items:center; justify-content:center; }
+  #mj-auth-overlay.hidden { display:none; }
+  .mj-auth-box { background:#1c1c1f; border:1px solid #2a2a2e; border-radius:8px;
+    padding:36px 40px; width:340px; max-width:90vw; }
+  .mj-auth-title { font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600;
+    color:#c8922a; margin-bottom:6px; letter-spacing:.04em; }
+  .mj-auth-sub { font-size:11px; color:#6b6a6a; margin-bottom:24px; }
+  .mj-auth-field { margin-bottom:14px; }
+  .mj-auth-field label { font-family:'IBM Plex Mono',monospace; font-size:9px;
+    letter-spacing:.1em; text-transform:uppercase; color:#6b6a6a; display:block; margin-bottom:6px; }
+  .mj-auth-field input { width:100%; background:#161618; border:1px solid #2a2a2e;
+    border-radius:4px; color:#d4cfc5; font-family:'IBM Plex Sans',sans-serif; font-size:13px;
+    padding:9px 12px; outline:none; box-sizing:border-box; }
+  .mj-auth-field input:focus { border-color:#7a5510; }
+  .mj-auth-btn { width:100%; font-family:'IBM Plex Mono',monospace; font-size:11px;
+    letter-spacing:.06em; text-transform:uppercase; background:#c8922a22; color:#c8922a;
+    border:1px solid #7a5510; border-radius:4px; padding:10px; cursor:pointer; margin-top:6px; }
+  .mj-auth-btn:hover { background:#c8922a44; }
+  .mj-auth-btn:disabled { opacity:.5; cursor:default; }
+  .mj-auth-error { font-size:11px; color:#e57373; margin-top:10px; min-height:14px; }
 </style>
 </head>
 <body>
+<div id="mj-auth-overlay">
+  <div class="mj-auth-box">
+    <div class="mj-auth-title">Acces restreint</div>
+    <div class="mj-auth-sub">Cette page est reservee au MJ.</div>
+    <div class="mj-auth-field">
+      <label>Email</label>
+      <input type="email" id="mj-auth-email" autocomplete="username" value="ProfRianori@savagepkmn.kanto">
+    </div>
+    <div class="mj-auth-field">
+      <label>Mot de passe</label>
+      <input type="password" id="mj-auth-pass" autocomplete="current-password">
+    </div>
+    <button class="mj-auth-btn" id="mj-auth-btn" onclick="mjAuthLogin()">Se connecter</button>
+    <div class="mj-auth-error" id="mj-auth-error"></div>
+  </div>
+</div>
+
 
 <header>
   <div style="display:flex;align-items:center;">
@@ -177,6 +216,45 @@ header{display:flex;align-items:center;justify-content:space-between;
 </div>
 
 <script>
+var MJ_FB_API_KEY = "AIzaSyBQwaWdHDnY08SmABYzxyTAQrl-0eq6TU0";
+
+function mjAuthLogin() {
+  var email = document.getElementById('mj-auth-email').value.trim();
+  var pass  = document.getElementById('mj-auth-pass').value;
+  var btn   = document.getElementById('mj-auth-btn');
+  var errEl = document.getElementById('mj-auth-error');
+  errEl.textContent = '';
+  if (!email || !pass) { errEl.textContent = 'Email et mot de passe requis.'; return; }
+  btn.disabled = true;
+  btn.textContent = 'Connexion...';
+
+  fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + MJ_FB_API_KEY, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ email: email, password: pass, returnSecureToken: true })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.idToken) {
+      sessionStorage.setItem('mj_id_token', data.idToken);
+      document.getElementById('mj-auth-overlay').classList.add('hidden');
+    } else {
+      errEl.textContent = 'Identifiants incorrects.';
+      btn.disabled = false;
+      btn.textContent = 'Se connecter';
+    }
+  })
+  .catch(function() {
+    errEl.textContent = 'Erreur de connexion.';
+    btn.disabled = false;
+    btn.textContent = 'Se connecter';
+  });
+}
+
+document.getElementById('mj-auth-pass') && document.getElementById('mj-auth-pass').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') mjAuthLogin();
+});
+
 /* === ECOUTE DES LANCERS DE DES (test) === */
 function listenDiceRolls(slug) {
   var src = new EventSource(FB + '/dice_rolls/' + slug + '.json');
