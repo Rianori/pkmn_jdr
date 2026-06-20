@@ -879,6 +879,13 @@ a { color: inherit; }
   .stat-row .dice-bubble { left:auto; right:0; transform:none; }
   .stat-row .dice-bubble.show { transform:translateY(-2px); }
   .stat-row .dice-bubble::after { left:auto; right:16px; transform:none; }
+
+  .pk-atk-dmg.rollable { cursor:pointer; transition:background .12s; position:relative; }
+  .pk-atk-dmg.rollable:hover { background:var(--amber-glow); }
+  .pk-atk-dmg.rollable:active { transform:scale(.96); }
+  .pk-atk-dmg .dice-bubble { left:auto; right:0; transform:none; }
+  .pk-atk-dmg .dice-bubble.show { transform:translateY(-2px); }
+  .pk-atk-dmg .dice-bubble::after { left:auto; right:16px; transform:none; }
 </style>
 </head>
 <body>
@@ -2636,6 +2643,71 @@ function showDiceBubble(el, total, detail, notation, wildTotal, wildDetail) {
     setTimeout(function() { bubble.remove(); }, 200);
   }, 3000);
 }
+
+function parseDamageNotation(text) {
+  /* Parse des formats varies : "2d6", "FOR+d8", "3d6+1", "Str+d4", "d10" */
+  text = String(text).trim();
+
+  /* Trouver tous les des explicites : 2d6, d8, 1d4 etc. */
+  var diceMatches = text.match(/(\d*)d(\d+)/gi) || [];
+  var dice = diceMatches.map(function(m) {
+    var parts = m.match(/(\d*)d(\d+)/i);
+    var count = parts[1] ? parseInt(parts[1],10) : 1;
+    var faces = parseInt(parts[2],10);
+    return { count: count, faces: faces };
+  });
+
+  /* Modificateur numerique fixe (apres un dernier + ou - hors notation de) */
+  var modMatch = text.match(/[+\-]\s*(\d+)\s*$/);
+  var mod = 0;
+  if (modMatch && !/d\d+\s*[+\-]\s*\d+$/i.test(text.replace(/\s/g,'')) === false) {
+    /* eviter de capturer le +1 qui suit immediatement un dXX comme partie du dé */
+  }
+  /* Plus simple : chercher un nombre final qui n'est pas precede de 'd' */
+  var modMatch2 = text.match(/(?:^|[^d\d])([+\-]\d+)\s*$/i);
+  if (modMatch2) mod = parseInt(modMatch2[1], 10);
+
+  /* Detecter un attribut nomme (FOR, Str, AGI...) -> trate comme un d6 informatif si pas de dé trouve avec lui */
+  var hasNamedAttr = /\b(FOR|STR|AGI|VIG|RUS|TREMP)\b/i.test(text);
+
+  return { dice: dice, mod: mod, hasNamedAttr: hasNamedAttr, raw: text };
+}
+
+function rollDamage(el, text) {
+  var parsed = parseDamageNotation(text);
+
+  if (!parsed.dice.length) return; /* rien a lancer (ex: "Standard", "-") */
+
+  var allRolls = [];
+  var total = 0;
+  parsed.dice.forEach(function(d) {
+    for (var i = 0; i < d.count; i++) {
+      var r = rollExplodingDie(d.faces);
+      allRolls.push({ faces: d.faces, rolls: r.rolls, total: r.total });
+      total += r.total;
+    }
+  });
+  total += parsed.mod;
+
+  var detailParts = allRolls.map(function(r) {
+    var rollsStr = r.rolls.map(function(v) {
+      return (v === r.faces) ? '<span class="explode">' + v + '</span>' : v;
+    }).join('+');
+    return 'd' + r.faces + '(' + rollsStr + ')';
+  });
+  var detail = detailParts.join(' + ');
+  if (parsed.mod) detail += (parsed.mod > 0 ? ' + ' : ' - ') + Math.abs(parsed.mod);
+
+  /* Wild Die — d6 systematique, comme pour les attributs */
+  var wild = rollExplodingDie(6);
+  var wildDetail = wild.rolls.map(function(r) {
+    return (r === 6) ? '<span class="explode">' + r + '</span>' : r;
+  }).join(' + ');
+
+  showDiceBubble(el, total, detail, parsed.raw, wild.total, wildDetail);
+  broadcastDiceRoll(parsed.raw, total, allRolls.reduce(function(a,r){return a.concat(r.rolls);},[]), wild.total, wild.rolls);
+}
+
 function initRollablePills() {
   /* Pills Pokemon (attributs combat) */
   document.querySelectorAll('.pk-stat .val, .stat-pill .val').forEach(function(valSpan) {
@@ -2656,11 +2728,23 @@ function initRollablePills() {
     var valSpan = row.querySelector('.stat-val');
     if (!valSpan) return;
     var notation = valSpan.textContent.trim();
-    if (!/^d\d+/i.test(notation)) return; /* exclut Parade, Robustesse, Allure, Fate Chips... */
+    if (!/^d\d+/i.test(notation)) return;
     row.classList.add('rollable');
     row.addEventListener('click', function(e) {
       e.stopPropagation();
       rollPillDice(row, valSpan.textContent.trim());
+    });
+  });
+
+  /* Dommages des attaques Pokemon */
+  document.querySelectorAll('.pk-atk-dmg, .bst-atk-dmg').forEach(function(cell) {
+    if (cell.classList.contains('rollable')) return;
+    var text = cell.textContent.trim();
+    if (!/d\d+/i.test(text)) return; /* pas de notation de de -> non cliquable */
+    cell.classList.add('rollable');
+    cell.addEventListener('click', function(e) {
+      e.stopPropagation();
+      rollDamage(cell, cell.textContent.trim());
     });
   });
 }</script>
