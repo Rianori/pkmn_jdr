@@ -1296,8 +1296,7 @@ function cancelEditName() {
 
 document.addEventListener('DOMContentLoaded',function(){
   loadState(); state.activeSlot=0; renderTeam(); initNotes(); loadBlessures(); loadPlayerName(); initPartnerStats(); initPlayerBin();
-  _syncCloud(); // push localStorage -> Firebase au chargement
-});
+  });
 
 /* ---- EQUIPEMENT EDITABLE ---- */
 var DEFAULT_GEAR = ["Badge de circuit libre (acc\u00e8s tournois non officiels)","Cahier de strat\u00e9gies (notes de combat personnelles)","Pok\u00e9balls x3","Veste de voyage","100\u20a8 (apr\u00e8s investissements)"];
