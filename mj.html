@@ -3730,52 +3730,7 @@ function _slugify(s) {
     .replace(/^-+|-+$/g, '');
 }
 
-function createNewScenario() {
-  var title  = (document.getElementById('sc-new-title').value || '').trim();
-  var sub    = (document.getElementById('sc-new-sub').value || '').trim();
-  var num    = (document.getElementById('sc-new-num').value || '02').trim();
-  var status = document.getElementById('sc-new-status');
 
-  if (!title) {
-    status.textContent = 'Le titre est obligatoire.';
-    status.style.color = 'var(--danger)';
-    status.style.display = 'block';
-    return;
-  }
-
-  var slug     = _slugify(title);
-  var filename = 'scenario-' + slug + '.html';
-
-  var html = _decodeTpl(_SC_TPL_B64)
-    .replace(/{{TITRE}}/g, title)
-    .replace(/{{SOUS_TITRE}}/g, sub || 'Scenario en cours de redaction')
-    .replace(/{{NUM}}/g, num);
-
-  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  var url  = URL.createObjectURL(blob);
-
-  var a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(function() {
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, 100);
-
-  _addScenarioCard(title, sub, num, filename);
-
-  status.innerHTML = '<strong>' + filename + '</strong> telecharg&eacute;.';
-  status.style.color = 'var(--safe)';
-  status.style.display = 'block';
-
-  document.getElementById('sc-new-title').value = '';
-  document.getElementById('sc-new-sub').value = '';
-
-  setTimeout(function() { closeNewScenarioModal(); }, 2500);
-}
 
 function _addScenarioCard(title, sub, num, filename) {
   var container = document.querySelector('#tab-scenarios > div[style*="flex-direction:column"]');
