@@ -3296,6 +3296,35 @@
 </main>
 
 <script>
+function createNewScenario() {
+  var title = document.getElementById('sc-new-title').value.trim();
+  var sub   = document.getElementById('sc-new-sub').value.trim();
+  var num   = document.getElementById('sc-new-num').value.trim() || '00';
+
+  if (!title) { alert('Le titre est requis.'); return; }
+
+  var id = 'sc-' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+
+  var payload = {
+    title: title,
+    tagline: sub,
+    campagne: num,
+    intro: { histoire:'', notes:'' },
+    conclusion: null,
+    actes: []
+  };
+
+  var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+  fetch(FB + '/scenarios/' + id + '.json', {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).then(function() {
+    window.location.href = 'scenario-editor.html?id=' + id;
+  }).catch(function() {
+    alert('Erreur lors de la creation du scenario.');
+  });
+}
 function toggleBgroup(id) {
   var acc = document.getElementById('bacc-' + id);
   var content = document.getElementById('bcontent-' + id);
@@ -3802,28 +3831,7 @@ function _addScenarioCard(title, sub, num, filename) {
       <button onclick="closeNewScenarioModal()" style="font-family:var(--mono);font-size:11px;padding:8px 18px;background:none;border:1px solid var(--border);border-radius:2px;color:var(--muted);cursor:pointer;">Annuler</button>
       <button id="sc-new-btn" onclick="createNewScenario()" style="font-family:var(--mono);font-size:11px;padding:8px 18px;background:var(--amber-dim);border:none;border-radius:2px;color:var(--amber);cursor:pointer;font-weight:600;">Creer</button>
     </div>
-    <div class="filter-bar" id="beast-filter-bar">
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;">
-          <button class="filter-btn active" onclick="filterBeast('all',this)">Tous</button>
-          <button class="filter-btn" onclick="filterBeast('sauvage',this)">&#127807; Sauvages</button>
-          <button class="filter-btn" onclick="filterBeast('psi',this)">&#128308; PSI-B</button>
-          <button class="filter-btn" onclick="filterBeast('allies',this)">&#128309; Alliés</button>
-          <button class="filter-btn" onclick="filterBeast('elites',this)">&#128995; Élites</button>
-          <button class="filter-btn" onclick="filterBeast('boss',this)">&#128128; Boss</button>
-          <button class="filter-btn" onclick="filterBeast('sc02',this)">&#127942; Carmin s/ Mer</button>
-          <button class="filter-btn" onclick="filterBeast('alpha9',this)">&#9763; Alpha-9</button>
-        </div>
-        <div class="filter-bar-pnj" id="filter-pnj-bar">
-          <span style="font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.08em;align-self:center;">PAR PNJ :</span>
-          <button class="filter-btn" onclick="filterByPnj('all',this)">Tous</button>
-          <button class="filter-btn" onclick="filterByPnj('drevin',this)">Drevin</button>
-          <button class="filter-btn" onclick="filterByPnj('alban',this)">Alban</button>
-          <button class="filter-btn" onclick="filterByPnj('bob',this)">Major Bob</button>
-          <button class="filter-btn" onclick="filterByPnj('volt',this)">Volt</button>
-          <button class="filter-btn" onclick="filterByPnj('nessa',this)">Nessa</button>
-          <button class="filter-btn" onclick="filterByPnj('ondine',this)">Ondine</button>
-        </div>
-      </div>
+    
   </div>
 </div>
 </body>
