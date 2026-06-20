@@ -2146,6 +2146,17 @@ function registerActiveDiceBubble(bubble) {
   }
   _activeDiceBubble = bubble;
 }
+
+document.addEventListener('click', function(e) {
+  if (!_activeDiceBubble) return;
+  if (_activeDiceBubble.contains(e.target)) return;
+  var bubbleToClose = _activeDiceBubble;
+  bubbleToClose.classList.remove('show');
+  setTimeout(function() {
+    if (bubbleToClose.parentElement) bubbleToClose.remove();
+  }, 200);
+  _activeDiceBubble = null;
+});
 function initAtkAutocomplete(inputEl, ai, idx) {
   var list = inputEl.parentElement.querySelector('.atk-ac-list');
   if (!list) return;
