@@ -2595,23 +2595,7 @@ function rollPillDice(el, notation) {
   broadcastDiceRoll(notation, grandTotal, result.rolls, wild.total, wild.rolls);
 }
 
-function broadcastDiceRoll(notation, total, rolls, wildTotal, wildRolls) {
-  var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
-  var payload = {
-    player: PLAYER_KEY,
-    notation: notation,
-    total: total,
-    rolls: rolls,
-    wildTotal: wildTotal,
-    wildRolls: wildRolls,
-    ts: Date.now()
-  };
-  fetch(FB + '/dice_rolls/' + PLAYER_KEY + '.json', {
-    method: 'PUT',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(payload)
-  }).catch(function(){});
-}
+
 function showDiceBubble(el, total, detail, notation, wildTotal, wildDetail) {
   var existing = el.querySelector('.dice-bubble');
   if (existing) existing.remove();
@@ -2673,40 +2657,7 @@ function parseDamageNotation(text) {
   return { dice: dice, mod: mod, hasNamedAttr: hasNamedAttr, raw: text };
 }
 
-function rollDamage(el, text) {
-  var parsed = parseDamageNotation(text);
 
-  if (!parsed.dice.length) return; /* rien a lancer (ex: "Standard", "-") */
-
-  var allRolls = [];
-  var total = 0;
-  parsed.dice.forEach(function(d) {
-    for (var i = 0; i < d.count; i++) {
-      var r = rollExplodingDie(d.faces);
-      allRolls.push({ faces: d.faces, rolls: r.rolls, total: r.total });
-      total += r.total;
-    }
-  });
-  total += parsed.mod;
-
-  var detailParts = allRolls.map(function(r) {
-    var rollsStr = r.rolls.map(function(v) {
-      return (v === r.faces) ? '<span class="explode">' + v + '</span>' : v;
-    }).join('+');
-    return 'd' + r.faces + '(' + rollsStr + ')';
-  });
-  var detail = detailParts.join(' + ');
-  if (parsed.mod) detail += (parsed.mod > 0 ? ' + ' : ' - ') + Math.abs(parsed.mod);
-
-  /* Wild Die — d6 systematique, comme pour les attributs */
-  var wild = rollExplodingDie(6);
-  var wildDetail = wild.rolls.map(function(r) {
-    return (r === 6) ? '<span class="explode">' + r + '</span>' : r;
-  }).join(' + ');
-
-  showDiceBubble(el, total, detail, parsed.raw, wild.total, wildDetail);
-  broadcastDiceRoll(parsed.raw, total, allRolls.reduce(function(a,r){return a.concat(r.rolls);},[]), wild.total, wild.rolls);
-}
 
 function initRollablePills() {
   /* Pills Pokemon (attributs combat) */
@@ -2747,6 +2698,74 @@ function initRollablePills() {
       rollDamage(cell, cell.textContent.trim());
     });
   });
+}
+function rollDamage(el, text) {
+  var parsed = parseDamageNotation(text);
+  if (!parsed.dice.length) return;
+
+  var allRolls = [];
+  var total = 0;
+  parsed.dice.forEach(function(d) {
+    for (var i = 0; i < d.count; i++) {
+      var r = rollExplodingDie(d.faces);
+      allRolls.push({ faces: d.faces, rolls: r.rolls, total: r.total });
+      total += r.total;
+    }
+  });
+  total += parsed.mod;
+
+  var detailParts = allRolls.map(function(r) {
+    var rollsStr = r.rolls.map(function(v) {
+      return (v === r.faces) ? '<span class="explode">' + v + '</span>' : v;
+    }).join('+');
+    return 'd' + r.faces + '(' + rollsStr + ')';
+  });
+  var detail = detailParts.join(' + ');
+  if (parsed.mod) detail += (parsed.mod > 0 ? ' + ' : ' - ') + Math.abs(parsed.mod);
+
+  showDamageBubble(el, total, detail, parsed.raw);
+  broadcastDiceRoll(parsed.raw, total, allRolls.reduce(function(a,r){return a.concat(r.rolls);},[]), null, null, 'damage');
+}
+
+function showDamageBubble(el, total, detail, notation) {
+  var existing = el.querySelector('.dice-bubble');
+  if (existing) existing.remove();
+
+  var bubble = document.createElement('div');
+  bubble.className = 'dice-bubble';
+  bubble.innerHTML =
+    '<div class="dice-bubble-total">' + total + '</div>'
+    + '<div class="dice-bubble-detail">' + notation + ' : ' + detail + '</div>';
+
+  el.style.position = 'relative';
+  el.appendChild(bubble);
+
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() { bubble.classList.add('show'); });
+  });
+
+  setTimeout(function() {
+    bubble.classList.remove('show');
+    setTimeout(function() { bubble.remove(); }, 200);
+  }, 2500);
+}
+function broadcastDiceRoll(notation, total, rolls, wildTotal, wildRolls, kind) {
+  var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+  var payload = {
+    player: PLAYER_KEY,
+    notation: notation,
+    total: total,
+    rolls: rolls,
+    wildTotal: wildTotal,
+    wildRolls: wildRolls,
+    kind: kind || 'attribut',
+    ts: Date.now()
+  };
+  fetch(FB + '/dice_rolls/' + PLAYER_KEY + '.json', {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).catch(function(){});
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
