@@ -854,6 +854,20 @@ a { color: inherit; }
   .atk-ac-item:hover { background:var(--amber-glow); }
   .atk-ac-name { font-family:var(--mono); font-weight:600; color:var(--text); }
   .atk-ac-meta { font-size:10px; color:var(--muted); margin-top:1px; }
+
+  .pk-stat.rollable { cursor:pointer; transition:border-color .12s,background .12s; position:relative; }
+  .pk-stat.rollable:hover { border-color:var(--amber-dim); background:var(--amber-glow); }
+  .pk-stat.rollable:active { transform:scale(.96); }
+  .dice-bubble { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+    background:var(--card); border:1px solid var(--amber-dim); border-radius:6px;
+    padding:8px 14px; white-space:nowrap; z-index:500; box-shadow:0 4px 16px rgba(0,0,0,.5);
+    opacity:0; pointer-events:none; transition:opacity .15s,transform .15s; }
+  .dice-bubble.show { opacity:1; transform:translateX(-50%) translateY(-2px); }
+  .dice-bubble::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+    border:5px solid transparent; border-top-color:var(--amber-dim); }
+  .dice-bubble-total { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--amber); text-align:center; }
+  .dice-bubble-detail { font-family:var(--mono); font-size:9px; color:var(--muted); text-align:center; margin-top:2px; }
+  .dice-bubble-detail .explode { color:var(--amber); }
 </style>
 </head>
 <body>
@@ -2507,6 +2521,104 @@ function renderPanel() {
 
   panel.querySelector('#pk-btn-del').addEventListener('click', function() {
     removePokemon(state.activeSlot);
+  });
+  initRollablePills();
+}
+
+/* === LANCER DE DES — Savage Worlds (des explosifs) === */
+
+function parseDieNotation(notation) {
+  /* Parse "d6", "d8+1", "d12+2" -> {faces, mod} */
+  var m = String(notation).match(/d(\d+)\s*(?:([+\-])\s*(\d+))?/i);
+  if (!m) return { faces: 4, mod: 0 };
+  var faces = parseInt(m[1], 10);
+  var mod   = m[3] ? (m[2] === '-' ? -parseInt(m[3],10) : parseInt(m[3],10)) : 0;
+  return { faces: faces, mod: mod };
+}
+
+function rollExplodingDie(faces) {
+  /* Lance un d{faces}, relance et additionne tant que le max sort */
+  var rolls = [];
+  var total = 0;
+  var roll;
+  do {
+    roll = Math.floor(Math.random() * faces) + 1;
+    rolls.push(roll);
+    total += roll;
+  } while (roll === faces && rolls.length < 20); /* securite anti-boucle infinie */
+  return { rolls: rolls, total: total };
+}
+
+function rollPillDice(el, notation) {
+  var parsed = parseDieNotation(notation);
+  var result = rollExplodingDie(parsed.faces);
+  var grandTotal = result.total + parsed.mod;
+
+  /* Construire le detail (ex: "6+6+3 = 15" si explosion, sinon juste le chiffre) */
+  var detail = result.rolls.map(function(r, i) {
+    var isMax = (r === parsed.faces);
+    return isMax ? '<span class="explode">' + r + '</span>' : r;
+  }).join(' + ');
+  if (parsed.mod) detail += (parsed.mod > 0 ? ' + ' : ' - ') + Math.abs(parsed.mod);
+
+  /* Afficher la bulle */
+  showDiceBubble(el, grandTotal, detail, notation);
+
+  /* Pousser vers Firebase pour le MJ */
+  broadcastDiceRoll(notation, grandTotal, result.rolls);
+}
+
+function showDiceBubble(el, total, detail, notation) {
+  /* Retirer une bulle existante sur cet element */
+  var existing = el.querySelector('.dice-bubble');
+  if (existing) existing.remove();
+
+  var bubble = document.createElement('div');
+  bubble.className = 'dice-bubble';
+  bubble.innerHTML =
+    '<div class="dice-bubble-total">' + total + '</div>'
+    + '<div class="dice-bubble-detail">' + notation + ' : ' + detail + '</div>';
+
+  el.style.position = 'relative';
+  el.appendChild(bubble);
+
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() { bubble.classList.add('show'); });
+  });
+
+  setTimeout(function() {
+    bubble.classList.remove('show');
+    setTimeout(function() { bubble.remove(); }, 200);
+  }, 2500);
+}
+
+function broadcastDiceRoll(notation, total, rolls) {
+  var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+  var payload = {
+    player: PLAYER_KEY,
+    notation: notation,
+    total: total,
+    rolls: rolls,
+    ts: Date.now()
+  };
+  fetch(FB + '/dice_rolls/' + PLAYER_KEY + '.json', {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).catch(function(){});
+}
+
+function initRollablePills() {
+  document.querySelectorAll('.pk-stat .val, .stat-pill .val').forEach(function(valSpan) {
+    var pill = valSpan.closest('.pk-stat, .stat-pill');
+    if (!pill || pill.classList.contains('rollable')) return;
+    pill.classList.add('rollable');
+    pill.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var notation = valSpan.textContent.trim();
+      if (!/^d\d+/i.test(notation)) return; /* pas un de valide */
+      rollPillDice(pill, notation);
+    });
   });
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
