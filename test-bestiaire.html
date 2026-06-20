@@ -891,6 +891,22 @@ a { color: inherit; }
     line-height: 1.6; margin-bottom: 14px; padding: 10px 12px;
     background: var(--surface); border-radius: 4px; border-left: 2px solid var(--amber-dim); }
   .pk-player-desc-empty { color: var(--muted); opacity: .6; }
+
+  .dice-spinner { display: flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 4px 0; }
+  .dice-cube { width: 28px; height: 28px; position: relative; }
+  .dice-cube svg { width: 100%; height: 100%; }
+  .dice-cube.rolling svg { animation: dice-spin 0.55s ease-out; }
+  @keyframes dice-spin {
+    0%   { transform: rotate(0deg) scale(1); }
+    30%  { transform: rotate(180deg) scale(1.15); }
+    60%  { transform: rotate(360deg) scale(1.1); }
+    100% { transform: rotate(540deg) scale(1); }
+  }
+  .dice-cube.rolling .dice-face-num { animation: dice-flicker 0.55s steps(6); }
+  @keyframes dice-flicker { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+  .dice-bubble-row { transition: opacity .15s; }
+  .dice-bubble-row.hidden-during-roll { opacity: 0; height: 0; overflow: hidden; }
 </style>
 </head>
 <body>
@@ -2680,6 +2696,42 @@ function renderPanel() {
     removePokemon(state.activeSlot);
   });
   initRollablePills();
+}
+function diceSvg(num) {
+  return '<svg viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" '
+    + 'fill="var(--card)" stroke="var(--amber-dim)" stroke-width="2"></rect>'
+    + '<text class="dice-face-num" x="18" y="24" text-anchor="middle" '
+    + 'font-family="var(--mono)" font-size="16" font-weight="700" fill="var(--amber)">' + num + '</text></svg>';
+}
+function animateDiceRoll(count, faces, onDone) {
+  var spinner = document.createElement('div');
+  spinner.className = 'dice-spinner';
+  var cubes = [];
+  for (var i = 0; i < count; i++) {
+    var cube = document.createElement('div');
+    cube.className = 'dice-cube rolling';
+    cube.innerHTML = diceSvg(1);
+    spinner.appendChild(cube);
+    cubes.push(cube);
+  }
+
+  var flickerCount = 0;
+  var flickerIv = setInterval(function() {
+    cubes.forEach(function(cube) {
+      var fake = Math.floor(Math.random() * faces) + 1;
+      cube.innerHTML = diceSvg(fake);
+    });
+    flickerCount++;
+    if (flickerCount >= 6) {
+      clearInterval(flickerIv);
+      setTimeout(function() {
+        spinner.remove();
+        if (onDone) onDone();
+      }, 80);
+    }
+  }, 90);
+
+  return spinner;
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
