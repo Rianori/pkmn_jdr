@@ -1202,22 +1202,9 @@ var state = {
   activeNote: null
 };
 
-function loadState() {
-  try {
-    var raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      var saved = JSON.parse(raw);
-      if (saved.team) { for (var i=1;i<6;i++) state.team[i]=saved.team[i]||null; }
-      if (saved.notes) state.notes = saved.notes;
-      if (saved.activeNote) state.activeNote = saved.activeNote;
-    }
-  } catch(e) {}
-}
 
-function saveState() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({team:state.team,notes:state.notes,activeNote:state.activeNote})); } catch(e) {}
-  _syncCloud();
-}
+
+
 
 function renderTeam() {
   var grid = document.getElementById('team-grid');
@@ -1393,17 +1380,9 @@ document.addEventListener('DOMContentLoaded',function(){
 /* ---- EQUIPEMENT EDITABLE ---- */
 var DEFAULT_GEAR = ["Analyseur de CT portable (+2 aux jets de Sciences sur toute CT)","Carnet de terrain chiffr\u00e9","Lampe frontale haute puissance","Pok\u00e9dex modifi\u00e9 (acc\u00e8s aux bases de donn\u00e9es de recherche)","Marteau d'alpiniste (arme improvis\u00e9e, Str+d4)","500\u00a5 en esp\u00e8ces"];
 
-function loadGear() {
-  try {
-    var saved = JSON.parse(localStorage.getItem(STORAGE_KEY + '_gear') || 'null');
-    return saved || DEFAULT_GEAR.slice();
-  } catch(e) { return DEFAULT_GEAR.slice(); }
-}
 
-function saveGear(items) {
-  localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(items));
-  _syncCloud();
-}
+
+
 
 
 
@@ -2513,6 +2492,26 @@ function renderPanel() {
   panel.querySelector('#pk-btn-del').addEventListener('click', function() {
     removePokemon(state.activeSlot);
   });
+}
+function loadState() {
+  /* Plus de localStorage — les donnees (team, notes) sont chargees
+     depuis Firebase via loadNotesFromCloud(). Cette fonction ne fait
+     que garantir un etat initial propre avant la reponse Firebase. */
+}
+
+function saveState() {
+  _syncCloud();
+}
+
+var _gearCache = DEFAULT_GEAR.slice();
+
+function loadGear() {
+  return _gearCache;
+}
+
+function saveGear(items) {
+  _gearCache = items;
+  _syncCloud();
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
