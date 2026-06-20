@@ -1859,20 +1859,22 @@ function showBstDetail(c, el) {
     atksHtml += '</table>';
   }
 
-  var talentsHtml = '';
-  if (c.talents.length) {
-    talentsHtml = '<span class="bst-talent-lbl">Talent</span>'
-      + '<div class="bst-talent-list" id="bst-talent-list">';
-    c.talents.forEach(function(t, i) {
-      talentsHtml += '<label class="bst-talent-opt' + (i===0?' selected':'') + '">'
-        + '<input type="radio" name="bst-talent" value="' + i + '"'
-        + (i===0?' checked':'') + '>'
-        + '<span><span class="bst-talent-name">' + t.name + '</span>'
-        + (t.desc ? '<span class="bst-talent-desc">' + t.desc + '</span>' : '')
-        + '</span></label>';
-    });
-    talentsHtml += '</div>';
-  }
+  var talentsHtml = '<span class="bst-talent-lbl">Talent</span>'
+    + '<div class="bst-talent-list" id="bst-talent-list">';
+  c.talents.forEach(function(t, i) {
+    talentsHtml += '<label class="bst-talent-opt' + (i===0?' selected':'') + '">'
+      + '<input type="radio" name="bst-talent" value="' + i + '"'
+      + (i===0?' checked':'') + '>'
+      + '<span><span class="bst-talent-name">' + t.name + '</span>'
+      + (t.desc ? '<span class="bst-talent-desc">' + t.desc + '</span>' : '')
+      + '</span></label>';
+  });
+  talentsHtml += '<label class="bst-talent-opt' + (!c.talents.length?' selected':'') + '">'
+    + '<input type="radio" name="bst-talent" value="-1"'
+    + (!c.talents.length?' checked':'') + '>'
+    + '<span><span class="bst-talent-name" style="color:var(--muted)">Aucun talent</span></span>'
+    + '</label>';
+  talentsHtml += '</div>';
 
   var panel = document.getElementById('bst-detail-panel');
   panel.innerHTML =
@@ -1911,10 +1913,9 @@ function addFromBestiaire() {
   var talentDesc = '';
   var radios = document.querySelectorAll('input[name="bst-talent"]');
   radios.forEach(function(r) {
-    if (r.checked) {
+    if (r.checked && r.value !== '-1') {
       var t = c.talents[parseInt(r.value)];
-      talentVal  = t.name;
-      talentDesc = t.desc || '';
+      if (t) { talentVal = t.name; talentDesc = t.desc || ''; }
     }
   });
 
