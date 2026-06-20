@@ -3310,10 +3310,7 @@
 <script>
 
 
-document.addEventListener('DOMContentLoaded', loadDynamicScenarios);
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  loadDynamicScenarios();
-}
+
 function createNewScenario() {
   var title = document.getElementById('sc-new-title').value.trim();
   var sub   = document.getElementById('sc-new-sub').value.trim();
@@ -3780,6 +3777,22 @@ function _addScenarioCard(title, sub, num, filename) {
 
 
 
+
+
+
+
+
+
+
+
+
+  }
+});
+
+document.addEventListener('DOMContentLoaded', loadDynamicScenarios);
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  loadDynamicScenarios();
+}
 var SC_STATUSES = [
   { key:'brouillon', label:'Brouillon', color:'var(--muted)',  bg:'rgba(255,255,255,.04)', border:'var(--border)' },
   { key:'encours',   label:'En cours',  color:'var(--safe)',   bg:'rgba(30,92,46,.15)',    border:'rgba(30,92,46,.3)' },
@@ -3800,13 +3813,11 @@ function loadDynamicScenarios() {
   fetch(FB + '/scenarios.json')
     .then(function(r) { return r.json(); })
     .then(function(data) {
-      if (!data) { container.innerHTML = ''; return; }
+      container.innerHTML = '';
+      if (!data) return;
 
-      var entries = Object.keys(data).map(function(id) { return { id: id, sc: data[id] }; });
-      var html = '';
-
-      entries.forEach(function(e) {
-        var sc = e.sc;
+      Object.keys(data).forEach(function(id) {
+        var sc = data[id] || {};
         var title    = sc.title || 'Sans titre';
         var tagline  = sc.tagline || '';
         var campagne = sc.campagne || '00';
@@ -3814,42 +3825,82 @@ function loadDynamicScenarios() {
         var nbScenes = (sc.actes || []).reduce(function(s,a){ return s + (a.scenes||[]).length; }, 0);
         var status   = getStatusInfo(sc.status || 'brouillon');
 
-        var menuItems = SC_STATUSES.map(function(s) {
-          return '<div class="sc-status-opt" style="color:' + s.color + '" '
-            + 'onclick="event.preventDefault();event.stopPropagation();setScenarioStatus(\'' + e.id + '\',\'' + s.key + '\')">'
-            + s.label + '</div>';
-        }).join('');
-
-        html += '<a href="scenario-editor.html?id=' + e.id + '" '
-          + 'style="display:flex;align-items:center;gap:16px;background:var(--card);'
+        var card = document.createElement('a');
+        card.href = 'scenario-editor.html?id=' + id;
+        card.style.cssText = 'display:flex;align-items:center;gap:16px;background:var(--card);'
           + 'border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;'
-          + 'text-decoration:none;transition:border-color .15s,background .15s;" '
-          + 'onmouseover="this.style.borderColor=\'var(--amber-dim)\';this.style.background=\'var(--surface)\'" '
-          + 'onmouseout="this.style.borderColor=\'var(--border)\';this.style.background=\'var(--card)\'">'
-          + '<div style="flex:1;">'
-          + '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;'
-          + 'text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Campagne ' + campagne + '</div>'
-          + '<div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;">' + title + '</div>'
-          + '<div style="font-size:12px;color:var(--muted);">'
-          + (tagline ? tagline + ' &middot; ' : '')
-          + nbActes + ' acte' + (nbActes===1?'':'s') + ' &middot; ' + nbScenes + ' sc\u00e8ne' + (nbScenes===1?'':'s')
-          + '</div></div>'
-          + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">'
-          + '<div class="sc-status-wrap">'
-          + '<span class="sc-status-badge" id="sc-badge-' + e.id + '" '
-          + 'style="font-family:var(--mono);font-size:10px;color:' + status.color + ';'
-          + 'background:' + status.bg + ';border:1px solid ' + status.border + ';padding:2px 8px;border-radius:2px;" '
-          + 'onclick="event.preventDefault();event.stopPropagation();toggleStatusMenu(\'' + e.id + '\')">' + status.label + '</span>'
-          + '<div class="sc-status-menu" id="sc-menu-' + e.id + '">' + menuItems + '</div>'
-          + '</div>'
-          + '<span style="font-family:var(--mono);font-size:11px;color:var(--amber);">Ouvrir &#8594;</span>'
-          + '</div>'
-          + '</a>';
-      });
+          + 'text-decoration:none;transition:border-color .15s,background .15s;';
+        card.addEventListener('mouseover', function(){ this.style.borderColor='var(--amber-dim)'; this.style.background='var(--surface)'; });
+        card.addEventListener('mouseout',  function(){ this.style.borderColor='var(--border)';    this.style.background='var(--card)'; });
 
-      container.innerHTML = html;
+        var infoDiv = document.createElement('div');
+        infoDiv.style.flex = '1';
+        infoDiv.innerHTML =
+          '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;'
+          + 'text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Campagne ' + escHtmlSc(campagne) + '</div>'
+          + '<div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;">' + escHtmlSc(title) + '</div>'
+          + '<div style="font-size:12px;color:var(--muted);">'
+          + (tagline ? escHtmlSc(tagline) + ' &middot; ' : '')
+          + nbActes + ' acte' + (nbActes===1?'':'s') + ' &middot; ' + nbScenes + ' sc\u00e8ne' + (nbScenes===1?'':'s')
+          + '</div>';
+        card.appendChild(infoDiv);
+
+        var rightDiv = document.createElement('div');
+        rightDiv.style.cssText = 'display:flex;flex-direction:column;align-items:flex-end;gap:6px;';
+
+        var statusWrap = document.createElement('div');
+        statusWrap.className = 'sc-status-wrap';
+
+        var badge = document.createElement('span');
+        badge.className = 'sc-status-badge';
+        badge.dataset.scId = id;
+        badge.textContent = status.label;
+        badge.style.cssText = 'font-family:var(--mono);font-size:10px;color:' + status.color + ';'
+          + 'background:' + status.bg + ';border:1px solid ' + status.border + ';padding:2px 8px;border-radius:2px;';
+        badge.addEventListener('click', function(ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          toggleStatusMenu(id);
+        });
+        statusWrap.appendChild(badge);
+
+        var menu = document.createElement('div');
+        menu.className = 'sc-status-menu';
+        menu.id = 'sc-menu-' + id;
+        SC_STATUSES.forEach(function(s) {
+          var opt = document.createElement('div');
+          opt.className = 'sc-status-opt';
+          opt.style.color = s.color;
+          opt.textContent = s.label;
+          opt.addEventListener('click', function(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            setScenarioStatus(id, s.key);
+          });
+          menu.appendChild(opt);
+        });
+        statusWrap.appendChild(menu);
+        rightDiv.appendChild(statusWrap);
+
+        var openSpan = document.createElement('span');
+        openSpan.style.cssText = 'font-family:var(--mono);font-size:11px;color:var(--amber);';
+        openSpan.innerHTML = 'Ouvrir &#8594;';
+        rightDiv.appendChild(openSpan);
+
+        card.appendChild(rightDiv);
+        container.appendChild(card);
+      });
     })
-    .catch(function() { container.innerHTML = ''; });
+    .catch(function(err) {
+      container.innerHTML = '<div style="color:var(--muted);font-size:11px;padding:8px">'
+        + 'Erreur de chargement des scenarios.</div>';
+    });
+}
+
+function escHtmlSc(s) {
+  var d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
 }
 
 function toggleStatusMenu(id) {
@@ -3868,25 +3919,27 @@ function setScenarioStatus(id, statusKey) {
     body: JSON.stringify(statusKey)
   }).then(function() {
     var info = getStatusInfo(statusKey);
-    var badge = document.getElementById('sc-badge-' + id);
+    var badge = document.querySelector('.sc-status-badge[data-sc-id="' + id + '"]');
     if (badge) {
       badge.textContent = info.label;
       badge.style.color = info.color;
       badge.style.background = info.bg;
       badge.style.borderColor = info.border;
     }
-    document.getElementById('sc-menu-' + id).classList.remove('open');
+    var menu = document.getElementById('sc-menu-' + id);
+    if (menu) menu.classList.remove('open');
   });
 }
 
 document.addEventListener('click', function(e) {
-  if (!e.target.classList.contains('sc-status-badge')) {
-    document.querySelectorAll('.sc-status-menu').forEach(function(m){ m.classList.remove('open'); });
+  if (!e.target.classList || !e.target.classList.contains('sc-status-badge')) {
+    document.querySelectorAll('.sc-status-menu.open').forEach(function(m){ m.classList.remove('open'); });
   }
 });
 
-document.addEventListener('DOMContentLoaded', loadDynamicScenarios);
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadDynamicScenarios);
+} else {
   loadDynamicScenarios();
 }</script>
 
