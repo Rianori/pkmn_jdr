@@ -1146,6 +1146,7 @@
         <span style="font-family:var(--mono);font-size:11px;color:var(--amber);">Ouvrir &#8594;</span>
       </div>
     </a>
+        <div id="dynamic-scenarios-list"></div>
         <button onclick="openNewScenarioModal()" style="display:flex;align-items:center;justify-content:center;gap:10px;border:1px dashed var(--border);border-radius:var(--radius);padding:18px 22px;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.04em;width:100%;background:none;cursor:pointer;transition:border-color .15s,color .15s;" onmouseover="this.style.borderColor='var(--amber-dim)';this.style.color='var(--amber)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
       <span style="font-size:16px;opacity:.6">+</span>&nbsp; Nouveau sc&eacute;nario
     </button>
@@ -3296,6 +3297,61 @@
 </main>
 
 <script>
+function loadDynamicScenarios() {
+  var container = document.getElementById('dynamic-scenarios-list');
+  if (!container) return;
+  var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+
+  fetch(FB + '/scenarios.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data) { container.innerHTML = ''; return; }
+
+      var entries = Object.keys(data).map(function(id) {
+        return { id: id, sc: data[id] };
+      });
+
+      var html = '';
+      entries.forEach(function(e) {
+        var sc = e.sc;
+        var title    = sc.title || 'Sans titre';
+        var tagline  = sc.tagline || 'Aucune accroche';
+        var campagne = sc.campagne || '00';
+        var nbActes  = (sc.actes || []).length;
+        var nbScenes = (sc.actes || []).reduce(function(s,a){ return s + (a.scenes||[]).length; }, 0);
+
+        html += '<a href="scenario-editor.html?id=' + e.id + '" '
+          + 'style="display:flex;align-items:center;gap:16px;background:var(--card);'
+          + 'border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;'
+          + 'text-decoration:none;transition:border-color .15s,background .15s;" '
+          + 'onmouseover="this.style.borderColor=\'var(--amber-dim)\';this.style.background=\'var(--surface)\'" '
+          + 'onmouseout="this.style.borderColor=\'var(--border)\';this.style.background=\'var(--card)\'">'
+          + '<div style="flex:1;">'
+          + '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;'
+          + 'text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Campagne ' + campagne + '</div>'
+          + '<div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;">' + title + '</div>'
+          + '<div style="font-size:12px;color:var(--muted);">'
+          + (tagline ? tagline + ' &middot; ' : '')
+          + nbActes + ' acte' + (nbActes===1?'':'s') + ' &middot; ' + nbScenes + ' sc\u00e8ne' + (nbScenes===1?'':'s')
+          + '</div>'
+          + '</div>'
+          + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">'
+          + '<span style="font-family:var(--mono);font-size:10px;color:var(--muted);'
+          + 'background:rgba(255,255,255,.04);border:1px solid var(--border);padding:2px 8px;border-radius:2px;">BROUILLON</span>'
+          + '<span style="font-family:var(--mono);font-size:11px;color:var(--amber);">Ouvrir &#8594;</span>'
+          + '</div>'
+          + '</a>';
+      });
+
+      container.innerHTML = html;
+    })
+    .catch(function() { container.innerHTML = ''; });
+}
+
+document.addEventListener('DOMContentLoaded', loadDynamicScenarios);
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  loadDynamicScenarios();
+}
 function createNewScenario() {
   var title = document.getElementById('sc-new-title').value.trim();
   var sub   = document.getElementById('sc-new-sub').value.trim();
