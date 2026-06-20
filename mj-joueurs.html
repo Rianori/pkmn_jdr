@@ -190,6 +190,15 @@ function listenDiceRolls(slug) {
   });
 }
 
+function diceKindLabel(kind) {
+  if (!kind) return 'Attribut';
+  if (kind === 'damage') return 'Dégâts';
+  if (kind === 'pokemon') return 'Attribut Pokémon';
+  if (kind.indexOf('competence: ') === 0) return 'Compétence — ' + kind.slice(12);
+  if (kind.indexOf('attribut: ') === 0) return 'Attribut — ' + kind.slice(10);
+  return kind;
+}
+
 function showDiceRollOnCard(slug, roll) {
   var card = document.getElementById('card-' + slug);
   if (!card) return;
@@ -202,13 +211,13 @@ function showDiceRollOnCard(slug, roll) {
   var time = new Date(roll.ts).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
   var rollsStr = (roll.rolls || []).join(' + ');
   var wildStr  = (roll.wildRolls || []).join(' + ');
-  var wildHtml = (roll.wildTotal !== undefined)
+  var wildHtml = (roll.wildTotal !== undefined && roll.wildTotal !== null)
     ? '<span class="dice-roll-sep">+</span>'
       + '<span class="dice-roll-value wild">' + roll.wildTotal + '</span>'
       + '<span class="dice-roll-detail">d6 (' + wildStr + ')</span>'
     : '';
   disp.innerHTML =
-    '<div class="dice-roll-label">Dernier lancer</div>'
+    '<div class="dice-roll-label">' + diceKindLabel(roll.kind) + '</div>'
     + '<span class="dice-roll-value">' + roll.total + '</span>'
     + '<span class="dice-roll-detail">' + roll.notation + ' (' + rollsStr + ')</span>'
     + wildHtml
