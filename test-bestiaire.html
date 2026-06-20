@@ -2614,46 +2614,7 @@ function showDiceBubble(el, total, detail, notation, wildTotal, wildDetail) {
 
 
 
-function initRollablePills() {
-  /* Pills Pokemon (attributs combat) */
-  document.querySelectorAll('.pk-stat .val, .stat-pill .val').forEach(function(valSpan) {
-    var pill = valSpan.closest('.pk-stat, .stat-pill');
-    if (!pill || pill.classList.contains('rollable')) return;
-    var notation = valSpan.textContent.trim();
-    if (!/^d\d+/i.test(notation)) return;
-    pill.classList.add('rollable');
-    pill.addEventListener('click', function(e) {
-      e.stopPropagation();
-      rollPillDice(pill, valSpan.textContent.trim());
-    });
-  });
 
-  /* Lignes attributs/competences du PJ (tab-perso) */
-  document.querySelectorAll('.stat-row').forEach(function(row) {
-    if (row.classList.contains('rollable')) return;
-    var valSpan = row.querySelector('.stat-val');
-    if (!valSpan) return;
-    var notation = valSpan.textContent.trim();
-    if (!/^d\d+/i.test(notation)) return;
-    row.classList.add('rollable');
-    row.addEventListener('click', function(e) {
-      e.stopPropagation();
-      rollPillDice(row, valSpan.textContent.trim());
-    });
-  });
-
-  /* Dommages des attaques Pokemon */
-  document.querySelectorAll('.pk-atk-dmg, .bst-atk-dmg').forEach(function(cell) {
-    if (cell.classList.contains('rollable')) return;
-    var text = cell.textContent.trim();
-    if (!/d\d+/i.test(text)) return; /* pas de notation de de -> non cliquable */
-    cell.classList.add('rollable');
-    cell.addEventListener('click', function(e) {
-      e.stopPropagation();
-      rollDamage(cell, cell.textContent.trim());
-    });
-  });
-}
 
 
 function showDamageBubble(el, total, detail, notation) {
@@ -2830,6 +2791,51 @@ function findPokemonAttribute(el, attrCode) {
     }
   }
   return null;
+}
+function initRollablePills(scope) {
+  var root = scope || document;
+
+  /* Pills Pokemon (attributs combat) */
+  root.querySelectorAll('.pk-stat .val, .stat-pill .val').forEach(function(valSpan) {
+    var pill = valSpan.closest('.pk-stat, .stat-pill');
+    if (!pill || pill.dataset.rollBound) return;
+    var notation = valSpan.textContent.trim();
+    if (!/^d\d+/i.test(notation)) return;
+    pill.classList.add('rollable');
+    pill.dataset.rollBound = '1';
+    pill.addEventListener('click', function(e) {
+      e.stopPropagation();
+      rollPillDice(pill, valSpan.textContent.trim());
+    });
+  });
+
+  /* Lignes attributs/competences du PJ (tab-perso) */
+  root.querySelectorAll('.stat-row').forEach(function(row) {
+    if (row.dataset.rollBound) return;
+    var valSpan = row.querySelector('.stat-val');
+    if (!valSpan) return;
+    var notation = valSpan.textContent.trim();
+    if (!/^d\d+/i.test(notation)) return;
+    row.classList.add('rollable');
+    row.dataset.rollBound = '1';
+    row.addEventListener('click', function(e) {
+      e.stopPropagation();
+      rollPillDice(row, valSpan.textContent.trim());
+    });
+  });
+
+  /* Dommages des attaques Pokemon */
+  root.querySelectorAll('.pk-atk-dmg, .bst-atk-dmg').forEach(function(cell) {
+    if (cell.dataset.rollBound) return;
+    var text = cell.textContent.trim();
+    if (!/d\d+/i.test(text)) return;
+    cell.classList.add('rollable');
+    cell.dataset.rollBound = '1';
+    cell.addEventListener('click', function(e) {
+      e.stopPropagation();
+      rollDamage(cell, cell.textContent.trim());
+    });
+  });
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
