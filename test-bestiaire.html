@@ -907,6 +907,19 @@ a { color: inherit; }
   @keyframes dice-flicker { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
   .dice-bubble-row { transition: opacity .15s; }
   .dice-bubble-row.hidden-during-roll { opacity: 0; height: 0; overflow: hidden; }
+
+  .pc-card { display:flex; align-items:center; gap:14px; background:var(--card);
+    border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px; }
+  .pc-card-info { flex:1; }
+  .pc-card-name { font-family:var(--mono); font-size:14px; font-weight:700; color:var(--text); }
+  .pc-card-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+  .pc-card-talent { font-size:11px; color:var(--amber); font-style:italic; margin-top:3px; }
+  .pc-recall-btn { font-family:var(--mono); font-size:10px; letter-spacing:.04em;
+    background:var(--amber-dim); color:var(--amber); border:1px solid var(--amber-dim);
+    border-radius:4px; padding:7px 14px; cursor:pointer; white-space:nowrap; }
+  .pc-recall-btn:hover { background:rgba(200,146,42,.4); }
+  .pc-recall-btn:disabled { opacity:.4; cursor:default; }
+  .pc-empty { text-align:center; padding:40px 20px; color:var(--muted); font-size:13px; }
 </style>
 </head>
 <body>
@@ -945,6 +958,7 @@ a { color: inherit; }
     <nav class="player-nav">
     <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
         <button onclick="showPlayerTab('team',this)">Equipe</button>
+    <button onclick="showPlayerTab('pc',this)">PC</button>
     <button onclick="showPlayerTab('notes',this)">Notes</button>
   </nav>
     <div class="player-content">
@@ -1018,6 +1032,11 @@ a { color: inherit; }
         </div>
       </div>
       <div class="team-panel" id="team-panel"><div class="team-empty-state">Selectionne un slot.</div></div>
+    </div>
+    <div class="player-tab" id="tab-pc">
+      <div class="page-title">PC — Pokémon archivés</div>
+      <div class="page-tagline">Pokémon envoyés au PC. Cliquez sur "Rappeler" pour les remettre dans un slot vide de l'équipe.</div>
+      <div id="pc-list" style="margin-top:20px;display:flex;flex-direction:column;gap:10px"></div>
     </div>
     <div class="player-tab" id="tab-notes">
       <div class="page-title">Notes</div>
@@ -1118,6 +1137,7 @@ var state = {
     { name: PARTNER_NAME_ASCII, type: 'Partenaire', notes: '', partner: true },
     null, null, null, null, null
   ],
+  pc: [],
   activeSlot: 0,
   notes: [],
   activeNote: null
@@ -1174,12 +1194,7 @@ function selectSlot(i) {
 
 
 
-function removePokemon(i) {
-  if (i===0) return;
-  if (!confirm('Retirer ce Pokemon ?')) return;
-  state.team[i] = null; state.activeSlot = 0;
-  saveState(); renderTeam();
-}
+
 
 
 
@@ -1308,7 +1323,7 @@ function cancelEditName() {
 }
 
 document.addEventListener('DOMContentLoaded',function(){
-  loadState(); initPartnerStats(); state.activeSlot=0; renderTeam(); initNotes(); loadPlayerName(); initPlayerBin();
+  loadState(); initPartnerStats(); state.activeSlot=0; renderTeam(); renderPcList(); initNotes(); loadPlayerName(); initPlayerBin();
 });
 
 /* ---- EQUIPEMENT EDITABLE ---- */
@@ -1609,6 +1624,11 @@ function loadNotesFromCloud() {
         state.team[i] = rec.team[i] || null;
       }
       renderTeam();
+    }
+
+    if (rec.pc) {
+      state.pc = Array.isArray(rec.pc) ? rec.pc : Object.values(rec.pc);
+      renderPcList();
     }
 
     /* Equipement */
@@ -1933,6 +1953,7 @@ function forceSave() {
 
   fbSet('notes',     state.notes);
   fbSet('team',      state.team);
+  fbSet('pc',        state.pc || []);
   fbSet('gear',      gear);
   fbSet('nom',       nom);
   fbSet('blessures', {b1:b1, b2:b2, bko:bko});
@@ -2752,6 +2773,101 @@ function showDamageBubble(el, total, detail, notation, facesForAnim) {
     bubble.classList.remove('show');
     setTimeout(function() { bubble.remove(); }, 200);
   }, 2900);
+}
+function removePokemon(i) {
+  if (i === 0) return;
+  openReleaseMenu(i);
+}
+
+function openReleaseMenu(i) {
+  var slot = state.team[i];
+  if (!slot) return;
+  var choice = confirm(
+    'Que faire de ' + slot.name + ' ?\n\n'
+    + 'OK = Envoyer au PC (archive, recuperable)\n'
+    + 'Annuler puis confirmer la suppression = Relacher definitivement'
+  );
+  if (choice) {
+    sendToPc(i);
+  } else {
+    if (confirm('Relacher ' + slot.name + ' definitivement ? Cette action est irreversible.')) {
+      releasePokemon(i);
+    }
+  }
+}
+
+function sendToPc(i) {
+  var slot = state.team[i];
+  if (!slot) return;
+  if (!state.pc) state.pc = [];
+  state.pc.push(slot);
+  state.team[i] = null;
+  state.activeSlot = 0;
+  saveState();
+  renderTeam();
+  renderPcList();
+}
+
+function releasePokemon(i) {
+  state.team[i] = null;
+  state.activeSlot = 0;
+  saveState();
+  renderTeam();
+}
+
+function recallFromPc(pcIdx) {
+  var emptySlot = -1;
+  for (var i = 1; i < 6; i++) {
+    if (!state.team[i]) { emptySlot = i; break; }
+  }
+  if (emptySlot === -1) {
+    alert('Aucun slot vide dans l\\'equipe. Retirez un Pokemon avant de rappeler celui-ci.');
+    return;
+  }
+  var pkmn = state.pc[pcIdx];
+  state.team[emptySlot] = pkmn;
+  state.pc.splice(pcIdx, 1);
+  saveState();
+  renderTeam();
+  renderPcList();
+  selectSlot(emptySlot);
+}
+
+function releaseFromPc(pcIdx) {
+  var pkmn = state.pc[pcIdx];
+  if (!confirm('Relacher ' + pkmn.name + ' definitivement depuis le PC ?')) return;
+  state.pc.splice(pcIdx, 1);
+  saveState();
+  renderPcList();
+}
+
+function renderPcList() {
+  var container = document.getElementById('pc-list');
+  if (!container) return;
+  var pc = state.pc || [];
+
+  if (!pc.length) {
+    container.innerHTML = '<div class="pc-empty">Aucun Pokemon archive. Les Pokemon envoyes au PC depuis l\\'equipe apparaitront ici.</div>';
+    return;
+  }
+
+  var hasEmptySlot = false;
+  for (var i = 1; i < 6; i++) { if (!state.team[i]) { hasEmptySlot = true; break; } }
+
+  var html = '';
+  pc.forEach(function(p, idx) {
+    var talentTxt = p.talent ? p.talent : 'Aucun talent';
+    html += '<div class="pc-card">'
+      + '<div class="pc-card-info">'
+      + '<div class="pc-card-name">' + escHtml(p.name) + '</div>'
+      + '<div class="pc-card-meta">' + escHtml(p.type||'') + (p.taille ? ' \u00b7 ' + escHtml(p.taille) : '') + '</div>'
+      + '<div class="pc-card-talent">' + escHtml(talentTxt) + '</div>'
+      + '</div>'
+      + '<button class="pc-recall-btn" ' + (hasEmptySlot ? '' : 'disabled') + ' onclick="recallFromPc(' + idx + ')">Rappeler</button>'
+      + '<button class="btn-danger" onclick="releaseFromPc(' + idx + ')">Relacher</button>'
+      + '</div>';
+  });
+  container.innerHTML = html;
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
