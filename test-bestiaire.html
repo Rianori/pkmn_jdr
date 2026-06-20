@@ -2278,7 +2278,7 @@ function renderPanel() {
     + '<div style="display:flex;gap:6px;margin-top:10px;justify-content:flex-end">'
     + '<button class="btn-edit" id="pk-btn-edit">Modifier</button>'
     + '<button class="btn-save" id="pk-btn-save" style="display:none">Sauvegarder</button>'
-    + '<button class="btn-danger" id="pk-btn-del">Retirer</button>'
+    + (idx === 0 ? '' : '<button class="btn-danger" id="pk-btn-del">Retirer</button>')
     + '</div>';
 
   /* Bouton Modifier */
@@ -2330,7 +2330,8 @@ function renderPanel() {
     renderPanel();
   });
 
-  panel.querySelector('#pk-btn-del').addEventListener('click', function() {
+  var delBtn = panel.querySelector('#pk-btn-del');
+  if (delBtn) delBtn.addEventListener('click', function() {
     removePokemon(state.activeSlot);
   });
   initRollablePills();
