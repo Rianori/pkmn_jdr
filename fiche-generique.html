@@ -1,0 +1,2334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiche Personnage</title>
+<style>
+
+:root {
+    --bg:        #0e0e0f;
+    --surface:   #161618;
+    --card:      #1c1c1f;
+    --border:    #2a2a2e;
+    --amber:     #c8922a;
+    --amber-dim: #7a5510;
+    --amber-glow:#c8922a22;
+    --text:      #d4cfc5;
+    --muted:     #6b6660;
+    --danger:    #8b2020;
+    --safe:      #1e5c2e;
+    --blue:      #1e3a6b;
+    --boss:      #4a2800;
+    --radius:    4px;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+/* ── RESET MINIMAL ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+a { color: inherit; }
+
+/* ── LAYOUT FICHE JOUEUR ── */
+
+
+.player-header {
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.player-logo { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.player-role { font-size: 12px; color: var(--muted); font-style: italic; }
+.player-back {
+  margin-left: auto; font-size: 12px; color: var(--muted);
+  text-decoration: none; border: 1px solid var(--border);
+  border-radius: 4px; padding: 4px 10px;
+  font-family: var(--mono); transition: color .15s, border-color .15s;
+}
+.player-back:hover { color: var(--amber); border-color: var(--amber-dim); }
+
+/* ── NOM ÉDITABLE ── */
+.player-name-wrap { display: flex; align-items: center; gap: 8px; }
+.player-name-display { font-family: var(--mono); font-size: 16px; font-weight: 600; color: var(--amber); cursor: pointer; }
+.player-name-display:hover { text-decoration: underline dotted var(--amber-dim); }
+.player-name-input {
+  font-family: var(--mono); font-size: 16px; font-weight: 600; color: var(--amber);
+  background: var(--surface); border: 1px solid var(--amber-dim); border-radius: 4px;
+  padding: 2px 8px; display: none; width: 200px;
+}
+.edit-name-btn { background: none; border: none; color: var(--muted); font-size: 11px; cursor: pointer; padding: 2px 4px; font-family: var(--mono); transition: color .12s; }
+.edit-name-btn:hover { color: var(--amber); }
+
+/* ── NAVIGATION ONGLETS ── */
+.player-nav {
+  display: flex; gap: 2px; padding: 0 24px;
+  background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto;
+}
+.player-nav button {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--muted); padding: 12px 16px 10px; cursor: pointer; white-space: nowrap;
+  transition: color .12s, border-color .12s;
+}
+.player-nav button.active { color: var(--amber); border-bottom-color: var(--amber); }
+.player-nav button:hover:not(.active) { color: var(--text); }
+
+/* ── ONGLETS CONTENU ── */
+.player-content { flex: 1; padding: 28px 24px; }
+.player-tab { display: none; }
+.player-tab.active { display: block; }
+
+/* ── ÉQUIPE ── */
+.team-grid { display: grid; grid-template-columns: repeat(6,1fr); gap: 10px; margin-bottom: 24px; }
+.team-slot {
+  border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface);
+  padding: 12px 8px; text-align: center; cursor: pointer;
+  transition: border-color .12s, background .12s; min-height: 80px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; position: relative;
+}
+.team-slot:hover { border-color: var(--amber-dim); background: var(--card); }
+.team-slot.active { border-color: var(--amber); background: var(--card); }
+.team-slot.empty { border-style: dashed; }
+.team-slot.empty:hover { border-color: var(--amber-dim); }
+.slot-num { font-family: var(--mono); font-size: 9px; color: var(--muted); position: absolute; top: 6px; left: 8px; }
+.slot-name { font-family: var(--mono); font-size: 11px; color: var(--text); line-height: 1.3; }
+.slot-type { font-size: 10px; color: var(--muted); }
+.slot-add { font-size: 20px; color: var(--border); line-height: 1; }
+.team-slot.empty .slot-add { color: var(--muted); }
+.team-slot:hover .slot-add { color: var(--amber-dim); }
+.slot-partner-badge { font-size: 9px; background: var(--amber-glow); color: var(--amber); border-radius: 3px; padding: 1px 5px; font-family: var(--mono); }
+.team-panel { border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); overflow: hidden; }
+.team-panel-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+.team-panel-name { font-family: var(--mono); font-size: 15px; font-weight: 600; color: var(--amber); }
+.team-panel-body { padding: 18px; }
+.team-empty-state { padding: 40px; text-align: center; color: var(--muted); font-style: italic; }
+
+/* ── FORMULAIRE AJOUT PK ── */
+.pk-add-form { display: none; flex-direction: column; gap: 12px; padding: 20px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; }
+.pk-add-form.open { display: flex; }
+.pk-add-form input, .pk-add-form select, .pk-add-form textarea { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--sans); font-size: 13px; padding: 8px 12px; }
+.pk-add-form textarea { min-height: 80px; resize: vertical; }
+.pk-add-form label { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: -8px; }
+.form-row { display: flex; gap: 10px; }
+.form-row > * { flex: 1; }
+.btn-primary { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-dim); border-radius: 4px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 18px; cursor: pointer; transition: background .12s; }
+.btn-primary:hover { background: var(--amber); color: #1a1000; }
+.btn-ghost { background: none; color: var(--muted); border: 1px solid var(--border); border-radius: 4px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px 18px; cursor: pointer; }
+.btn-ghost:hover { color: var(--text); border-color: var(--text); }
+.btn-danger { background: none; color: var(--danger); border: 1px solid var(--danger); border-radius: 4px; font-family: var(--mono); font-size: 10px; padding: 4px 10px; cursor: pointer; }
+
+/* ── NOTES ── */
+.notes-layout { display: flex; gap: 16px; height: calc(100vh - 180px); }
+.notes-sidebar { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; }
+.note-list-item { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; cursor: pointer; font-size: 12px; transition: border-color .12s; display: flex; align-items: center; gap: 8px; }
+.note-list-item.active { border-color: var(--amber); color: var(--amber); }
+.note-list-item:hover:not(.active) { background: var(--card); }
+.note-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+.note-list-item.active .note-dot { background: var(--amber); }
+.note-editor-wrap { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.note-title-input { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--mono); font-size: 14px; font-weight: 600; padding: 10px 14px; width: 100%; }
+.note-body-textarea { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.7; padding: 14px; resize: none; width: 100%; }
+.note-meta-bar { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--muted); }
+.save-ok { color: var(--safe); }
+.save-pending { color: var(--amber-dim); }
+.note-add-btn { background: none; border: 1px dashed var(--border); border-radius: 4px; color: var(--muted); font-size: 12px; padding: 6px 12px; cursor: pointer; text-align: center; transition: color .12s, border-color .12s; }
+.note-add-btn:hover { color: var(--amber); border-color: var(--amber-dim); }
+.page-title { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--amber); margin-bottom: 4px; }
+.page-tagline { font-size: 13px; color: var(--muted); font-style: italic; margin-bottom: 24px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .team-grid { grid-template-columns: repeat(3,1fr); }
+  .player-content { padding: 16px; }
+  .notes-layout { flex-direction: column; height: auto; }
+  .notes-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; }
+}
+/* ── TYPOGRAPHY ── */
+  .page-title {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--amber);
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+.page-tagline {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+.section-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 32px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+.pj-body { padding: 22px; }
+/* Stats grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+.stat-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+  }
+.stat-block-title {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+.stat-row:last-child { border-bottom: none; }
+.stat-name { color: var(--muted); }
+.stat-val  { font-family: var(--mono); font-weight: 600; color: var(--amber); font-size: 13px; }
+/* Tags */
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+  }
+.tag-majeur   { background: #3a1010; color: #e07070; }
+.tag-mineur   { background: #1a2a10; color: #80b060; }
+.tag-edge     { background: #102030; color: #5090c0; }
+.tag-background { background: #2a1a00; color: #c08030; }
+.tag-combat   { background: #200010; color: #c040a0; }
+.tag-social   { background: #0a1a30; color: #4090e0; }
+.tag-weird    { background: #1a0a30; color: #9060d0; }
+.tag-psi      { background: #3a0505; color: #e05050; }
+.tag-sauvage  { background: #05200a; color: #50c060; }
+.tag-gardien  { background: #051530; color: #5080e0; }
+.tag-boss     { background: #201000; color: #d08020; }
+.hindrance-block, .edge-block {
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    margin-bottom: 6px;
+  }
+.hindrance-block { background: #1a0a0a; border-left: 2px solid #5a2020; }
+.edge-block      { background: #0a1020; border-left: 2px solid #203050; }
+.block-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.block-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.gear-list { list-style: none; }
+.gear-list li {
+    font-size: 13px;
+    color: #a8a39a;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+.gear-list li::before {
+    content: '·';
+    font-family: var(--mono);
+    color: var(--amber-dim);
+    flex-shrink: 0;
+  }
+.stat-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+.stat-pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 2px 8px;
+    color: var(--text);
+  }
+.stat-pill span { color: var(--amber); font-weight: 600; }
+.atk-table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 12px; }
+.atk-table th {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+.atk-table td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #1e1e22;
+    color: #a8a39a;
+    vertical-align: top;
+  }
+.atk-table tr:last-child td { border-bottom: none; }
+.capa-list { list-style: none; margin-top: 8px; }
+.capa-list li {
+    font-size: 12px;
+    color: #a8a39a;
+    padding: 4px 0 4px 12px;
+    border-bottom: 1px solid #1e1e22;
+    position: relative;
+    line-height: 1.5;
+  }
+.capa-list li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--amber-dim);
+    font-size: 10px;
+    top: 5px;
+  }
+.capa-list li:last-child { border-bottom: none; }
+.capa-name { color: var(--text); font-weight: 600; }
+.divider { height: 1px; background: var(--border); margin: 28px 0; }
+.pk-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+.pk-card-header {
+    padding: 14px 18px 10px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+.pk-owner {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+.pk-name {
+    font-family: var(--mono);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--amber);
+    margin-bottom: 1px;
+  }
+.pk-species {
+    font-size: 11px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+.pk-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 2px;
+  }
+.pk-body { padding: 16px 18px; }
+.pk-lore {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+/* Stats en ligne horizontale */
+  .pk-stats-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+.pk-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 4px 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+.pk-stat .val { color: var(--amber); font-weight: 600; }
+/* Sous-sections compactes */
+  .pk-section-lbl {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 12px 0 5px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+/* Table attaques compacte */
+  .pk-atk-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 4px; }
+.pk-atk-table th {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: 3px 6px;
+    border-bottom: 1px solid var(--border);
+  }
+.pk-atk-table td {
+    padding: 4px 6px;
+    border-bottom: 1px solid #1e1e22;
+    color: #a8a39a;
+    vertical-align: top;
+    line-height: 1.4;
+  }
+.pk-atk-table tr:last-child td { border-bottom: none; }
+.pk-atk-name { color: var(--text); font-weight: 600; font-size: 11px; white-space: nowrap; }
+.pk-atk-dmg  { font-family: var(--mono); color: var(--amber); font-size: 10px; white-space: nowrap; }
+/* Capacités */
+  .pk-capa { margin-bottom: 8px; }
+.pk-capa-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+.pk-capa-desc {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+    padding-left: 10px;
+  }
+/* Blessures Pokémon */
+  .pk-wounds {
+    display: flex;
+    gap: 5px;
+    margin: 10px 0 6px;
+  }
+.pk-wound-box {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 6px 4px;
+    text-align: center;
+    font-size: 10px;
+    background: var(--surface);
+  }
+.pk-wound-box.ko { background: #1a0505; border-color: #5a2020; color: #e07070; }
+.pk-wound-lbl { font-family: var(--mono); font-size: 8px; color: var(--muted); display: block; margin-bottom: 3px; }
+.pk-wound-check { font-size: 16px; color: var(--muted); line-height: 1; }
+/* Boite narrative */
+  .pk-note {
+    background: var(--amber-glow);
+    border-left: 2px solid var(--amber-dim);
+    border-radius: 0 2px 2px 0;
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-size: 11px;
+    font-style: italic;
+    color: #8a8278;
+    line-height: 1.5;
+  }
+.pk-note strong { color: var(--amber); font-style: normal; }
+.pokemon-section-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:6px;padding:4px 0;border-bottom:1px solid var(--amber-dim);}
+.pj-acc-stats .stats-grid {
+    gap: 8px;
+    margin-bottom: 0;
+  }
+.pj-acc-stats .stat-block {
+    padding: 7px 10px;
+  }
+.pj-acc-stats .stat-block-title {
+    font-size: 7.5px;
+    margin-bottom: 4px;
+  }
+.pj-acc-stats .stat-row {
+    padding: 2px 0;
+    font-size: 12px;
+  }
+
+  /* == EQUIPEMENT EDITABLE == */
+  .gear-editable { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+  .gear-item { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 7px 10px; font-size: 13px; }
+  .gear-item-text { flex: 1; color: var(--text); }
+  .gear-del-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; line-height: 1; padding: 0 2px; transition: color .12s; flex-shrink: 0; }
+  .gear-del-btn:hover { color: var(--danger); }
+  .gear-add-row { display: flex; gap: 6px; margin-top: 4px; }
+  .gear-add-input { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--sans); font-size: 13px; padding: 7px 10px; }
+  .gear-add-input:focus { outline: none; border-color: var(--amber-dim); }
+  .gear-add-btn { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-dim); border-radius: 4px; font-family: var(--mono); font-size: 11px; padding: 7px 14px; cursor: pointer; white-space: nowrap; transition: background .12s; }
+  .gear-add-btn:hover { background: var(--amber); color: #1a1000; }
+
+  /* == STATS POKEMON DANS FORMULAIRE EQUIPE == */
+  .pk-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+  .pk-stat-field label { font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 3px; }
+  .pk-stat-field input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--mono); font-size: 13px; padding: 6px 8px; }
+  .pk-attacks-area { margin-top: 8px; }
+  .pk-attack-row { display: flex; gap: 6px; margin-bottom: 4px; }
+  .pk-attack-row input { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-size: 12px; padding: 5px 8px; }
+  .pk-attack-add { background: none; border: 1px dashed var(--border); border-radius: 4px; color: var(--muted); font-size: 11px; padding: 5px 12px; cursor: pointer; margin-top: 2px; }
+  .pk-attack-add:hover { color: var(--amber); border-color: var(--amber-dim); }
+  .pk-attack-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 0 4px; }
+  .pk-attack-del:hover { color: var(--danger); }
+
+  /* == POP-UP NOTE MJ == */
+  .mj-note-popup {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,.65); z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .mj-note-popup.hidden { display: none; }
+  .mj-note-box {
+    background: var(--card); border: 1px solid var(--amber-dim);
+    border-radius: var(--radius); padding: 28px 32px; max-width: 420px; width: 90%;
+    box-shadow: 0 0 40px rgba(200,146,42,.15);
+  }
+  .mj-note-box-title { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--amber); margin-bottom: 10px; }
+  .mj-note-box-content { font-size: 14px; color: var(--text); line-height: 1.7; white-space: pre-wrap; margin-bottom: 20px; }
+  .mj-note-box-close { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber-dim); border-radius: 4px; font-family: var(--mono); font-size: 11px; padding: 8px 18px; cursor: pointer; letter-spacing: .06em; }
+  .mj-note-box-close:hover { background: var(--amber); color: #1a1000; }
+
+
+  
+  /* Bannière pleine largeur */
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  .player-header {
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  
+  
+  
+  .pj-banner:hover .pj-banner-drag-hint.visible { opacity: 1; }
+
+  /* ── BANNIERE PJ FIXE ── */
+  .player-shell { display: flex; flex-direction: column; min-height: 100vh; }
+
+  .pj-banner {
+    position: relative;
+    width: 220px;
+    max-height: 200px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .pj-banner-img {
+    width: 100%;
+    flex: 1;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    min-height: 200px;
+  }
+  .pj-banner-placeholder {
+    width: 100%;
+    flex: 1;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--muted);
+  }
+  .pj-banner-placeholder-icon { font-size: 28px; opacity: .4; }
+  .pj-banner-placeholder-txt {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: .6;
+  }
+  .pj-banner-overlay {
+    padding: 20px 20px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .pj-banner-name {
+    font-family: var(--mono);
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--amber);
+    margin-bottom: 3px;
+  }
+  .pj-banner-role {
+    font-family: var(--mono);
+    font-family: var(--sans);
+    font-size: 20px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* Layout principal : bannière latérale + contenu */
+  .player-body {
+    display: flex;
+    max-height: 200px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .player-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+    min-height: 0;
+  }
+  .player-content { flex: 1; padding: 28px 24px; overflow-y: auto; }
+  /* ── BOUTON SAUVEGARDE JSON ── */
+  .save-json-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--muted);
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: color .15s, border-color .15s, background .15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .save-json-btn:hover {
+    color: var(--amber);
+    border-color: var(--amber-dim);
+    background: var(--amber-glow);
+  }
+  .save-json-btn.saved {
+    color: var(--safe);
+    border-color: rgba(30,92,46,.4);
+    background: rgba(30,92,46,.08);
+  }
+
+  /* ── PHOTO MINIATURE HEADER ── */
+  .hd-photo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .hd-photo {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    border: 1px solid var(--border);
+    display: block;
+    flex-shrink: 0;
+  }
+  .hd-photo-ph {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .hd-identity { display: flex; flex-direction: column; gap: 1px; }
+  .hd-nom { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--amber); }
+  .hd-role { font-size: 10px; color: var(--muted); }
+
+  .gear-item-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 0;
+    outline: none;
+    transition: border-color .15s;
+    min-width: 0;
+  }
+  .gear-item-input:hover { border-bottom-color: var(--border); }
+  .gear-item-input:focus { border-bottom-color: var(--amber-dim); }
+
+  /* Edition inline stats Pokemon */
+  .pk-edit-row { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+  .pk-edit-label { font-family:var(--mono); font-size:9px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--muted); width:80px; flex-shrink:0; }
+  .pk-edit-input { flex:1; background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-family:var(--mono); font-size:12px;
+    padding:3px 7px; outline:none; transition:border-color .12s; }
+  .pk-edit-input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit { display:flex; gap:6px; margin-bottom:4px; }
+  .pk-atk-edit input { background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-size:11px; padding:3px 7px;
+    outline:none; transition:border-color .12s; }
+  .pk-atk-edit input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit .atk-name { flex:2; }
+  .pk-atk-edit .atk-dmg  { flex:1; }
+  .pk-atk-add { font-family:var(--mono); font-size:10px; background:none;
+    border:1px dashed var(--border); border-radius:3px; color:var(--muted);
+    padding:3px 10px; cursor:pointer; margin-top:3px; transition:color .12s,border-color .12s; }
+  .pk-atk-add:hover { color:var(--amber); border-color:var(--amber-dim); }
+  .pk-atk-del { background:none; border:none; color:var(--muted); cursor:pointer;
+    font-size:14px; padding:0 3px; flex-shrink:0; transition:color .12s; }
+  .pk-atk-del:hover { color:var(--danger); }
+
+  .pk-edit-row { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+  .pk-edit-label { font-family:var(--mono); font-size:9px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--muted); width:80px; flex-shrink:0; }
+  .pk-edit-input { flex:1; background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-family:var(--mono); font-size:12px;
+    padding:3px 7px; outline:none; transition:border-color .12s; }
+  .pk-edit-input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit { display:flex; gap:6px; margin-bottom:4px; }
+  .pk-atk-edit input { background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-size:11px; padding:3px 7px;
+    outline:none; transition:border-color .12s; }
+  .pk-atk-edit input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit .atk-name { flex:2; }
+  .pk-atk-edit .atk-dmg  { flex:1; }
+  .pk-notes-ta { width:100%; min-height:80px; background:var(--surface);
+    border:1px solid var(--border); border-radius:4px; color:var(--text);
+    font-size:13px; padding:10px; resize:vertical; outline:none; }
+
+  .btn-edit { background:none; color:var(--muted); border:1px solid var(--border);
+    border-radius:4px; font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+    padding:4px 10px; cursor:pointer; transition:color .12s,border-color .12s; }
+  .btn-edit:hover { color:var(--amber); border-color:var(--amber-dim); }
+  .btn-save { background:var(--amber-dim); color:var(--amber); border:1px solid var(--amber-dim);
+    border-radius:4px; font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+    padding:4px 10px; cursor:pointer; transition:background .12s; }
+  .btn-save:hover { background:rgba(200,146,42,.4); }
+  .pk-edit-input[disabled], .pk-atk-edit input[disabled], .pk-notes-ta[disabled] {
+    opacity:.6; cursor:default; background:transparent; border-color:transparent; }
+
+  /* ── BESTIAIRE PICKER ── */
+  .add-mode-tabs { display:flex; gap:8px; margin-bottom:16px; }
+  .add-mode-tab { font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+    text-transform:uppercase; background:none; border:1px solid var(--border);
+    border-radius:3px; color:var(--muted); padding:5px 14px; cursor:pointer;
+    transition:color .12s,border-color .12s; }
+  .add-mode-tab.active { color:var(--amber); border-color:var(--amber-dim);
+    background:var(--amber-glow); }
+  .add-form-section { display:none; }
+  .add-form-section.active { display:block; }
+  .bst-search { width:100%; background:var(--surface); border:1px solid var(--border);
+    border-radius:4px; color:var(--text); font-size:13px; padding:8px 12px;
+    outline:none; margin-bottom:10px; transition:border-color .15s; }
+  .bst-search:focus { border-color:var(--amber-dim); }
+  .bst-picker-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+    gap:8px; max-height:320px; overflow-y:auto; }
+  .bst-pick-card { background:var(--surface); border:1px solid var(--border);
+    border-radius:4px; padding:10px 12px; cursor:pointer;
+    transition:border-color .15s,background .15s; }
+  .bst-pick-card:hover { border-color:var(--amber-dim); background:var(--amber-glow); }
+  .bst-pick-name { font-family:var(--mono); font-size:12px; font-weight:700;
+    color:var(--text); margin-bottom:3px; }
+  .bst-pick-meta { font-size:10px; color:var(--muted); margin-bottom:5px; }
+  .bst-pick-stats { display:flex; flex-wrap:wrap; gap:3px; }
+  .bst-pick-stat { font-family:var(--mono); font-size:9px; background:var(--card);
+    border:1px solid var(--border); border-radius:2px; padding:1px 5px; color:var(--muted); }
+  .bst-pick-stat span { color:var(--amber); }
+  .bst-selected { border-color:var(--amber) !important; background:var(--amber-glow) !important; }
+  .bst-loading { text-align:center; color:var(--muted); font-size:12px; padding:20px; }
+
+  /* ── TALENT PICKER ── */
+  .bst-detail-panel { margin-top:12px; border:1px solid var(--border); border-radius:4px; overflow:hidden; }
+  .bst-detail-header { padding:12px 14px 8px; background:var(--card); border-bottom:1px solid var(--border); }
+  .bst-detail-name { font-family:var(--mono); font-size:15px; font-weight:700; color:var(--amber); margin-bottom:2px; }
+  .bst-detail-meta { font-size:10px; color:var(--muted); margin-bottom:6px; }
+  .bst-detail-desc { font-size:11px; font-style:italic; color:var(--muted); line-height:1.5; margin-bottom:8px; }
+  .bst-detail-body { padding:12px 14px; }
+  .bst-attrs { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
+  .bst-attr { font-family:var(--mono); font-size:10px; background:var(--surface);
+    border:1px solid var(--border); border-radius:2px; padding:3px 7px; }
+  .bst-attr span { color:var(--amber); font-weight:600; }
+  .bst-atk-table { width:100%; border-collapse:collapse; font-size:11px; margin-bottom:10px; }
+  .bst-atk-table th { font-family:var(--mono); font-size:8px; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--muted); text-align:left;
+    padding:3px 6px; border-bottom:1px solid var(--border); }
+  .bst-atk-table td { padding:4px 6px; border-bottom:1px solid #1e1e22;
+    color:#a8a39a; vertical-align:top; line-height:1.4; }
+  .bst-atk-table tr:last-child td { border-bottom:none; }
+  .bst-atk-name { color:var(--text); font-weight:600; }
+  .bst-atk-dmg  { font-family:var(--mono); color:var(--amber); }
+  .bst-talent-lbl { font-family:var(--mono); font-size:9px; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--muted); margin:10px 0 6px;
+    padding-bottom:4px; border-bottom:1px solid var(--border); display:block; }
+  .bst-talent-list { display:flex; flex-direction:column; gap:5px; }
+  .bst-talent-opt { display:flex; align-items:flex-start; gap:8px;
+    padding:8px 10px; border:1px solid var(--border); border-radius:3px;
+    cursor:pointer; transition:border-color .12s, background .12s; background:var(--surface); }
+  .bst-talent-opt:hover { border-color:var(--amber-dim); background:var(--amber-glow); }
+  .bst-talent-opt.selected { border-color:var(--amber); background:var(--amber-glow); }
+  .bst-talent-opt input[type=radio] { flex-shrink:0; margin-top:2px; accent-color:var(--amber); }
+  .bst-talent-name { font-size:11px; font-weight:600; color:var(--text); display:block; margin-bottom:2px; }
+  .bst-talent-desc { font-size:10px; color:var(--muted); line-height:1.4; }
+  .bst-confirm-row { display:flex; gap:8px; margin-top:12px; justify-content:flex-end; }
+  .bst-confirm-btn { font-family:var(--mono); font-size:10px; background:var(--amber-dim);
+    border:none; border-radius:3px; color:var(--amber); padding:6px 16px; cursor:pointer; }
+  .bst-confirm-btn:hover { background:rgba(200,146,42,.4); }
+  .bst-confirm-btn:disabled { opacity:.4; cursor:default; }
+
+  .pk-atk-edit-row { display:grid; grid-template-columns:2fr 1fr 1fr 2fr; gap:5px; margin-bottom:5px; }
+  .pk-atk-edit-row input { background:var(--surface); border:1px solid var(--border);
+    border-radius:3px; color:var(--text); font-size:11px; padding:3px 7px;
+    outline:none; transition:border-color .12s; width:100%; }
+  .pk-atk-edit-row input:focus { border-color:var(--amber-dim); }
+  .pk-atk-edit-row input::placeholder { color:var(--muted); opacity:.6; }
+
+  /* Autocomplete attaques */
+  .atk-ac-wrap { position:relative; flex:2; }
+  .atk-ac-wrap input { width:100%; }
+  .atk-ac-list { display:none; position:absolute; top:100%; left:0; right:0; z-index:200;
+    background:var(--card); border:1px solid var(--amber-dim); border-radius:3px;
+    max-height:200px; overflow-y:auto; box-shadow:0 4px 16px rgba(0,0,0,.4); }
+  .atk-ac-list.open { display:block; }
+  .atk-ac-item { padding:7px 10px; cursor:pointer; border-bottom:1px solid var(--border);
+    font-size:12px; }
+  .atk-ac-item:last-child { border-bottom:none; }
+  .atk-ac-item:hover { background:var(--amber-glow); }
+  .atk-ac-name { font-family:var(--mono); font-weight:600; color:var(--text); }
+  .atk-ac-meta { font-size:10px; color:var(--muted); margin-top:1px; }
+
+  .pk-stat.rollable { cursor:pointer; transition:border-color .12s,background .12s; position:relative; }
+  .pk-stat.rollable:hover { border-color:var(--amber-dim); background:var(--amber-glow); }
+  .pk-stat.rollable:active { transform:scale(.96); }
+  .dice-bubble { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+    background:var(--card); border:1px solid var(--amber-dim); border-radius:6px;
+    padding:8px 12px; white-space:nowrap; z-index:500; box-shadow:0 4px 16px rgba(0,0,0,.5);
+    opacity:0; pointer-events:none; transition:opacity .15s,transform .15s; }
+  .dice-bubble-row { display:flex; align-items:center; gap:10px; }
+  .dice-bubble-col { text-align:center; }
+  .dice-bubble-sep { width:1px; height:28px; background:var(--border); }
+  .dice-bubble-total.wild { color:#6b9fd8; }
+  .dice-bubble.show { opacity:1; transform:translateX(-50%) translateY(-2px); }
+  .dice-bubble::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+    border:5px solid transparent; border-top-color:var(--amber-dim); }
+  .dice-bubble-total { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--amber); text-align:center; }
+  .dice-bubble-detail { font-family:var(--mono); font-size:9px; color:var(--muted); text-align:center; margin-top:2px; }
+  .dice-bubble-detail .explode { color:var(--amber); }
+
+  .stat-row.rollable { cursor:pointer; transition:background .12s; position:relative; border-radius:3px; }
+  .stat-row.rollable:hover { background:var(--amber-glow); }
+  .stat-row.rollable:active { transform:scale(.98); }
+  .stat-row .dice-bubble { left:auto; right:0; transform:none; }
+  .stat-row .dice-bubble.show { transform:translateY(-2px); }
+  .stat-row .dice-bubble::after { left:auto; right:16px; transform:none; }
+
+  .pk-atk-dmg.rollable { cursor:pointer; transition:background .12s; position:relative; }
+  .pk-atk-dmg.rollable:hover { background:var(--amber-glow); }
+  .pk-atk-dmg.rollable:active { transform:scale(.96); }
+  .pk-atk-dmg .dice-bubble { left:auto; right:0; transform:none; }
+  .pk-atk-dmg .dice-bubble.show { transform:translateY(-2px); }
+  .pk-atk-dmg .dice-bubble::after { left:auto; right:16px; transform:none; }
+
+  .pk-player-desc { font-size: 12px; font-style: italic; color: var(--text);
+    line-height: 1.6; margin-bottom: 14px; padding: 10px 12px;
+    background: var(--surface); border-radius: 4px; border-left: 2px solid var(--amber-dim); }
+  .pk-player-desc-empty { color: var(--muted); opacity: .6; }
+
+  .dice-spinner { display: flex; align-items: center; justify-content: center;
+    gap: 6px; padding: 4px 0; }
+  .dice-cube { width: 28px; height: 28px; position: relative; }
+  .dice-cube svg { width: 100%; height: 100%; }
+  .dice-cube.rolling svg { animation: dice-spin 0.55s ease-out; }
+  @keyframes dice-spin {
+    0%   { transform: rotate(0deg) scale(1); }
+    30%  { transform: rotate(180deg) scale(1.15); }
+    60%  { transform: rotate(360deg) scale(1.1); }
+    100% { transform: rotate(540deg) scale(1); }
+  }
+  .dice-cube.rolling .dice-face-num { animation: dice-flicker 0.55s steps(6); }
+  @keyframes dice-flicker { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+  .dice-bubble-row { transition: opacity .15s; }
+  .dice-bubble-row.hidden-during-roll { opacity: 0; height: 0; overflow: hidden; }
+
+  .pc-card { display:flex; align-items:center; gap:14px; background:var(--card);
+    border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px; }
+  .pc-card-info { flex:1; }
+  .pc-card-name { font-family:var(--mono); font-size:14px; font-weight:700; color:var(--text); }
+  .pc-card-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+  .pc-card-talent { font-size:11px; color:var(--amber); font-style:italic; margin-top:3px; }
+  .pc-recall-btn { font-family:var(--mono); font-size:10px; letter-spacing:.04em;
+    background:var(--amber-dim); color:var(--amber); border:1px solid var(--amber-dim);
+    border-radius:4px; padding:7px 14px; cursor:pointer; white-space:nowrap; }
+  .pc-recall-btn:hover { background:rgba(200,146,42,.4); }
+  .pc-recall-btn:disabled { opacity:.4; cursor:default; }
+  .pc-empty { text-align:center; padding:40px 20px; color:var(--muted); font-size:13px; }
+
+  .release-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7);
+    z-index:1000; align-items:center; justify-content:center; }
+  .release-modal-bg.open { display:flex; }
+  .release-modal { background:var(--card); border:1px solid var(--border);
+    border-radius:var(--radius); padding:28px 32px; width:420px; max-width:90vw; }
+  .release-modal-title { font-family:var(--mono); font-size:14px; font-weight:700;
+    color:var(--text); margin-bottom:6px; }
+  .release-modal-sub { font-size:12px; color:var(--muted); margin-bottom:22px; }
+  .release-modal-btns { display:flex; flex-direction:column; gap:10px; }
+  .release-opt-btn { display:flex; align-items:flex-start; gap:12px; text-align:left;
+    background:var(--surface); border:1px solid var(--border); border-radius:6px;
+    padding:14px 16px; cursor:pointer; font-family:var(--sans); transition:border-color .12s,background .12s; }
+  .release-opt-btn:hover { border-color:var(--amber-dim); background:var(--amber-glow); }
+  .release-opt-marker { width:4px; border-radius:2px; flex-shrink:0; align-self:stretch;
+    background:var(--amber-dim); }
+  .release-opt-title { font-size:13px; font-weight:600; color:var(--text); margin-bottom:2px; }
+  .release-opt-desc { font-size:11px; color:var(--muted); line-height:1.4; }
+  .release-opt-btn.danger:hover { border-color:rgba(139,51,0,.5); background:rgba(139,51,0,.08); }
+  .release-opt-btn.danger .release-opt-title { color:#e57373; }
+  .release-opt-btn.danger .release-opt-marker { background:#8B3300; }
+  .release-cancel-btn { font-family:var(--mono); font-size:11px; background:none;
+    border:1px solid var(--border); border-radius:4px; color:var(--muted);
+    padding:8px 16px; cursor:pointer; margin-top:14px; width:100%; }
+  .release-cancel-btn:hover { color:var(--text); border-color:var(--muted); }
+
+  .confirm-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7);
+    z-index:1001; align-items:center; justify-content:center; }
+  .confirm-modal-bg.open { display:flex; }
+  .confirm-modal { background:var(--card); border:1px solid rgba(139,51,0,.4);
+    border-radius:var(--radius); padding:26px 30px; width:380px; max-width:90vw; }
+  .confirm-modal-title { font-family:var(--mono); font-size:13px; font-weight:700;
+    color:#e57373; margin-bottom:8px; }
+  .confirm-modal-text { font-size:12px; color:var(--muted); line-height:1.5; margin-bottom:20px; }
+  .confirm-modal-btns { display:flex; gap:8px; justify-content:flex-end; }
+
+</style>
+</head>
+<body>
+<div class="player-shell">
+  <header class="player-header">
+    <div class="hd-photo-wrap">
+      <div class="hd-photo-ph">?</div>
+      <div class="hd-identity">
+        <div class="hd-nom" id="hd-nom">Chargement...</div>
+        <div class="hd-role" id="hd-role"></div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="save-json-btn" id="save-json-btn" onclick="forceSave()">&#9650; Sauvegarder</button>
+    </div>
+  </header>
+
+  <div class="player-body">
+    <div class="pj-banner" id="pj-banner">
+      <div class="pj-banner-placeholder">
+        <div class="pj-banner-placeholder-icon">&#9670;</div>
+      </div>
+    </div>
+    <div class="pj-banner-overlay">
+      <div class="pj-banner-name" id="pj-banner-name">...</div>
+      <div class="pj-banner-role" id="pj-banner-role"></div>
+    </div>
+  </div>
+
+  <div class="player-main">
+    <nav class="player-nav">
+      <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
+      <button onclick="showPlayerTab('team',this)">Equipe</button>
+      <button onclick="showPlayerTab('notes',this)">Notes</button>
+    </nav>
+
+    <div class="player-content">
+
+      <div class="player-tab active" id="tab-perso">
+        <div class="page-title" id="perso-title">Chargement...</div>
+        <div class="page-tagline" id="perso-tagline"></div>
+
+        <div class="stats-grid">
+          <div class="stat-block">
+            <div class="stat-block-title">Attributs</div>
+            <div id="attrs-block"></div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-block-title">Stats derivees</div>
+            <div id="derived-block"></div>
+          </div>
+        </div>
+
+        <div class="pj-body">
+          <p id="perso-desc" style="font-style:italic;color:var(--muted);margin-bottom:16px"></p>
+
+          <div class="section-title">Competences</div>
+          <div class="stat-block" id="skills-block" style="margin-bottom:16px"></div>
+
+          <div class="section-title">Handicaps</div>
+          <div id="hindrances-block"></div>
+
+          <div class="section-title">Atouts</div>
+          <div id="edges-block"></div>
+
+          <div class="section-title">Equipement</div>
+          <ul class="gear-list" id="gear-block"></ul>
+        </div>
+      </div>
+
+      <div class="player-tab" id="tab-team">
+        <div class="page-title">Equipe Pokemon</div>
+        <div class="page-tagline">6 slots - partenaire fixe en slot 0</div>
+        <div class="team-grid" id="team-grid"></div>
+
+        <div class="pk-add-form" id="pk-add-form">
+          <div class="section-title">Ajouter un Pokemon &mdash; <span id="add-slot-num"></span></div>
+          <input type="hidden" id="add-slot-hidden">
+          <input class="bst-search" id="bst-search" type="text" placeholder="Rechercher dans le bestiaire..." oninput="filterBstPicker()">
+          <div class="bst-picker-grid" id="bst-picker-grid"><div class="bst-loading">Chargement...</div></div>
+          <div class="bst-detail-panel" id="bst-detail-panel"></div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+            <button class="btn-primary" id="bst-add-btn" onclick="addFromBestiaire()" disabled style="opacity:.4">Ajouter</button>
+            <button class="btn-ghost" onclick="closeAddForm()">Annuler</button>
+          </div>
+        </div>
+
+        <div class="team-panel" id="team-panel"><div class="team-empty-state">Selectionne un slot.</div></div>
+      </div>
+
+      <div class="player-tab" id="tab-notes">
+        <div class="page-title">Notes</div>
+        <div class="notes-layout">
+          <div class="notes-sidebar">
+            <div id="note-list"></div>
+            <button class="note-add-btn" onclick="addNote()">+ Nouvelle note</button>
+          </div>
+          <div class="note-editor-wrap">
+            <input class="note-title-input" id="note-title" placeholder="Titre..." oninput="onNoteEdit()">
+            <textarea class="note-body-textarea" id="note-body" placeholder="Ecrivez ici..." oninput="onNoteEdit()"></textarea>
+            <div class="note-meta-bar"><span id="note-save-status"></span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="mj-note-popup hidden" id="mj-note-popup">
+  <div class="mj-note-box">
+    <div class="mj-note-box-title">Message du MJ</div>
+    <div class="mj-note-box-content" id="mj-note-content"></div>
+    <button class="mj-note-box-close" onclick="closeMjNotePopup()">Lu - Fermer</button>
+  </div>
+</div>
+
+<script>
+var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+var params = new URLSearchParams(window.location.search);
+var TABLE_ID = params.get('table') || 'table2';
+var CHAR_ID  = params.get('id') || '';
+var FB_PATH  = FB + '/personnages/' + TABLE_ID + '/' + CHAR_ID;
+
+var charData = null;
+var state = { team: [null,null,null,null,null,null], pc: [], activeSlot: 0, notes: [], activeNote: null };
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showPlayerTab(tab, btn) {
+  document.querySelectorAll('.player-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.player-nav button').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('tab-' + tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+function loadCharacter() {
+  fetch(FB_PATH + '.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data) {
+        document.getElementById('hd-nom').textContent = 'Personnage introuvable';
+        return;
+      }
+      charData = data;
+      renderPerso();
+      initPartnerSlot();
+      if (data.team) {
+        for (var i = 1; i < 6; i++) state.team[i] = data.team[i] || null;
+      }
+      if (data.pc) state.pc = Array.isArray(data.pc) ? data.pc : Object.values(data.pc);
+      if (data.notes) state.notes = data.notes;
+      renderTeam();
+      renderNoteList();
+    })
+    .catch(function() {
+      document.getElementById('hd-nom').textContent = 'Erreur de chargement';
+    });
+}
+
+function renderPerso() {
+  var d = charData;
+  document.getElementById('hd-nom').textContent = d.nom || 'Sans nom';
+  document.getElementById('hd-role').textContent = d.role || '';
+  document.getElementById('pj-banner-name').textContent = d.nom || '';
+  document.getElementById('pj-banner-role').textContent = d.role || '';
+  document.getElementById('perso-title').textContent = d.nom || '';
+  document.getElementById('perso-tagline').textContent = d.role || '';
+  document.getElementById('perso-desc').textContent = d.desc || '';
+
+  var ATTR_LBL = { agi:'Agilite', rus:'Ruse', for:'Force', tremp:'Trempe', vig:'Vigueur' };
+  var attrsHtml = '';
+  Object.keys(ATTR_LBL).forEach(function(k) {
+    if (d.attrs && d.attrs[k]) {
+      attrsHtml += '<div class="stat-row"><span class="stat-name">' + ATTR_LBL[k] + '</span>'
+        + '<span class="stat-val">' + d.attrs[k] + '</span></div>';
+    }
+  });
+  document.getElementById('attrs-block').innerHTML = attrsHtml;
+
+  var derivedHtml = '';
+  if (d.derived) {
+    derivedHtml += '<div class="stat-row"><span class="stat-name">Parade</span><span class="stat-val">' + (d.derived.parade||'') + '</span></div>';
+    derivedHtml += '<div class="stat-row"><span class="stat-name">Robustesse</span><span class="stat-val">' + (d.derived.robustesse||'') + '</span></div>';
+    derivedHtml += '<div class="stat-row"><span class="stat-name">Allure</span><span class="stat-val">' + (d.derived.allure||'') + '</span></div>';
+  }
+  derivedHtml += '<div class="stat-row"><span class="stat-name">De Joker</span><span class="stat-val">d6</span></div>';
+  document.getElementById('derived-block').innerHTML = derivedHtml;
+
+  var skillsHtml = '';
+  if (d.skills) {
+    Object.keys(d.skills).forEach(function(name) {
+      var sk = d.skills[name];
+      var dice = (typeof sk === 'object') ? sk.dice : sk;
+      skillsHtml += '<div class="stat-row"><span class="stat-name">' + escHtml(name) + '</span>'
+        + '<span class="stat-val">' + escHtml(dice) + '</span></div>';
+    });
+  }
+  document.getElementById('skills-block').innerHTML = skillsHtml || '<div class="stat-row"><span class="stat-name">Aucune competence</span></div>';
+
+  var hindHtml = '';
+  (d.hindrances || []).forEach(function(h) {
+    var tagClass = h.type === 'Majeur' ? 'tag-majeur' : 'tag-mineur';
+    hindHtml += '<div class="hindrance-block"><div class="block-name"><span class="tag ' + tagClass + '">' + h.type + '</span> ' + escHtml(h.name) + '</div>'
+      + '<div class="block-desc">' + escHtml(h.desc||'') + '</div></div>';
+  });
+  document.getElementById('hindrances-block').innerHTML = hindHtml || '<p style="color:var(--muted);font-size:12px">Aucun handicap.</p>';
+
+  var edgeHtml = '';
+  (d.edges || []).forEach(function(e) {
+    edgeHtml += '<div class="edge-block"><div class="block-name"><span class="tag tag-edge">' + e.type + '</span> ' + escHtml(e.name) + '</div>'
+      + '<div class="block-desc">' + escHtml(e.desc||'') + '</div></div>';
+  });
+  document.getElementById('edges-block').innerHTML = edgeHtml || '<p style="color:var(--muted);font-size:12px">Aucun atout.</p>';
+
+  var gearHtml = '';
+  (d.gear || []).forEach(function(g) {
+    gearHtml += '<li>' + escHtml(g) + '</li>';
+  });
+  document.getElementById('gear-block').innerHTML = gearHtml;
+}
+
+function initPartnerSlot() {
+  if (!charData.partner) return;
+  var p = charData.partner;
+  state.team[0] = {
+    name: p.name, type: p.type, taille: p.taille, talent: p.talent, talent_desc: p.talent_desc,
+    partner: true, notes: '',
+    stats: p.stats || {}
+  };
+}
+
+function saveState() {
+  fbSetTeam();
+}
+
+function fbSetTeam() {
+  fetch(FB_PATH + '/team.json', {
+    method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(state.team)
+  }).catch(function(){});
+  fetch(FB_PATH + '/pc.json', {
+    method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(state.pc || [])
+  }).catch(function(){});
+}
+
+function forceSave() {
+  fbSetTeam();
+  fetch(FB_PATH + '/notes.json', {
+    method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(state.notes)
+  }).catch(function(){});
+  var btn = document.getElementById('save-json-btn');
+  var orig = btn.innerHTML;
+  btn.innerHTML = '&#10003; Sauvegarde';
+  setTimeout(function(){ btn.innerHTML = orig; }, 2000);
+}
+
+
+function fbSet(key, val) {
+  return fetch(FB_PATH + '/' + key + '.json', {
+    method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(val)
+  }).catch(function(){});
+}
+
+function fbGet(key) {
+  var url = key ? (FB_PATH + '/' + key + '.json') : (FB_PATH + '.json');
+  return fetch(url).then(function(r){ return r.json(); }).catch(function(){ return null; });
+}
+
+function _syncCloud() {
+  fbSet('team', state.team);
+  fbSet('pc', state.pc || []);
+  fbSet('notes', state.notes);
+}
+
+function renderTeam() {
+  var grid = document.getElementById('team-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  for (var i=0;i<6;i++) {
+    var slot = state.team[i];
+    var div = document.createElement('div');
+    div.className = 'team-slot' + (slot?'':' empty') + (state.activeSlot===i?' active':'');
+    div.onclick = (function(idx){ return function(){ selectSlot(idx); }; })(i);
+    if (slot) {
+      var badge = slot.partner ? '<span class="slot-partner-badge">Partenaire</span>' : '';
+      div.innerHTML = '<span class="slot-num">' + (i===0?'P':'#'+i) + '</span>'
+        + '<span class="slot-name">' + slot.name + '</span>'
+        + '<span class="slot-type">' + slot.type + '</span>' + badge;
+    } else {
+      div.innerHTML = '<span class="slot-num">#'+i+'</span><span class="slot-add">+</span>';
+    }
+    grid.appendChild(div);
+  }
+  renderPanel();
+}
+function selectSlot(i) {
+  state.activeSlot = i;
+  renderTeam();
+  if (!state.team[i] && i>0) openAddForm(i); else closeAddForm();
+}
+function renderPanel() {
+  var panel = document.getElementById('team-panel');
+  if (!panel) return;
+  var slot = state.team[state.activeSlot];
+  if (!slot) {
+    panel.innerHTML = '<div style="padding:28px;text-align:center;color:var(--muted);font-size:13px">Cliquez sur un slot pour ajouter un Pok\u00e9mon.</div>';
+    return;
+  }
+
+  var idx     = state.activeSlot;
+  var s       = slot.stats || {};
+  var attacks = s.attacks || [];
+  if (!Array.isArray(attacks)) attacks = Object.values(attacks);
+  var talents = s.talents || [];
+  if (!Array.isArray(talents)) talents = Object.values(talents);
+
+  var DEF = 'd4';
+  var ROW1 = [{k:'for',l:'FOR'},{k:'agi',l:'AGI'},{k:'vig',l:'VIG'},
+              {k:'rus',l:'RUS'},{k:'tremp',l:'TREMP'}];
+  var ROW2 = [{k:'parade',l:'Parade'},{k:'robustesse',l:'Robustesse'},{k:'allure',l:'Allure'}];
+
+  var statsHtml =
+    '<div class="pk-stats-row" style="margin-bottom:4px">'
+    + ROW1.map(function(x){
+        return '<div class="pk-stat">' + x.l + ' <span class="val">' + escHtml(s[x.k]||DEF) + '</span></div>';
+      }).join('')
+    + '</div>'
+    + '<div class="pk-stats-row">'
+    + ROW2.map(function(x){
+        return '<div class="pk-stat">' + x.l + ' <span class="val">' + escHtml(s[x.k]||DEF) + '</span></div>';
+      }).join('')
+    + '</div>';
+
+  var loreHtml = slot.lore ? '<div class="pk-lore">' + escHtml(slot.lore) + '</div>' : '';
+
+  /* Description courte ecrite par le joueur */
+  var playerDescHtml = slot.player_desc
+    ? '<div class="pk-player-desc">' + escHtml(slot.player_desc) + '</div>'
+    : '';
+
+  var talentHtml = '';
+  if (talents.length) {
+    talentHtml = '<div class="pk-section-lbl">Talents</div>'
+      + talents.map(function(t) {
+          return '<div class="pk-capa"><span class="pk-capa-name">' + escHtml(t.name) + '</span>'
+            + (t.desc ? '<span class="pk-capa-desc"> : ' + escHtml(t.desc) + '</span>' : '')
+            + '</div>';
+        }).join('');
+  } else if (slot.talent) {
+    talentHtml = '<div class="pk-section-lbl">Talent</div>'
+      + '<div class="pk-capa"><span class="pk-capa-name">' + escHtml(slot.talent) + '</span>'
+      + (slot.talent_desc ? '<span class="pk-capa-desc"> : ' + escHtml(slot.talent_desc) + '</span>' : '')
+      + '</div>';
+  }
+
+  var validAtks = attacks.filter(function(a){ return a && a.name; });
+  var atksHtml = '';
+  if (validAtks.length) {
+    atksHtml = '<div class="pk-section-lbl">Attaques</div>'
+      + '<table class="pk-atk-table">'
+      + '<tr><th>Attaque</th><th>Dommages</th><th>Port\u00e9e</th><th>Effet</th></tr>';
+    validAtks.forEach(function(a) {
+      atksHtml += '<tr>'
+        + '<td class="pk-atk-name">' + escHtml(a.name)       + '</td>'
+        + '<td class="pk-atk-dmg">'  + escHtml(a.dmg||'')    + '</td>'
+        + '<td>'                      + escHtml(a.range||'')  + '</td>'
+        + '<td>'                      + escHtml(a.effect||'') + '</td>'
+        + '</tr>';
+    });
+    atksHtml += '</table>';
+  }
+
+  var notesHtml = slot.notes ? '<div class="pk-note">' + escHtml(slot.notes) + '</div>' : '';
+
+  /* Mode édition */
+  var EDIT_KEYS = ['for','agi','vig','rus','tremp','parade','robustesse','allure'];
+  var EDIT_LBL  = {for:'FOR',agi:'AGI',vig:'VIG',rus:'RUS',tremp:'TREMP',
+                   parade:'Parade',robustesse:'Robustesse',allure:'Allure'};
+  var editStatsHtml = '<div class="pk-stats-grid">';
+  EDIT_KEYS.forEach(function(k) {
+    editStatsHtml += '<div class="pk-stat-field"><label>' + EDIT_LBL[k] + '</label>'
+      + '<input class="pk-edit-input" type="text" data-idx="' + idx + '" data-key="' + k + '"'
+      + ' value="' + escHtml(s[k]||DEF) + '" maxlength="20"></div>';
+  });
+  editStatsHtml += '</div>';
+
+  var editAtksHtml = '';
+  for (var ai = 0; ai < Math.max(attacks.length + 1, 4); ai++) {
+    var atk = attacks[ai] || {name:'',dmg:'',range:'',effect:''};
+    editAtksHtml += '<div class="pk-atk-edit-row">'
+      + '<div class="atk-ac-wrap">'
+      + '<input type="text" placeholder="Attaque"'
+      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="name"'
+      + ' value="' + escHtml(atk.name||'') + '" maxlength="50" autocomplete="off">'
+      + '<div class="atk-ac-list" id="atk-ac-' + ai + '"></div>'
+      + '</div>'
+      + '<input type="text" placeholder="Dmg"'
+      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="dmg"'
+      + ' value="' + escHtml(atk.dmg||'') + '" maxlength="20">'
+      + '<input type="text" placeholder="Port\u00e9e"'
+      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="range"'
+      + ' value="' + escHtml(atk.range||'') + '" maxlength="30">'
+      + '<input type="text" placeholder="Effet"'
+      + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="effect"'
+      + ' value="' + escHtml(atk.effect||'') + '" maxlength="80">'
+      + '</div>';
+  }
+
+  panel.innerHTML =
+    '<div class="pk-card">'
+    + '<div class="pk-card-header">'
+    + '<div class="pk-owner">Slot #' + idx + '</div>'
+    + '<div class="pk-name">' + escHtml(slot.name) + '</div>'
+    + '<div class="pk-meta-row">'
+    + (slot.type   ? '<span class="tag tag-weird">'   + escHtml(slot.type)   + '</span>' : '')
+    + (slot.taille ? '<span class="tag tag-sauvage">' + escHtml(slot.taille) + '</span>' : '')
+    + '</div></div>'
+    + '<div class="pk-body" id="pk-panel-read">'
+    + loreHtml
+    + playerDescHtml
+    + talentHtml
+    + '<div class="pk-section-lbl">Attributs</div>'
+    + statsHtml + atksHtml + notesHtml
+    + '</div>'
+    + '<div class="pk-body" id="pk-panel-edit" style="display:none">'
+    + '<div class="pk-section-lbl">Description (par vous)</div>'
+    + '<textarea class="pk-notes-ta" id="pk-player-desc-input" maxlength="280"'
+    + ' placeholder="Une courte description personnelle de ce Pok\u00e9mon...">' + escHtml(slot.player_desc||'') + '</textarea>'
+    + '<div class="pk-section-lbl" style="margin-top:10px">Talent principal</div>'
+    + '<input class="pk-edit-input" type="text" id="pk-talent-input"'
+    + ' style="width:100%;margin-bottom:4px"'
+    + ' data-idx="' + idx + '" data-key="talent"'
+    + ' value="' + escHtml(slot.talent||'') + '" maxlength="80" placeholder="Nom du talent">'
+    + '<input class="pk-edit-input" type="text" id="pk-talent-desc-input"'
+    + ' style="width:100%;margin-bottom:10px"'
+    + ' data-idx="' + idx + '" data-key="talent_desc"'
+    + ' value="' + escHtml(slot.talent_desc||'') + '" maxlength="200" placeholder="Description...">'
+    + '<div class="pk-section-lbl">Attributs</div>'
+    + editStatsHtml
+    + '<div class="pk-section-lbl" style="margin-top:10px">Attaques'
+    + ' <span style="font-size:9px;font-weight:400;color:var(--muted);margin-left:8px">'
+    + 'Tapez pour chercher dans le Pok\u00e9dex</span></div>'
+    + editAtksHtml
+    + '<div class="pk-section-lbl" style="margin-top:10px">Notes</div>'
+    + '<textarea class="pk-notes-ta" id="pk-notes-input">' + escHtml(slot.notes||'') + '</textarea>'
+    + '</div>'
+    + '</div>'
+    + '<div style="display:flex;gap:6px;margin-top:10px;justify-content:flex-end">'
+    + '<button class="btn-edit" id="pk-btn-edit">Modifier</button>'
+    + '<button class="btn-save" id="pk-btn-save" style="display:none">Sauvegarder</button>'
+    + (idx === 0 ? '' : '<button class="btn-danger" id="pk-btn-del">Retirer</button>')
+    + '</div>';
+
+  panel.querySelector('#pk-btn-edit').addEventListener('click', function() {
+    document.getElementById('pk-panel-read').style.display = 'none';
+    document.getElementById('pk-panel-edit').style.display = '';
+    this.style.display = 'none';
+    panel.querySelector('#pk-btn-save').style.display = '';
+    panel.querySelectorAll('.atk-ac-wrap input').forEach(function(inp) {
+      var ai2 = parseInt(inp.dataset.ai);
+      initAtkAutocomplete(inp, ai2, idx);
+    });
+  });
+
+  panel.querySelector('#pk-btn-save').addEventListener('click', function() {
+    var curIdx = parseInt(panel.querySelector('[data-idx]').dataset.idx);
+    if (!state.team[curIdx]) return;
+    if (!state.team[curIdx].stats) state.team[curIdx].stats = {};
+
+    var pd = document.getElementById('pk-player-desc-input');
+    if (pd) state.team[curIdx].player_desc = pd.value.trim();
+
+    var ti  = document.getElementById('pk-talent-input');
+    if (ti) state.team[curIdx].talent = ti.value.trim();
+    var tdi = document.getElementById('pk-talent-desc-input');
+    if (tdi) state.team[curIdx].talent_desc = tdi.value.trim();
+    panel.querySelectorAll('.pk-edit-input').forEach(function(inp) {
+      if (inp.dataset.key && inp.dataset.key !== 'talent' && inp.dataset.key !== 'talent_desc') {
+        state.team[curIdx].stats[inp.dataset.key] = inp.value.trim();
+      }
+    });
+    var atksMap = {};
+    panel.querySelectorAll('.pk-atk-edit-row input, .pk-atk-edit-row .atk-ac-wrap input').forEach(function(inp) {
+      var ai3 = inp.dataset.ai; var field = inp.dataset.field;
+      if (ai3 === undefined) return;
+      if (!atksMap[ai3]) atksMap[ai3] = {name:'',dmg:'',range:'',effect:''};
+      atksMap[ai3][field] = inp.value.trim();
+    });
+    var newAtks = [];
+    Object.keys(atksMap).sort().forEach(function(ai4) {
+      if (atksMap[ai4].name) newAtks.push(atksMap[ai4]);
+    });
+    state.team[curIdx].stats.attacks = newAtks;
+
+    var ta = document.getElementById('pk-notes-input');
+    if (ta) state.team[curIdx].notes = ta.value;
+
+    saveState();
+    document.getElementById('pk-panel-read').style.display = '';
+    document.getElementById('pk-panel-edit').style.display = 'none';
+    this.style.display = 'none';
+    panel.querySelector('#pk-btn-edit').style.display = '';
+    renderPanel();
+  });
+
+  var delBtn = panel.querySelector('#pk-btn-del');
+  if (delBtn) delBtn.addEventListener('click', function() {
+    removePokemon(state.activeSlot);
+  });
+  initRollablePills();
+}
+function openAddForm(slot) {
+  var form = document.getElementById('pk-add-form');
+  form.classList.add('open');
+  document.getElementById('add-slot-num').textContent = 'Slot #' + slot;
+  document.getElementById('add-slot-hidden').value = slot;
+  document.getElementById('bst-detail-panel').innerHTML = '';
+  document.getElementById('bst-add-btn').disabled = true;
+  document.getElementById('bst-add-btn').style.opacity = '.4';
+  _bstCurrent = null;
+  if (!_bstData) {
+    loadBestiaire();
+  } else {
+    renderBstPicker(_bstData);
+  }
+}
+function closeAddForm() {
+  document.getElementById('pk-add-form').classList.remove('open');
+  document.getElementById('bst-search').value = '';
+  document.getElementById('bst-detail-panel').innerHTML = '';
+  _bstCurrent = null;
+}
+function loadBestiaire() {
+  var grid = document.getElementById('bst-picker-grid');
+  grid.innerHTML = '<div class="bst-loading">Chargement...</div>';
+  fetch('mj.html')
+    .then(function(r) { return r.text(); })
+    .then(function(txt) {
+      _bstData = parseBestCards(txt);
+      renderBstPicker(_bstData);
+    })
+    .catch(function() {
+      grid.innerHTML = '<div class="bst-loading">Erreur de chargement.</div>';
+    });
+}
+function parseBestCards(html) {
+  var cards = [];
+  var doc = (new DOMParser()).parseFromString(html, 'text/html');
+  doc.querySelectorAll('.beast-card').forEach(function(card) {
+    var nameEl = card.querySelector('.beast-name');
+    var metaEl = card.querySelector('.beast-meta');
+    if (!nameEl) return;
+    var metaTxt = metaEl ? metaEl.textContent : '';
+    var tagEl   = metaEl ? metaEl.querySelector('[class^="tag"]') : null;
+    var categorie = tagEl ? tagEl.textContent.trim() : '';
+    var rest  = metaTxt.replace(categorie,'').replace(/^\s*[·\-]\s*/,'').trim();
+    var parts = rest.split(/\s*[·\-]\s*/);
+    var type   = parts[0] ? parts[0].trim() : '';
+    var taille = parts[1] ? parts[1].trim() : '';
+    var descEl = card.querySelector('p');
+    var attrs  = {};
+    var statMap = {AGI:'agi',FOR:'for',VIG:'vig',RUS:'rus',TREMP:'tremp',
+                   Parade:'parade',Robustesse:'robustesse',Allure:'allure'};
+    card.querySelectorAll('.stat-pill').forEach(function(pill) {
+      var val = pill.querySelector('span');
+      if (!val) return;
+      var key = pill.textContent.replace(val.textContent,'').trim();
+      var fk  = statMap[key];
+      if (fk) attrs[fk] = val.textContent.trim();
+    });
+    var attacks = [];
+    card.querySelectorAll('.atk-table tr').forEach(function(row) {
+      var cells = row.querySelectorAll('td');
+      if (cells.length >= 2) {
+        attacks.push({
+          name:   cells[0] ? cells[0].textContent.trim() : '',
+          dmg:    cells[1] ? cells[1].textContent.trim() : '',
+          range:  cells[2] ? cells[2].textContent.trim() : '',
+          effect: cells[3] ? cells[3].textContent.trim() : ''
+        });
+      }
+    });
+    var talents = [];
+    card.querySelectorAll('.capa-list li').forEach(function(li) {
+      var n = li.querySelector('.capa-name');
+      if (!n) return;
+      var d = li.textContent.replace(n.textContent,'').replace(/^\s*:\s*/,'').trim();
+      talents.push({ name: n.textContent.trim(), desc: d });
+    });
+    cards.push({ name: nameEl.textContent.trim(), categorie: categorie,
+      type: type, taille: taille,
+      desc: descEl ? descEl.textContent.trim() : '',
+      attrs: attrs, attacks: attacks, talents: talents });
+  });
+  return cards;
+}
+function filterBstPicker() {
+  if (_bstData) renderBstPicker(_bstData);
+}
+function renderBstPicker(cards) {
+  var grid = document.getElementById('bst-picker-grid');
+  var q = ((document.getElementById('bst-search')||{}).value||'').toLowerCase();
+  grid.innerHTML = '';
+  var filtered = cards.filter(function(c) {
+    return !q || c.name.toLowerCase().indexOf(q) >= 0
+              || c.type.toLowerCase().indexOf(q) >= 0;
+  });
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="bst-loading">Aucun r\u00e9sultat.</div>';
+    return;
+  }
+  var SL = {agi:'AGI',rus:'RUS',for:'FOR',tremp:'TREMP',vig:'VIG',
+            parade:'PAR',robustesse:'ROB',allure:'ALL'};
+  filtered.forEach(function(c) {
+    var div = document.createElement('div');
+    div.className = 'bst-pick-card';
+    var statsHtml = Object.keys(SL).filter(function(k){ return c.attrs[k]; })
+      .map(function(k){ return '<div class="bst-pick-stat">' + SL[k]
+        + ' <span>' + c.attrs[k] + '</span></div>'; }).join('');
+    div.innerHTML =
+      '<div class="bst-pick-name">' + c.name + '</div>'
+      + '<div class="bst-pick-meta">' + c.type
+      + (c.taille ? ' &middot; ' + c.taille : '') + '</div>'
+      + '<div class="bst-pick-stats">' + statsHtml + '</div>'
+      + (c.talents.length
+          ? '<div style="font-size:9px;color:var(--muted);margin-top:3px">'
+            + c.talents.length + ' talent' + (c.talents.length > 1 ? 's' : '') + '</div>'
+          : '');
+    div.addEventListener('click', (function(card, el){
+      return function(){ showBstDetail(card, el); };
+    })(c, div));
+    grid.appendChild(div);
+  });
+}
+function showBstDetail(c, el) {
+  document.querySelectorAll('.bst-selected').forEach(function(d){ d.classList.remove('bst-selected'); });
+  el.classList.add('bst-selected');
+  _bstCurrent = c;
+
+  var SL = {agi:'AGI',rus:'RUS',for:'FOR',tremp:'TREMP',vig:'VIG',
+            parade:'Parade',robustesse:'Robustesse',allure:'Allure'};
+
+  var attrsHtml = '<div class="bst-attrs">'
+    + Object.keys(SL).filter(function(k){ return c.attrs[k]; })
+      .map(function(k){ return '<div class="bst-attr">' + SL[k]
+        + ' <span>' + c.attrs[k] + '</span></div>'; }).join('')
+    + '</div>';
+
+  var atksHtml = '';
+  if (c.attacks.length) {
+    atksHtml = '<table class="bst-atk-table">'
+      + '<tr><th>Attaque</th><th>Dommages</th><th>Port\u00e9e</th><th>Effet</th></tr>';
+    c.attacks.forEach(function(a) {
+      atksHtml += '<tr><td class="bst-atk-name">' + a.name + '</td>'
+        + '<td class="bst-atk-dmg">' + a.dmg + '</td>'
+        + '<td>' + (a.range||'') + '</td>'
+        + '<td>' + (a.effect||'') + '</td></tr>';
+    });
+    atksHtml += '</table>';
+  }
+
+  var talentsHtml = '<span class="bst-talent-lbl">Talent</span>'
+    + '<div class="bst-talent-list" id="bst-talent-list">';
+  c.talents.forEach(function(t, i) {
+    talentsHtml += '<label class="bst-talent-opt' + (i===0?' selected':'') + '">'
+      + '<input type="radio" name="bst-talent" value="' + i + '"'
+      + (i===0?' checked':'') + '>'
+      + '<span><span class="bst-talent-name">' + t.name + '</span>'
+      + (t.desc ? '<span class="bst-talent-desc">' + t.desc + '</span>' : '')
+      + '</span></label>';
+  });
+  talentsHtml += '<label class="bst-talent-opt' + (!c.talents.length?' selected':'') + '">'
+    + '<input type="radio" name="bst-talent" value="-1"'
+    + (!c.talents.length?' checked':'') + '>'
+    + '<span><span class="bst-talent-name" style="color:var(--muted)">Aucun talent</span></span>'
+    + '</label>';
+  talentsHtml += '</div>';
+
+  var panel = document.getElementById('bst-detail-panel');
+  panel.innerHTML =
+    '<div class="bst-detail-header">'
+    + '<div class="bst-detail-name">' + c.name + '</div>'
+    + '<div class="bst-detail-meta">'
+    + c.type + (c.taille ? ' &middot; ' + c.taille : '')
+    + '</div>'
+    + (c.desc ? '<div class="bst-detail-desc">' + c.desc + '</div>' : '')
+    + '</div>'
+    + '<div class="bst-detail-body">'
+    + '<span class="bst-talent-lbl" style="margin-top:0">Attributs</span>'
+    + attrsHtml + atksHtml + talentsHtml
+    + '</div>';
+
+  panel.querySelectorAll('input[type=radio]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      panel.querySelectorAll('.bst-talent-opt').forEach(function(o){ o.classList.remove('selected'); });
+      this.closest('.bst-talent-opt').classList.add('selected');
+    });
+  });
+
+  var btn = document.getElementById('bst-add-btn');
+  btn.disabled = false;
+  btn.style.opacity = '1';
+}
+function addFromBestiaire() {
+  if (!_bstCurrent) return;
+  var c    = _bstCurrent;
+  var slot = parseInt(document.getElementById('add-slot-hidden').value);
+
+  var talentVal  = '';
+  var talentDesc = '';
+  var radios = document.querySelectorAll('input[name="bst-talent"]');
+  radios.forEach(function(r) {
+    if (r.checked && r.value !== '-1') {
+      var t = c.talents[parseInt(r.value)];
+      if (t) { talentVal = t.name; talentDesc = t.desc || ''; }
+    }
+  });
+
+  var stats = {};
+  var statKeys = ['for','agi','vig','rus','tremp','parade','robustesse','allure'];
+  statKeys.forEach(function(k) { if (c.attrs[k]) stats[k] = c.attrs[k]; });
+  stats.attacks = c.attacks.map(function(a) {
+    return { name:a.name, dmg:a.dmg, range:a.range, effect:a.effect };
+  });
+
+  state.team[slot] = {
+    name:        c.name,
+    type:        c.type,
+    taille:      c.taille,
+    talent:      talentVal,
+    talent_desc: talentDesc,
+    partner:     false,
+    notes:       '',
+    stats:       stats
+  };
+
+  saveState();
+  closeAddForm();
+  renderTeam();
+  selectSlot(slot);
+}
+function removePokemon(i) {
+  if (i === 0) return;
+  openReleaseMenu(i);
+}
+function openReleaseMenu(i) {
+  var slot = state.team[i];
+  if (!slot) return;
+  _releaseTargetSlot = i;
+  document.getElementById('release-modal-title').textContent = 'Que faire de ' + slot.name + ' ?';
+  document.getElementById('release-modal-bg').classList.add('open');
+}
+function closeReleaseModal() {
+  document.getElementById('release-modal-bg').classList.remove('open');
+  _releaseTargetSlot = null;
+}
+function confirmSendToPc() {
+  var i = _releaseTargetSlot;
+  closeReleaseModal();
+  if (i !== null) sendToPc(i);
+}
+function confirmReleaseModal() {
+  var i = _releaseTargetSlot;
+  closeReleaseModal();
+  if (i === null) return;
+  var slot = state.team[i];
+  openConfirmModal(
+    'Rel\u00e2cher ' + slot.name + ' ?',
+    'Cette action est irr\u00e9versible. ' + slot.name + ' quittera l\u2019\u00e9quipe d\u00e9finitivement.',
+    function() { releasePokemon(i); }
+  );
+}
+function releaseFromPc(pcIdx) {
+  var pkmn = state.pc[pcIdx];
+  _releaseTargetPc = pcIdx;
+  openConfirmModal(
+    'Rel\u00e2cher ' + pkmn.name + ' ?',
+    'Ce Pok\u00e9mon sera retir\u00e9 du PC d\u00e9finitivement. Cette action est irr\u00e9versible.',
+    function() {
+      state.pc.splice(pcIdx, 1);
+      saveState();
+      renderPcList();
+    }
+  );
+}
+function openConfirmModal(title, text, onConfirm) {
+  document.getElementById('confirm-modal-title').textContent = title;
+  document.getElementById('confirm-modal-text').textContent = text;
+  var yesBtn = document.getElementById('confirm-modal-yes');
+  var newBtn = yesBtn.cloneNode(true);
+  yesBtn.parentNode.replaceChild(newBtn, yesBtn);
+  newBtn.addEventListener('click', function() {
+    closeConfirmModal();
+    onConfirm();
+  });
+  document.getElementById('confirm-modal-bg').classList.add('open');
+}
+function closeConfirmModal() {
+  document.getElementById('confirm-modal-bg').classList.remove('open');
+}
+function sendToPc(i) {
+  var slot = state.team[i];
+  if (!slot) return;
+  if (!state.pc) state.pc = [];
+  state.pc.push(slot);
+  state.team[i] = null;
+  state.activeSlot = 0;
+  saveState();
+  renderTeam();
+  renderPcList();
+}
+function releasePokemon(i) {
+  state.team[i] = null;
+  state.activeSlot = 0;
+  saveState();
+  renderTeam();
+}
+function recallFromPc(pcIdx) {
+  var emptySlot = -1;
+  for (var i = 1; i < 6; i++) {
+    if (!state.team[i]) { emptySlot = i; break; }
+  }
+  if (emptySlot === -1) {
+    alert('Aucun slot vide dans l\'equipe. Retirez un Pokemon avant de rappeler celui-ci.');
+    return;
+  }
+  var pkmn = state.pc[pcIdx];
+  state.team[emptySlot] = pkmn;
+  state.pc.splice(pcIdx, 1);
+  saveState();
+  renderTeam();
+  renderPcList();
+  selectSlot(emptySlot);
+}
+function renderPcList() {
+  var container = document.getElementById('pc-list');
+  if (!container) return;
+  var pc = state.pc || [];
+
+  if (!pc.length) {
+    container.innerHTML = '<div class="pc-empty">Aucun Pokemon archive. Les Pokemon envoyes au PC depuis l\'equipe apparaitront ici.</div>';
+    return;
+  }
+
+  var hasEmptySlot = false;
+  for (var i = 1; i < 6; i++) { if (!state.team[i]) { hasEmptySlot = true; break; } }
+
+  var html = '';
+  pc.forEach(function(p, idx) {
+    var talentTxt = p.talent ? p.talent : 'Aucun talent';
+    html += '<div class="pc-card">'
+      + '<div class="pc-card-info">'
+      + '<div class="pc-card-name">' + escHtml(p.name) + '</div>'
+      + '<div class="pc-card-meta">' + escHtml(p.type||'') + (p.taille ? ' \u00b7 ' + escHtml(p.taille) : '') + '</div>'
+      + '<div class="pc-card-talent">' + escHtml(talentTxt) + '</div>'
+      + '</div>'
+      + '<button class="pc-recall-btn" ' + (hasEmptySlot ? '' : 'disabled') + ' onclick="recallFromPc(' + idx + ')">Rappeler</button>'
+      + '<button class="btn-danger" onclick="releaseFromPc(' + idx + ')">Relacher</button>'
+      + '</div>';
+  });
+  container.innerHTML = html;
+}
+function parseDieNotation(notation) {
+  /* Parse "d6", "d8+1", "d12+2" -> {faces, mod} */
+  var m = String(notation).match(/d(\d+)\s*(?:([+\-])\s*(\d+))?/i);
+  if (!m) return { faces: 4, mod: 0 };
+  var faces = parseInt(m[1], 10);
+  var mod   = m[3] ? (m[2] === '-' ? -parseInt(m[3],10) : parseInt(m[3],10)) : 0;
+  return { faces: faces, mod: mod };
+}
+function rollExplodingDie(faces) {
+  /* Lance un d{faces}, relance et additionne tant que le max sort */
+  var rolls = [];
+  var total = 0;
+  var roll;
+  do {
+    roll = Math.floor(Math.random() * faces) + 1;
+    rolls.push(roll);
+    total += roll;
+  } while (roll === faces && rolls.length < 20); /* securite anti-boucle infinie */
+  return { rolls: rolls, total: total };
+}
+function rollPillDice(el, notation) {
+  var parsed = parseDieNotation(notation);
+  var result = rollExplodingDie(parsed.faces);
+  var grandTotal = result.total + parsed.mod;
+
+  var detail = result.rolls.map(function(r) {
+    return (r === parsed.faces) ? '<span class="explode">' + r + '</span>' : r;
+  }).join(' + ');
+  if (parsed.mod) detail += (parsed.mod > 0 ? ' + ' : ' - ') + Math.abs(parsed.mod);
+
+  var wild = rollExplodingDie(6);
+  var wildDetail = wild.rolls.map(function(r) {
+    return (r === 6) ? '<span class="explode">' + r + '</span>' : r;
+  }).join(' + ');
+
+  /* Determiner le type de lancer selon l'origine de l'element */
+  var kind = 'attribut';
+  if (el.classList.contains('stat-row')) {
+    var nameEl = el.querySelector('.stat-name');
+    var label  = nameEl ? nameEl.textContent.trim() : '';
+    var isCompetence = el.closest('.stats-grid') === null; /* hors grille attributs = competence */
+    kind = isCompetence ? ('competence: ' + label) : ('attribut: ' + label);
+  } else if (el.classList.contains('pk-stat') || el.classList.contains('stat-pill')) {
+    kind = 'pokemon';
+  }
+
+  showDiceBubble(el, grandTotal, detail, notation, wild.total, wildDetail, parsed.faces);
+  broadcastDiceRoll(notation, grandTotal, result.rolls, wild.total, wild.rolls, kind);
+}
+function showDiceBubble(el, total, detail, notation, wildTotal, wildDetail, facesForAnim) {
+  var existing = el.querySelector('.dice-bubble');
+  if (existing) existing.remove();
+
+  var bubble = document.createElement('div');
+  bubble.className = 'dice-bubble';
+
+  var resultRow = document.createElement('div');
+  resultRow.className = 'dice-bubble-row hidden-during-roll';
+  resultRow.innerHTML =
+    '<div class="dice-bubble-col">'
+    + '<div class="dice-bubble-total">' + total + '</div>'
+    + '<div class="dice-bubble-detail">' + notation + ' : ' + detail + '</div>'
+    + '</div>'
+    + '<div class="dice-bubble-sep"></div>'
+    + '<div class="dice-bubble-col wild">'
+    + '<div class="dice-bubble-total wild">' + wildTotal + '</div>'
+    + '<div class="dice-bubble-detail">d6 : ' + wildDetail + '</div>'
+    + '</div>';
+
+  var spinner = animateDiceRoll(2, facesForAnim || 6, function() {
+    resultRow.classList.remove('hidden-during-roll');
+  });
+  bubble.appendChild(spinner);
+  bubble.appendChild(resultRow);
+
+  el.style.position = 'relative';
+  el.appendChild(bubble);
+
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() { bubble.classList.add('show'); });
+  });
+
+  registerActiveDiceBubble(bubble);
+}
+function broadcastDiceRoll(notation, total, rolls, wildTotal, wildRolls, kind) {
+  var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+  var payload = {
+    player: CHAR_ID,
+    notation: notation,
+    total: total,
+    rolls: rolls,
+    wildTotal: wildTotal,
+    wildRolls: wildRolls,
+    kind: kind || 'attribut',
+    ts: Date.now()
+  };
+  fetch(FB + '/dice_rolls/' + TABLE_ID + '_' + CHAR_ID + '.json', {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).catch(function(){});
+}
+function findPokemonAttribute(el, attrCode) {
+  var ALIASES = {
+    FOR: ['for','force','str'],
+    AGI: ['agi','agilite','agilit\u00e9'],
+    VIG: ['vig','vigueur'],
+    RUS: ['rus','ruse'],
+    TREMP: ['tremp','trempe']
+  };
+  var wanted = ALIASES[attrCode.toUpperCase()] || [attrCode.toLowerCase()];
+
+  /* Remonter manuellement parent par parent jusqu'a trouver des pills */
+  var node = el;
+  var pills = null;
+  for (var depth = 0; depth < 12 && node; depth++) {
+    if (node.querySelectorAll) {
+      var found = node.querySelectorAll('.pk-stat, .stat-pill');
+      if (found && found.length > 0) { pills = found; break; }
+    }
+    node = node.parentElement;
+  }
+  if (!pills) {
+    /* Dernier recours : chercher dans tout le document */
+    pills = document.querySelectorAll('.pk-stat, .stat-pill');
+  }
+
+  for (var i = 0; i < pills.length; i++) {
+    var pill = pills[i];
+    var valEl = pill.querySelector('.val');
+    if (!valEl) continue;
+    var label = pill.textContent.replace(valEl.textContent, '').trim().toLowerCase();
+    if (wanted.indexOf(label) >= 0) {
+      return valEl.textContent.trim();
+    }
+  }
+  return null;
+}
+function parseDamageNotation(text) {
+  text = String(text).trim();
+
+  /* Detecter un attribut nomme en prefixe : FOR+, Str+, AGI+ etc. */
+  var attrMatch = text.match(/^(FOR|STR|AGI|VIG|RUS|TREMP)\s*\+/i);
+  var namedAttr = attrMatch ? attrMatch[1].toUpperCase() : null;
+  if (namedAttr === 'STR') namedAttr = 'FOR';
+
+  /* Trouver tous les des explicites : 2d6, d8, 1d4 etc. */
+  var diceMatches = text.match(/(\d*)d(\d+)/gi) || [];
+  var dice = diceMatches.map(function(m) {
+    var parts = m.match(/(\d*)d(\d+)/i);
+    var count = parts[1] ? parseInt(parts[1],10) : 1;
+    var faces = parseInt(parts[2],10);
+    return { count: count, faces: faces };
+  });
+
+  /* Modificateur numerique fixe en fin de chaine */
+  var modMatch = text.match(/(?:^|[^d\d])([+\-]\d+)\s*$/i);
+  var mod = modMatch ? parseInt(modMatch[1], 10) : 0;
+
+  return { dice: dice, mod: mod, namedAttr: namedAttr, raw: text };
+}
+function rollDamage(el, text) {
+  var parsed = parseDamageNotation(text);
+  if (!parsed.dice.length && !parsed.namedAttr) return;
+
+  var allRolls = [];
+  var total = 0;
+
+  /* Des explicites de l'attaque (2d6, d8...) */
+  parsed.dice.forEach(function(d) {
+    for (var i = 0; i < d.count; i++) {
+      var r = rollExplodingDie(d.faces);
+      allRolls.push({ label: 'd' + d.faces, faces: d.faces, rolls: r.rolls, total: r.total });
+      total += r.total;
+    }
+  });
+
+  /* Attribut nomme (FOR, AGI...) -> lire le de du Pokemon et le lancer aussi */
+  var attrNotation = null;
+  if (parsed.namedAttr) {
+    attrNotation = findPokemonAttribute(el, parsed.namedAttr);
+    if (attrNotation) {
+      var attrParsed = parseDieNotation(attrNotation);
+      var ar = rollExplodingDie(attrParsed.faces);
+      allRolls.unshift({ label: parsed.namedAttr + '(' + attrNotation + ')', faces: attrParsed.faces, rolls: ar.rolls, total: ar.total });
+      total += ar.total + attrParsed.mod;
+    }
+  }
+
+  total += parsed.mod;
+
+  var detailParts = allRolls.map(function(r) {
+    var rollsStr = r.rolls.map(function(v) {
+      return (v === r.faces) ? '<span class="explode">' + v + '</span>' : v;
+    }).join('+');
+    return r.label + '(' + rollsStr + ')';
+  });
+  var detail = detailParts.join(' + ');
+  if (parsed.mod) detail += (parsed.mod > 0 ? ' + ' : ' - ') + Math.abs(parsed.mod);
+
+  showDamageBubble(el, total, detail, parsed.raw, (allRolls[0] && allRolls[0].faces) || 6);
+
+  var allDiceRolls = allRolls.reduce(function(a,r){ return a.concat(r.rolls); }, []);
+  broadcastDiceRoll(parsed.raw, total, allDiceRolls, null, null, 'damage');
+}
+function showDamageBubble(el, total, detail, notation, facesForAnim) {
+  var existing = el.querySelector('.dice-bubble');
+  if (existing) existing.remove();
+
+  var bubble = document.createElement('div');
+  bubble.className = 'dice-bubble';
+
+  var resultBlock = document.createElement('div');
+  resultBlock.className = 'dice-bubble-row hidden-during-roll';
+  resultBlock.innerHTML =
+    '<div class="dice-bubble-col">'
+    + '<div class="dice-bubble-total">' + total + '</div>'
+    + '<div class="dice-bubble-detail">' + notation + ' : ' + detail + '</div>'
+    + '</div>';
+
+  var spinner = animateDiceRoll(2, facesForAnim || 6, function() {
+    resultBlock.classList.remove('hidden-during-roll');
+  });
+  bubble.appendChild(spinner);
+  bubble.appendChild(resultBlock);
+
+  el.style.position = 'relative';
+  el.appendChild(bubble);
+
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() { bubble.classList.add('show'); });
+  });
+
+  registerActiveDiceBubble(bubble);
+}
+function initRollablePills(scope) {
+  var root = scope || document;
+
+  /* Pills Pokemon (attributs combat) */
+  root.querySelectorAll('.pk-stat .val, .stat-pill .val').forEach(function(valSpan) {
+    var pill = valSpan.closest('.pk-stat, .stat-pill');
+    if (!pill || pill.dataset.rollBound) return;
+    var notation = valSpan.textContent.trim();
+    if (!/^d\d+/i.test(notation)) return;
+    pill.classList.add('rollable');
+    pill.dataset.rollBound = '1';
+    pill.addEventListener('click', function(e) {
+      e.stopPropagation();
+      rollPillDice(pill, valSpan.textContent.trim());
+    });
+  });
+
+  /* Lignes attributs/competences du PJ (tab-perso) */
+  root.querySelectorAll('.stat-row').forEach(function(row) {
+    if (row.dataset.rollBound) return;
+    var valSpan = row.querySelector('.stat-val');
+    if (!valSpan) return;
+    var notation = valSpan.textContent.trim();
+    if (!/^d\d+/i.test(notation)) return;
+    row.classList.add('rollable');
+    row.dataset.rollBound = '1';
+    row.addEventListener('click', function(e) {
+      e.stopPropagation();
+      rollPillDice(row, valSpan.textContent.trim());
+    });
+  });
+
+  /* Dommages des attaques Pokemon */
+  root.querySelectorAll('.pk-atk-dmg, .bst-atk-dmg').forEach(function(cell) {
+    if (cell.dataset.rollBound) return;
+    var text = cell.textContent.trim();
+    if (!/d\d+/i.test(text)) return;
+    cell.classList.add('rollable');
+    cell.dataset.rollBound = '1';
+    cell.addEventListener('click', function(e) {
+      e.stopPropagation();
+      rollDamage(cell, cell.textContent.trim());
+    });
+  });
+}
+function diceSvg(num) {
+  return '<svg viewBox="0 0 36 36"><rect x="2" y="2" width="32" height="32" rx="6" '
+    + 'fill="var(--card)" stroke="var(--amber-dim)" stroke-width="2"></rect>'
+    + '<text class="dice-face-num" x="18" y="24" text-anchor="middle" '
+    + 'font-family="var(--mono)" font-size="16" font-weight="700" fill="var(--amber)">' + num + '</text></svg>';
+}
+function animateDiceRoll(count, faces, onDone) {
+  var spinner = document.createElement('div');
+  spinner.className = 'dice-spinner';
+  var cubes = [];
+  for (var i = 0; i < count; i++) {
+    var cube = document.createElement('div');
+    cube.className = 'dice-cube rolling';
+    cube.innerHTML = diceSvg(1);
+    spinner.appendChild(cube);
+    cubes.push(cube);
+  }
+
+  var flickerCount = 0;
+  var flickerIv = setInterval(function() {
+    cubes.forEach(function(cube) {
+      var fake = Math.floor(Math.random() * faces) + 1;
+      cube.innerHTML = diceSvg(fake);
+    });
+    flickerCount++;
+    if (flickerCount >= 6) {
+      clearInterval(flickerIv);
+      setTimeout(function() {
+        spinner.remove();
+        if (onDone) onDone();
+      }, 80);
+    }
+  }, 90);
+
+  return spinner;
+}
+function registerActiveDiceBubble(bubble) {
+  if (_activeDiceBubble && _activeDiceBubble.parentElement) {
+    _activeDiceBubble.classList.remove('show');
+    setTimeout(function() {
+      if (_activeDiceBubble && _activeDiceBubble.parentElement) _activeDiceBubble.remove();
+    }, 200);
+  }
+  _activeDiceBubble = bubble;
+}
+function initAtkAutocomplete(inputEl, ai, idx) {
+  var list = inputEl.parentElement.querySelector('.atk-ac-list');
+  if (!list) return;
+
+  inputEl.addEventListener('focus', function() {
+    loadPokedexAttaques(function() {
+      filterAtkAc(inputEl, list, ai, idx);
+    });
+  });
+
+  inputEl.addEventListener('input', function() {
+    filterAtkAc(inputEl, list, ai, idx);
+  });
+
+  inputEl.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { list.classList.remove('open'); }
+    if (e.key === 'ArrowDown') {
+      var first = list.querySelector('.atk-ac-item');
+      if (first) first.focus();
+      e.preventDefault();
+    }
+  });
+
+  list.addEventListener('keydown', function(e) {
+    var items = list.querySelectorAll('.atk-ac-item');
+    var focused = document.activeElement;
+    var idx_el = Array.prototype.indexOf.call(items, focused);
+    if (e.key === 'ArrowDown' && idx_el < items.length - 1) {
+      items[idx_el + 1].focus(); e.preventDefault();
+    } else if (e.key === 'ArrowUp') {
+      if (idx_el > 0) items[idx_el - 1].focus();
+      else inputEl.focus();
+      e.preventDefault();
+    } else if (e.key === 'Enter' && focused.classList.contains('atk-ac-item')) {
+      focused.click(); e.preventDefault();
+    } else if (e.key === 'Escape') {
+      list.classList.remove('open'); inputEl.focus();
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!inputEl.parentElement.contains(e.target)) {
+      list.classList.remove('open');
+    }
+  });
+}
+function loadPokedexAttaques(cb) {
+  if (_pokedexAttaques) { cb(_pokedexAttaques); return; }
+  /* Firebase /attaques.json */
+  fetch('https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app/attaques.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var arr = Array.isArray(data) ? data
+        : Object.keys(data).filter(function(k){ return !isNaN(parseInt(k)); })
+            .sort(function(a,b){ return parseInt(a)-parseInt(b); })
+            .map(function(k){ return data[k]; });
+      _pokedexAttaques = arr.filter(function(a){ return a && a.name; });
+      cb(_pokedexAttaques);
+    })
+    .catch(function() { cb([]); });
+}
+function filterAtkAc(inputEl, list, ai, idx) {
+  if (!_pokedexAttaques) return;
+  var q = inputEl.value.toLowerCase().trim();
+  var results = q
+    ? _pokedexAttaques.filter(function(a){ return a.name.toLowerCase().indexOf(q) >= 0; })
+    : _pokedexAttaques.slice(0, 20);
+
+  if (!results.length) { list.classList.remove('open'); return; }
+
+  list.innerHTML = '';
+  results.slice(0, 15).forEach(function(a) {
+    var item = document.createElement('div');
+    item.className = 'atk-ac-item';
+    item.tabIndex = 0;
+    item.innerHTML =
+      '<div class="atk-ac-name">' + a.name + '</div>'
+      + '<div class="atk-ac-meta">'
+      + (a.dmg   ? a.dmg   + '&nbsp;&nbsp;' : '')
+      + (a.range ? a.range + '&nbsp;&nbsp;' : '')
+      + (a.effect ? a.effect.slice(0,40) + (a.effect.length>40?'…':'') : '')
+      + '</div>';
+
+    item.addEventListener('click', function() {
+      selectAtkAc(a, ai, idx);
+      list.classList.remove('open');
+    });
+    list.appendChild(item);
+  });
+  list.classList.add('open');
+}
+function selectAtkAc(atk, ai, idx) {
+  /* Remplir les 4 inputs de la ligne */
+  var nameEl   = document.querySelector('[data-ai="' + ai + '"][data-field="name"]');
+  var dmgEl    = document.querySelector('[data-ai="' + ai + '"][data-field="dmg"]');
+  var rangeEl  = document.querySelector('[data-ai="' + ai + '"][data-field="range"]');
+  var effectEl = document.querySelector('[data-ai="' + ai + '"][data-field="effect"]');
+  if (nameEl)   nameEl.value   = atk.name   || '';
+  if (dmgEl)    dmgEl.value    = atk.dmg    || '';
+  if (rangeEl)  rangeEl.value  = atk.range  || '';
+  if (effectEl) effectEl.value = atk.effect || '';
+}
+function closeAllAtkAc() {
+  document.querySelectorAll('.atk-ac-list').forEach(function(l){ l.classList.remove('open'); });
+}
+function initNotes() {
+  if (!state.notes.length) {
+    state.notes = [
+      {id:'n1',title:'Session 1',content:'',updated:Date.now()},
+      {id:'n2',title:'Indices et pistes',content:'',updated:Date.now()}
+    ];
+    saveState();
+  }
+  renderNoteList();
+  var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
+  if (id) openNote(id);
+  loadNotesFromCloud();
+}
+function renderNoteList() {
+  var list = document.getElementById('note-list');
+  if (!list) return;
+  list.innerHTML = '';
+  state.notes.forEach(function(n) {
+    var div = document.createElement('div');
+    div.className = 'note-list-item' + (n.id===state.activeNote?' active':'');
+    div.innerHTML = '<span class="note-dot"></span>' + (n.title||'Sans titre');
+    div.onclick = (function(id){ return function(){ openNote(id); }; })(n.id);
+    list.appendChild(div);
+  });
+}
+function openNote(id) {
+  state.activeNote = id;
+  var note = state.notes.find(function(n){return n.id===id;});
+  if (!note) return;
+  renderNoteList();
+  document.getElementById('note-title').value = note.title||'';
+  document.getElementById('note-body').value = note.content||'';
+  document.getElementById('note-wc').textContent = wordCount(note.content)+' mots';
+  setSaveStatus('saved');
+}
+function addNote() {
+  var id = 'n'+Date.now();
+  state.notes.push({id:id,title:'Nouveau carnet',content:'',updated:Date.now()});
+  saveState(); renderNoteList(); openNote(id);
+  setTimeout(function(){ var t=document.getElementById('note-title'); if(t) t.select(); },50);
+}
+function deleteNote() {
+  if (!state.activeNote||!confirm('Supprimer ?')) return;
+  state.notes = state.notes.filter(function(n){return n.id!==state.activeNote;});
+  saveState();
+  state.activeNote = state.notes.length ? state.notes[0].id : null;
+  renderNoteList();
+  if (state.activeNote) openNote(state.activeNote);
+  else { document.getElementById('note-title').value=''; document.getElementById('note-body').value=''; }
+}
+function onNoteTitle(val) {
+  var note=state.notes.find(function(n){return n.id===state.activeNote;});
+  if (!note) return; note.title=val; note.updated=Date.now(); schedSaveNote();
+}
+function onNoteBody(val) {
+  var note=state.notes.find(function(n){return n.id===state.activeNote;});
+  if (!note) return; note.content=val; note.updated=Date.now();
+  document.getElementById('note-wc').textContent=wordCount(val)+' mots';
+  schedSaveNote();
+}
+function schedSaveNote() {
+  setSaveStatus('pending'); clearTimeout(noteTimer);
+  noteTimer = setTimeout(function(){ saveState(); renderNoteList(); saveNotesToCloud(); setSaveStatus('saved'); },800);
+}
+function saveNotesToCloud() { _syncCloud(); }
+
+function listenMjNote() { }
+function checkMjNote() { }
+function showMjNotePopup(text) {
+  document.getElementById('mj-note-content').textContent = text;
+  document.getElementById('mj-note-popup').classList.remove('hidden');
+}
+function closeMjNotePopup() {
+  document.getElementById('mj-note-popup').classList.add('hidden');
+}
+
+loadCharacter();
+
+</script>
+</body>
+</html>
