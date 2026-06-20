@@ -853,6 +853,45 @@ a { color: inherit; }
   .atk-ac-item:hover { background:var(--amber-glow); }
   .atk-ac-name { font-family:var(--mono); font-weight:600; color:var(--text); }
   .atk-ac-meta { font-size:10px; color:var(--muted); margin-top:1px; }
+
+.pk-stat.rollable { cursor:pointer; transition:border-color .12s,background .12s; position:relative; }
+  .pk-stat.rollable:hover { border-color:var(--amber-dim); background:var(--amber-glow); }
+  .pk-stat.rollable:active { transform:scale(.96); }
+  .dice-bubble { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%);
+    background:var(--card); border:1px solid var(--amber-dim); border-radius:6px;
+    padding:8px 12px; white-space:nowrap; z-index:500; box-shadow:0 4px 16px rgba(0,0,0,.5);
+    opacity:0; pointer-events:none; transition:opacity .15s,transform .15s; }
+  .dice-bubble-row { display:flex; align-items:center; gap:10px; }
+  .dice-bubble-col { text-align:center; }
+  .dice-bubble-sep { width:1px; height:28px; background:var(--border); }
+  .dice-bubble-total.wild { color:#6b9fd8; }
+  .dice-bubble.show { opacity:1; transform:translateX(-50%) translateY(-2px); }
+  .dice-bubble::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+    border:5px solid transparent; border-top-color:var(--amber-dim); }
+  .dice-bubble-total { font-family:var(--mono); font-size:18px; font-weight:700; color:var(--amber); text-align:center; }
+  .dice-bubble-detail { font-family:var(--mono); font-size:9px; color:var(--muted); text-align:center; margin-top:2px; }
+  .dice-bubble-detail .explode { color:var(--amber); }
+
+  .stat-row.rollable { cursor:pointer; transition:background .12s; position:relative; border-radius:3px; }
+  .stat-row.rollable:hover { background:var(--amber-glow); }
+  .stat-row.rollable:active { transform:scale(.98); }
+  .stat-row .dice-bubble { left:auto; right:0; transform:none; }
+  .stat-row .dice-bubble.show { transform:translateY(-2px); }
+  .stat-row .dice-bubble::after { left:auto; right:16px; transform:none; }
+
+  .pk-atk-dmg.rollable { cursor:pointer; transition:background .12s; position:relative; }
+  .pk-atk-dmg.rollable:hover { background:var(--amber-glow); }
+  .pk-atk-dmg.rollable:active { transform:scale(.96); }
+  .pk-atk-dmg .dice-bubble { left:auto; right:0; transform:none; }
+  .pk-atk-dmg .dice-bubble.show { transform:translateY(-2px); }
+  .pk-atk-dmg .dice-bubble::after { left:auto; right:16px; transform:none; }
+
+  
+.pk-player-desc { font-size: 12px; font-style: italic; color: var(--text);
+    line-height: 1.6; margin-bottom: 14px; padding: 10px 12px;
+    background: var(--surface); border-radius: 4px; border-left: 2px solid var(--amber-dim); }
+  .pk-player-desc-empty { color: var(--muted); opacity: .6; }
+
 </style>
 </head>
 <body>
@@ -889,8 +928,7 @@ a { color: inherit; }
   <div class="player-main">
     <nav class="player-nav">
     <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
-    <button onclick="showPlayerTab('partner',this)">Évoli</button>
-    <button onclick="showPlayerTab('team',this)">Equipe</button>
+        <button onclick="showPlayerTab('team',this)">Equipe</button>
     <button onclick="showPlayerTab('notes',this)">Notes</button>
   </nav>
     <div class="player-content">
@@ -949,146 +987,7 @@ a { color: inherit; }
           </div>
         </div>
     </div>
-    <div class="player-tab" id="tab-partner">
-      <div class="page-title">Pokemon partenaire</div>
-      <div class="page-tagline">Evoli</div>
-      <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
-        <span style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Blessures</span>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b1" onchange="saveBlessures()"> Blessure 1 (-1)</label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);cursor:pointer"><input type="checkbox" id="b2" onchange="saveBlessures()"> Blessure 2 (-2)</label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--danger);cursor:pointer"><input type="checkbox" id="bko" onchange="saveBlessures()"> Hors combat</label>
-      </div>
-      <div id="partner-pk-card" style="display:none"><div class="pk-card">
-    <div class="pk-card-header">
-      <div class="pk-owner">Partenaire de · Dresseur #3 · Rizen Dao</div>
-      <div class="pk-name">Évoli</div>
-      <div class="pk-species">Évoli — L'adaptabilité comme mode de vie</div>
-      <div class="pk-meta-row">
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Normal</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Petit (−1)</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° 133</span>
-        <span class="tag tag-edge">Extra spécial · 2 Blessures</span>
-      </div>
-    </div>
-    <div class="pk-body">
-      <div class="pk-lore">Évoli n'a jamais évolué. Ce n'est pas un accident — Rizen Dao n'a pas voulu. Elle dit que l'Évoli évolue quand il trouve ce qu'il est vraiment. Le sien n'a pas encore décidé. En attendant, il apprend les gens avant qu'elle ne leur parle : les hésitations, les regards qui fuient, les sourires qui arrivent trop tôt. Elle ne lui a jamais appris ça. Il l'a appris à la regarder faire.</div>
-
-      <div class="pk-section-lbl">Attributs & Stats</div>
-      <div class="pk-stats-row">
-        <div class="pk-stat">Agilité <span class="val">d10</span></div>
-        <div class="pk-stat">Ruse <span class="val">d8</span></div>
-        <div class="pk-stat">Force <span class="val">d4</span></div>
-        <div class="pk-stat">Trempe <span class="val">d8</span></div>
-        <div class="pk-stat">Vigueur <span class="val">d6</span></div>
-        <div class="pk-stat">Parade <span class="val">5</span></div>
-        <div class="pk-stat">Robustesse <span class="val">4</span></div>
-        <div class="pk-stat">Allure <span class="val">8"</span></div>
-      </div>
-
-      <div class="pk-section-lbl">Attaques</div>
-      <table class="pk-atk-table">
-        <tr><th>Attaque</th><th>Domm.</th><th>Portée</th><th>Effet</th></tr>
-        <tr><td class="pk-atk-name">Vive-Attaque</td><td class="pk-atk-dmg">d6</td><td>Mêlée</td><td><strong>Priorité</strong> : agit toujours en premier dans le round, avant toute initiative</td></tr>
-        <tr><td class="pk-atk-name">Regard Triste</td><td class="pk-atk-dmg">Trempe d8 opp.</td><td>Ligne de vue 4"</td><td>Échec : ne peut pas attaquer Évoli ce round. Très efficace sur les gardes peu motivés</td></tr>
-        <tr><td class="pk-atk-name">Mordre</td><td class="pk-atk-dmg">Str+d4</td><td>Mêlée</td><td>Dernier recours. Peut arracher un objet / document</td></tr>
-        <tr><td class="pk-atk-name">Couverture</td><td class="pk-atk-dmg">—</td><td>Contact</td><td>Rizen Dao gagne +2 Parade ce round. Évoli ciblable à +2 en retour. Action de déplacement gratuite</td></tr>
-      </table>
-
-      <div class="pk-section-lbl">Capacités spéciales</div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Lecteur de salle (Passif — synergie)</div>
-        <div class="pk-capa-desc">Avant un jet de Persuasion ou d'Investigation de Rizen Dao : Évoli observe la cible 1 round (Perception d10 diff. 4). Succès : transmet l'état émotionnel (sincère / nerveux / hostile / cache quelque chose) → +1 au jet suivant de Rizen Dao. Cumulable avec Charismatique (+2) pour un total de +3.</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Petit fantôme (Passif)</div>
-        <div class="pk-capa-desc">Taille −1 : −2 aux jets pour le cibler. Passe sous les portes standard, dans les conduits larges, inaperçu dans une foule. Peut transporter de petits objets (clés, badge, micro-document) discrètement.</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Instinct d'adaptation (1 fois / session)</div>
-        <div class="pk-capa-desc">Copie temporairement un trait élémentaire d'un Pokémon observé. Trempe d8 diff. 6. Succès : le trait s'applique 1 round. Version instinctive et imparfaite — jamais complète.</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Lien social amplifié (Passif)</div>
-        <div class="pk-capa-desc">Quand Rizen Dao utilise Réseau d'informateurs avec Évoli présent lors du contact : la Relance est automatique si le premier jet est un succès. Personne ne ment franchement quand un Évoli les regarde avec cet air-là.</div>
-      </div>
-
-      <div class="pk-section-lbl">Blessures</div>
-      <div class="pk-wounds">
-        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 1</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Légère −1</div></div>
-        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 2</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Grave −2</div></div>
-        <div class="pk-wound-box ko"><span class="pk-wound-lbl">Hors combat</span><span class="pk-wound-check">○</span></div>
-        <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check"></span></div>
-      </div>
-
-      
-    </div>
-  </div></div>
-      <div class="pk-card">
-    <div class="pk-card-header">
-      <div class="pk-owner">Partenaire de · Dresseur #3 · Rizen Dao</div>
-      <div class="pk-name">Évoli</div>
-      <div class="pk-species">Évoli — L'adaptabilité comme mode de vie</div>
-      <div class="pk-meta-row">
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Normal</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">Petit (−1)</span>
-        <span class="tag tag-sauvage" style="background:#141414;color:#888;">N° 133</span>
-        <span class="tag tag-edge">Extra spécial · 2 Blessures</span>
-      </div>
-    </div>
-    <div class="pk-body">
-      <div class="pk-lore">Évoli n'a jamais évolué. Ce n'est pas un accident — Rizen Dao n'a pas voulu. Elle dit que l'Évoli évolue quand il trouve ce qu'il est vraiment. Le sien n'a pas encore décidé. En attendant, il apprend les gens avant qu'elle ne leur parle : les hésitations, les regards qui fuient, les sourires qui arrivent trop tôt. Elle ne lui a jamais appris ça. Il l'a appris à la regarder faire.</div>
-
-      <div class="pk-section-lbl">Attributs & Stats</div>
-      <div class="pk-stats-row">
-        <div class="pk-stat">Agilité <span class="val">d10</span></div>
-        <div class="pk-stat">Ruse <span class="val">d8</span></div>
-        <div class="pk-stat">Force <span class="val">d4</span></div>
-        <div class="pk-stat">Trempe <span class="val">d8</span></div>
-        <div class="pk-stat">Vigueur <span class="val">d6</span></div>
-        <div class="pk-stat">Parade <span class="val">5</span></div>
-        <div class="pk-stat">Robustesse <span class="val">4</span></div>
-        <div class="pk-stat">Allure <span class="val">8"</span></div>
-      </div>
-
-      <div class="pk-section-lbl">Attaques</div>
-      <table class="pk-atk-table">
-        <tr><th>Attaque</th><th>Domm.</th><th>Portée</th><th>Effet</th></tr>
-        <tr><td class="pk-atk-name">Vive-Attaque</td><td class="pk-atk-dmg">d6</td><td>Mêlée</td><td><strong>Priorité</strong> : agit toujours en premier dans le round, avant toute initiative</td></tr>
-        <tr><td class="pk-atk-name">Regard Triste</td><td class="pk-atk-dmg">Trempe d8 opp.</td><td>Ligne de vue 4"</td><td>Échec : ne peut pas attaquer Évoli ce round. Très efficace sur les gardes peu motivés</td></tr>
-        <tr><td class="pk-atk-name">Mordre</td><td class="pk-atk-dmg">Str+d4</td><td>Mêlée</td><td>Dernier recours. Peut arracher un objet / document</td></tr>
-        <tr><td class="pk-atk-name">Couverture</td><td class="pk-atk-dmg">—</td><td>Contact</td><td>Rizen Dao gagne +2 Parade ce round. Évoli ciblable à +2 en retour. Action de déplacement gratuite</td></tr>
-      </table>
-
-      <div class="pk-section-lbl">Capacités spéciales</div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Lecteur de salle (Passif — synergie)</div>
-        <div class="pk-capa-desc">Avant un jet de Persuasion ou d'Investigation de Rizen Dao : Évoli observe la cible 1 round (Perception d10 diff. 4). Succès : transmet l'état émotionnel (sincère / nerveux / hostile / cache quelque chose) → +1 au jet suivant de Rizen Dao. Cumulable avec Charismatique (+2) pour un total de +3.</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Petit fantôme (Passif)</div>
-        <div class="pk-capa-desc">Taille −1 : −2 aux jets pour le cibler. Passe sous les portes standard, dans les conduits larges, inaperçu dans une foule. Peut transporter de petits objets (clés, badge, micro-document) discrètement.</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Instinct d'adaptation (1 fois / session)</div>
-        <div class="pk-capa-desc">Copie temporairement un trait élémentaire d'un Pokémon observé. Trempe d8 diff. 6. Succès : le trait s'applique 1 round. Version instinctive et imparfaite — jamais complète.</div>
-      </div>
-      <div class="pk-capa">
-        <div class="pk-capa-name">Lien social amplifié (Passif)</div>
-        <div class="pk-capa-desc">Quand Rizen Dao utilise Réseau d'informateurs avec Évoli présent lors du contact : la Relance est automatique si le premier jet est un succès. Personne ne ment franchement quand un Évoli les regarde avec cet air-là.</div>
-      </div>
-
-      <div class="pk-section-lbl">Blessures</div>
-      <div class="pk-wounds">
-        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 1</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Légère −1</div></div>
-        <div class="pk-wound-box"><span class="pk-wound-lbl">Blessure 2</span><span class="pk-wound-check">○</span><div style="font-size:9px;color:var(--muted);margin-top:2px">Grave −2</div></div>
-        <div class="pk-wound-box ko"><span class="pk-wound-lbl">Hors combat</span><span class="pk-wound-check">○</span></div>
-        <div class="pk-wound-box" style="flex:2"><span class="pk-wound-lbl">Statut actuel</span><span class="pk-wound-check"></span></div>
-      </div>
-
-      
-    </div>
-  </div>
-    </div>
+    
     <div class="player-tab" id="tab-team">
       <div class="page-title">Equipe Pokemon</div>
       <div class="page-tagline">6 slots - partenaire fixe en slot 0</div>
@@ -1380,7 +1279,7 @@ function cancelEditName() {
 }
 
 document.addEventListener('DOMContentLoaded',function(){
-  loadState(); state.activeSlot=0; renderTeam(); initNotes(); loadBlessures(); loadPlayerName(); initPartnerStats(); initPlayerBin();
+  loadState(); initPartnerStats(); state.activeSlot=0; renderTeam(); initNotes(); loadPlayerName(); initPlayerBin();
   });
 
 /* ---- EQUIPEMENT EDITABLE ---- */
@@ -2059,71 +1958,7 @@ function initPlayerBin() {
   startRealtime();
 }
 
-function initPartnerStats() {
-  var tab = document.getElementById('tab-partner');
-  if (!tab) return;
 
-  var FR_MAP = {
-    'agilit\u00e9':'agi','agilite':'agi','force':'for','vigueur':'vig',
-    'ruse':'rus','trempe':'tremp','parade':'parade',
-    'robustesse':'robustesse','allure':'allure'
-  };
-
-  var stats = {};
-
-  /* Stats depuis .pk-stat > .val */
-  tab.querySelectorAll('.pk-stat').forEach(function(el) {
-    var valEl = el.querySelector('.val');
-    if (!valEl) return;
-    var label = el.textContent.replace(valEl.textContent,'').trim().toLowerCase();
-    var key   = FR_MAP[label];
-    if (key) stats[key] = valEl.textContent.trim();
-  });
-
-  /* Attaques UNIQUEMENT depuis .pk-atk-table */
-  var attacks = [];
-  tab.querySelectorAll('.pk-atk-table tr').forEach(function(row) {
-    var cells = row.querySelectorAll('td');
-    if (cells.length >= 2 && cells[0].classList.contains('pk-atk-name')) {
-      attacks.push({
-        name:   cells[0].textContent.trim(),
-        dmg:    cells[1] ? cells[1].textContent.trim() : '',
-        range:  cells[2] ? cells[2].textContent.trim() : '',
-        effect: cells[3] ? cells[3].textContent.trim() : ''
-      });
-    }
-  });
-  if (attacks.length) stats.attacks = attacks;
-
-  /* Talents depuis .pk-capa (Capacites speciales) */
-  var talents = [];
-  tab.querySelectorAll('.pk-capa').forEach(function(el) {
-    var n = el.querySelector('.pk-capa-name');
-    var d = el.querySelector('.pk-capa-desc');
-    if (n) talents.push({
-      name: n.textContent.trim(),
-      desc: d ? d.textContent.trim() : ''
-    });
-  });
-
-  /* Type */
-  var typeEl = tab.querySelector('.pk-meta-row .tag, .tag');
-  var ptype  = typeEl ? typeEl.textContent.trim() : '';
-
-  /* Premier talent comme talent principal */
-  var talent     = talents.length ? talents[0].name : '';
-  var talentDesc = talents.length ? talents[0].desc : '';
-
-  /* Stocker TOUS les talents dans stats.talents */
-  if (talents.length) stats.talents = talents;
-
-  state.team[0].stats       = stats;
-  state.team[0].talent      = talent;
-  state.team[0].talent_desc = talentDesc;
-  if (ptype) state.team[0].type = ptype;
-
-  fbSet('team', state.team);
-}
 function forceSave() {
   /* Push complet vers Firebase — PAS de flag _writing
      Les autres appareils recevront l'update et re-renderont */
@@ -2306,6 +2141,317 @@ function selectAtkAc(atk, ai, idx) {
   if (rangeEl)  rangeEl.value  = atk.range  || '';
   if (effectEl) effectEl.value = atk.effect || '';
 }
+
+function loadState() {
+  /* Plus de localStorage — les donnees (team, notes) sont chargees
+     depuis Firebase via loadNotesFromCloud(). Cette fonction ne fait
+     que garantir un etat initial propre avant la reponse Firebase. */
+}
+
+function saveState() {
+  _syncCloud();
+}
+
+var _gearCache = DEFAULT_GEAR.slice();
+
+function loadGear() {
+  return _gearCache;
+}
+
+function saveGear(items) {
+  _gearCache = items;
+  _syncCloud();
+}
+function initPartnerStats() {
+  state.team[0].type        = 'Normal';
+  state.team[0].taille      = 'Petit (−1)';
+  state.team[0].lore        = 'Évoli n\'a jamais évolué. Ce n\'est pas un accident — Rizen Dao n\'a pas voulu. Elle dit que l\'Évoli évolue quand il trouve ce qu\'il est vraiment. Le sien n\'a pas encore décidé. En attendant, il apprend les gens avant qu\'elle ne leur parle : les hésitations, les regards qui fuient, les sourires qui arrivent trop tôt. Elle ne lui a jamais appris ça. Il l\'a appris à la regarder faire.';
+  state.team[0].talent      = 'Lecteur de salle (Passif — synergie)';
+  state.team[0].talent_desc = 'Avant un jet de Persuasion ou d\'Investigation de Rizen Dao : Évoli observe la cible 1 round (Perception d10 diff. 4). Succès : transmet l\'état émotionnel (sincère / nerveux / hostile / cache quelque chose) → +1 au jet suivant de Rizen Dao. Cumulable avec Charismatique (+2) pour un total de +3.';
+  state.team[0].stats = {
+    agi: 'd10', for: 'd4', vig: 'd6', rus: 'd8', tremp: 'd8', parade: '5', robustesse: '4', allure: '8"',
+    attacks: [
+      { name: 'Regard Triste', dmg: 'Trempe d8 opp.', range: 'Ligne de vue 4"', effect: 'Échec : ne peut pas attaquer Évoli ce round. Très efficace sur les gardes peu motivés' },
+      { name: 'Mordre', dmg: 'Str+d4', range: 'Mêlée', effect: 'Dernier recours. Peut arracher un objet / document' },
+      { name: 'Couverture', dmg: '—', range: 'Contact', effect: 'Rizen Dao gagne +2 Parade ce round. Évoli ciblable à +2 en retour. Action de déplacement gratuite' }
+    ],
+    talents: [
+      { name: 'Lecteur de salle (Passif — synergie)', desc: 'Avant un jet de Persuasion ou d\'Investigation de Rizen Dao : Évoli observe la cible 1 round (Perception d10 diff. 4). Succès : transmet l\'état émotionnel (sincère / nerveux / hostile / cache quelque chose) → +1 au jet suivant de Rizen Dao. Cumulable avec Charismatique (+2) pour un total de +3.' },
+      { name: 'Petit fantôme (Passif)', desc: 'Taille −1 : −2 aux jets pour le cibler. Passe sous les portes standard, dans les conduits larges, inaperçu dans une foule. Peut transporter de petits objets (clés, badge, micro-document) discrètement.' },
+      { name: 'Instinct d\'adaptation (1 fois / session)', desc: 'Copie temporairement un trait élémentaire d\'un Pokémon observé. Trempe d8 diff. 6. Succès : le trait s\'applique 1 round. Version instinctive et imparfaite — jamais complète.' },
+      { name: 'Lien social amplifié (Passif)', desc: 'Quand Rizen Dao utilise Réseau d\'informateurs avec Évoli présent lors du contact : la Relance est automatique si le premier jet est un succès. Personne ne ment franchement quand un Évoli les regarde avec cet air-là.' }
+    ]
+  };
+  fbSet('team', state.team);
+}
+function parseDieNotation(notation) {
+  /* Parse "d6", "d8+1", "d12+2" -> {faces, mod} */
+  var m = String(notation).match(/d(\d+)\s*(?:([+\-])\s*(\d+))?/i);
+  if (!m) return { faces: 4, mod: 0 };
+  var faces = parseInt(m[1], 10);
+  var mod   = m[3] ? (m[2] === '-' ? -parseInt(m[3],10) : parseInt(m[3],10)) : 0;
+  return { faces: faces, mod: mod };
+}
+function rollExplodingDie(faces) {
+  /* Lance un d{faces}, relance et additionne tant que le max sort */
+  var rolls = [];
+  var total = 0;
+  var roll;
+  do {
+    roll = Math.floor(Math.random() * faces) + 1;
+    rolls.push(roll);
+    total += roll;
+  } while (roll === faces && rolls.length < 20); /* securite anti-boucle infinie */
+  return { rolls: rolls, total: total };
+}
+function rollPillDice(el, notation) {
+  var parsed = parseDieNotation(notation);
+  var result = rollExplodingDie(parsed.faces);
+  var grandTotal = result.total + parsed.mod;
+
+  var detail = result.rolls.map(function(r) {
+    return (r === parsed.faces) ? '<span class="explode">' + r + '</span>' : r;
+  }).join(' + ');
+  if (parsed.mod) detail += (parsed.mod > 0 ? ' + ' : ' - ') + Math.abs(parsed.mod);
+
+  var wild = rollExplodingDie(6);
+  var wildDetail = wild.rolls.map(function(r) {
+    return (r === 6) ? '<span class="explode">' + r + '</span>' : r;
+  }).join(' + ');
+
+  /* Determiner le type de lancer selon l'origine de l'element */
+  var kind = 'attribut';
+  if (el.classList.contains('stat-row')) {
+    var nameEl = el.querySelector('.stat-name');
+    var label  = nameEl ? nameEl.textContent.trim() : '';
+    var isCompetence = el.closest('.stats-grid') === null; /* hors grille attributs = competence */
+    kind = isCompetence ? ('competence: ' + label) : ('attribut: ' + label);
+  } else if (el.classList.contains('pk-stat') || el.classList.contains('stat-pill')) {
+    kind = 'pokemon';
+  }
+
+  showDiceBubble(el, grandTotal, detail, notation, wild.total, wildDetail);
+  broadcastDiceRoll(notation, grandTotal, result.rolls, wild.total, wild.rolls, kind);
+}
+function showDiceBubble(el, total, detail, notation, wildTotal, wildDetail) {
+  var existing = el.querySelector('.dice-bubble');
+  if (existing) existing.remove();
+
+  var bubble = document.createElement('div');
+  bubble.className = 'dice-bubble';
+  bubble.innerHTML =
+    '<div class="dice-bubble-row">'
+    + '<div class="dice-bubble-col">'
+    + '<div class="dice-bubble-total">' + total + '</div>'
+    + '<div class="dice-bubble-detail">' + notation + ' : ' + detail + '</div>'
+    + '</div>'
+    + '<div class="dice-bubble-sep"></div>'
+    + '<div class="dice-bubble-col wild">'
+    + '<div class="dice-bubble-total wild">' + wildTotal + '</div>'
+    + '<div class="dice-bubble-detail">d6 : ' + wildDetail + '</div>'
+    + '</div>'
+    + '</div>';
+
+  el.style.position = 'relative';
+  el.appendChild(bubble);
+
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() { bubble.classList.add('show'); });
+  });
+
+  setTimeout(function() {
+    bubble.classList.remove('show');
+    setTimeout(function() { bubble.remove(); }, 200);
+  }, 3000);
+}
+function broadcastDiceRoll(notation, total, rolls, wildTotal, wildRolls, kind) {
+  var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+  var payload = {
+    player: PLAYER_KEY,
+    notation: notation,
+    total: total,
+    rolls: rolls,
+    wildTotal: wildTotal,
+    wildRolls: wildRolls,
+    kind: kind || 'attribut',
+    ts: Date.now()
+  };
+  fetch(FB + '/dice_rolls/' + PLAYER_KEY + '.json', {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  }).catch(function(){});
+}
+function findPokemonAttribute(el, attrCode) {
+  var ALIASES = {
+    FOR: ['for','force','str'],
+    AGI: ['agi','agilite','agilit\u00e9'],
+    VIG: ['vig','vigueur'],
+    RUS: ['rus','ruse'],
+    TREMP: ['tremp','trempe']
+  };
+  var wanted = ALIASES[attrCode.toUpperCase()] || [attrCode.toLowerCase()];
+
+  /* Remonter manuellement parent par parent jusqu'a trouver des pills */
+  var node = el;
+  var pills = null;
+  for (var depth = 0; depth < 12 && node; depth++) {
+    if (node.querySelectorAll) {
+      var found = node.querySelectorAll('.pk-stat, .stat-pill');
+      if (found && found.length > 0) { pills = found; break; }
+    }
+    node = node.parentElement;
+  }
+  if (!pills) {
+    /* Dernier recours : chercher dans tout le document */
+    pills = document.querySelectorAll('.pk-stat, .stat-pill');
+  }
+
+  for (var i = 0; i < pills.length; i++) {
+    var pill = pills[i];
+    var valEl = pill.querySelector('.val');
+    if (!valEl) continue;
+    var label = pill.textContent.replace(valEl.textContent, '').trim().toLowerCase();
+    if (wanted.indexOf(label) >= 0) {
+      return valEl.textContent.trim();
+    }
+  }
+  return null;
+}
+function parseDamageNotation(text) {
+  text = String(text).trim();
+
+  /* Detecter un attribut nomme en prefixe : FOR+, Str+, AGI+ etc. */
+  var attrMatch = text.match(/^(FOR|STR|AGI|VIG|RUS|TREMP)\s*\+/i);
+  var namedAttr = attrMatch ? attrMatch[1].toUpperCase() : null;
+  if (namedAttr === 'STR') namedAttr = 'FOR';
+
+  /* Trouver tous les des explicites : 2d6, d8, 1d4 etc. */
+  var diceMatches = text.match(/(\d*)d(\d+)/gi) || [];
+  var dice = diceMatches.map(function(m) {
+    var parts = m.match(/(\d*)d(\d+)/i);
+    var count = parts[1] ? parseInt(parts[1],10) : 1;
+    var faces = parseInt(parts[2],10);
+    return { count: count, faces: faces };
+  });
+
+  /* Modificateur numerique fixe en fin de chaine */
+  var modMatch = text.match(/(?:^|[^d\d])([+\-]\d+)\s*$/i);
+  var mod = modMatch ? parseInt(modMatch[1], 10) : 0;
+
+  return { dice: dice, mod: mod, namedAttr: namedAttr, raw: text };
+}
+function rollDamage(el, text) {
+  var parsed = parseDamageNotation(text);
+  if (!parsed.dice.length && !parsed.namedAttr) return;
+
+  var allRolls = [];
+  var total = 0;
+
+  /* Des explicites de l'attaque (2d6, d8...) */
+  parsed.dice.forEach(function(d) {
+    for (var i = 0; i < d.count; i++) {
+      var r = rollExplodingDie(d.faces);
+      allRolls.push({ label: 'd' + d.faces, faces: d.faces, rolls: r.rolls, total: r.total });
+      total += r.total;
+    }
+  });
+
+  /* Attribut nomme (FOR, AGI...) -> lire le de du Pokemon et le lancer aussi */
+  var attrNotation = null;
+  if (parsed.namedAttr) {
+    attrNotation = findPokemonAttribute(el, parsed.namedAttr);
+    if (attrNotation) {
+      var attrParsed = parseDieNotation(attrNotation);
+      var ar = rollExplodingDie(attrParsed.faces);
+      allRolls.unshift({ label: parsed.namedAttr + '(' + attrNotation + ')', faces: attrParsed.faces, rolls: ar.rolls, total: ar.total });
+      total += ar.total + attrParsed.mod;
+    }
+  }
+
+  total += parsed.mod;
+
+  var detailParts = allRolls.map(function(r) {
+    var rollsStr = r.rolls.map(function(v) {
+      return (v === r.faces) ? '<span class="explode">' + v + '</span>' : v;
+    }).join('+');
+    return r.label + '(' + rollsStr + ')';
+  });
+  var detail = detailParts.join(' + ');
+  if (parsed.mod) detail += (parsed.mod > 0 ? ' + ' : ' - ') + Math.abs(parsed.mod);
+
+  showDamageBubble(el, total, detail, parsed.raw);
+
+  var allDiceRolls = allRolls.reduce(function(a,r){ return a.concat(r.rolls); }, []);
+  broadcastDiceRoll(parsed.raw, total, allDiceRolls, null, null, 'damage');
+}
+function showDamageBubble(el, total, detail, notation) {
+  var existing = el.querySelector('.dice-bubble');
+  if (existing) existing.remove();
+
+  var bubble = document.createElement('div');
+  bubble.className = 'dice-bubble';
+  bubble.innerHTML =
+    '<div class="dice-bubble-total">' + total + '</div>'
+    + '<div class="dice-bubble-detail">' + notation + ' : ' + detail + '</div>';
+
+  el.style.position = 'relative';
+  el.appendChild(bubble);
+
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() { bubble.classList.add('show'); });
+  });
+
+  setTimeout(function() {
+    bubble.classList.remove('show');
+    setTimeout(function() { bubble.remove(); }, 200);
+  }, 2500);
+}
+function initRollablePills(scope) {
+  var root = scope || document;
+
+  /* Pills Pokemon (attributs combat) */
+  root.querySelectorAll('.pk-stat .val, .stat-pill .val').forEach(function(valSpan) {
+    var pill = valSpan.closest('.pk-stat, .stat-pill');
+    if (!pill || pill.dataset.rollBound) return;
+    var notation = valSpan.textContent.trim();
+    if (!/^d\d+/i.test(notation)) return;
+    pill.classList.add('rollable');
+    pill.dataset.rollBound = '1';
+    pill.addEventListener('click', function(e) {
+      e.stopPropagation();
+      rollPillDice(pill, valSpan.textContent.trim());
+    });
+  });
+
+  /* Lignes attributs/competences du PJ (tab-perso) */
+  root.querySelectorAll('.stat-row').forEach(function(row) {
+    if (row.dataset.rollBound) return;
+    var valSpan = row.querySelector('.stat-val');
+    if (!valSpan) return;
+    var notation = valSpan.textContent.trim();
+    if (!/^d\d+/i.test(notation)) return;
+    row.classList.add('rollable');
+    row.dataset.rollBound = '1';
+    row.addEventListener('click', function(e) {
+      e.stopPropagation();
+      rollPillDice(row, valSpan.textContent.trim());
+    });
+  });
+
+  /* Dommages des attaques Pokemon */
+  root.querySelectorAll('.pk-atk-dmg, .bst-atk-dmg').forEach(function(cell) {
+    if (cell.dataset.rollBound) return;
+    var text = cell.textContent.trim();
+    if (!/d\d+/i.test(text)) return;
+    cell.classList.add('rollable');
+    cell.dataset.rollBound = '1';
+    cell.addEventListener('click', function(e) {
+      e.stopPropagation();
+      rollDamage(cell, cell.textContent.trim());
+    });
+  });
+}
 function renderPanel() {
   var panel = document.getElementById('team-panel');
   if (!panel) return;
@@ -2314,16 +2460,13 @@ function renderPanel() {
     panel.innerHTML = '<div style="padding:28px;text-align:center;color:var(--muted);font-size:13px">Cliquez sur un slot pour ajouter un Pok\u00e9mon.</div>';
     return;
   }
-  if (state.activeSlot === 0) {
-    var pk = document.getElementById('partner-pk-card');
-    if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
-    return;
-  }
 
   var idx     = state.activeSlot;
   var s       = slot.stats || {};
   var attacks = s.attacks || [];
   if (!Array.isArray(attacks)) attacks = Object.values(attacks);
+  var talents = s.talents || [];
+  if (!Array.isArray(talents)) talents = Object.values(talents);
 
   var DEF = 'd4';
   var ROW1 = [{k:'for',l:'FOR'},{k:'agi',l:'AGI'},{k:'vig',l:'VIG'},
@@ -2342,8 +2485,22 @@ function renderPanel() {
       }).join('')
     + '</div>';
 
+  var loreHtml = slot.lore ? '<div class="pk-lore">' + escHtml(slot.lore) + '</div>' : '';
+
+  /* Description courte ecrite par le joueur */
+  var playerDescHtml = slot.player_desc
+    ? '<div class="pk-player-desc">' + escHtml(slot.player_desc) + '</div>'
+    : '';
+
   var talentHtml = '';
-  if (slot.talent) {
+  if (talents.length) {
+    talentHtml = '<div class="pk-section-lbl">Talents</div>'
+      + talents.map(function(t) {
+          return '<div class="pk-capa"><span class="pk-capa-name">' + escHtml(t.name) + '</span>'
+            + (t.desc ? '<span class="pk-capa-desc"> : ' + escHtml(t.desc) + '</span>' : '')
+            + '</div>';
+        }).join('');
+  } else if (slot.talent) {
     talentHtml = '<div class="pk-section-lbl">Talent</div>'
       + '<div class="pk-capa"><span class="pk-capa-name">' + escHtml(slot.talent) + '</span>'
       + (slot.talent_desc ? '<span class="pk-capa-desc"> : ' + escHtml(slot.talent_desc) + '</span>' : '')
@@ -2381,12 +2538,10 @@ function renderPanel() {
   });
   editStatsHtml += '</div>';
 
-  /* Attaques éditables avec autocomplete sur le champ "name" */
   var editAtksHtml = '';
   for (var ai = 0; ai < Math.max(attacks.length + 1, 4); ai++) {
     var atk = attacks[ai] || {name:'',dmg:'',range:'',effect:''};
     editAtksHtml += '<div class="pk-atk-edit-row">'
-      /* Champ nom avec wrapper autocomplete */
       + '<div class="atk-ac-wrap">'
       + '<input type="text" placeholder="Attaque"'
       + ' data-idx="' + idx + '" data-ai="' + ai + '" data-field="name"'
@@ -2410,18 +2565,22 @@ function renderPanel() {
     + '<div class="pk-card-header">'
     + '<div class="pk-owner">Slot #' + idx + '</div>'
     + '<div class="pk-name">' + escHtml(slot.name) + '</div>'
-    + (slot.talent ? '<div class="pk-species">' + escHtml(slot.talent) + '</div>' : '')
     + '<div class="pk-meta-row">'
     + (slot.type   ? '<span class="tag tag-weird">'   + escHtml(slot.type)   + '</span>' : '')
     + (slot.taille ? '<span class="tag tag-sauvage">' + escHtml(slot.taille) + '</span>' : '')
     + '</div></div>'
     + '<div class="pk-body" id="pk-panel-read">'
+    + loreHtml
+    + playerDescHtml
     + talentHtml
     + '<div class="pk-section-lbl">Attributs</div>'
     + statsHtml + atksHtml + notesHtml
     + '</div>'
     + '<div class="pk-body" id="pk-panel-edit" style="display:none">'
-    + '<div class="pk-section-lbl">Talent</div>'
+    + '<div class="pk-section-lbl">Description (par vous)</div>'
+    + '<textarea class="pk-notes-ta" id="pk-player-desc-input" maxlength="280"'
+    + ' placeholder="Une courte description personnelle de ce Pok\u00e9mon...">' + escHtml(slot.player_desc||'') + '</textarea>'
+    + '<div class="pk-section-lbl" style="margin-top:10px">Talent principal</div>'
     + '<input class="pk-edit-input" type="text" id="pk-talent-input"'
     + ' style="width:100%;margin-bottom:4px"'
     + ' data-idx="' + idx + '" data-key="talent"'
@@ -2437,33 +2596,34 @@ function renderPanel() {
     + 'Tapez pour chercher dans le Pok\u00e9dex</span></div>'
     + editAtksHtml
     + '<div class="pk-section-lbl" style="margin-top:10px">Notes</div>'
-    + '<textarea class="pk-notes-ta">' + escHtml(slot.notes||'') + '</textarea>'
+    + '<textarea class="pk-notes-ta" id="pk-notes-input">' + escHtml(slot.notes||'') + '</textarea>'
     + '</div>'
     + '</div>'
     + '<div style="display:flex;gap:6px;margin-top:10px;justify-content:flex-end">'
     + '<button class="btn-edit" id="pk-btn-edit">Modifier</button>'
     + '<button class="btn-save" id="pk-btn-save" style="display:none">Sauvegarder</button>'
-    + '<button class="btn-danger" id="pk-btn-del">Retirer</button>'
+    + (idx === 0 ? '' : '<button class="btn-danger" id="pk-btn-del">Retirer</button>')
     + '</div>';
 
-  /* Bouton Modifier */
   panel.querySelector('#pk-btn-edit').addEventListener('click', function() {
     document.getElementById('pk-panel-read').style.display = 'none';
     document.getElementById('pk-panel-edit').style.display = '';
     this.style.display = 'none';
     panel.querySelector('#pk-btn-save').style.display = '';
-    /* Initialiser l'autocomplete sur chaque champ "name" */
     panel.querySelectorAll('.atk-ac-wrap input').forEach(function(inp) {
       var ai2 = parseInt(inp.dataset.ai);
       initAtkAutocomplete(inp, ai2, idx);
     });
   });
 
-  /* Bouton Sauvegarder */
   panel.querySelector('#pk-btn-save').addEventListener('click', function() {
     var curIdx = parseInt(panel.querySelector('[data-idx]').dataset.idx);
     if (!state.team[curIdx]) return;
     if (!state.team[curIdx].stats) state.team[curIdx].stats = {};
+
+    var pd = document.getElementById('pk-player-desc-input');
+    if (pd) state.team[curIdx].player_desc = pd.value.trim();
+
     var ti  = document.getElementById('pk-talent-input');
     if (ti) state.team[curIdx].talent = ti.value.trim();
     var tdi = document.getElementById('pk-talent-desc-input');
@@ -2485,8 +2645,10 @@ function renderPanel() {
       if (atksMap[ai4].name) newAtks.push(atksMap[ai4]);
     });
     state.team[curIdx].stats.attacks = newAtks;
-    var ta = panel.querySelector('.pk-notes-ta');
+
+    var ta = document.getElementById('pk-notes-input');
     if (ta) state.team[curIdx].notes = ta.value;
+
     saveState();
     document.getElementById('pk-panel-read').style.display = '';
     document.getElementById('pk-panel-edit').style.display = 'none';
@@ -2495,29 +2657,11 @@ function renderPanel() {
     renderPanel();
   });
 
-  panel.querySelector('#pk-btn-del').addEventListener('click', function() {
+  var delBtn = panel.querySelector('#pk-btn-del');
+  if (delBtn) delBtn.addEventListener('click', function() {
     removePokemon(state.activeSlot);
   });
-}
-function loadState() {
-  /* Plus de localStorage — les donnees (team, notes) sont chargees
-     depuis Firebase via loadNotesFromCloud(). Cette fonction ne fait
-     que garantir un etat initial propre avant la reponse Firebase. */
-}
-
-function saveState() {
-  _syncCloud();
-}
-
-var _gearCache = DEFAULT_GEAR.slice();
-
-function loadGear() {
-  return _gearCache;
-}
-
-function saveGear(items) {
-  _gearCache = items;
-  _syncCloud();
+  initRollablePills();
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
