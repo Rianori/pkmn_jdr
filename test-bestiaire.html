@@ -2575,25 +2575,7 @@ function rollExplodingDie(faces) {
 
 
 
-function rollPillDice(el, notation) {
-  var parsed = parseDieNotation(notation);
-  var result = rollExplodingDie(parsed.faces);
-  var grandTotal = result.total + parsed.mod;
 
-  var detail = result.rolls.map(function(r) {
-    return (r === parsed.faces) ? '<span class="explode">' + r + '</span>' : r;
-  }).join(' + ');
-  if (parsed.mod) detail += (parsed.mod > 0 ? ' + ' : ' - ') + Math.abs(parsed.mod);
-
-  /* Wild Die — d6 systematique, explosif, independant */
-  var wild = rollExplodingDie(6);
-  var wildDetail = wild.rolls.map(function(r) {
-    return (r === 6) ? '<span class="explode">' + r + '</span>' : r;
-  }).join(' + ');
-
-  showDiceBubble(el, grandTotal, detail, notation, wild.total, wildDetail);
-  broadcastDiceRoll(notation, grandTotal, result.rolls, wild.total, wild.rolls);
-}
 
 
 function showDiceBubble(el, total, detail, notation, wildTotal, wildDetail) {
@@ -2766,6 +2748,35 @@ function broadcastDiceRoll(notation, total, rolls, wildTotal, wildRolls, kind) {
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify(payload)
   }).catch(function(){});
+}
+function rollPillDice(el, notation) {
+  var parsed = parseDieNotation(notation);
+  var result = rollExplodingDie(parsed.faces);
+  var grandTotal = result.total + parsed.mod;
+
+  var detail = result.rolls.map(function(r) {
+    return (r === parsed.faces) ? '<span class="explode">' + r + '</span>' : r;
+  }).join(' + ');
+  if (parsed.mod) detail += (parsed.mod > 0 ? ' + ' : ' - ') + Math.abs(parsed.mod);
+
+  var wild = rollExplodingDie(6);
+  var wildDetail = wild.rolls.map(function(r) {
+    return (r === 6) ? '<span class="explode">' + r + '</span>' : r;
+  }).join(' + ');
+
+  /* Determiner le type de lancer selon l'origine de l'element */
+  var kind = 'attribut';
+  if (el.classList.contains('stat-row')) {
+    var nameEl = el.querySelector('.stat-name');
+    var label  = nameEl ? nameEl.textContent.trim() : '';
+    var isCompetence = el.closest('.stats-grid') === null; /* hors grille attributs = competence */
+    kind = isCompetence ? ('competence: ' + label) : ('attribut: ' + label);
+  } else if (el.classList.contains('pk-stat') || el.classList.contains('stat-pill')) {
+    kind = 'pokemon';
+  }
+
+  showDiceBubble(el, grandTotal, detail, notation, wild.total, wildDetail);
+  broadcastDiceRoll(notation, grandTotal, result.rolls, wild.total, wild.rolls, kind);
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
