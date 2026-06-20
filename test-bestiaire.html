@@ -1287,8 +1287,7 @@ function cancelEditName() {
 }
 
 document.addEventListener('DOMContentLoaded',function(){
-  loadState(); state.activeSlot=0; renderTeam(); initNotes(); loadBlessures(); loadPlayerName(); initPlayerBin();
-  _syncCloud(); // push localStorage -> Firebase au chargement
+  loadState(); initPartnerStats(); state.activeSlot=0; renderTeam(); initNotes(); loadPlayerName(); initPlayerBin();
 });
 
 /* ---- EQUIPEMENT EDITABLE ---- */
