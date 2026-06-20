@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creation de Personnage</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+
+:root {
+  --bg:#0e0e10; --surface:#141416; --card:#1a1a1e; --border:#2a2a30;
+  --text:#e8e6e0; --muted:#6b6a6a; --amber:#c8922a; --amber-dim:rgba(200,146,42,.25);
+  --amber-glow:rgba(200,146,42,.08); --danger:#8B3300; --safe:#1e5c2e;
+  --radius:6px; --mono:'IBM Plex Mono',monospace; --sans:'IBM Plex Sans',sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:14px; }
+
+header { display:flex; align-items:center; gap:16px; padding:14px 24px;
+  background:var(--surface); border-bottom:1px solid var(--border);
+  position:sticky; top:0; z-index:100; }
+.hd-title { font-family:var(--mono); font-size:14px; font-weight:600; color:var(--amber); }
+.hd-table-label { font-family:var(--mono); font-size:9px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--muted); margin-left:auto; }
+
+.main { max-width:780px; margin:0 auto; padding:28px 20px 80px; }
+
+.step-block { background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:22px 26px; margin-bottom:18px; }
+.step-num { font-family:var(--mono); font-size:9px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--amber); margin-bottom:4px; }
+.step-title { font-size:16px; font-weight:600; color:var(--text); margin-bottom:14px; }
+.step-hint { font-size:11px; color:var(--muted); margin-bottom:16px; line-height:1.5; }
+
+.field-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+.field { margin-bottom:14px; }
+.field label { font-family:var(--mono); font-size:9px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted); display:block; margin-bottom:6px; }
+.field input, .field textarea, .field select { width:100%; background:var(--surface);
+  border:1px solid var(--border); border-radius:4px; color:var(--text);
+  font-family:var(--sans); font-size:13px; padding:9px 12px; outline:none; }
+.field input:focus, .field textarea:focus, .field select:focus { border-color:var(--amber-dim); }
+.field textarea { resize:vertical; min-height:70px; }
+
+.dice-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
+.dice-field label { text-align:center; }
+.dice-field select { text-align:center; font-family:var(--mono); color:var(--amber); }
+
+.points-bar { display:flex; align-items:center; gap:10px; margin-bottom:16px;
+  padding:10px 14px; background:var(--surface); border:1px solid var(--border);
+  border-radius:4px; font-family:var(--mono); font-size:11px; }
+.points-val { color:var(--amber); font-weight:700; font-size:14px; }
+.points-val.over { color:#e57373; }
+
+.skills-table { width:100%; }
+.skill-row { display:grid; grid-template-columns:1fr 90px; gap:10px; align-items:center;
+  padding:6px 0; border-bottom:1px solid #1a1a1e; }
+.skill-row label { font-size:12px; color:var(--text); }
+.skill-row select { font-family:var(--mono); font-size:12px; color:var(--amber);
+  background:var(--surface); border:1px solid var(--border); border-radius:3px;
+  padding:5px 8px; text-align:center; }
+
+.derived-row { display:flex; gap:20px; padding:12px 0; }
+.derived-item { text-align:center; }
+.derived-label { font-family:var(--mono); font-size:9px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+.derived-val { font-family:var(--mono); font-size:20px; font-weight:700; color:var(--amber); }
+
+.gear-list { display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+.gear-item-row { display:flex; gap:8px; }
+.gear-item-row input { flex:1; }
+.gear-del { background:none; border:1px solid var(--border); border-radius:3px;
+  color:var(--muted); cursor:pointer; padding:0 10px; font-size:14px; }
+.gear-del:hover { color:#e57373; border-color:rgba(139,51,0,.4); }
+.add-gear-btn { font-family:var(--mono); font-size:10px; background:none;
+  border:1px dashed var(--border); border-radius:3px; color:var(--muted);
+  padding:6px 14px; cursor:pointer; }
+.add-gear-btn:hover { border-color:var(--amber-dim); color:var(--amber); }
+
+.hindrance-row, .edge-row { display:flex; gap:8px; margin-bottom:8px; align-items:flex-start; }
+.hindrance-row select, .edge-row select { width:110px; flex-shrink:0; }
+.hindrance-row input, .edge-row input { flex:1; }
+
+.submit-bar { display:flex; gap:10px; justify-content:flex-end; margin-top:24px; }
+.btn-create { font-family:var(--mono); font-size:12px; letter-spacing:.04em;
+  background:var(--amber-dim); color:var(--amber); border:1px solid var(--amber-dim);
+  border-radius:5px; padding:12px 28px; cursor:pointer; font-weight:600; }
+.btn-create:hover { background:rgba(200,146,42,.4); }
+.btn-create:disabled { opacity:.5; cursor:default; }
+.status-msg { font-size:12px; margin-top:10px; text-align:right; }
+.status-msg.ok { color:var(--safe); }
+.status-msg.err { color:#e57373; }
+
+.result-box { display:none; background:var(--card); border:1px solid var(--amber-dim);
+  border-radius:var(--radius); padding:24px; margin-top:18px; text-align:center; }
+.result-box.show { display:block; }
+.result-link { font-family:var(--mono); font-size:13px; color:var(--amber);
+  word-break:break-all; display:block; margin:12px 0; padding:10px;
+  background:var(--surface); border-radius:4px; }
+.result-copy-btn { font-family:var(--mono); font-size:11px; background:var(--amber-dim);
+  color:var(--amber); border:1px solid var(--amber-dim); border-radius:4px;
+  padding:7px 16px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="hd-title">Creation de Personnage</span>
+  <span style="font-size:11px;color:var(--muted)">Savage Worlds &middot; Pokemon Kanto</span>
+  <span class="hd-table-label" id="hd-table-label">Table : nouvelle-table</span>
+</header>
+
+<div class="main">
+
+  <div class="step-block">
+    <div class="step-num">Etape 1</div>
+    <div class="step-title">Identite</div>
+    <div class="field">
+      <label>Nom du personnage *</label>
+      <input type="text" id="f-nom" placeholder="Ex : Sarah Kessler" maxlength="60">
+    </div>
+    <div class="field">
+      <label>Role / Profession</label>
+      <input type="text" id="f-role" placeholder="Ex : Ancienne membre de la Ligue" maxlength="80">
+    </div>
+    <div class="field">
+      <label>Description courte</label>
+      <textarea id="f-desc" placeholder="Une ou deux phrases sur ce personnage..." maxlength="400"></textarea>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-num">Etape 2</div>
+    <div class="step-title">Attributs</div>
+    <div class="step-hint">Savage Worlds : 5 points a repartir entre les 5 attributs (depart d4, chaque augmentation d'un cran coute 1 point).</div>
+    <div class="points-bar">
+      <span>Points attributs restants :</span>
+      <span class="points-val" id="attr-points">5</span>
+      <span>/ 5</span>
+    </div>
+    <div class="dice-grid">
+      <div class="dice-field"><label>Agilite</label>
+        <select id="attr-agi" onchange="updateAttrPoints()">
+          <option value="d4">d4</option><option value="d6">d6</option><option value="d8">d8</option>
+          <option value="d10">d10</option><option value="d12">d12</option>
+        </select></div>
+      <div class="dice-field"><label>Ruse</label>
+        <select id="attr-rus" onchange="updateAttrPoints()">
+          <option value="d4">d4</option><option value="d6">d6</option><option value="d8">d8</option>
+          <option value="d10">d10</option><option value="d12">d12</option>
+        </select></div>
+      <div class="dice-field"><label>Force</label>
+        <select id="attr-for" onchange="updateAttrPoints()">
+          <option value="d4">d4</option><option value="d6">d6</option><option value="d8">d8</option>
+          <option value="d10">d10</option><option value="d12">d12</option>
+        </select></div>
+      <div class="dice-field"><label>Trempe</label>
+        <select id="attr-tremp" onchange="updateAttrPoints()">
+          <option value="d4">d4</option><option value="d6">d6</option><option value="d8">d8</option>
+          <option value="d10">d10</option><option value="d12">d12</option>
+        </select></div>
+      <div class="dice-field"><label>Vigueur</label>
+        <select id="attr-vig" onchange="updateAttrPoints()">
+          <option value="d4">d4</option><option value="d6">d6</option><option value="d8">d8</option>
+          <option value="d10">d10</option><option value="d12">d12</option>
+        </select></div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-num">Etape 3</div>
+    <div class="step-title">Stats derivees</div>
+    <div class="step-hint">Calculees automatiquement depuis les attributs.</div>
+    <div class="derived-row">
+      <div class="derived-item"><div class="derived-label">Parade</div><div class="derived-val" id="d-parade">2</div></div>
+      <div class="derived-item"><div class="derived-label">Robustesse</div><div class="derived-val" id="d-robustesse">2</div></div>
+      <div class="derived-item"><div class="derived-label">Allure</div><div class="derived-val">6"</div></div>
+      <div class="derived-item"><div class="derived-label">De Joker</div><div class="derived-val">d6</div></div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-num">Etape 4</div>
+    <div class="step-title">Competences</div>
+    <div class="step-hint">12 points a repartir. Competence liee a Agilite/Ruse/Force/Trempe/Vigueur : 1 pour 1 cran jusqu'au niveau de l'attribut, 2 pour 1 cran au-dela.</div>
+    <div class="points-bar">
+      <span>Points competences restants :</span>
+      <span class="points-val" id="skill-points">12</span>
+      <span>/ 12</span>
+    </div>
+    <div class="skills-table" id="skills-table"></div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-num">Etape 5</div>
+    <div class="step-title">Atouts &amp; Handicaps</div>
+    <div class="step-hint">Optionnel. Ajoutez si pertinent pour votre personnage.</div>
+    <div id="hindrances-list"></div>
+    <button class="add-gear-btn" onclick="addHindrance()">+ Handicap</button>
+    <div style="height:14px"></div>
+    <div id="edges-list"></div>
+    <button class="add-gear-btn" onclick="addEdge()">+ Atout</button>
+  </div>
+
+  <div class="step-block">
+    <div class="step-num">Etape 6</div>
+    <div class="step-title">Equipement de depart</div>
+    <div class="gear-list" id="gear-list"></div>
+    <button class="add-gear-btn" onclick="addGearField()">+ Ajouter un objet</button>
+  </div>
+
+  <div class="submit-bar">
+    <button class="btn-create" id="create-btn" onclick="createCharacter()">Creer le personnage</button>
+  </div>
+  <div class="status-msg" id="status-msg"></div>
+
+  <div class="result-box" id="result-box">
+    <div style="font-family:var(--mono);font-size:13px;color:var(--amber);margin-bottom:8px">Personnage cree !</div>
+    <div style="font-size:12px;color:var(--muted)">Partagez ce lien avec le joueur :</div>
+    <span class="result-link" id="result-link"></span>
+    <button class="result-copy-btn" onclick="copyResultLink()">Copier le lien</button>
+  </div>
+
+</div>
+
+<script>
+var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+var TABLE_ID = (new URLSearchParams(window.location.search)).get('table') || 'table2';
+
+document.getElementById('hd-table-label').textContent = 'Table : ' + TABLE_ID;
+
+var SKILLS = [
+  { name: 'Athletisme', linked: 'agi' },
+  { name: 'Connaissances Communes', linked: 'rus' },
+  { name: 'Perception (Notice)', linked: 'rus' },
+  { name: 'Persuasion', linked: 'rus' },
+  { name: 'Discretion (Sneak)', linked: 'agi' },
+  { name: 'Investigation', linked: 'rus' },
+  { name: 'Survie', linked: 'rus' },
+  { name: 'Pilotage', linked: 'agi' },
+  { name: 'Combat (Fightin\\')', linked: 'agi' },
+  { name: 'Tir (Shootin\\')', linked: 'agi' },
+  { name: 'Dressage', linked: 'rus' },
+  { name: 'Intimidation', linked: 'for' }
+];
+
+var DICE_ORDER = ['d4','d6','d8','d10','d12'];
+function diceIndex(d) { return DICE_ORDER.indexOf(d); }
+
+function updateAttrPoints() {
+  var attrs = ['agi','rus','for','tremp','vig'];
+  var spent = 0;
+  attrs.forEach(function(a) {
+    var idx = diceIndex(document.getElementById('attr-' + a).value);
+    spent += idx;
+  });
+  var remaining = 5 - spent;
+  var el = document.getElementById('attr-points');
+  el.textContent = remaining;
+  el.classList.toggle('over', remaining < 0);
+  updateDerivedStats();
+  buildSkillsTable();
+}
+
+function updateDerivedStats() {
+  var agiIdx = diceIndex(document.getElementById('attr-agi').value);
+  var vigIdx = diceIndex(document.getElementById('attr-vig').value);
+  document.getElementById('d-parade').textContent = 2 + Math.floor(agiIdx / 1) + 0 + (agiIdx >= 0 ? Math.floor((agiIdx)/1)*0 : 0) + 2 - 2 + (agiIdx >= 1 ? Math.ceil(agiIdx/1) : 0);
+  document.getElementById('d-parade').textContent = 2 + Math.ceil((diceIndex(document.getElementById('attr-agi').value))/1);
+  var parade = 2 + diceIndex(document.getElementById('attr-agi').value);
+  var robustesse = 2 + diceIndex(document.getElementById('attr-vig').value);
+  document.getElementById('d-parade').textContent = parade;
+  document.getElementById('d-robustesse').textContent = robustesse;
+}
+
+function buildSkillsTable() {
+  var container = document.getElementById('skills-table');
+  var existing = {};
+  container.querySelectorAll('select').forEach(function(s) { existing[s.dataset.skill] = s.value; });
+
+  container.innerHTML = '';
+  SKILLS.forEach(function(sk) {
+    var row = document.createElement('div');
+    row.className = 'skill-row';
+    var label = document.createElement('label');
+    label.textContent = sk.name + ' (' + sk.linked.toUpperCase() + ')';
+    var select = document.createElement('select');
+    select.dataset.skill = sk.name;
+    select.dataset.linked = sk.linked;
+    select.innerHTML = '<option value="d4">d4</option><option value="d6">d6</option>'
+      + '<option value="d8">d8</option><option value="d10">d10</option><option value="d12">d12</option>';
+    select.value = existing[sk.name] || 'd4';
+    select.addEventListener('change', updateSkillPoints);
+    row.appendChild(label);
+    row.appendChild(select);
+    container.appendChild(row);
+  });
+  updateSkillPoints();
+}
+
+function updateSkillPoints() {
+  var rows = document.querySelectorAll('#skills-table select');
+  var spent = 0;
+  rows.forEach(function(s) {
+    var linkedAttr = document.getElementById('attr-' + s.dataset.linked).value;
+    var linkedIdx  = diceIndex(linkedAttr);
+    var skillIdx   = diceIndex(s.value);
+    for (var i = 0; i < skillIdx; i++) {
+      spent += (i < linkedIdx) ? 1 : 2;
+    }
+  });
+  var remaining = 12 - spent;
+  var el = document.getElementById('skill-points');
+  el.textContent = remaining;
+  el.classList.toggle('over', remaining < 0);
+}
+
+var HINDRANCE_TYPES = ['Majeur', 'Mineur'];
+
+function addHindrance() {
+  var container = document.getElementById('hindrances-list');
+  var row = document.createElement('div');
+  row.className = 'hindrance-row';
+  row.innerHTML = '<select>' + HINDRANCE_TYPES.map(function(t){ return '<option>' + t + '</option>'; }).join('') + '</select>'
+    + '<input type="text" placeholder="Nom et description du handicap...">'
+    + '<button class="gear-del" onclick="this.parentElement.remove()">&times;</button>';
+  container.appendChild(row);
+}
+
+function addEdge() {
+  var container = document.getElementById('edges-list');
+  var row = document.createElement('div');
+  row.className = 'edge-row';
+  row.innerHTML = '<select><option>Background</option><option>Combat</option><option>Pouvoir</option><option>Professionnel</option><option>Weird</option></select>'
+    + '<input type="text" placeholder="Nom et effet de l\\'atout...">'
+    + '<button class="gear-del" onclick="this.parentElement.remove()">&times;</button>';
+  container.appendChild(row);
+}
+
+function addGearField() {
+  var container = document.getElementById('gear-list');
+  var row = document.createElement('div');
+  row.className = 'gear-item-row';
+  row.innerHTML = '<input type="text" placeholder="Ex : Revolver (2d6, portee 12/24/48)" maxlength="120">'
+    + '<button class="gear-del" onclick="this.parentElement.remove()">&times;</button>';
+  container.appendChild(row);
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function createCharacter() {
+  var nom = document.getElementById('f-nom').value.trim();
+  var statusEl = document.getElementById('status-msg');
+  statusEl.className = 'status-msg';
+  statusEl.textContent = '';
+
+  if (!nom) {
+    statusEl.className = 'status-msg err';
+    statusEl.textContent = 'Le nom du personnage est requis.';
+    return;
+  }
+
+  var attrPoints = parseInt(document.getElementById('attr-points').textContent);
+  var skillPoints = parseInt(document.getElementById('skill-points').textContent);
+  if (attrPoints < 0 || skillPoints < 0) {
+    statusEl.className = 'status-msg err';
+    statusEl.textContent = 'Trop de points depenses (attributs ou competences negatifs).';
+    return;
+  }
+
+  var btn = document.getElementById('create-btn');
+  btn.disabled = true;
+  btn.textContent = 'Creation en cours...';
+
+  var slug = nom.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+    .slice(0, 30) + '-' + Date.now().toString(36).slice(-4);
+
+  var skills = {};
+  document.querySelectorAll('#skills-table select').forEach(function(s) {
+    skills[s.dataset.skill] = s.value;
+  });
+
+  var hindrances = [];
+  document.querySelectorAll('.hindrance-row').forEach(function(row) {
+    var type = row.querySelector('select').value;
+    var text = row.querySelector('input').value.trim();
+    if (text) hindrances.push({ type: type, text: text });
+  });
+
+  var edges = [];
+  document.querySelectorAll('.edge-row').forEach(function(row) {
+    var type = row.querySelector('select').value;
+    var text = row.querySelector('input').value.trim();
+    if (text) edges.push({ type: type, text: text });
+  });
+
+  var gear = [];
+  document.querySelectorAll('#gear-list input').forEach(function(inp) {
+    var v = inp.value.trim();
+    if (v) gear.push(v);
+  });
+
+  var payload = {
+    nom: nom,
+    role: document.getElementById('f-role').value.trim(),
+    desc: document.getElementById('f-desc').value.trim(),
+    attrs: {
+      agi: document.getElementById('attr-agi').value,
+      rus: document.getElementById('attr-rus').value,
+      for: document.getElementById('attr-for').value,
+      tremp: document.getElementById('attr-tremp').value,
+      vig: document.getElementById('attr-vig').value
+    },
+    derived: {
+      parade: document.getElementById('d-parade').textContent,
+      robustesse: document.getElementById('d-robustesse').textContent,
+      allure: '6"'
+    },
+    skills: skills,
+    hindrances: hindrances,
+    edges: edges,
+    gear: gear,
+    team: [
+      null, null, null, null, null, null
+    ],
+    notes: [],
+    created: Date.now()
+  };
+
+  fetch(FB + '/personnages/' + TABLE_ID + '/' + slug + '.json', {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  })
+  .then(function(r) { return r.json(); })
+  .then(function() {
+    statusEl.className = 'status-msg ok';
+    statusEl.textContent = 'Personnage cree avec succes.';
+    btn.disabled = false;
+    btn.textContent = 'Creer le personnage';
+
+    var link = window.location.origin + window.location.pathname.replace('creation-personnage.html','')
+      + 'fiche-generique.html?table=' + TABLE_ID + '&id=' + slug;
+    document.getElementById('result-link').textContent = link;
+    document.getElementById('result-box').classList.add('show');
+  })
+  .catch(function() {
+    statusEl.className = 'status-msg err';
+    statusEl.textContent = 'Erreur lors de la creation. Reessayez.';
+    btn.disabled = false;
+    btn.textContent = 'Creer le personnage';
+  });
+}
+
+function copyResultLink() {
+  var text = document.getElementById('result-link').textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.querySelector('.result-copy-btn');
+    var orig = btn.textContent;
+    btn.textContent = 'Copie !';
+    setTimeout(function() { btn.textContent = orig; }, 1500);
+  });
+}
+
+document.getElementById('attr-agi').value = 'd4';
+buildSkillsTable();
+updateDerivedStats();
+addGearField();
+</script>
+</body>
+</html>
