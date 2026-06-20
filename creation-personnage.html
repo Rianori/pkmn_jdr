@@ -235,7 +235,7 @@ header { display:flex; align-items:center; gap:16px; padding:14px 24px;
   </div>
 
   <div class="submit-bar">
-    <button class="btn-create" id="create-btn" onclick="createCharacter()">Creer le personnage</button>
+    <button class="btn-create" id="create-btn" onclick="createCharacter()">Choisir son Pokemon &rarr;</button>
   </div>
   <div class="status-msg" id="status-msg"></div>
 
@@ -413,14 +413,11 @@ function createCharacter() {
   .then(function(r) { return r.json(); })
   .then(function() {
     statusEl.className = 'status-msg ok';
-    statusEl.textContent = 'Personnage cree avec succes.';
-    btn.disabled = false;
-    btn.textContent = 'Creer le personnage';
+    statusEl.textContent = 'Personnage enregistre. Redirection...';
 
-    var link = window.location.origin + window.location.pathname.replace('creation-personnage.html','')
-      + 'fiche-generique.html?table=' + TABLE_ID + '&id=' + slug;
-    document.getElementById('result-link').textContent = link;
-    document.getElementById('result-box').classList.add('show');
+    var nextUrl = window.location.pathname.replace('creation-personnage.html','')
+      + 'creation-pokemon.html?table=' + TABLE_ID + '&id=' + slug;
+    setTimeout(function() { window.location.href = nextUrl; }, 600);
   })
   .catch(function() {
     statusEl.className = 'status-msg err';
