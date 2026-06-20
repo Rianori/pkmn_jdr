@@ -100,6 +100,24 @@ header { display:flex; align-items:center; gap:16px; padding:14px 24px;
 .result-copy-btn { font-family:var(--mono); font-size:11px; background:var(--amber-dim);
   color:var(--amber); border:1px solid var(--amber-dim); border-radius:4px;
   padding:7px 16px; cursor:pointer; }
+
+  .skill-row-new { display:grid; grid-template-columns:1fr 90px 70px 28px; gap:8px; align-items:center;
+    padding:6px 0; border-bottom:1px solid #1a1a1e; }
+  .skill-row-new input { font-size:12px; padding:5px 8px; }
+  .skill-row-new select { font-family:var(--mono); font-size:11px; color:var(--amber);
+    background:var(--surface); border:1px solid var(--border); border-radius:3px;
+    padding:5px 6px; text-align:center; }
+  .skill-row-new select.dice-select { color:var(--amber); }
+  .skill-row-new select.link-select { color:var(--muted); font-size:10px; }
+  .skill-del-btn { background:none; border:1px solid var(--border); border-radius:3px;
+    color:var(--muted); cursor:pointer; font-size:14px; padding:4px 0; }
+  .skill-del-btn:hover { color:#e57373; border-color:rgba(139,51,0,.4); }
+  .hindrance-edge-card { background:var(--surface); border:1px solid var(--border);
+    border-radius:4px; padding:10px 12px; margin-bottom:8px; }
+  .he-row1 { display:flex; gap:8px; margin-bottom:6px; }
+  .he-row1 select { width:110px; flex-shrink:0; }
+  .he-row1 input.he-name { flex:1; font-weight:600; }
+  .he-desc { width:100%; }
 </style>
 </head>
 <body>
@@ -188,7 +206,14 @@ header { display:flex; align-items:center; gap:16px; padding:14px 24px;
       <span class="points-val" id="skill-points">12</span>
       <span>/ 12</span>
     </div>
+    <div style="display:grid;grid-template-columns:1fr 90px 70px 28px;gap:8px;margin-bottom:6px">
+      <span style="font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase">Competence</span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;text-align:center">De</span>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;text-align:center">Liee a</span>
+      <span></span>
+    </div>
     <div class="skills-table" id="skills-table"></div>
+    <button class="add-gear-btn" onclick="addCustomSkill()" style="margin-top:10px">+ Ajouter une competence</button>
   </div>
 
   <div class="step-block">
@@ -196,10 +221,10 @@ header { display:flex; align-items:center; gap:16px; padding:14px 24px;
     <div class="step-title">Atouts &amp; Handicaps</div>
     <div class="step-hint">Optionnel. Ajoutez si pertinent pour votre personnage.</div>
     <div id="hindrances-list"></div>
-    <button class="add-gear-btn" onclick="addHindrance()">+ Handicap</button>
+    <button class="add-gear-btn" onclick="addHindrance()">+ Ajouter un handicap</button>
     <div style="height:14px"></div>
     <div id="edges-list"></div>
-    <button class="add-gear-btn" onclick="addEdge()">+ Atout</button>
+    <button class="add-gear-btn" onclick="addEdge()">+ Ajouter un atout</button>
   </div>
 
   <div class="step-block">
@@ -271,69 +296,15 @@ function updateDerivedStats() {
   document.getElementById('d-robustesse').textContent = robustesse;
 }
 
-function buildSkillsTable() {
-  var container = document.getElementById('skills-table');
-  var existing = {};
-  container.querySelectorAll('select').forEach(function(s) { existing[s.dataset.skill] = s.value; });
 
-  container.innerHTML = '';
-  SKILLS.forEach(function(sk) {
-    var row = document.createElement('div');
-    row.className = 'skill-row';
-    var label = document.createElement('label');
-    label.textContent = sk.name + ' (' + sk.linked.toUpperCase() + ')';
-    var select = document.createElement('select');
-    select.dataset.skill = sk.name;
-    select.dataset.linked = sk.linked;
-    select.innerHTML = '<option value="d4">d4</option><option value="d6">d6</option>'
-      + '<option value="d8">d8</option><option value="d10">d10</option><option value="d12">d12</option>';
-    select.value = existing[sk.name] || 'd4';
-    select.addEventListener('change', updateSkillPoints);
-    row.appendChild(label);
-    row.appendChild(select);
-    container.appendChild(row);
-  });
-  updateSkillPoints();
-}
 
-function updateSkillPoints() {
-  var rows = document.querySelectorAll('#skills-table select');
-  var spent = 0;
-  rows.forEach(function(s) {
-    var linkedAttr = document.getElementById('attr-' + s.dataset.linked).value;
-    var linkedIdx  = diceIndex(linkedAttr);
-    var skillIdx   = diceIndex(s.value);
-    for (var i = 0; i < skillIdx; i++) {
-      spent += (i < linkedIdx) ? 1 : 2;
-    }
-  });
-  var remaining = 12 - spent;
-  var el = document.getElementById('skill-points');
-  el.textContent = remaining;
-  el.classList.toggle('over', remaining < 0);
-}
+
 
 var HINDRANCE_TYPES = ['Majeur', 'Mineur'];
 
-function addHindrance() {
-  var container = document.getElementById('hindrances-list');
-  var row = document.createElement('div');
-  row.className = 'hindrance-row';
-  row.innerHTML = '<select>' + HINDRANCE_TYPES.map(function(t){ return '<option>' + t + '</option>'; }).join('') + '</select>'
-    + '<input type="text" placeholder="Nom et description du handicap...">'
-    + '<button class="gear-del" onclick="this.parentElement.remove()">&times;</button>';
-  container.appendChild(row);
-}
 
-function addEdge() {
-  var container = document.getElementById('edges-list');
-  var row = document.createElement('div');
-  row.className = 'edge-row';
-  row.innerHTML = '<select><option>Background</option><option>Combat</option><option>Pouvoir</option><option>Professionnel</option><option>Weird</option></select>'
-    + '<input type="text" placeholder="Nom et effet de l\'atout...">'
-    + '<button class="gear-del" onclick="this.parentElement.remove()">&times;</button>';
-  container.appendChild(row);
-}
+
+
 
 function addGearField() {
   var container = document.getElementById('gear-list');
@@ -378,22 +349,27 @@ function createCharacter() {
     .slice(0, 30) + '-' + Date.now().toString(36).slice(-4);
 
   var skills = {};
-  document.querySelectorAll('#skills-table select').forEach(function(s) {
-    skills[s.dataset.skill] = s.value;
+  document.querySelectorAll('.skill-row-new').forEach(function(row) {
+    var name = row.querySelector('.skill-name-inp').value.trim();
+    var dice = row.querySelector('.dice-select').value;
+    var link = row.querySelector('.link-select').value;
+    if (name) skills[name] = { dice: dice, linked: link };
   });
 
   var hindrances = [];
-  document.querySelectorAll('.hindrance-row').forEach(function(row) {
-    var type = row.querySelector('select').value;
-    var text = row.querySelector('input').value.trim();
-    if (text) hindrances.push({ type: type, text: text });
+  document.querySelectorAll('.hindrance-card').forEach(function(card) {
+    var type = card.querySelector('.he-type').value;
+    var name = card.querySelector('.he-name').value.trim();
+    var desc = card.querySelector('.he-desc').value.trim();
+    if (name) hindrances.push({ type: type, name: name, desc: desc });
   });
 
   var edges = [];
-  document.querySelectorAll('.edge-row').forEach(function(row) {
-    var type = row.querySelector('select').value;
-    var text = row.querySelector('input').value.trim();
-    if (text) edges.push({ type: type, text: text });
+  document.querySelectorAll('.edge-card').forEach(function(card) {
+    var type = card.querySelector('.he-type').value;
+    var name = card.querySelector('.he-name').value.trim();
+    var desc = card.querySelector('.he-desc').value.trim();
+    if (name) edges.push({ type: type, name: name, desc: desc });
   });
 
   var gear = [];
@@ -468,6 +444,134 @@ document.getElementById('attr-agi').value = 'd4';
 buildSkillsTable();
 updateDerivedStats();
 addGearField();
-</script>
+
+var customSkills = [];
+
+function buildSkillsTable() {
+  var container = document.getElementById('skills-table');
+  var existing = {};
+  container.querySelectorAll('.skill-row-new').forEach(function(row) {
+    var nameInp = row.querySelector('.skill-name-inp');
+    var diceSel = row.querySelector('.dice-select');
+    var linkSel = row.querySelector('.link-select');
+    if (nameInp) existing[nameInp.value] = { dice: diceSel.value, link: linkSel.value };
+  });
+
+  container.innerHTML = '';
+
+  SKILLS.forEach(function(sk) {
+    addSkillRow(sk.name, existing[sk.name] ? existing[sk.name].dice : 'd4', sk.linked, false);
+  });
+  customSkills.forEach(function(sk) {
+    addSkillRow(sk.name, sk.dice, sk.linked, true);
+  });
+
+  updateSkillPoints();
+}
+
+function addSkillRow(name, dice, linked, removable) {
+  var container = document.getElementById('skills-table');
+  var row = document.createElement('div');
+  row.className = 'skill-row-new';
+
+  var nameInp = document.createElement('input');
+  nameInp.className = 'skill-name-inp';
+  nameInp.type = 'text';
+  nameInp.value = name;
+  nameInp.maxLength = 60;
+  if (!removable) nameInp.readOnly = true;
+  if (!removable) nameInp.style.opacity = '.85';
+
+  var diceSel = document.createElement('select');
+  diceSel.className = 'dice-select';
+  diceSel.innerHTML = '<option value="d4">d4</option><option value="d6">d6</option>'
+    + '<option value="d8">d8</option><option value="d10">d10</option><option value="d12">d12</option>';
+  diceSel.value = dice;
+  diceSel.addEventListener('change', updateSkillPoints);
+
+  var linkSel = document.createElement('select');
+  linkSel.className = 'link-select';
+  linkSel.innerHTML = '<option value="agi">AGI</option><option value="rus">RUS</option>'
+    + '<option value="for">FOR</option><option value="tremp">TREMP</option><option value="vig">VIG</option>';
+  linkSel.value = linked;
+  linkSel.addEventListener('change', updateSkillPoints);
+
+  var delBtn = document.createElement('button');
+  delBtn.className = 'skill-del-btn';
+  delBtn.innerHTML = '&times;';
+  delBtn.title = removable ? 'Retirer cette competence' : 'Retirer de la liste';
+  delBtn.addEventListener('click', function() {
+    if (removable) {
+      customSkills = customSkills.filter(function(s) { return s.name !== name; });
+    }
+    row.remove();
+    updateSkillPoints();
+  });
+
+  row.appendChild(nameInp);
+  row.appendChild(diceSel);
+  row.appendChild(linkSel);
+  row.appendChild(delBtn);
+  container.appendChild(row);
+}
+
+function addCustomSkill() {
+  var name = prompt('Nom de la nouvelle competence :');
+  if (!name || !name.trim()) return;
+  name = name.trim();
+  if (customSkills.some(function(s){ return s.name === name; }) || SKILLS.some(function(s){ return s.name === name; })) {
+    alert('Cette competence existe deja dans la liste.');
+    return;
+  }
+  customSkills.push({ name: name, dice: 'd4', linked: 'agi' });
+  addSkillRow(name, 'd4', 'agi', true);
+  updateSkillPoints();
+}
+
+function updateSkillPoints() {
+  var rows = document.querySelectorAll('.skill-row-new');
+  var spent = 0;
+  rows.forEach(function(row) {
+    var diceSel = row.querySelector('.dice-select');
+    var linkSel = row.querySelector('.link-select');
+    var linkedAttr = document.getElementById('attr-' + linkSel.value).value;
+    var linkedIdx  = diceIndex(linkedAttr);
+    var skillIdx   = diceIndex(diceSel.value);
+    for (var i = 0; i < skillIdx; i++) {
+      spent += (i < linkedIdx) ? 1 : 2;
+    }
+  });
+  var remaining = 12 - spent;
+  var el = document.getElementById('skill-points');
+  el.textContent = remaining;
+  el.classList.toggle('over', remaining < 0);
+}
+function addHindrance() {
+  var container = document.getElementById('hindrances-list');
+  var card = document.createElement('div');
+  card.className = 'hindrance-edge-card hindrance-card';
+  card.innerHTML =
+    '<div class="he-row1">'
+    + '<select class="he-type"><option>Majeur</option><option>Mineur</option></select>'
+    + '<input type="text" class="he-name" placeholder="Nom du handicap" maxlength="60">'
+    + '<button class="gear-del" onclick="this.closest(\'.hindrance-edge-card\').remove()">&times;</button>'
+    + '</div>'
+    + '<input type="text" class="he-desc" placeholder="Description / effet de jeu..." maxlength="250">';
+  container.appendChild(card);
+}
+
+function addEdge() {
+  var container = document.getElementById('edges-list');
+  var card = document.createElement('div');
+  card.className = 'hindrance-edge-card edge-card';
+  card.innerHTML =
+    '<div class="he-row1">'
+    + '<select class="he-type"><option>Background</option><option>Combat</option><option>Pouvoir</option><option>Professionnel</option><option>Weird</option></select>'
+    + '<input type="text" class="he-name" placeholder="Nom de l\'atout" maxlength="60">'
+    + '<button class="gear-del" onclick="this.closest(\'.hindrance-edge-card\').remove()">&times;</button>'
+    + '</div>'
+    + '<input type="text" class="he-desc" placeholder="Description / effet de jeu..." maxlength="250">';
+  container.appendChild(card);
+}</script>
 </body>
 </html>
