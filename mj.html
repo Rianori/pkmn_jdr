@@ -1016,6 +1016,17 @@
   .beast-cat-acc.open .beast-chevron { transform:rotate(90deg); }
   .beast-cat-content { display:none; }
   .beast-cat-content.open { display:block; }
+
+  .sc-status-wrap { position:relative; }
+  .sc-status-badge { cursor:pointer; transition:opacity .12s; }
+  .sc-status-badge:hover { opacity:.8; }
+  .sc-status-menu { display:none; position:absolute; top:100%; right:0; margin-top:4px;
+    background:var(--card); border:1px solid var(--border); border-radius:4px;
+    z-index:300; min-width:140px; box-shadow:0 4px 16px rgba(0,0,0,.4); overflow:hidden; }
+  .sc-status-menu.open { display:block; }
+  .sc-status-opt { padding:7px 12px; font-family:var(--mono); font-size:10px;
+    cursor:pointer; transition:background .1s; }
+  .sc-status-opt:hover { background:var(--amber-glow); }
 </style>
 </head>
 <body>
@@ -3297,56 +3308,7 @@
 </main>
 
 <script>
-function loadDynamicScenarios() {
-  var container = document.getElementById('dynamic-scenarios-list');
-  if (!container) return;
-  var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
 
-  fetch(FB + '/scenarios.json')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (!data) { container.innerHTML = ''; return; }
-
-      var entries = Object.keys(data).map(function(id) {
-        return { id: id, sc: data[id] };
-      });
-
-      var html = '';
-      entries.forEach(function(e) {
-        var sc = e.sc;
-        var title    = sc.title || 'Sans titre';
-        var tagline  = sc.tagline || 'Aucune accroche';
-        var campagne = sc.campagne || '00';
-        var nbActes  = (sc.actes || []).length;
-        var nbScenes = (sc.actes || []).reduce(function(s,a){ return s + (a.scenes||[]).length; }, 0);
-
-        html += '<a href="scenario-editor.html?id=' + e.id + '" '
-          + 'style="display:flex;align-items:center;gap:16px;background:var(--card);'
-          + 'border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;'
-          + 'text-decoration:none;transition:border-color .15s,background .15s;" '
-          + 'onmouseover="this.style.borderColor=\'var(--amber-dim)\';this.style.background=\'var(--surface)\'" '
-          + 'onmouseout="this.style.borderColor=\'var(--border)\';this.style.background=\'var(--card)\'">'
-          + '<div style="flex:1;">'
-          + '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;'
-          + 'text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Campagne ' + campagne + '</div>'
-          + '<div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;">' + title + '</div>'
-          + '<div style="font-size:12px;color:var(--muted);">'
-          + (tagline ? tagline + ' &middot; ' : '')
-          + nbActes + ' acte' + (nbActes===1?'':'s') + ' &middot; ' + nbScenes + ' sc\u00e8ne' + (nbScenes===1?'':'s')
-          + '</div>'
-          + '</div>'
-          + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">'
-          + '<span style="font-family:var(--mono);font-size:10px;color:var(--muted);'
-          + 'background:rgba(255,255,255,.04);border:1px solid var(--border);padding:2px 8px;border-radius:2px;">BROUILLON</span>'
-          + '<span style="font-family:var(--mono);font-size:11px;color:var(--amber);">Ouvrir &#8594;</span>'
-          + '</div>'
-          + '</a>';
-      });
-
-      container.innerHTML = html;
-    })
-    .catch(function() { container.innerHTML = ''; });
-}
 
 document.addEventListener('DOMContentLoaded', loadDynamicScenarios);
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
@@ -3817,7 +3779,116 @@ function _addScenarioCard(title, sub, num, filename) {
 
 
 
-</script>
+
+var SC_STATUSES = [
+  { key:'brouillon', label:'Brouillon', color:'var(--muted)',  bg:'rgba(255,255,255,.04)', border:'var(--border)' },
+  { key:'encours',   label:'En cours',  color:'var(--safe)',   bg:'rgba(30,92,46,.15)',    border:'rgba(30,92,46,.3)' },
+  { key:'pause',     label:'En pause',  color:'#c8922a',       bg:'rgba(200,146,42,.12)',  border:'rgba(200,146,42,.3)' },
+  { key:'termine',   label:'Termin\u00e9',  color:'#8a8a8a',  bg:'rgba(255,255,255,.06)', border:'var(--border)' },
+  { key:'archive',   label:'Archiv\u00e9', color:'#5a5a5a',  bg:'rgba(0,0,0,.2)',         border:'var(--border)' },
+];
+
+function getStatusInfo(key) {
+  return SC_STATUSES.find(function(s){ return s.key === key; }) || SC_STATUSES[0];
+}
+
+function loadDynamicScenarios() {
+  var container = document.getElementById('dynamic-scenarios-list');
+  if (!container) return;
+  var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+
+  fetch(FB + '/scenarios.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data) { container.innerHTML = ''; return; }
+
+      var entries = Object.keys(data).map(function(id) { return { id: id, sc: data[id] }; });
+      var html = '';
+
+      entries.forEach(function(e) {
+        var sc = e.sc;
+        var title    = sc.title || 'Sans titre';
+        var tagline  = sc.tagline || '';
+        var campagne = sc.campagne || '00';
+        var nbActes  = (sc.actes || []).length;
+        var nbScenes = (sc.actes || []).reduce(function(s,a){ return s + (a.scenes||[]).length; }, 0);
+        var status   = getStatusInfo(sc.status || 'brouillon');
+
+        var menuItems = SC_STATUSES.map(function(s) {
+          return '<div class="sc-status-opt" style="color:' + s.color + '" '
+            + 'onclick="event.preventDefault();event.stopPropagation();setScenarioStatus(\'' + e.id + '\',\'' + s.key + '\')">'
+            + s.label + '</div>';
+        }).join('');
+
+        html += '<a href="scenario-editor.html?id=' + e.id + '" '
+          + 'style="display:flex;align-items:center;gap:16px;background:var(--card);'
+          + 'border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;'
+          + 'text-decoration:none;transition:border-color .15s,background .15s;" '
+          + 'onmouseover="this.style.borderColor=\'var(--amber-dim)\';this.style.background=\'var(--surface)\'" '
+          + 'onmouseout="this.style.borderColor=\'var(--border)\';this.style.background=\'var(--card)\'">'
+          + '<div style="flex:1;">'
+          + '<div style="font-family:var(--mono);font-size:9px;letter-spacing:.12em;'
+          + 'text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Campagne ' + campagne + '</div>'
+          + '<div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;">' + title + '</div>'
+          + '<div style="font-size:12px;color:var(--muted);">'
+          + (tagline ? tagline + ' &middot; ' : '')
+          + nbActes + ' acte' + (nbActes===1?'':'s') + ' &middot; ' + nbScenes + ' sc\u00e8ne' + (nbScenes===1?'':'s')
+          + '</div></div>'
+          + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">'
+          + '<div class="sc-status-wrap">'
+          + '<span class="sc-status-badge" id="sc-badge-' + e.id + '" '
+          + 'style="font-family:var(--mono);font-size:10px;color:' + status.color + ';'
+          + 'background:' + status.bg + ';border:1px solid ' + status.border + ';padding:2px 8px;border-radius:2px;" '
+          + 'onclick="event.preventDefault();event.stopPropagation();toggleStatusMenu(\'' + e.id + '\')">' + status.label + '</span>'
+          + '<div class="sc-status-menu" id="sc-menu-' + e.id + '">' + menuItems + '</div>'
+          + '</div>'
+          + '<span style="font-family:var(--mono);font-size:11px;color:var(--amber);">Ouvrir &#8594;</span>'
+          + '</div>'
+          + '</a>';
+      });
+
+      container.innerHTML = html;
+    })
+    .catch(function() { container.innerHTML = ''; });
+}
+
+function toggleStatusMenu(id) {
+  document.querySelectorAll('.sc-status-menu').forEach(function(m) {
+    if (m.id !== 'sc-menu-' + id) m.classList.remove('open');
+  });
+  var menu = document.getElementById('sc-menu-' + id);
+  if (menu) menu.classList.toggle('open');
+}
+
+function setScenarioStatus(id, statusKey) {
+  var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+  fetch(FB + '/scenarios/' + id + '/status.json', {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(statusKey)
+  }).then(function() {
+    var info = getStatusInfo(statusKey);
+    var badge = document.getElementById('sc-badge-' + id);
+    if (badge) {
+      badge.textContent = info.label;
+      badge.style.color = info.color;
+      badge.style.background = info.bg;
+      badge.style.borderColor = info.border;
+    }
+    document.getElementById('sc-menu-' + id).classList.remove('open');
+  });
+}
+
+document.addEventListener('click', function(e) {
+  if (!e.target.classList.contains('sc-status-badge')) {
+    document.querySelectorAll('.sc-status-menu').forEach(function(m){ m.classList.remove('open'); });
+  }
+});
+
+document.addEventListener('DOMContentLoaded', loadDynamicScenarios);
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  loadDynamicScenarios();
+}</script>
 
 <!-- Modal nouveau scenario -->
 <div id="modal-new-sc" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center;">
