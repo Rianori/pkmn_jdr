@@ -2610,34 +2610,7 @@ function showDiceBubble(el, total, detail, notation, wildTotal, wildDetail) {
   }, 3000);
 }
 
-function parseDamageNotation(text) {
-  /* Parse des formats varies : "2d6", "FOR+d8", "3d6+1", "Str+d4", "d10" */
-  text = String(text).trim();
 
-  /* Trouver tous les des explicites : 2d6, d8, 1d4 etc. */
-  var diceMatches = text.match(/(\d*)d(\d+)/gi) || [];
-  var dice = diceMatches.map(function(m) {
-    var parts = m.match(/(\d*)d(\d+)/i);
-    var count = parts[1] ? parseInt(parts[1],10) : 1;
-    var faces = parseInt(parts[2],10);
-    return { count: count, faces: faces };
-  });
-
-  /* Modificateur numerique fixe (apres un dernier + ou - hors notation de) */
-  var modMatch = text.match(/[+\-]\s*(\d+)\s*$/);
-  var mod = 0;
-  if (modMatch && !/d\d+\s*[+\-]\s*\d+$/i.test(text.replace(/\s/g,'')) === false) {
-    /* eviter de capturer le +1 qui suit immediatement un dXX comme partie du dé */
-  }
-  /* Plus simple : chercher un nombre final qui n'est pas precede de 'd' */
-  var modMatch2 = text.match(/(?:^|[^d\d])([+\-]\d+)\s*$/i);
-  if (modMatch2) mod = parseInt(modMatch2[1], 10);
-
-  /* Detecter un attribut nomme (FOR, Str, AGI...) -> trate comme un d6 informatif si pas de dé trouve avec lui */
-  var hasNamedAttr = /\b(FOR|STR|AGI|VIG|RUS|TREMP)\b/i.test(text);
-
-  return { dice: dice, mod: mod, hasNamedAttr: hasNamedAttr, raw: text };
-}
 
 
 
@@ -2681,33 +2654,7 @@ function initRollablePills() {
     });
   });
 }
-function rollDamage(el, text) {
-  var parsed = parseDamageNotation(text);
-  if (!parsed.dice.length) return;
 
-  var allRolls = [];
-  var total = 0;
-  parsed.dice.forEach(function(d) {
-    for (var i = 0; i < d.count; i++) {
-      var r = rollExplodingDie(d.faces);
-      allRolls.push({ faces: d.faces, rolls: r.rolls, total: r.total });
-      total += r.total;
-    }
-  });
-  total += parsed.mod;
-
-  var detailParts = allRolls.map(function(r) {
-    var rollsStr = r.rolls.map(function(v) {
-      return (v === r.faces) ? '<span class="explode">' + v + '</span>' : v;
-    }).join('+');
-    return 'd' + r.faces + '(' + rollsStr + ')';
-  });
-  var detail = detailParts.join(' + ');
-  if (parsed.mod) detail += (parsed.mod > 0 ? ' + ' : ' - ') + Math.abs(parsed.mod);
-
-  showDamageBubble(el, total, detail, parsed.raw);
-  broadcastDiceRoll(parsed.raw, total, allRolls.reduce(function(a,r){return a.concat(r.rolls);},[]), null, null, 'damage');
-}
 
 function showDamageBubble(el, total, detail, notation) {
   var existing = el.querySelector('.dice-bubble');
@@ -2777,6 +2724,102 @@ function rollPillDice(el, notation) {
 
   showDiceBubble(el, grandTotal, detail, notation, wild.total, wildDetail);
   broadcastDiceRoll(notation, grandTotal, result.rolls, wild.total, wild.rolls, kind);
+}
+function findPokemonAttribute(el, attrCode) {
+  /* Remonte au conteneur du Pokemon (pk-card ou pk-body) et cherche
+     la pill d'attribut correspondante. Gere FR complet et abreges. */
+  var ALIASES = {
+    FOR: ['for','force','str'],
+    AGI: ['agi','agilite','agilit\u00e9'],
+    VIG: ['vig','vigueur'],
+    RUS: ['rus','ruse'],
+    TREMP: ['tremp','trempe']
+  };
+  var wanted = ALIASES[attrCode.toUpperCase()] || [attrCode.toLowerCase()];
+
+  var container = el.closest('.pk-card, .pk-body, [id^="tab-"]');
+  if (!container) container = document;
+
+  var pills = container.querySelectorAll('.pk-stat, .stat-pill');
+  for (var i = 0; i < pills.length; i++) {
+    var pill = pills[i];
+    var valEl = pill.querySelector('.val');
+    if (!valEl) continue;
+    var label = pill.textContent.replace(valEl.textContent, '').trim().toLowerCase();
+    if (wanted.indexOf(label) >= 0) {
+      return valEl.textContent.trim();
+    }
+  }
+  return null;
+}
+
+function parseDamageNotation(text) {
+  text = String(text).trim();
+
+  /* Detecter un attribut nomme en prefixe : FOR+, Str+, AGI+ etc. */
+  var attrMatch = text.match(/^(FOR|STR|AGI|VIG|RUS|TREMP)\s*\+/i);
+  var namedAttr = attrMatch ? attrMatch[1].toUpperCase() : null;
+  if (namedAttr === 'STR') namedAttr = 'FOR';
+
+  /* Trouver tous les des explicites : 2d6, d8, 1d4 etc. */
+  var diceMatches = text.match(/(\d*)d(\d+)/gi) || [];
+  var dice = diceMatches.map(function(m) {
+    var parts = m.match(/(\d*)d(\d+)/i);
+    var count = parts[1] ? parseInt(parts[1],10) : 1;
+    var faces = parseInt(parts[2],10);
+    return { count: count, faces: faces };
+  });
+
+  /* Modificateur numerique fixe en fin de chaine */
+  var modMatch = text.match(/(?:^|[^d\d])([+\-]\d+)\s*$/i);
+  var mod = modMatch ? parseInt(modMatch[1], 10) : 0;
+
+  return { dice: dice, mod: mod, namedAttr: namedAttr, raw: text };
+}
+
+function rollDamage(el, text) {
+  var parsed = parseDamageNotation(text);
+  if (!parsed.dice.length && !parsed.namedAttr) return;
+
+  var allRolls = [];
+  var total = 0;
+
+  /* Des explicites de l'attaque (2d6, d8...) */
+  parsed.dice.forEach(function(d) {
+    for (var i = 0; i < d.count; i++) {
+      var r = rollExplodingDie(d.faces);
+      allRolls.push({ label: 'd' + d.faces, faces: d.faces, rolls: r.rolls, total: r.total });
+      total += r.total;
+    }
+  });
+
+  /* Attribut nomme (FOR, AGI...) -> lire le de du Pokemon et le lancer aussi */
+  var attrNotation = null;
+  if (parsed.namedAttr) {
+    attrNotation = findPokemonAttribute(el, parsed.namedAttr);
+    if (attrNotation) {
+      var attrParsed = parseDieNotation(attrNotation);
+      var ar = rollExplodingDie(attrParsed.faces);
+      allRolls.unshift({ label: parsed.namedAttr + '(' + attrNotation + ')', faces: attrParsed.faces, rolls: ar.rolls, total: ar.total });
+      total += ar.total + attrParsed.mod;
+    }
+  }
+
+  total += parsed.mod;
+
+  var detailParts = allRolls.map(function(r) {
+    var rollsStr = r.rolls.map(function(v) {
+      return (v === r.faces) ? '<span class="explode">' + v + '</span>' : v;
+    }).join('+');
+    return r.label + '(' + rollsStr + ')';
+  });
+  var detail = detailParts.join(' + ');
+  if (parsed.mod) detail += (parsed.mod > 0 ? ' + ' : ' - ') + Math.abs(parsed.mod);
+
+  showDamageBubble(el, total, detail, parsed.raw);
+
+  var allDiceRolls = allRolls.reduce(function(a,r){ return a.concat(r.rolls); }, []);
+  broadcastDiceRoll(parsed.raw, total, allDiceRolls, null, null, 'damage');
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
