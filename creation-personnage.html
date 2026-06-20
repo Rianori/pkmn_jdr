@@ -265,10 +265,8 @@ function updateAttrPoints() {
 function updateDerivedStats() {
   var agiIdx = diceIndex(document.getElementById('attr-agi').value);
   var vigIdx = diceIndex(document.getElementById('attr-vig').value);
-  document.getElementById('d-parade').textContent = 2 + Math.floor(agiIdx / 1) + 0 + (agiIdx >= 0 ? Math.floor((agiIdx)/1)*0 : 0) + 2 - 2 + (agiIdx >= 1 ? Math.ceil(agiIdx/1) : 0);
-  document.getElementById('d-parade').textContent = 2 + Math.ceil((diceIndex(document.getElementById('attr-agi').value))/1);
-  var parade = 2 + diceIndex(document.getElementById('attr-agi').value);
-  var robustesse = 2 + diceIndex(document.getElementById('attr-vig').value);
+  var parade = 2 + agiIdx;
+  var robustesse = 2 + vigIdx;
   document.getElementById('d-parade').textContent = parade;
   document.getElementById('d-robustesse').textContent = robustesse;
 }
