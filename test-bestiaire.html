@@ -2341,6 +2341,7 @@ function renderPanel() {
   if (state.activeSlot === 0) {
     var pk = document.getElementById('partner-pk-card');
     if (pk) panel.innerHTML = '<div style="padding:16px">' + pk.innerHTML + '</div>';
+    initRollablePills();
     return;
   }
 
