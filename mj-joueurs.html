@@ -151,6 +151,8 @@ header{display:flex;align-items:center;justify-content:space-between;
   .dice-roll-label { font-family:var(--mono); font-size:8px; letter-spacing:.1em;
     text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
   .dice-roll-value { font-family:var(--mono); font-size:22px; font-weight:700; color:var(--amber); }
+  .dice-roll-value.wild { color:#6b9fd8; font-size:18px; }
+  .dice-roll-sep { color:var(--muted); margin:0 6px; font-size:14px; }
   .dice-roll-detail { font-family:var(--mono); font-size:10px; color:var(--muted); margin-left:8px; }
   .dice-roll-time { font-size:9px; color:var(--muted); margin-top:2px; }
 </style>
@@ -199,10 +201,17 @@ function showDiceRollOnCard(slug, roll) {
   }
   var time = new Date(roll.ts).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
   var rollsStr = (roll.rolls || []).join(' + ');
+  var wildStr  = (roll.wildRolls || []).join(' + ');
+  var wildHtml = (roll.wildTotal !== undefined)
+    ? '<span class="dice-roll-sep">+</span>'
+      + '<span class="dice-roll-value wild">' + roll.wildTotal + '</span>'
+      + '<span class="dice-roll-detail">d6 (' + wildStr + ')</span>'
+    : '';
   disp.innerHTML =
     '<div class="dice-roll-label">Dernier lancer</div>'
     + '<span class="dice-roll-value">' + roll.total + '</span>'
     + '<span class="dice-roll-detail">' + roll.notation + ' (' + rollsStr + ')</span>'
+    + wildHtml
     + '<div class="dice-roll-time">' + time + '</div>';
   disp.classList.add('show');
 }
