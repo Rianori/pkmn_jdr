@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choisir son Pokemon Partenaire</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+:root {
+  --bg:#0e0e10; --surface:#141416; --card:#1a1a1e; --border:#2a2a30;
+  --text:#e8e6e0; --muted:#6b6a6a; --amber:#c8922a; --amber-dim:rgba(200,146,42,.25);
+  --amber-glow:rgba(200,146,42,.08); --danger:#8B3300; --safe:#1e5c2e;
+  --radius:6px; --mono:'IBM Plex Mono',monospace; --sans:'IBM Plex Sans',sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:14px; }
+
+header { display:flex; align-items:center; gap:16px; padding:14px 24px;
+  background:var(--surface); border-bottom:1px solid var(--border);
+  position:sticky; top:0; z-index:100; }
+.hd-title { font-family:var(--mono); font-size:14px; font-weight:600; color:var(--amber); }
+.hd-sub { font-size:11px; color:var(--muted); }
+.hd-step { margin-left:auto; font-family:var(--mono); font-size:9px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--muted); background:var(--card); border:1px solid var(--border);
+  padding:4px 10px; border-radius:3px; }
+
+.main { max-width:780px; margin:0 auto; padding:24px 20px 80px; }
+
+.mode-tabs { display:flex; gap:8px; margin-bottom:20px; }
+.mode-tab { flex:1; font-family:var(--mono); font-size:11px; letter-spacing:.04em;
+  text-transform:uppercase; background:var(--card); border:1px solid var(--border);
+  color:var(--muted); padding:12px; border-radius:5px; cursor:pointer; text-align:center; }
+.mode-tab.active { color:var(--amber); border-color:var(--amber-dim); background:var(--amber-glow); }
+
+.mode-section { display:none; }
+.mode-section.active { display:block; }
+
+.bst-search { width:100%; background:var(--card); border:1px solid var(--border);
+  border-radius:4px; color:var(--text); font-size:13px; padding:10px 14px; outline:none;
+  margin-bottom:14px; }
+.bst-search:focus { border-color:var(--amber-dim); }
+.bst-picker-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:8px; max-height:340px; overflow-y:auto; margin-bottom:16px; }
+.bst-pick-card { background:var(--card); border:1px solid var(--border); border-radius:4px;
+  padding:10px 12px; cursor:pointer; transition:border-color .15s,background .15s; }
+.bst-pick-card:hover { border-color:var(--amber-dim); background:var(--amber-glow); }
+.bst-pick-card.selected { border-color:var(--amber); background:var(--amber-glow); }
+.bst-pick-name { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); margin-bottom:3px; }
+.bst-pick-meta { font-size:10px; color:var(--muted); margin-bottom:5px; }
+.bst-pick-stats { display:flex; flex-wrap:wrap; gap:3px; }
+.bst-pick-stat { font-family:var(--mono); font-size:9px; background:var(--surface);
+  border:1px solid var(--border); border-radius:2px; padding:1px 5px; color:var(--muted); }
+.bst-pick-stat span { color:var(--amber); }
+.bst-loading { text-align:center; color:var(--muted); font-size:12px; padding:20px; grid-column:1/-1; }
+
+.bst-detail-panel { background:var(--card); border:1px solid var(--amber-dim);
+  border-radius:var(--radius); overflow:hidden; margin-bottom:16px; }
+.bst-detail-header { padding:14px 18px 10px; background:var(--surface); border-bottom:1px solid var(--border); }
+.bst-detail-name { font-family:var(--mono); font-size:15px; font-weight:700; color:var(--amber); }
+.bst-detail-meta { font-size:10px; color:var(--muted); margin:2px 0 6px; }
+.bst-detail-desc { font-size:11px; font-style:italic; color:var(--muted); line-height:1.5; }
+.bst-detail-body { padding:14px 18px; }
+.bst-attrs { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
+.bst-attr { font-family:var(--mono); font-size:10px; background:var(--surface);
+  border:1px solid var(--border); border-radius:2px; padding:3px 7px; }
+.bst-attr span { color:var(--amber); font-weight:600; }
+.bst-atk-table { width:100%; border-collapse:collapse; font-size:11px; margin-bottom:10px; }
+.bst-atk-table th { font-family:var(--mono); font-size:8px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--muted); text-align:left; padding:3px 6px; border-bottom:1px solid var(--border); }
+.bst-atk-table td { padding:4px 6px; border-bottom:1px solid #1e1e22; color:#a8a39a; vertical-align:top; }
+.bst-talent-lbl { font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); margin:10px 0 6px; padding-bottom:4px; border-bottom:1px solid var(--border); display:block; }
+.bst-talent-list { display:flex; flex-direction:column; gap:5px; }
+.bst-talent-opt { display:flex; align-items:flex-start; gap:8px; padding:8px 10px;
+  border:1px solid var(--border); border-radius:3px; cursor:pointer; background:var(--surface);
+  transition:border-color .12s,background .12s; }
+.bst-talent-opt:hover { border-color:var(--amber-dim); background:var(--amber-glow); }
+.bst-talent-opt.selected { border-color:var(--amber); background:var(--amber-glow); }
+.bst-talent-opt input[type=radio] { flex-shrink:0; margin-top:2px; accent-color:var(--amber); }
+.bst-talent-name { font-size:11px; font-weight:600; color:var(--text); display:block; margin-bottom:2px; }
+.bst-talent-desc { font-size:10px; color:var(--muted); line-height:1.4; }
+
+.field { margin-bottom:14px; }
+.field label { font-family:var(--mono); font-size:9px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted); display:block; margin-bottom:6px; }
+.field input, .field select, .field textarea { width:100%; background:var(--card);
+  border:1px solid var(--border); border-radius:4px; color:var(--text);
+  font-family:var(--sans); font-size:13px; padding:9px 12px; outline:none; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color:var(--amber-dim); }
+
+.dice-grid-pk { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:16px; }
+.dice-field-pk label { text-align:center; }
+.dice-field-pk select { text-align:center; font-family:var(--mono); color:var(--amber); }
+
+.atk-edit-row { display:grid; grid-template-columns:2fr 1fr 1fr 2fr; gap:6px; margin-bottom:6px; }
+.atk-edit-row input { font-size:12px; padding:7px 9px; }
+.add-atk-btn { font-family:var(--mono); font-size:10px; background:none;
+  border:1px dashed var(--border); border-radius:3px; color:var(--muted);
+  padding:6px 14px; cursor:pointer; margin-top:4px; }
+.add-atk-btn:hover { border-color:var(--amber-dim); color:var(--amber); }
+
+.submit-bar { display:flex; gap:10px; justify-content:space-between; margin-top:24px; }
+.btn-back { font-family:var(--mono); font-size:11px; background:none; border:1px solid var(--border);
+  color:var(--muted); border-radius:5px; padding:11px 22px; cursor:pointer; }
+.btn-back:hover { color:var(--text); }
+.btn-finish { font-family:var(--mono); font-size:12px; letter-spacing:.04em;
+  background:var(--amber-dim); color:var(--amber); border:1px solid var(--amber-dim);
+  border-radius:5px; padding:12px 28px; cursor:pointer; font-weight:600; }
+.btn-finish:hover { background:rgba(200,146,42,.4); }
+.btn-finish:disabled { opacity:.5; cursor:default; }
+.status-msg { font-size:12px; margin-top:10px; text-align:right; }
+.status-msg.ok { color:var(--safe); }
+.status-msg.err { color:#e57373; }
+
+.result-box { display:none; background:var(--card); border:1px solid var(--amber-dim);
+  border-radius:var(--radius); padding:24px; margin-top:18px; text-align:center; }
+.result-box.show { display:block; }
+.result-link { font-family:var(--mono); font-size:13px; color:var(--amber);
+  word-break:break-all; display:block; margin:12px 0; padding:10px;
+  background:var(--surface); border-radius:4px; }
+.result-copy-btn { font-family:var(--mono); font-size:11px; background:var(--amber-dim);
+  color:var(--amber); border:1px solid var(--amber-dim); border-radius:4px;
+  padding:7px 16px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="hd-title">Pokemon Partenaire</span>
+  <span class="hd-sub">Etape 2 sur 2</span>
+  <span class="hd-step" id="hd-char-label">Personnage : ?</span>
+</header>
+
+<div class="main">
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" onclick="switchMode('pokedex')">Choisir dans le Pokedex</button>
+    <button class="mode-tab" onclick="switchMode('custom')">Creation libre</button>
+  </div>
+
+  <div class="mode-section active" id="mode-pokedex">
+    <input class="bst-search" id="bst-search" type="text" placeholder="Rechercher un Pokemon..." oninput="filterBstPicker()">
+    <div class="bst-picker-grid" id="bst-picker-grid"><div class="bst-loading">Chargement du Pokedex...</div></div>
+    <div class="bst-detail-panel" id="bst-detail-panel" style="display:none"></div>
+  </div>
+
+  <div class="mode-section" id="mode-custom">
+    <div class="field">
+      <label>Nom du Pokemon *</label>
+      <input type="text" id="c-nom" placeholder="Ex : Flambino" maxlength="40">
+    </div>
+    <div class="field">
+      <label>Type</label>
+      <input type="text" id="c-type" placeholder="Ex : Feu" maxlength="30">
+    </div>
+    <div class="field">
+      <label>Taille</label>
+      <input type="text" id="c-taille" placeholder="Ex : Moyen" maxlength="30">
+    </div>
+    <div class="field">
+      <label>Description courte</label>
+      <textarea id="c-desc" placeholder="Une courte description..." maxlength="300" style="min-height:60px"></textarea>
+    </div>
+
+    <div class="field"><label>Attributs</label></div>
+    <div class="dice-grid-pk">
+      <div class="dice-field-pk"><label>AGI</label>
+        <select id="c-agi"><option>d4</option><option>d6</option><option>d8</option><option>d10</option><option>d12</option></select></div>
+      <div class="dice-field-pk"><label>FOR</label>
+        <select id="c-for"><option>d4</option><option>d6</option><option>d8</option><option>d10</option><option>d12</option></select></div>
+      <div class="dice-field-pk"><label>VIG</label>
+        <select id="c-vig"><option>d4</option><option>d6</option><option>d8</option><option>d10</option><option>d12</option></select></div>
+      <div class="dice-field-pk"><label>RUS</label>
+        <select id="c-rus"><option>d4</option><option>d6</option><option>d8</option><option>d10</option><option>d12</option></select></div>
+      <div class="dice-field-pk"><label>TREMP</label>
+        <select id="c-tremp"><option>d4</option><option>d6</option><option>d8</option><option>d10</option><option>d12</option></select></div>
+    </div>
+    <div class="field-row" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px">
+      <div class="field"><label>Parade</label><input type="text" id="c-parade" value="5"></div>
+      <div class="field"><label>Robustesse</label><input type="text" id="c-robustesse" value="5"></div>
+      <div class="field"><label>Allure</label><input type="text" id="c-allure" value="6&quot;"></div>
+    </div>
+
+    <div class="field"><label>Talent</label>
+      <input type="text" id="c-talent" placeholder="Nom du talent" maxlength="60" style="margin-bottom:8px">
+      <textarea id="c-talent-desc" placeholder="Description du talent..." maxlength="250" style="min-height:50px"></textarea>
+    </div>
+
+    <div class="field"><label>Attaques</label></div>
+    <div id="c-atk-list"></div>
+    <button class="add-atk-btn" onclick="addCustomAtkRow()">+ Ajouter une attaque</button>
+  </div>
+
+  <div class="submit-bar">
+    <button class="btn-back" onclick="history.back()">&larr; Retour</button>
+    <button class="btn-finish" id="finish-btn" onclick="finishCreation()">Finaliser le personnage</button>
+  </div>
+  <div class="status-msg" id="status-msg"></div>
+
+  <div class="result-box" id="result-box">
+    <div style="font-family:var(--mono);font-size:13px;color:var(--amber);margin-bottom:8px">Personnage complet !</div>
+    <div style="font-size:12px;color:var(--muted)">Partagez ce lien avec le joueur :</div>
+    <span class="result-link" id="result-link"></span>
+    <button class="result-copy-btn" onclick="copyResultLink()">Copier le lien</button>
+  </div>
+
+</div>
+
+<script>
+var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
+var params = new URLSearchParams(window.location.search);
+var TABLE_ID = params.get('table') || 'table2';
+var CHAR_ID  = params.get('id') || '';
+
+document.getElementById('hd-char-label').textContent = 'Personnage : ' + (CHAR_ID || '?');
+
+var _bstData = null;
+var _bstCurrent = null;
+var _currentMode = 'pokedex';
+
+function switchMode(mode) {
+  _currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.mode-section').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelector('.mode-tab[onclick*="' + mode + '"]').classList.add('active');
+  document.getElementById('mode-' + mode).classList.add('active');
+  if (mode === 'pokedex' && !_bstData) loadBestiaire();
+}
+
+function loadBestiaire() {
+  var grid = document.getElementById('bst-picker-grid');
+  grid.innerHTML = '<div class="bst-loading">Chargement...</div>';
+  fetch('mj.html')
+    .then(function(r) { return r.text(); })
+    .then(function(txt) {
+      _bstData = parseBestCards(txt);
+      renderBstPicker(_bstData);
+    })
+    .catch(function() {
+      grid.innerHTML = '<div class="bst-loading">Erreur de chargement du Pokedex.</div>';
+    });
+}
+
+function parseBestCards(html) {
+  var cards = [];
+  var doc = (new DOMParser()).parseFromString(html, 'text/html');
+  doc.querySelectorAll('.beast-card').forEach(function(card) {
+    var nameEl = card.querySelector('.beast-name');
+    var metaEl = card.querySelector('.beast-meta');
+    if (!nameEl) return;
+    var metaTxt = metaEl ? metaEl.textContent : '';
+    var tagEl = metaEl ? metaEl.querySelector('[class^="tag"]') : null;
+    var categorie = tagEl ? tagEl.textContent.trim() : '';
+    var rest = metaTxt.replace(categorie,'').replace(/^\s*[·\-]\s*/,'').trim();
+    var parts = rest.split(/\s*[·\-]\s*/);
+    var type = parts[0] ? parts[0].trim() : '';
+    var taille = parts[1] ? parts[1].trim() : '';
+    var descEl = card.querySelector('p');
+    var attrs = {};
+    var statMap = {AGI:'agi',FOR:'for',VIG:'vig',RUS:'rus',TREMP:'tremp',
+                   Parade:'parade',Robustesse:'robustesse',Allure:'allure'};
+    card.querySelectorAll('.stat-pill').forEach(function(pill) {
+      var val = pill.querySelector('span');
+      if (!val) return;
+      var key = pill.textContent.replace(val.textContent,'').trim();
+      var fk = statMap[key];
+      if (fk) attrs[fk] = val.textContent.trim();
+    });
+    var attacks = [];
+    card.querySelectorAll('.atk-table tr').forEach(function(row) {
+      var cells = row.querySelectorAll('td');
+      if (cells.length >= 2) {
+        attacks.push({
+          name: cells[0] ? cells[0].textContent.trim() : '',
+          dmg:  cells[1] ? cells[1].textContent.trim() : '',
+          range: cells[2] ? cells[2].textContent.trim() : '',
+          effect: cells[3] ? cells[3].textContent.trim() : ''
+        });
+      }
+    });
+    var talents = [];
+    card.querySelectorAll('.capa-list li').forEach(function(li) {
+      var n = li.querySelector('.capa-name');
+      if (!n) return;
+      var d = li.textContent.replace(n.textContent,'').replace(/^\s*:\s*/,'').trim();
+      talents.push({ name: n.textContent.trim(), desc: d });
+    });
+    cards.push({ name: nameEl.textContent.trim(), categorie: categorie, type: type, taille: taille,
+      desc: descEl ? descEl.textContent.trim() : '', attrs: attrs, attacks: attacks, talents: talents });
+  });
+  return cards;
+}
+
+function filterBstPicker() {
+  if (_bstData) renderBstPicker(_bstData);
+}
+
+function renderBstPicker(cards) {
+  var grid = document.getElementById('bst-picker-grid');
+  var q = ((document.getElementById('bst-search')||{}).value||'').toLowerCase();
+  grid.innerHTML = '';
+  var filtered = cards.filter(function(c) {
+    return !q || c.name.toLowerCase().indexOf(q) >= 0 || c.type.toLowerCase().indexOf(q) >= 0;
+  });
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="bst-loading">Aucun resultat.</div>';
+    return;
+  }
+  var SL = {agi:'AGI',rus:'RUS',for:'FOR',tremp:'TREMP',vig:'VIG',parade:'PAR',robustesse:'ROB',allure:'ALL'};
+  filtered.forEach(function(c) {
+    var div = document.createElement('div');
+    div.className = 'bst-pick-card';
+    var statsHtml = Object.keys(SL).filter(function(k){ return c.attrs[k]; })
+      .map(function(k){ return '<div class="bst-pick-stat">' + SL[k] + ' <span>' + c.attrs[k] + '</span></div>'; }).join('');
+    div.innerHTML = '<div class="bst-pick-name">' + c.name + '</div>'
+      + '<div class="bst-pick-meta">' + c.type + (c.taille ? ' &middot; ' + c.taille : '') + '</div>'
+      + '<div class="bst-pick-stats">' + statsHtml + '</div>';
+    div.addEventListener('click', (function(card, el){ return function(){ showBstDetail(card, el); }; })(c, div));
+    grid.appendChild(div);
+  });
+}
+
+function showBstDetail(c, el) {
+  document.querySelectorAll('.bst-pick-card.selected').forEach(function(d){ d.classList.remove('selected'); });
+  el.classList.add('selected');
+  _bstCurrent = c;
+
+  var SL = {agi:'AGI',rus:'RUS',for:'FOR',tremp:'TREMP',vig:'VIG',parade:'Parade',robustesse:'Robustesse',allure:'Allure'};
+  var attrsHtml = '<div class="bst-attrs">'
+    + Object.keys(SL).filter(function(k){ return c.attrs[k]; })
+      .map(function(k){ return '<div class="bst-attr">' + SL[k] + ' <span>' + c.attrs[k] + '</span></div>'; }).join('')
+    + '</div>';
+
+  var atksHtml = '';
+  if (c.attacks.length) {
+    atksHtml = '<table class="bst-atk-table"><tr><th>Attaque</th><th>Dommages</th><th>Portee</th><th>Effet</th></tr>';
+    c.attacks.forEach(function(a) {
+      atksHtml += '<tr><td>' + a.name + '</td><td style="color:var(--amber)">' + a.dmg + '</td><td>' + (a.range||'') + '</td><td>' + (a.effect||'') + '</td></tr>';
+    });
+    atksHtml += '</table>';
+  }
+
+  var talentsHtml = '';
+  if (c.talents.length) {
+    talentsHtml = '<span class="bst-talent-lbl">Talent</span><div class="bst-talent-list" id="bst-talent-list">';
+    c.talents.forEach(function(t, i) {
+      talentsHtml += '<label class="bst-talent-opt' + (i===0?' selected':'') + '">'
+        + '<input type="radio" name="bst-talent" value="' + i + '"' + (i===0?' checked':'') + '>'
+        + '<span><span class="bst-talent-name">' + t.name + '</span>'
+        + (t.desc ? '<span class="bst-talent-desc">' + t.desc + '</span>' : '') + '</span></label>';
+    });
+    talentsHtml += '<label class="bst-talent-opt"><input type="radio" name="bst-talent" value="-1">'
+      + '<span><span class="bst-talent-name" style="color:var(--muted)">Aucun talent</span></span></label>';
+    talentsHtml += '</div>';
+  } else {
+    talentsHtml = '<span class="bst-talent-lbl">Talent</span>'
+      + '<input class="bst-search" id="bst-talent-free" type="text" placeholder="Talent libre (optionnel)...">';
+  }
+
+  var panel = document.getElementById('bst-detail-panel');
+  panel.style.display = '';
+  panel.innerHTML = '<div class="bst-detail-header">'
+    + '<div class="bst-detail-name">' + c.name + '</div>'
+    + '<div class="bst-detail-meta">' + c.type + (c.taille ? ' &middot; ' + c.taille : '') + '</div>'
+    + (c.desc ? '<div class="bst-detail-desc">' + c.desc + '</div>' : '')
+    + '</div>'
+    + '<div class="bst-detail-body">'
+    + '<span class="bst-talent-lbl" style="margin-top:0">Attributs</span>' + attrsHtml + atksHtml + talentsHtml
+    + '</div>';
+
+  panel.querySelectorAll('input[type=radio]').forEach(function(r) {
+    r.addEventListener('change', function() {
+      panel.querySelectorAll('.bst-talent-opt').forEach(function(o){ o.classList.remove('selected'); });
+      this.closest('.bst-talent-opt').classList.add('selected');
+    });
+  });
+}
+
+function addCustomAtkRow(name, dmg, range, effect) {
+  var container = document.getElementById('c-atk-list');
+  var row = document.createElement('div');
+  row.className = 'atk-edit-row';
+  row.innerHTML = '<input type="text" class="atk-name-inp" placeholder="Nom" value="' + (name||'') + '" maxlength="50">'
+    + '<input type="text" class="atk-dmg-inp" placeholder="Dmg" value="' + (dmg||'') + '" maxlength="20">'
+    + '<input type="text" class="atk-range-inp" placeholder="Portee" value="' + (range||'') + '" maxlength="30">'
+    + '<input type="text" class="atk-effect-inp" placeholder="Effet" value="' + (effect||'') + '" maxlength="100">';
+  container.appendChild(row);
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function buildPokemonPayload() {
+  if (_currentMode === 'pokedex') {
+    if (!_bstCurrent) return null;
+    var c = _bstCurrent;
+    var talentVal = '', talentDesc = '';
+    var radios = document.querySelectorAll('input[name="bst-talent"]');
+    radios.forEach(function(r) {
+      if (r.checked && r.value !== '-1') {
+        var t = c.talents[parseInt(r.value)];
+        if (t) { talentVal = t.name; talentDesc = t.desc || ''; }
+      }
+    });
+    if (!radios.length) {
+      var free = document.getElementById('bst-talent-free');
+      if (free) talentVal = free.value.trim();
+    }
+    return {
+      name: c.name, type: c.type, taille: c.taille, talent: talentVal, talent_desc: talentDesc,
+      stats: Object.assign({}, c.attrs, { attacks: c.attacks })
+    };
+  } else {
+    var nom = document.getElementById('c-nom').value.trim();
+    if (!nom) return null;
+    var attacks = [];
+    document.querySelectorAll('#c-atk-list .atk-edit-row').forEach(function(row) {
+      var n = row.querySelector('.atk-name-inp').value.trim();
+      if (n) attacks.push({
+        name: n,
+        dmg: row.querySelector('.atk-dmg-inp').value.trim(),
+        range: row.querySelector('.atk-range-inp').value.trim(),
+        effect: row.querySelector('.atk-effect-inp').value.trim()
+      });
+    });
+    return {
+      name: nom,
+      type: document.getElementById('c-type').value.trim(),
+      taille: document.getElementById('c-taille').value.trim(),
+      desc: document.getElementById('c-desc').value.trim(),
+      talent: document.getElementById('c-talent').value.trim(),
+      talent_desc: document.getElementById('c-talent-desc').value.trim(),
+      stats: {
+        agi: document.getElementById('c-agi').value,
+        for: document.getElementById('c-for').value,
+        vig: document.getElementById('c-vig').value,
+        rus: document.getElementById('c-rus').value,
+        tremp: document.getElementById('c-tremp').value,
+        parade: document.getElementById('c-parade').value.trim(),
+        robustesse: document.getElementById('c-robustesse').value.trim(),
+        allure: document.getElementById('c-allure').value.trim(),
+        attacks: attacks
+      }
+    };
+  }
+}
+
+function finishCreation() {
+  var statusEl = document.getElementById('status-msg');
+  statusEl.className = 'status-msg';
+  statusEl.textContent = '';
+
+  var pkmn = buildPokemonPayload();
+  if (!pkmn) {
+    statusEl.className = 'status-msg err';
+    statusEl.textContent = _currentMode === 'pokedex'
+      ? 'Selectionnez un Pokemon dans le Pokedex.'
+      : 'Le nom du Pokemon est requis.';
+    return;
+  }
+
+  if (!CHAR_ID) {
+    statusEl.className = 'status-msg err';
+    statusEl.textContent = 'Identifiant de personnage manquant. Recommencez depuis le formulaire de creation.';
+    return;
+  }
+
+  var btn = document.getElementById('finish-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sauvegarde en cours...';
+
+  fetch(FB + '/personnages/' + TABLE_ID + '/' + CHAR_ID + '/partner.json', {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(pkmn)
+  })
+  .then(function() {
+    btn.disabled = false;
+    btn.textContent = 'Finaliser le personnage';
+    statusEl.className = 'status-msg ok';
+    statusEl.textContent = 'Pokemon partenaire enregistre.';
+
+    var link = window.location.origin + window.location.pathname.replace('creation-pokemon.html','')
+      + 'fiche-generique.html?table=' + TABLE_ID + '&id=' + CHAR_ID;
+    document.getElementById('result-link').textContent = link;
+    document.getElementById('result-box').classList.add('show');
+  })
+  .catch(function() {
+    btn.disabled = false;
+    btn.textContent = 'Finaliser le personnage';
+    statusEl.className = 'status-msg err';
+    statusEl.textContent = 'Erreur lors de la sauvegarde. Reessayez.';
+  });
+}
+
+function copyResultLink() {
+  var text = document.getElementById('result-link').textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.querySelector('.result-copy-btn');
+    var orig = btn.textContent;
+    btn.textContent = 'Copie !';
+    setTimeout(function() { btn.textContent = orig; }, 1500);
+  });
+}
+
+addCustomAtkRow();
+loadBestiaire();
+</script>
+</body>
+</html>
