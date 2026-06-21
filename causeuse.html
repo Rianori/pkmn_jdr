@@ -1996,6 +1996,7 @@ function _syncCloud() {
   _writing = true;
   fbSet('notes',     state.notes);
   fbSet('team',      state.team);
+  fbSet('pc',        state.pc || []);
   fbSet('gear',      gear);
   fbSet('nom',       nom);
   fbSet('blessures', {b1:b1, b2:b2, bko:bko});
@@ -2057,6 +2058,7 @@ function forceSave() {
 
   fbSet('notes',     state.notes);
   fbSet('team',      state.team);
+  fbSet('pc',        state.pc || []);
   fbSet('gear',      gear);
   fbSet('nom',       nom);
   fbSet('blessures', {b1:b1, b2:b2, bko:bko});
