@@ -1767,17 +1767,10 @@
 </div>
 <div class="player-tab" id="tab-bestiaire">
       <div class="page-title">Pokedex</div>
-      <div class="page-tagline">Le bestiaire complet est maintenant accessible publiquement, sans authentification.</div>
-      <div style="margin-top:20px">
-        <a href="pokedex.html" target="_blank" style="display:inline-flex;align-items:center;gap:10px;
-          background:var(--card);border:1px solid var(--amber-dim);border-radius:var(--radius);
-          padding:16px 24px;text-decoration:none;color:var(--amber);font-family:var(--mono);
-          font-size:13px;transition:background .15s;"
-          onmouseover="this.style.background='var(--amber-glow)'"
-          onmouseout="this.style.background='var(--card)'">
-          Ouvrir le Pokedex &rarr;
-        </a>
-      </div>
+      <div class="page-tagline">Le bestiaire complet, integre directement ici. Egalement accessible publiquement sans authentification sur <a href="pokedex.html" target="_blank" style="color:var(--amber)">pokedex.html</a>.</div>
+      <iframe src="pokedex.html" style="width:100%;height:calc(100vh - 220px);min-height:600px;
+        border:1px solid var(--border);border-radius:var(--radius);margin-top:14px;background:var(--bg)"
+        loading="lazy"></iframe>
     </div>
 
 <div class="section" id="tab-notes">
