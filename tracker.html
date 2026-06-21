@@ -2168,29 +2168,7 @@ function saveGear(items) {
   _gearCache = items;
   _syncCloud();
 }
-function initPartnerStats() {
-  state.team[0].type        = 'Feu';
-  state.team[0].taille      = 'Grand (+1)';
-  state.team[0].lore = 'Arcanin était blessé sur le bord d\'une route quand Lidia est apparue. Contre sa nature, Arcanin n\'a pas fui quand Lidia s\'est approchée de lui. Depuis, ils ne se quittent plus. Arcanin ne comprend pas les nuances morales de son dresseur — mais il comprend à qui il fait confiance. Et il protège cette personne comme si sa vie en dépendait. Elle en dépend souvent.';
-  state.team[0].talent      = 'Flair de traqueur (Passif)';
-  state.team[0].talent_desc = 'Piste une cible par odeur sur 2km si piste < 24h. Perception d8 diff. 4. Relance : sait depuis combien de temps et si la cible était seule. En sous-sol : ventilation artificielle −2 au jet.';
-  state.team[0].stats = {
-    agi: 'd10', for: 'd10', vig: 'd10', rus: 'd4', tremp: 'd8', parade: '7', robustesse: '8', allure: '10"',
-    attacks: [
-      { name: 'Morsure ardente', dmg: 'Str+d8 🔥', range: 'Mêlée', effect: 'Armure ordinaire ignorée. En Feu si Relance (d6/round)' },
-      { name: 'Lance-Flamme', dmg: '3d6', range: '12"/24"', effect: 'Zone cône optionnelle. Barrage de feu possible au sol' },
-      { name: 'Charge éclair', dmg: 'Str+d10', range: 'Charge 4"+', effect: 'Renversé si Robustesse non atteinte. +2 domm. si charge 8"+' },
-      { name: 'Rugissement', dmg: 'Trempe d8 opp.', range: 'Zone 4"', effect: 'Échec : Secoué. Relance : Secoué + Vulnérable ce round' }
-    ],
-    talents: [
-      { name: 'Flair de traqueur (Passif)', desc: 'Piste une cible par odeur sur 2km si piste < 24h. Perception d8 diff. 4. Relance : sait depuis combien de temps et si la cible était seule. En sous-sol : ventilation artificielle −2 au jet.' },
-      { name: 'Loyauté absolue (Passif — miroir du Pistolero)', desc: 'Quand Lidia Fireheart est Secoué ou Blessé, Arcanin peut s\'interposer (action gratuite, sa Parade utilisée). S\'il reçoit l\'attaque à la place, Arcanin absorbe les dégâts. Une fois par round.' },
-      { name: 'Crinière ardente (Passif)', desc: 'Toute attaque en mêlée sans protection thermique inflige d4 dégâts de feu réflexifs à l\'attaquant. Les agents d\'Ashford en équipement standard ne sont pas protégés.' },
-      { name: 'Sprint légendaire (1 fois / combat)', desc: 'Se déplace de 20" en ligne droite, traversant obstacles mineurs. Peut enchaîner une Charge éclair en bonus à l\'arrivée. Allure réduite à 6" le round suivant.' }
-    ]
-  };
-  fbSet('team', state.team);
-}
+
 function parseDieNotation(notation) {
   /* Parse "d6", "d8+1", "d12+2" -> {faces, mod} */
   var m = String(notation).match(/d(\d+)\s*(?:([+\-])\s*(\d+))?/i);
@@ -2669,6 +2647,27 @@ function renderPanel() {
     removePokemon(state.activeSlot);
   });
   initRollablePills();
+}
+function initPartnerStats() {
+  state.team[0].type        = 'Eau';
+  state.team[0].taille      = 'Petit (\u22121)';
+  state.team[0].lore = "Elias l'a trouv\u00e9 seul pr\u00e8s d'un point d'eau souterrain, mordant tout ce qui passait \u00e0 sa port\u00e9e \u2014 m\u00eame les pierres. Il ne l'a pas captur\u00e9. Il s'est juste assis \u00e0 distance, sans bouger, jusqu'\u00e0 ce que Kaiminus s'approche par curiosit\u00e9. Il l'a suivi depuis, sans jamais vraiment demander la permission \u00e0 personne.";
+  state.team[0].talent      = 'Torrent (Passif)';
+  state.team[0].talent_desc = 'Quand Kaiminus a perdu une quantit\u00e9 importante de Vigueur (1 Blessure ou plus), ses attaques de type Eau gagnent +d4 d\u00e9g\u00e2ts. Il mord plus fort quand il est aux abois.';
+  state.team[0].stats = {
+    agi: 'd6', for: 'd6', vig: 'd8', rus: 'd4', tremp: 'd6', parade: '5', robustesse: '6', allure: '6" (nage 8")',
+    attacks: [
+      { name: 'Morsure', dmg: 'FOR+d6', range: 'M\u00eal\u00e9e', effect: "M\u00e2choire accroch\u00e9e \u2014 sur Relance, la cible est Entrav\u00e9e (For d6 opp. pour se d\u00e9gager)" },
+      { name: 'Pistolet \u00e0 O', dmg: '2d4', range: '8"/16"', effect: 'Standard' },
+      { name: 'Cris', dmg: 'Intimidation d6', range: 'Zone 3"', effect: 'Turbulent \u2014 \u00e9choue souvent par excitation plut\u00f4t que par calcul' }
+    ],
+    talents: [
+      { name: 'Torrent (Passif)', desc: 'Quand Kaiminus a perdu une quantit\u00e9 importante de Vigueur (1 Blessure ou plus), ses attaques de type Eau gagnent +d4 d\u00e9g\u00e2ts.' },
+      { name: 'M\u00e2choire increvable', desc: "Une fois accroch\u00e9 par Morsure, ne l\u00e2che jamais volontairement. Pour le faire l\u00e2cher prise contre son gr\u00e9, il faut un jet de Force d8 oppos\u00e9 ou l'assommer." },
+      { name: 'Suit son instinct', desc: "Kaiminus n'ob\u00e9it pas toujours \u2014 il suit Elias par choix, pas par dressage. Sur un jet de Dressage rat\u00e9, il agit selon son propre jugement ce round (souvent : mordre quelque chose)." }
+    ]
+  };
+  fbSet('team', state.team);
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
