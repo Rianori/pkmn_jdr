@@ -1212,22 +1212,9 @@ var state = {
   activeNote: null
 };
 
-function loadState() {
-  try {
-    var raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      var saved = JSON.parse(raw);
-      if (saved.team) { for (var i=1;i<6;i++) state.team[i]=saved.team[i]||null; }
-      if (saved.notes) state.notes = saved.notes;
-      if (saved.activeNote) state.activeNote = saved.activeNote;
-    }
-  } catch(e) {}
-}
 
-function saveState() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({team:state.team,notes:state.notes,activeNote:state.activeNote})); } catch(e) {}
-  _syncCloud();
-}
+
+
 
 function renderTeam() {
   var grid = document.getElementById('team-grid');
@@ -1474,7 +1461,7 @@ function checkMjNote() {
       if (!data.record) return;
       var rec = data.record;
       var mjNote = rec.mj_note || '';
-      var mjNoteRead = localStorage.getItem(STORAGE_KEY + '_mj_note_read');
+      var mjNoteRead = sessionStorage.getItem('_mj_note_read');
       if (mjNote && mjNote !== mjNoteRead) {
         showMjNotePopup(mjNote);
       }
@@ -1589,7 +1576,7 @@ function listenMjNote() {
     // Afficher si c'est un nouveau message (différent du dernier vu CE SESSION)
     if (val !== _lastMjNote) {
       _lastMjNote = val;
-      var dismissed = localStorage.getItem(STORAGE_KEY + '_mj_note_dismissed');
+      var dismissed = sessionStorage.getItem('_mj_note_dismissed');
       // Afficher si jamais acquitté, ou si message différent du dernier acquitté
       if (dismissed !== val) {
         showMjNotePopup(val);
@@ -1604,7 +1591,7 @@ function closeMjNotePopup() {
   // Marquer comme acquitté pour ne plus afficher au rechargement
   var content = document.getElementById('mj-note-content');
   if (content && content.textContent) {
-    localStorage.setItem(STORAGE_KEY + '_mj_note_dismissed', content.textContent);
+    sessionStorage.setItem('_mj_note_dismissed', content.textContent);
   }
 }
 
@@ -1678,58 +1665,7 @@ function loadPlayerName() {
   if (el && !el.textContent) el.textContent = def;
 }
 
-function loadNotesFromCloud() {
-  fbGet('').then(function(rec) {
-    if (!rec) return;
 
-    /* Notes */
-    if (rec.notes && rec.notes.length) {
-      state.notes = rec.notes;
-      renderNoteList();
-      var id = state.activeNote || state.notes[0].id;
-      if (id) openNote(id);
-    }
-
-    /* Equipe */
-    if (rec.team) {
-      for (var i = 1; i < 6; i++) {
-        state.team[i] = rec.team[i] || null;
-      }
-      renderTeam();
-    }
-
-    if (rec.pc) {
-      state.pc = Array.isArray(rec.pc) ? rec.pc : Object.values(rec.pc);
-      renderPcList();
-    }
-
-    /* Equipement */
-    if (rec.gear) {
-      _gearCache = rec.gear;
-      renderGear();
-    }
-
-    /* Nom du joueur */
-    if (rec.nom) {
-      var el = document.getElementById('pj-name-display');
-      if (el) el.textContent = rec.nom;
-    }
-
-    /* Blessures */
-    if (rec.blessures) {
-      var b = rec.blessures;
-      if (document.getElementById('b1'))  document.getElementById('b1').checked  = b.b1  || false;
-      if (document.getElementById('b2'))  document.getElementById('b2').checked  = b.b2  || false;
-      if (document.getElementById('bko')) document.getElementById('bko').checked = b.bko || false;
-    }
-
-    /* Message MJ */
-    if (rec.mj_note) {
-      var dismissed = localStorage.getItem(STORAGE_KEY + '_mj_note_dismissed');
-      if (rec.mj_note !== dismissed) showMjNotePopup(rec.mj_note);
-    }
-  });
-}
 function savePlayerName() { _syncCloud(); }
 
 /* ── BESTIAIRE PICKER ── */
@@ -2045,51 +1981,7 @@ function forceSave() {
     btn.style.borderColor = '';
   }, 2000);
 }
-function applyRemoteUpdate(rec) {
-  if (!rec) return;
 
-  /* Equipe — forcer le re-render sans comparaison */
-  if (rec.team) {
-    for (var i = 1; i < 6; i++) {
-      state.team[i] = rec.team[i] || null;
-    }
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(
-      {team:state.team, notes:state.notes, activeNote:state.activeNote}
-    )); } catch(e) {}
-    renderTeam();
-  }
-
-  /* Notes — forcer le re-render */
-  if (rec.notes) {
-    state.notes = rec.notes;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(
-      {team:state.team, notes:state.notes, activeNote:state.activeNote}
-    )); } catch(e) {}
-    renderNoteList();
-    var id = state.activeNote;
-    if (id) openNote(id);
-  }
-
-  /* Equipement */
-  if (rec.gear) {
-    _gearCache = rec.gear;
-    renderGear();
-  }
-
-  /* Nom */
-  if (rec.nom) {
-    var el = document.getElementById('pj-name-display');
-    if (el) el.textContent = rec.nom;
-  }
-
-  /* Blessures */
-  if (rec.blessures) {
-    var b = rec.blessures;
-    if (document.getElementById('b1'))  document.getElementById('b1').checked  = b.b1  || false;
-    if (document.getElementById('b2'))  document.getElementById('b2').checked  = b.b2  || false;
-    if (document.getElementById('bko')) document.getElementById('bko').checked = b.bko || false;
-  }
-}
 function startRealtime() {
   if (_sseSource) { _sseSource.close(); }
   _sseSource = new EventSource(FB_PATH + '.json');
@@ -2641,9 +2533,7 @@ function renderPanel() {
     '<div class="pk-card">'
     + '<div class="pk-card-header">'
     + '<div class="pk-owner">Slot #' + idx + '</div>'
-    + '<div class="pk-name">' + escHtml(slot.name)
-    + (slot.nickname ? '<span class="pk-nickname">« ' + escHtml(slot.nickname) + ' »</span>' : '')
-    + '</div>'
+    + '<div class="pk-name">' + escHtml(slot.name) + '</div>'
     + '<div class="pk-meta-row">'
     + (slot.type   ? '<span class="tag tag-weird">'   + escHtml(slot.type)   + '</span>' : '')
     + (slot.taille ? '<span class="tag tag-sauvage">' + escHtml(slot.taille) + '</span>' : '')
@@ -3011,7 +2901,97 @@ document.addEventListener('click', function(e) {
     if (bubbleToClose.parentElement) bubbleToClose.remove();
   }, 200);
   _activeDiceBubble = null;
-});</script>
+});
+function loadState() {
+  /* Plus de localStorage. Toutes les donnees viennent de Firebase
+     via loadNotesFromCloud(). Volontairement vide. */
+}
+
+function saveState() {
+  _syncCloud();
+}
+
+function applyRemoteUpdate(rec) {
+  if (!rec) return;
+
+  if (rec.team) {
+    for (var i = 1; i < 6; i++) {
+      state.team[i] = rec.team[i] || null;
+    }
+    renderTeam();
+  }
+
+  if (rec.notes) {
+    state.notes = rec.notes;
+    renderNoteList();
+    var id = state.activeNote;
+    if (id) openNote(id);
+  }
+
+  if (rec.gear) {
+    _gearCache = rec.gear;
+    renderGear();
+  }
+
+  if (rec.nom) {
+    var el = document.getElementById('pj-name-display');
+    if (el) el.textContent = rec.nom;
+  }
+
+  if (rec.blessures) {
+    var b = rec.blessures;
+    if (document.getElementById('b1'))  document.getElementById('b1').checked  = b.b1  || false;
+    if (document.getElementById('b2'))  document.getElementById('b2').checked  = b.b2  || false;
+    if (document.getElementById('bko')) document.getElementById('bko').checked = b.bko || false;
+  }
+}
+
+function loadNotesFromCloud() {
+  fbGet('').then(function(rec) {
+    if (!rec) return;
+
+    if (rec.notes && rec.notes.length) {
+      state.notes = rec.notes;
+      renderNoteList();
+      var id = state.activeNote || state.notes[0].id;
+      if (id) openNote(id);
+    }
+
+    if (rec.team) {
+      for (var i = 1; i < 6; i++) {
+        state.team[i] = rec.team[i] || null;
+      }
+      renderTeam();
+    }
+
+    if (rec.pc) {
+      state.pc = Array.isArray(rec.pc) ? rec.pc : Object.values(rec.pc);
+      renderPcList();
+    }
+
+    if (rec.gear) {
+      _gearCache = rec.gear;
+      renderGear();
+    }
+
+    if (rec.nom) {
+      var el = document.getElementById('pj-name-display');
+      if (el) el.textContent = rec.nom;
+    }
+
+    if (rec.blessures) {
+      var b = rec.blessures;
+      if (document.getElementById('b1'))  document.getElementById('b1').checked  = b.b1  || false;
+      if (document.getElementById('b2'))  document.getElementById('b2').checked  = b.b2  || false;
+      if (document.getElementById('bko')) document.getElementById('bko').checked = b.bko || false;
+    }
+
+    if (rec.mj_note) {
+      var dismissed = sessionStorage.getItem('_mj_note_dismissed');
+      if (rec.mj_note !== dismissed) showMjNotePopup(rec.mj_note);
+    }
+  });
+}</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
     <div class="mj-note-box-title">Message du MJ</div>
