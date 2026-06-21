@@ -1736,7 +1736,7 @@ function loadNotesFromCloud() {
 
     /* Equipement */
     if (rec.gear) {
-      localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(rec.gear));
+      _gearCache = rec.gear;
       renderGear();
     }
 
@@ -2122,7 +2122,7 @@ function applyRemoteUpdate(rec) {
 
   /* Equipement */
   if (rec.gear) {
-    localStorage.setItem(STORAGE_KEY + '_gear', JSON.stringify(rec.gear));
+    _gearCache = rec.gear;
     renderGear();
   }
 
