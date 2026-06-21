@@ -1249,12 +1249,15 @@ function selectSlot(i) {
 var noteTimer = null;
 
 function initNotes() {
+  /* Ne PAS appeler saveState() ici : state.notes peut etre vide simplement
+     parce que loadNotesFromCloud() n'a pas encore repondu. Ecrire maintenant
+     ecraserait les vraies donnees (gear, team...) sur Firebase avec les
+     valeurs par defaut locales (race condition). */
   if (!state.notes.length) {
     state.notes = [
       {id:'n1',title:'Session 1',content:'',updated:Date.now()},
       {id:'n2',title:'Indices et pistes',content:'',updated:Date.now()}
     ];
-    saveState();
   }
   renderNoteList();
   var id = state.activeNote || (state.notes.length ? state.notes[0].id : null);
