@@ -1496,7 +1496,7 @@ function closeAddForm() {
 function loadBestiaire() {
   var grid = document.getElementById('bst-picker-grid');
   grid.innerHTML = '<div class="bst-loading">Chargement...</div>';
-  fetch('mj.html')
+  fetch('pokedex.html')
     .then(function(r) { return r.text(); })
     .then(function(txt) {
       _bstData = parseBestCards(txt);
