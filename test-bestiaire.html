@@ -1213,15 +1213,8 @@ var state = {
 };
 
 function loadState() {
-  try {
-    var raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      var saved = JSON.parse(raw);
-      if (saved.team) { for (var i=1;i<6;i++) state.team[i]=saved.team[i]||null; }
-      if (saved.notes) state.notes = saved.notes;
-      if (saved.activeNote) state.activeNote = saved.activeNote;
-    }
-  } catch(e) {}
+  /* Plus de localStorage pour team/notes. Toutes les donnees viennent
+     de Firebase via loadNotesFromCloud(), appelee separement. */
 }
 
 function saveState() {
