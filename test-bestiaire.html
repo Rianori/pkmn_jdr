@@ -955,6 +955,9 @@ a { color: inherit; }
     color:#e57373; margin-bottom:8px; }
   .confirm-modal-text { font-size:12px; color:var(--muted); line-height:1.5; margin-bottom:20px; }
   .confirm-modal-btns { display:flex; gap:8px; justify-content:flex-end; }
+
+  .slot-nickname { font-family: var(--mono); font-size: 9px; color: var(--amber);
+    font-weight: 600; position: absolute; top: 6px; left: 26px; }
 </style>
 </head>
 <body>
@@ -1222,27 +1225,7 @@ function saveState() {
   _syncCloud();
 }
 
-function renderTeam() {
-  var grid = document.getElementById('team-grid');
-  if (!grid) return;
-  grid.innerHTML = '';
-  for (var i=0;i<6;i++) {
-    var slot = state.team[i];
-    var div = document.createElement('div');
-    div.className = 'team-slot' + (slot?'':' empty') + (state.activeSlot===i?' active':'');
-    div.onclick = (function(idx){ return function(){ selectSlot(idx); }; })(i);
-    if (slot) {
-      var badge = slot.partner ? '<span class="slot-partner-badge">Partenaire</span>' : '';
-      div.innerHTML = '<span class="slot-num">' + (i===0?'P':'#'+i) + '</span>'
-        + '<span class="slot-name">' + slot.name + '</span>'
-        + '<span class="slot-type">' + slot.type + '</span>' + badge;
-    } else {
-      div.innerHTML = '<span class="slot-num">#'+i+'</span><span class="slot-add">+</span>';
-    }
-    grid.appendChild(div);
-  }
-  renderPanel();
-}
+
 
 function selectSlot(i) {
   state.activeSlot = i;
@@ -2647,6 +2630,10 @@ function renderPanel() {
     + statsHtml + atksHtml + notesHtml
     + '</div>'
     + '<div class="pk-body" id="pk-panel-edit" style="display:none">'
+    + '<div class="pk-section-lbl">Surnom</div>'
+    + '<input class="pk-edit-input" type="text" id="pk-nickname-input"'
+    + ' style="width:100%;margin-bottom:10px"'
+    + ' value="' + escHtml(slot.nickname||'') + '" maxlength="40" placeholder="Donnez-lui un nom...">'
     + '<div class="pk-section-lbl">Description (par vous)</div>'
     + '<textarea class="pk-notes-ta" id="pk-player-desc-input" maxlength="280"'
     + ' placeholder="Une courte description personnelle de ce Pok\u00e9mon...">' + escHtml(slot.player_desc||'') + '</textarea>'
@@ -2690,6 +2677,9 @@ function renderPanel() {
     var curIdx = parseInt(panel.querySelector('[data-idx]').dataset.idx);
     if (!state.team[curIdx]) return;
     if (!state.team[curIdx].stats) state.team[curIdx].stats = {};
+
+    var nk = document.getElementById('pk-nickname-input');
+    if (nk) state.team[curIdx].nickname = nk.value.trim();
 
     var pd = document.getElementById('pk-player-desc-input');
     if (pd) state.team[curIdx].player_desc = pd.value.trim();
@@ -2995,7 +2985,30 @@ document.addEventListener('click', function(e) {
     if (bubbleToClose.parentElement) bubbleToClose.remove();
   }, 200);
   _activeDiceBubble = null;
-});</script>
+});
+function renderTeam() {
+  var grid = document.getElementById('team-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  for (var i=0;i<6;i++) {
+    var slot = state.team[i];
+    var div = document.createElement('div');
+    div.className = 'team-slot' + (slot?'':' empty') + (state.activeSlot===i?' active':'');
+    div.onclick = (function(idx){ return function(){ selectSlot(idx); }; })(i);
+    if (slot) {
+      var badge = slot.partner ? '<span class="slot-partner-badge">Partenaire</span>' : '';
+      var nicknameHtml = slot.nickname ? '<span class="slot-nickname">' + escHtml(slot.nickname) + '</span>' : '';
+      div.innerHTML = '<span class="slot-num">' + (i===0?'P':'#'+i) + '</span>'
+        + nicknameHtml
+        + '<span class="slot-name">' + escHtml(slot.name) + '</span>'
+        + '<span class="slot-type">' + escHtml(slot.type) + '</span>' + badge;
+    } else {
+      div.innerHTML = '<span class="slot-num">#'+i+'</span><span class="slot-add">+</span>';
+    }
+    grid.appendChild(div);
+  }
+  renderPanel();
+}</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
     <div class="mj-note-box-title">Message du MJ</div>
