@@ -894,6 +894,52 @@ a { color: inherit; }
     background: var(--surface); border-radius: 4px; border-left: 2px solid var(--amber-dim); }
   .pk-player-desc-empty { color: var(--muted); opacity: .6; }
 
+
+  .pc-card { display:flex; align-items:center; gap:14px; background:var(--card);
+    border:1px solid var(--border); border-radius:var(--radius); padding:14px 18px; }
+  .pc-card-info { flex:1; }
+  .pc-card-name { font-family:var(--mono); font-size:14px; font-weight:700; color:var(--text); }
+  .pc-card-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+  .pc-card-talent { font-size:11px; color:var(--amber); font-style:italic; margin-top:3px; }
+  .pc-recall-btn { font-family:var(--mono); font-size:10px; letter-spacing:.04em;
+    background:var(--amber-dim); color:var(--amber); border:1px solid var(--amber-dim);
+    border-radius:4px; padding:7px 14px; cursor:pointer; white-space:nowrap; }
+  .pc-recall-btn:hover { background:rgba(200,146,42,.4); }
+  .pc-recall-btn:disabled { opacity:.4; cursor:default; }
+  .pc-empty { text-align:center; padding:40px 20px; color:var(--muted); font-size:13px; }
+  .release-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7);
+    z-index:1000; align-items:center; justify-content:center; }
+  .release-modal-bg.open { display:flex; }
+  .release-modal { background:var(--card); border:1px solid var(--border);
+    border-radius:var(--radius); padding:28px 32px; width:420px; max-width:90vw; }
+  .release-modal-title { font-family:var(--mono); font-size:14px; font-weight:700;
+    color:var(--text); margin-bottom:6px; }
+  .release-modal-sub { font-size:12px; color:var(--muted); margin-bottom:22px; }
+  .release-modal-btns { display:flex; flex-direction:column; gap:10px; }
+  .release-opt-btn { display:flex; align-items:flex-start; gap:12px; text-align:left;
+    background:var(--surface); border:1px solid var(--border); border-radius:6px;
+    padding:14px 16px; cursor:pointer; font-family:var(--sans); transition:border-color .12s,background .12s; }
+  .release-opt-btn:hover { border-color:var(--amber-dim); background:var(--amber-glow); }
+  .release-opt-marker { width:4px; border-radius:2px; flex-shrink:0; align-self:stretch;
+    background:var(--amber-dim); }
+  .release-opt-title { font-size:13px; font-weight:600; color:var(--text); margin-bottom:2px; }
+  .release-opt-desc { font-size:11px; color:var(--muted); line-height:1.4; }
+  .release-opt-btn.danger:hover { border-color:rgba(139,51,0,.5); background:rgba(139,51,0,.08); }
+  .release-opt-btn.danger .release-opt-title { color:#e57373; }
+  .release-opt-btn.danger .release-opt-marker { background:#8B3300; }
+  .release-cancel-btn { font-family:var(--mono); font-size:11px; background:none;
+    border:1px solid var(--border); border-radius:4px; color:var(--muted);
+    padding:8px 16px; cursor:pointer; margin-top:14px; width:100%; }
+  .release-cancel-btn:hover { color:var(--text); border-color:var(--muted); }
+  .confirm-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7);
+    z-index:1001; align-items:center; justify-content:center; }
+  .confirm-modal-bg.open { display:flex; }
+  .confirm-modal { background:var(--card); border:1px solid rgba(139,51,0,.4);
+    border-radius:var(--radius); padding:26px 30px; width:380px; max-width:90vw; }
+  .confirm-modal-title { font-family:var(--mono); font-size:13px; font-weight:700;
+    color:#e57373; margin-bottom:8px; }
+  .confirm-modal-text { font-size:12px; color:var(--muted); line-height:1.5; margin-bottom:20px; }
+  .confirm-modal-btns { display:flex; gap:8px; justify-content:flex-end; }
 </style>
 </head>
 <body>
@@ -931,6 +977,7 @@ a { color: inherit; }
     <nav class="player-nav">
     <button class="active" onclick="showPlayerTab('perso',this)">Personnage</button>
         <button onclick="showPlayerTab('team',this)">Equipe</button>
+    <button onclick="showPlayerTab('pc',this)">PC</button>
     <button onclick="showPlayerTab('notes',this)">Notes</button>
   </nav>
     <div class="player-content">
@@ -1008,7 +1055,12 @@ a { color: inherit; }
     
 
       <!-- ── ONGLET NOTES ── -->
-      <div class="player-tab" id="tab-notes">
+      <div class="player-tab" id="tab-pc">
+      <div class="page-title">PC — Pokémon archivés</div>
+      <div class="page-tagline">Pokémon envoyés au PC. Cliquez sur "Rappeler" pour les remettre dans un slot vide de l'équipe.</div>
+      <div id="pc-list" style="margin-top:20px;display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+    <div class="player-tab" id="tab-notes">
       <div class="page-title">Notes</div>
       <div class="page-tagline">Sauvegarde automatique</div>
       <div class="notes-layout">
@@ -1036,7 +1088,44 @@ a { color: inherit; }
 </div><!-- /.player-shell -->
 
 
-<script>
+<div class="release-modal-bg" id="release-modal-bg">
+  <div class="release-modal">
+    <div class="release-modal-title" id="release-modal-title">Que faire de ce Pokémon ?</div>
+    <div class="release-modal-sub">Choisissez une option ci-dessous.</div>
+    <div class="release-modal-btns">
+      <button class="release-opt-btn" onclick="confirmSendToPc()">
+        <span class="release-opt-marker"></span>
+        <span>
+          <div class="release-opt-title">Envoyer au PC</div>
+          <div class="release-opt-desc">Libère le slot. Le Pokémon est archivé et peut être rappelé plus tard.</div>
+        </span>
+      </button>
+      <button class="release-opt-btn danger" onclick="confirmReleaseModal()">
+        <span class="release-opt-marker"></span>
+        <span>
+          <div class="release-opt-title">Relâcher définitivement</div>
+          <div class="release-opt-desc">Action irréversible. Le Pokémon est supprimé pour toujours.</div>
+        </span>
+      </button>
+    </div>
+    <button class="release-cancel-btn" onclick="closeReleaseModal()">Annuler</button>
+  </div>
+</div>
+
+<div class="confirm-modal-bg" id="confirm-modal-bg">
+  <div class="confirm-modal">
+    <div class="confirm-modal-title" id="confirm-modal-title">Confirmer la suppression</div>
+    <div class="confirm-modal-text" id="confirm-modal-text">Cette action est irréversible.</div>
+    <div class="confirm-modal-btns">
+      <button class="btn-edit" onclick="closeConfirmModal()">Annuler</button>
+      <button class="btn-danger" id="confirm-modal-yes">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<script>var _releaseTargetSlot = null;
+var _releaseTargetPc = null;
+
 
 
 var PLAYER_KEY = 'dresseur';
@@ -1108,6 +1197,7 @@ var state = {
     { name: PARTNER_NAME_ASCII, type: 'Partenaire', notes: '', partner: true },
     null, null, null, null, null
   ],
+  pc: [],
   activeSlot: 0,
   notes: [],
   activeNote: null
@@ -1151,12 +1241,7 @@ function selectSlot(i) {
 
 
 
-function removePokemon(i) {
-  if (i===0) return;
-  if (!confirm('Retirer ce Pokemon ?')) return;
-  state.team[i] = null; state.activeSlot = 0;
-  saveState(); renderTeam();
-}
+
 
 
 
@@ -2683,6 +2768,127 @@ function renderPanel() {
     removePokemon(state.activeSlot);
   });
   initRollablePills();
+}
+function removePokemon(i) {
+  if (i === 0) return;
+  openReleaseMenu(i);
+}
+function sendToPc(i) {
+  var slot = state.team[i];
+  if (!slot) return;
+  if (!state.pc) state.pc = [];
+  state.pc.push(slot);
+  state.team[i] = null;
+  state.activeSlot = 0;
+  saveState();
+  renderTeam();
+  renderPcList();
+}
+function releasePokemon(i) {
+  state.team[i] = null;
+  state.activeSlot = 0;
+  saveState();
+  renderTeam();
+}
+function recallFromPc(pcIdx) {
+  var emptySlot = -1;
+  for (var i = 1; i < 6; i++) {
+    if (!state.team[i]) { emptySlot = i; break; }
+  }
+  if (emptySlot === -1) {
+    alert('Aucun slot vide dans l\'equipe. Retirez un Pokemon avant de rappeler celui-ci.');
+    return;
+  }
+  var pkmn = state.pc[pcIdx];
+  state.team[emptySlot] = pkmn;
+  state.pc.splice(pcIdx, 1);
+  saveState();
+  renderTeam();
+  renderPcList();
+  selectSlot(emptySlot);
+}
+function renderPcList() {
+  var container = document.getElementById('pc-list');
+  if (!container) return;
+  var pc = state.pc || [];
+
+  if (!pc.length) {
+    container.innerHTML = '<div class="pc-empty">Aucun Pokemon archive. Les Pokemon envoyes au PC depuis l\'equipe apparaitront ici.</div>';
+    return;
+  }
+
+  var hasEmptySlot = false;
+  for (var i = 1; i < 6; i++) { if (!state.team[i]) { hasEmptySlot = true; break; } }
+
+  var html = '';
+  pc.forEach(function(p, idx) {
+    var talentTxt = p.talent ? p.talent : 'Aucun talent';
+    html += '<div class="pc-card">'
+      + '<div class="pc-card-info">'
+      + '<div class="pc-card-name">' + escHtml(p.name) + '</div>'
+      + '<div class="pc-card-meta">' + escHtml(p.type||'') + (p.taille ? ' \u00b7 ' + escHtml(p.taille) : '') + '</div>'
+      + '<div class="pc-card-talent">' + escHtml(talentTxt) + '</div>'
+      + '</div>'
+      + '<button class="pc-recall-btn" ' + (hasEmptySlot ? '' : 'disabled') + ' onclick="recallFromPc(' + idx + ')">Rappeler</button>'
+      + '<button class="btn-danger" onclick="releaseFromPc(' + idx + ')">Relacher</button>'
+      + '</div>';
+  });
+  container.innerHTML = html;
+}
+function openReleaseMenu(i) {
+  var slot = state.team[i];
+  if (!slot) return;
+  _releaseTargetSlot = i;
+  document.getElementById('release-modal-title').textContent = 'Que faire de ' + slot.name + ' ?';
+  document.getElementById('release-modal-bg').classList.add('open');
+}
+function closeReleaseModal() {
+  document.getElementById('release-modal-bg').classList.remove('open');
+  _releaseTargetSlot = null;
+}
+function confirmSendToPc() {
+  var i = _releaseTargetSlot;
+  closeReleaseModal();
+  if (i !== null) sendToPc(i);
+}
+function confirmReleaseModal() {
+  var i = _releaseTargetSlot;
+  closeReleaseModal();
+  if (i === null) return;
+  var slot = state.team[i];
+  openConfirmModal(
+    'Rel\u00e2cher ' + slot.name + ' ?',
+    'Cette action est irr\u00e9versible. ' + slot.name + ' quittera l\u2019\u00e9quipe d\u00e9finitivement.',
+    function() { releasePokemon(i); }
+  );
+}
+function releaseFromPc(pcIdx) {
+  var pkmn = state.pc[pcIdx];
+  _releaseTargetPc = pcIdx;
+  openConfirmModal(
+    'Rel\u00e2cher ' + pkmn.name + ' ?',
+    'Ce Pok\u00e9mon sera retir\u00e9 du PC d\u00e9finitivement. Cette action est irr\u00e9versible.',
+    function() {
+      state.pc.splice(pcIdx, 1);
+      saveState();
+      renderPcList();
+    }
+  );
+}
+function openConfirmModal(title, text, onConfirm) {
+  document.getElementById('confirm-modal-title').textContent = title;
+  document.getElementById('confirm-modal-text').textContent = text;
+  var yesBtn = document.getElementById('confirm-modal-yes');
+  var newBtn = yesBtn.cloneNode(true);
+  yesBtn.parentNode.replaceChild(newBtn, yesBtn);
+  newBtn.addEventListener('click', function() {
+    closeConfirmModal();
+    onConfirm();
+  });
+  document.getElementById('confirm-modal-bg').classList.add('open');
+}
+function closeConfirmModal() {
+  document.getElementById('confirm-modal-bg').classList.remove('open');
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
