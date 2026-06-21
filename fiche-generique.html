@@ -1506,57 +1506,7 @@ function loadBestiaire() {
       grid.innerHTML = '<div class="bst-loading">Erreur de chargement.</div>';
     });
 }
-function parseBestCards(html) {
-  var cards = [];
-  var doc = (new DOMParser()).parseFromString(html, 'text/html');
-  doc.querySelectorAll('.beast-card').forEach(function(card) {
-    var nameEl = card.querySelector('.beast-name');
-    var metaEl = card.querySelector('.beast-meta');
-    if (!nameEl) return;
-    var metaTxt = metaEl ? metaEl.textContent : '';
-    var tagEl   = metaEl ? metaEl.querySelector('[class^="tag"]') : null;
-    var categorie = tagEl ? tagEl.textContent.trim() : '';
-    var rest  = metaTxt.replace(categorie,'').replace(/^\s*[·\-]\s*/,'').trim();
-    var parts = rest.split(/\s*[·\-]\s*/);
-    var type   = parts[0] ? parts[0].trim() : '';
-    var taille = parts[1] ? parts[1].trim() : '';
-    var descEl = card.querySelector('p');
-    var attrs  = {};
-    var statMap = {AGI:'agi',FOR:'for',VIG:'vig',RUS:'rus',TREMP:'tremp',
-                   Parade:'parade',Robustesse:'robustesse',Allure:'allure'};
-    card.querySelectorAll('.stat-pill').forEach(function(pill) {
-      var val = pill.querySelector('span');
-      if (!val) return;
-      var key = pill.textContent.replace(val.textContent,'').trim();
-      var fk  = statMap[key];
-      if (fk) attrs[fk] = val.textContent.trim();
-    });
-    var attacks = [];
-    card.querySelectorAll('.atk-table tr').forEach(function(row) {
-      var cells = row.querySelectorAll('td');
-      if (cells.length >= 2) {
-        attacks.push({
-          name:   cells[0] ? cells[0].textContent.trim() : '',
-          dmg:    cells[1] ? cells[1].textContent.trim() : '',
-          range:  cells[2] ? cells[2].textContent.trim() : '',
-          effect: cells[3] ? cells[3].textContent.trim() : ''
-        });
-      }
-    });
-    var talents = [];
-    card.querySelectorAll('.capa-list li').forEach(function(li) {
-      var n = li.querySelector('.capa-name');
-      if (!n) return;
-      var d = li.textContent.replace(n.textContent,'').replace(/^\s*:\s*/,'').trim();
-      talents.push({ name: n.textContent.trim(), desc: d });
-    });
-    cards.push({ name: nameEl.textContent.trim(), categorie: categorie,
-      type: type, taille: taille,
-      desc: descEl ? descEl.textContent.trim() : '',
-      attrs: attrs, attacks: attacks, talents: talents });
-  });
-  return cards;
-}
+
 function filterBstPicker() {
   if (_bstData) renderBstPicker(_bstData);
 }
@@ -2342,6 +2292,68 @@ function closeMjNotePopup() {
 
 loadCharacter();
 
-</script>
+
+function parseBestCards(html) {
+  var cards = [];
+  var doc = (new DOMParser()).parseFromString(html, 'text/html');
+  var statMap = {
+    'agilite':'agi','agilit\u00e9':'agi','agi':'agi',
+    'force':'for','for':'for',
+    'vigueur':'vig','vig':'vig',
+    'ruse':'rus','rus':'rus',
+    'trempe':'tremp','tremp':'tremp',
+    'parade':'parade','robustesse':'robustesse','allure':'allure'
+  };
+
+  doc.querySelectorAll('.beast-card').forEach(function(card) {
+    try {
+      var nameEl = card.querySelector('.beast-name');
+      var metaEl = card.querySelector('.beast-meta');
+      if (!nameEl) return;
+      var metaTxt = metaEl ? metaEl.textContent : '';
+      var tagEl   = metaEl ? metaEl.querySelector('[class^="tag"]') : null;
+      var categorie = tagEl ? tagEl.textContent.trim() : '';
+      var rest  = metaTxt.replace(categorie,'').replace(/^\s*[\u00b7\-]\s*/,'').trim();
+      var parts = rest.split(/\s*[\u00b7\-]\s*/);
+      var type   = parts[0] ? parts[0].trim() : '';
+      var taille = parts[1] ? parts[1].trim() : '';
+      var descEl = card.querySelector('p');
+      var attrs  = {};
+      card.querySelectorAll('.stat-pill').forEach(function(pill) {
+        var val = pill.querySelector('span');
+        if (!val) return;
+        var key = pill.textContent.replace(val.textContent,'').trim().toLowerCase();
+        var fk  = statMap[key];
+        if (fk) attrs[fk] = val.textContent.trim();
+      });
+      var attacks = [];
+      card.querySelectorAll('.atk-table tr').forEach(function(row) {
+        var cells = row.querySelectorAll('td');
+        if (cells.length >= 2) {
+          attacks.push({
+            name:   cells[0] ? cells[0].textContent.trim() : '',
+            dmg:    cells[1] ? cells[1].textContent.trim() : '',
+            range:  cells[2] ? cells[2].textContent.trim() : '',
+            effect: cells[3] ? cells[3].textContent.trim() : ''
+          });
+        }
+      });
+      var talents = [];
+      card.querySelectorAll('.capa-list li').forEach(function(li) {
+        var n = li.querySelector('.capa-name');
+        if (!n) return;
+        var d = li.textContent.replace(n.textContent,'').replace(/^\s*:\s*/,'').trim();
+        talents.push({ name: n.textContent.trim(), desc: d });
+      });
+      cards.push({ name: nameEl.textContent.trim(), categorie: categorie,
+        type: type, taille: taille,
+        desc: descEl ? descEl.textContent.trim() : '',
+        attrs: attrs, attacks: attacks, talents: talents });
+    } catch (err) {
+      /* Une carte malformee ne doit jamais bloquer tout le parsing */
+    }
+  });
+  return cards;
+}</script>
 </body>
 </html>
