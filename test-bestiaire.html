@@ -2641,7 +2641,9 @@ function renderPanel() {
     '<div class="pk-card">'
     + '<div class="pk-card-header">'
     + '<div class="pk-owner">Slot #' + idx + '</div>'
-    + '<div class="pk-name">' + escHtml(slot.name) + '</div>'
+    + '<div class="pk-name">' + escHtml(slot.name)
+    + (slot.nickname ? '<span class="pk-nickname">« ' + escHtml(slot.nickname) + ' »</span>' : '')
+    + '</div>'
     + '<div class="pk-meta-row">'
     + (slot.type   ? '<span class="tag tag-weird">'   + escHtml(slot.type)   + '</span>' : '')
     + (slot.taille ? '<span class="tag tag-sauvage">' + escHtml(slot.taille) + '</span>' : '')
@@ -2654,6 +2656,10 @@ function renderPanel() {
     + statsHtml + atksHtml + notesHtml
     + '</div>'
     + '<div class="pk-body" id="pk-panel-edit" style="display:none">'
+    + '<div class="pk-section-lbl">Surnom</div>'
+    + '<input class="pk-edit-input" type="text" id="pk-nickname-input"'
+    + ' style="width:100%;margin-bottom:10px"'
+    + ' value="' + escHtml(slot.nickname||'') + '" maxlength="40" placeholder="Donnez-lui un nom...">'
     + '<div class="pk-section-lbl">Description (par vous)</div>'
     + '<textarea class="pk-notes-ta" id="pk-player-desc-input" maxlength="280"'
     + ' placeholder="Une courte description personnelle de ce Pok\u00e9mon...">' + escHtml(slot.player_desc||'') + '</textarea>'
@@ -2697,6 +2703,9 @@ function renderPanel() {
     var curIdx = parseInt(panel.querySelector('[data-idx]').dataset.idx);
     if (!state.team[curIdx]) return;
     if (!state.team[curIdx].stats) state.team[curIdx].stats = {};
+
+    var nk = document.getElementById('pk-nickname-input');
+    if (nk) state.team[curIdx].nickname = nk.value.trim();
 
     var pd = document.getElementById('pk-player-desc-input');
     if (pd) state.team[curIdx].player_desc = pd.value.trim();
