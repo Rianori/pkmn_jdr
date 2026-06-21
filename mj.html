@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Compagnon JDR — SWADE Pokémon Kanto</title>
+<title>Log du Professeur</title>
 <style>
 
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
@@ -1071,7 +1071,7 @@
 
 
 <header style="display:flex;align-items:center;gap:16px;">
-  <h1>Compagnon JDR</h1>
+  <h1>Log du Professeur</h1>
   <span class="subtitle">SWADE · Pokémon Kanto · v2.0</span>
   <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
     <button onclick="refreshAll()" style="font-family:var(--mono);font-size:11px;background:var(--amber-dim);color:var(--amber);border:none;border-radius:2px;padding:7px 16px;cursor:pointer;letter-spacing:.04em;" title="Mettre a jour PJ et equipes">&#8635; Actualiser</button>
@@ -1160,8 +1160,8 @@
 
     <!-- SCÉNARIOS -->
     <div class="section active" id="tab-scenarios">
-  <div class="page-title">Scenarios</div>
-  <div class="page-tagline">Selectionnez un scenario pour l'ouvrir</div>
+  <div class="page-title">Aventures</div>
+  <div class="page-tagline" style="display:none"></div>
   <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px;max-width:600px;">
     <a href="scenario-ville-morte.html" style="display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;text-decoration:none;transition:border-color .15s,background .15s;" onmouseover="this.style.borderColor='var(--amber-dim)';this.style.background='var(--surface)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--card)'">
       <div style="flex:1;">
@@ -1205,7 +1205,6 @@
 
     <div class="section" id="tab-groupe">
   <div class="page-title">Le Groupe</div>
-  <div class="page-tagline">4 Dresseurs · Pokémon partenaires · Style Deadlands</div>
   <div class="pj-acc-list">
     
 <div class="pnj-card" id="pj-acc-1">
@@ -1510,8 +1509,7 @@
         </div>
       </div>
     </div><div class="section" id="tab-pnj">
-      <div class="page-title">Fiches PNJ</div>
-      <div class="page-tagline">Organis&eacute;es par sc&eacute;nario</div>
+      <div class="page-title">PNJ</div>
 
       <div class="pnj-scenario-acc open" id="scn-btn-scn1" onclick="toggleScenario('scn1')"><span class="pnj-scenario-num">Sc&eacute;nario 01</span><span class="pnj-scenario-name">La Ville Morte</span><span class="chapter-chevron">&#9654;</span></div>
 <div class="pnj-scenario-body open" id="scn-body-scn1">
@@ -1766,8 +1764,8 @@
     </div>
 </div>
 <div class="section" id="tab-bestiaire">
-      <div class="page-title">Pokedex</div>
-      <div class="page-tagline">Le bestiaire complet, integre directement ici. Egalement accessible publiquement sans authentification sur <a href="pokedex.html" target="_blank" style="color:var(--amber)">pokedex.html</a>.</div>
+      <div class="page-title">Pok&eacute;dex</div>
+      <div class="page-tagline">Incomplet</div>
       <iframe src="pokedex.html" style="width:100%;height:calc(100vh - 220px);min-height:600px;
         border:1px solid var(--border);border-radius:var(--radius);margin-top:14px;background:var(--bg)"
         loading="lazy"></iframe>
