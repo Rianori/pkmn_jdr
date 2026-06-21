@@ -1129,13 +1129,7 @@ var FB_URL = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.
 var FB_PATH = FB_URL + '/joueurs/' + PLAYER_KEY;
 
 /* Écriture d'un champ → Firebase */
-function fbSet(path, data) {
-  return fetch(FB_PATH + '/' + path + '.json', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  }).catch(function() {});
-}
+
 
 /* Lecture unique d'un champ */
 function fbGet(path) {
@@ -2866,6 +2860,22 @@ function openConfirmModal(title, text, onConfirm) {
 }
 function closeConfirmModal() {
   document.getElementById('confirm-modal-bg').classList.remove('open');
+}
+function fbSet(path, data) {
+  return fetch(FB_PATH + '/' + path + '.json', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(function(r) {
+    if (!r.ok) {
+      console.error('fbSet FAILED', path, r.status, r.statusText);
+      alert('Erreur sauvegarde Firebase (' + path + '): HTTP ' + r.status);
+    }
+    return r;
+  }).catch(function(err) {
+    console.error('fbSet ERROR', path, err);
+    alert('Erreur reseau lors de la sauvegarde (' + path + '): ' + err.message);
+  });
 }</script>
 <div class="mj-note-popup hidden" id="mj-note-popup">
   <div class="mj-note-box">
