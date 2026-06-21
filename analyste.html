@@ -2259,7 +2259,9 @@ function initPartnerStats() {
       { name: 'Fragilité de forme (Contrainte)', desc: 'Une Blessure en forme transformée = retour forme de base + Secoué. Ne peut pas se retransformer ce round.' }
     ]
   };
-  fbSet('team', state.team);
+  /* fbSet retire ici : ecrasait state.team complet au chargement,
+     avant que loadNotesFromCloud() ait pu lire les vraies donnees Firebase.
+     state.team[0] est mis a jour localement, mais pas re-envoye seul ici. */
 }
 function parseDieNotation(notation) {
   /* Parse "d6", "d8+1", "d12+2" -> {faces, mod} */
