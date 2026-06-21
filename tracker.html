@@ -1722,6 +1722,12 @@ function loadNotesFromCloud() {
       renderTeam();
     }
 
+    /* PC */
+    if (rec.pc) {
+      state.pc = Array.isArray(rec.pc) ? rec.pc : Object.values(rec.pc);
+      renderPcList();
+    }
+
     /* Equipement */
     if (rec.gear) {
       _gearCache = rec.gear;
