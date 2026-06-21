@@ -1097,29 +1097,7 @@ function showPlayerTab(tab, btn) {
   btn.classList.add('active');
 }
 
-function loadCharacter() {
-  fetch(FB_PATH + '.json')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (!data) {
-        document.getElementById('hd-nom').textContent = 'Personnage introuvable';
-        return;
-      }
-      charData = data;
-      renderPerso();
-      initPartnerSlot();
-      if (data.team) {
-        for (var i = 1; i < 6; i++) state.team[i] = data.team[i] || null;
-      }
-      if (data.pc) state.pc = Array.isArray(data.pc) ? data.pc : Object.values(data.pc);
-      if (data.notes) state.notes = data.notes;
-      renderTeam();
-      renderNoteList();
-    })
-    .catch(function() {
-      document.getElementById('hd-nom').textContent = 'Erreur de chargement';
-    });
-}
+
 
 function renderPerso() {
   var d = charData;
@@ -2354,6 +2332,54 @@ function parseBestCards(html) {
     }
   });
   return cards;
+}
+function loadCharacter() {
+  if (!CHAR_ID) {
+    document.getElementById('hd-nom').textContent = 'Erreur : aucun id de personnage dans l\'URL';
+    return;
+  }
+  fetch(FB_PATH + '.json')
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      if (!data) {
+        document.getElementById('hd-nom').textContent = 'Personnage introuvable (table=' + TABLE_ID + ', id=' + CHAR_ID + ')';
+        return;
+      }
+      charData = data;
+      try {
+        renderPerso();
+      } catch (e) {
+        document.getElementById('hd-nom').textContent = 'Erreur renderPerso: ' + e.message;
+        return;
+      }
+      try {
+        initPartnerSlot();
+      } catch (e) {
+        document.getElementById('hd-nom').textContent = 'Erreur initPartnerSlot: ' + e.message;
+        return;
+      }
+      if (data.team) {
+        for (var i = 1; i < 6; i++) state.team[i] = data.team[i] || null;
+      }
+      if (data.pc) state.pc = Array.isArray(data.pc) ? data.pc : Object.values(data.pc);
+      if (data.notes) state.notes = data.notes;
+      try {
+        renderTeam();
+      } catch (e) {
+        console.error('renderTeam error', e);
+      }
+      try {
+        renderNoteList();
+      } catch (e) {
+        console.error('renderNoteList error', e);
+      }
+    })
+    .catch(function(err) {
+      document.getElementById('hd-nom').textContent = 'Erreur de chargement: ' + err.message;
+    });
 }</script>
 </body>
 </html>
