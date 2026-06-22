@@ -10,31 +10,149 @@ body { background:#0e0e10; color:#e8e6e0; font-family:'IBM Plex Mono',monospace;
 #status { margin-top:16px; color:#c8922a; }
 a { color:#c8922a; text-decoration:none; border:1px solid #7a5510; padding:10px 20px;
   border-radius:4px; display:inline-block; margin-top:16px; }
+
+  #mj-auth-overlay { position:fixed; inset:0; background:#0e0e0f; z-index:9999;
+    display:flex; align-items:center; justify-content:center; }
+  #mj-auth-overlay.hidden { display:none; }
+  .mj-auth-box { background:#1c1c1f; border:1px solid #2a2a2e; border-radius:8px;
+    padding:36px 40px; width:340px; max-width:90vw; }
+  .mj-auth-title { font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600;
+    color:#c8922a; margin-bottom:6px; letter-spacing:.04em; }
+  .mj-auth-sub { font-size:11px; color:#6b6a6a; margin-bottom:24px; }
+  .mj-auth-field { margin-bottom:14px; }
+  .mj-auth-field label { font-family:'IBM Plex Mono',monospace; font-size:9px;
+    letter-spacing:.1em; text-transform:uppercase; color:#6b6a6a; display:block; margin-bottom:6px; }
+  .mj-auth-field input { width:100%; background:#161618; border:1px solid #2a2a2e;
+    border-radius:4px; color:#d4cfc5; font-family:'IBM Plex Sans',sans-serif; font-size:13px;
+    padding:9px 12px; outline:none; box-sizing:border-box; }
+  .mj-auth-field input:focus { border-color:#7a5510; }
+  .mj-auth-btn { width:100%; font-family:'IBM Plex Mono',monospace; font-size:11px;
+    letter-spacing:.06em; text-transform:uppercase; background:#c8922a22; color:#c8922a;
+    border:1px solid #7a5510; border-radius:4px; padding:10px; cursor:pointer; margin-top:6px; }
+  .mj-auth-btn:hover { background:#c8922a44; }
+  .mj-auth-btn:disabled { opacity:.5; cursor:default; }
+  .mj-auth-error { font-size:11px; color:#e57373; margin-top:10px; min-height:14px; }
 </style>
 </head>
 <body>
+
+<div id="mj-auth-overlay">
+  <div class="mj-auth-box">
+    <div class="mj-auth-title">Acces restreint</div>
+    <div class="mj-auth-sub">Cette page est reservee au MJ.</div>
+    <div class="mj-auth-field">
+      <label>Email</label>
+      <input type="email" id="mj-auth-email" autocomplete="username" value="ProfRianori@savagepkmn.kanto">
+    </div>
+    <div class="mj-auth-field">
+      <label>Mot de passe</label>
+      <input type="password" id="mj-auth-pass" autocomplete="current-password">
+    </div>
+    <button class="mj-auth-btn" id="mj-auth-btn" onclick="mjAuthLogin()">Se connecter</button>
+    <div class="mj-auth-error" id="mj-auth-error"></div>
+  </div>
+</div>
+
 <div class="box">
   <div>Import du scenario "Le Marche Noir de Safrania"...</div>
-  <div id="status">En cours...</div>
+  <div id="status">En attente de connexion...</div>
 </div>
 <script>
+var MJ_FB_API_KEY = "AIzaSyBQwaWdHDnY08SmABYzxyTAQrl-0eq6TU0";
+
+function mjAuthLogin() {
+  var email = document.getElementById('mj-auth-email').value.trim();
+  var pass  = document.getElementById('mj-auth-pass').value;
+  var btn   = document.getElementById('mj-auth-btn');
+  var errEl = document.getElementById('mj-auth-error');
+  errEl.textContent = '';
+  if (!email || !pass) { errEl.textContent = 'Email et mot de passe requis.'; return; }
+  btn.disabled = true;
+  btn.textContent = 'Connexion...';
+
+  fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + MJ_FB_API_KEY, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ email: email, password: pass, returnSecureToken: true })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.idToken) {
+      sessionStorage.setItem('mj_id_token', data.idToken);
+      document.getElementById('mj-auth-overlay').classList.add('hidden');
+    } else {
+      errEl.textContent = 'Identifiants incorrects.';
+      btn.disabled = false;
+      btn.textContent = 'Se connecter';
+    }
+  })
+  .catch(function() {
+    errEl.textContent = 'Erreur de connexion.';
+    btn.disabled = false;
+    btn.textContent = 'Se connecter';
+  });
+}
+
+document.getElementById('mj-auth-pass') && document.getElementById('mj-auth-pass').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') mjAuthLogin();
+});
+
 var FB = 'https://savage-pokemon-default-rtdb.europe-west1.firebasedatabase.app';
 var SCENARIO_ID = "safrania-marche-noir";
 var data = {"title": "Le Marché Noir de Safrania", "tagline": "Infiltration / Thriller macabre — Biohacking de dresseurs, course contre le temps", "campagne": "", "intro": {"histoire": "Un réseau souterrain à Safrania — le Syndicat de la Mue — vend des capsules de biohacking permettant de forcer l'apprentissage d'attaques hors du répertoire naturel d'un Pokémon, et de provoquer des évolutions prématurées. Les PJ sont d'abord témoins de la violence brute d'un « raté » dans les rues de Safrania, puis personnellement frappés lorsqu'un de leurs partenaires est enlevé pour servir de cobaye à une combinaison expérimentale jamais testée sur sa lignée.\n\nLE SYNDICAT DE LA MUE\nPas un laboratoire scientifique : un réseau de dresseurs, d'anciens coachs de combat clandestin et de bricoleurs de biochimie. Clientele : des dresseurs de combats clandestins prets a payer cher pour un avantage tactique injuste.\n• Les Récolteurs — volent ou achetent les Pokémon a transformer, reperent les cibles.\n• Les Chimistes — fabriquent les capsules dans des laboratoires mobiles, démontables en moins d'une heure.\n• Les Placeurs — revendent les spécimens dopés sur le marché clandestin.\n• Le Conclave — direction invisible ; même les cadres du réseau ne savent pas qui ils sont vraiment.\n\nLES CAPSULES\n• Apprentissage forcé d'attaques — hors répertoire naturel, parfois hors logique de typage.\n• Évolution prématurée — puissance brute immediate, corps pas pret a la supporter.\nLa plupart des combinaisons forcées échouent. Quand une combinaison « prend », le spécimen devient extrêmement recherché — c'est l'effet de surprise tactique qui fait flamber les prix.\n\nL'OTAGE\nChoisir le partenaire avec le lien narratif le plus fort établi en jeu. Un Récolteur l'a identifié précisément parce que son espèce n'a jamais été testée sur le marché des capsules. Le compte à rebours est une expérimentation déjà planifiée, avec une date et une heure précises.", "notes": "Ton : Body horror contenu, biohacking de dresseurs, course contre le temps.\nDuree estimee : 3 sessions.\nPerte de partenaire : reelle et possible (cf. Acte 3, Scene 10/14).\n\nRAPPEL DE CONTINUITE : NoKo (projet de crowdfunding) et cette campagne Pokemon sont deux univers totalement independants — aucun lien, aucune reference croisee.\n\n[A AFFINER] :\n- Fiche PNJ complete + statblock pour le Placeur retourne (Acte 2).\n- Table de resultats mecaniques chiffree pour le jet de Vigueur final (Scene 3.14).\n- Choix definitif du Pokemon otage.\n- Calibrage du seuil pour l'analyse ADN (Scene 1.2).\n- Detailler le complexe Alpha-9 dans son ensemble + transition vers Cramoisi Ile.\n- Sort de Foulques Ardannes apres l'Acte 3."}, "actes": [{"id": "acte0", "title": "Acte 0 — Cold Open", "scenes": [{"id": "s0-1", "histoire": "Nuit, rue commerçante ou marché de Safrania encore animé. Un grondement sourd, puis des vitrines qui explosent. Un Tortank massif, évolution finale forcée prématurément, corps disproportionné, mal stabilisé sur ses propres membres, déboule, incontrôlable.\n\nDescription physique : mouvements saccadés et désynchronisés — comme un corps obéissant à plusieurs signaux contradictoires. Marques de ponctions multiples aux commissures et flancs, certaines suintantes, d'autres en chéloïdes anormales. Un œil anormalement dilaté, l'autre presque clos. Respiration sifflante, trop rapide pour sa masse. Les deux canons dorsaux crachotent par intermittence une fumée noire âcre.\n\nL'attaque illogique : au pic de la scène, le Tortank exécute un Lance-Flammes directement depuis ses canons dorsaux — organe biologiquement conçu pour l'eau. À jouer comme un dérèglement, pas comme une attaque maîtrisée : le Pokémon semble terrifié par ce que son propre corps vient de faire.\n\nFin de scène : après 2-3 rounds de chaos maximum, le Pokémon s'effondre brutalement — pas un combat gagné, un corps qui cède. Convulsions, respiration qui se bloque, puis silence.", "notes": "MECANIQUE — Table d'actions erratiques (1d6/round, pas de jet d'intelligence) :\n1-2 : attaque la cible la plus proche.\n3-4 : fuit en detruisant tout sur son passage.\n5-6 : se prend lui-meme pour cible (convulsion).\n\nLes PJ ne peuvent ni le raisonner, ni le capturer proprement, ni dialoguer — seulement contenir les degats ou l'aider a s'effondrer sans plus de victimes.\n\nVoir fiche Pokedex : Tortank (Rate instable) — tag Mutation."}, {"id": "s0-2", "histoire": "Une fois le corps immobile, examen du cadavre (jet de Médecine ou Survie) :\n• Points de ponction regroupés en deux zones — nuque (apprentissage forcé d'attaque) et sternum (évolution forcée).\n• Substance cristalline résiduelle autour des points d'injection — clairement synthétique.\n• Détail clé : une étiquette ou un tatouage d'identification dissimulé sous une plaque cutanée épaissie (cicatrice volontaire) — premier lien vers le système de « lots » numérotés du Syndicat.", "notes": "Cette scene sert de prologue thematique : les PJ comprennent l'enjeu du Syndicat de facon viscerale avant meme que leur propre partenaire soit menace."}]}, {"id": "acte1", "title": "Acte 1 — L'Enlèvement", "scenes": [{"id": "s1-0", "histoire": "Avant l'urgence personnelle, les PJ sont mis en contact avec les autorités locales — sur réquisition, par relation, ou parce qu'ils sont connus pour leur sérieux après la scène de l'Acte 0.\n\nPNJ — Officier Jenny : responsable du poste de police du quartier industriel. Pragmatique, débordée, méfiante envers les amateurs mais reconnaît vite la compétence. Partenaire : Lévéinard ou Arcanin, dressé pour le maintien de l'ordre.\n\nJenny partage un dossier classe « nuisance mineure » : plaintes de voisinage sur un appartement (bruits chimiques, allees et venues nocturnes). L'occupant est decrit comme un « fou » instable.\n\nAccroche : Jenny propose aux PJ d'aller verifier ce dossier, davantage pour s'en debarrasser que par conviction. Elle ne les accompagne pas mais reste joignable.", "notes": "Fiche PNJ complete : Officier Jenny (voir mj.html onglet PNJ).\n\nCe que Jenny ne sait pas (et les PJ decouvriront en enquetant) : l'occupant est en realite un Chimiste du Syndicat de la Mue, en rupture avec sa cellule, menant des experimentations personnelles non autorisees."}, {"id": "s1-1", "histoire": "Petit appartement en étage, immeuble vieillissant. Volets fermés en plein jour, courrier accumulé, odeur âcre dès le palier.\n\nDescription des lieux :\n• Salon transformé en atelier de fortune : étagères de bric-à-brac médical détourné, seringues réutilisées, notes manuscrites couvrant les murs.\n• Établi avec centrifugeuse artisanale, flacons étiquetés avec codes alphanumériques.\n• Cage vide, tachée, traces de griffures profondes — un Pokémon y a été détenu.\n• Calendrier mural avec certaines dates entourées au marqueur rouge, sans légende.", "notes": "Acces : autorisation legale (mandat informel de Jenny), crochetage, ou porte mal fermee."}, {"id": "s1-2", "histoire": "Plusieurs niveaux de fouille :\n• Examen rapide (Notice) : notes murales obsédées par « stabilité de séquence », croquis anatomiques annotés de flèches contradictoires.\n• Fouille approfondie (Recherche/Investigation) : carnet à moitie brulé dans la cheminee, mentionne des rendez-vous repetes dans un « entrepot 4 » sans precision geographique.\n\nDerniere ligne lisible du carnet, ecrite dans l'urgence :\n« Ils savent que j'ai pris trop de retard. Si je ne livre pas avant la date, c'est moi qui finis dans un entrepot. »", "notes": "ANALYSE APPROFONDIE — SEQUENCES ADN [A AFFINER] : un PJ avec competences scientifiques (Science, Medecine veterinaire, ou assistance de Kimara Nessa) peut pousser l'analyse des flacons. Jet reussi (seuil eleve a moduler) revele des sequences ADN partielles incompatibles entre elles a l'etat naturel — confirme des essais plus risques que la pratique normale du Syndicat. Peut etre reservee a une session ulterieure si trop technique pour le rythme.\n\nCette phrase humanise le Chimiste sans l'excuser : victime du systeme qu'il sert, dilemme moral possible s'il est retrouve vivant plus tard."}, {"id": "s1-3", "histoire": "L'indice central qui ouvre l'Acte 2 : le carnet mentionne « l'entrepôt 4 », et un reçu de livraison chiffonné porte le tampon de « Transports Lenoir & Fils », société-écran dont l'adresse renvoie au quartier industriel portuaire de Safrania.", "notes": "Les PJ savent ou chercher, sans encore savoir lequel des entrepots est le bon ni ce qui les y attend."}, {"id": "s1-4", "histoire": "Les PJ tombent sur un Récolteur en pleine surveillance — il observe leurs habitudes depuis plusieurs jours (détail reconstituable après coup : quelqu'un les suivait). S'ils ne réagissent pas assez vite, l'enlèvement a lieu en pleine nuit, pendant que le Pokémon visé est hors de sa Poké Ball.", "notes": "Choisir le partenaire avec le lien narratif le plus fort etabli en jeu pour cette scene (cf. section L'Otage en intro)."}, {"id": "s1-5", "histoire": "Indices sur la scène du crime :\n• Seringue tranquillisante vide, fabrication artisanale mais précise (Médecine : dosage calculé, pas amateur).\n• Odeur chimique âcre — solvant de conservation de tissus (Odorat Pokémon ou Survie).\n• Un formulaire administratif du Syndicat : « J-4. Lot 0731. Ne pas perdre le spécimen comme le 0729. »", "notes": "Cette derniere phrase doit glacer la table : elle implique un rate precedent, donc une mort precedente."}, {"id": "s1-6", "histoire": "Un PNJ de soutien (Capitaine Sorel, Kimara Nessa, ou Jenny elle-même) confirme à demi-mot ce que signifie « le 0729 » s'il a déjà entendu parler du Syndicat — sans savoir où le trouver.", "notes": "Le ton bascule : course contre une horloge precise, quatre jours."}]}, {"id": "acte2", "title": "Acte 2 — Safrania, Ville Malade", "scenes": [{"id": "s2-4", "histoire": "Quartier industriel portuaire de Safrania, nuit, pluie suggérée. « Transports Lenoir & Fils » loue une série d'entrepôts numérotés dont la façade légale masque l'activité réelle. L'Entrepôt 4 se distingue par des détails discrets (jet de Notice) : groupe électrogène tournant en permanence, véhicules écartés du quai, rotation de gardes régulière.\n\nApproches d'infiltration :\n• Conduit d'aération ou toiture (Discrétion/Escalade) — lent mais silencieux, débouche au-dessus de la Zone de Contention.\n• Quai de livraison (Tromperie/faux badge) — rapide mais expose davantage.\n• Infiltration sociale via un Placeur déjà approché — accompagné mais sous surveillance.", "notes": ""}, {"id": "s2-5", "histoire": "PLAN DES LIEUX — ENTREPOT 4 (4 zones, ordre de decouverte flexible) :\n\nZone A — La Fosse aux cages : rangees de cages sur trois niveaux. Calme etrange, abattement total plutot que soumission dressee. Un Pokemon isole tremble convulsivement a l'approche d'un humain.\n\nZone B — Les chambres froides : trois conteneurs frigorifiques. 1er : capsules en attente par lots numerotes. 2e : prelevements biologiques. 3e (verrouillage renforce) : contenu plus sensible, pas necessairement explicite.\n\nZone C — La salle medicale : deux tables d'operation a sangles. Tableau blanc avec liste de « patients » par numero de lot, annotations rouge (echec) / vert (stabilise). Le rouge domine largement.\n\nZone D — La fosse de combat : cage circulaire grillagee, gradins de palettes. Specimens stabilises testes en conditions reelles contre des Pokemon sauvages sans chance de survie.", "notes": "AMBIANCE — Le calme qui derange : insister sur l'absence de bruit. Pas de grognements ni d'aboiements agressifs — seulement le bourdonnement des groupes froids, le pas des gardes, un silence presque hospitalier. C'est ce silence, plus que toute violence explicite, qui doit mettre les joueurs mal a l'aise."}, {"id": "s2-6", "histoire": "Trois gardes rotatifs : Garde Ortiz (Nidoking, Lance-Flammes forcé), Garde Selma (Dratatin « Draco », réussite mineure), et le Chef de poste Brask (Sablaireau, combinaison rare avec Surf forcé hors typage).\n\nChaque Pokémon est une combinaison fonctionnelle, pas un raté instable comme l'Acte 0 — donc d'autant plus inquiétant.", "notes": "Fiches PNJ completes : Garde Ortiz, Garde Selma, Chef de poste Brask (voir mj.html onglet PNJ).\nFiches Pokemon : Nidoking, Dratatin, Sablaireau (voir Pokedex, tag Mutation).\n\nSelma : visiblement mal a l'aise, trop endettee pour partir. Bon point d'entree pour la retourner par la voie sociale plutot que la force (cf. Scene 2.9).\nBrask : fuit ou negocie des que le combat tourne mal, n'engage jamais le combat personnellement."}, {"id": "s2-7", "histoire": "Au fond de la Zone B, une porte métallique isolée mène à une pièce équipée d'un four industriel reconverti — le Syndicat l'utilise pour faire disparaître les corps des ratés. Un registre scrupuleusement à jour liste chaque incinération par numéro de lot et date.", "notes": "Un des indices les plus lourds de l'Acte 2 : confirme noir sur blanc l'ampleur reelle du nombre de rates, bien plus nombreux que ce que les PJ imaginaient."}, {"id": "s2-8", "histoire": "Objectif de l'acte : comprendre l'ampleur du réseau, pas le démanteler. Indices à collecter :\n• Confirmation matérielle (Zones A et C) — existence de Pokémon modifiés en nombre.\n• Notes scientifiques (Zone C) — dizaines de tentatives, majoritairement des échecs, quelques entrées « STABLE — à reproduire ».\n• Le lien Alpha-9 — sigle récurrent sur documents et étiquettes, nom de code interne au Syndicat.\n• L'incohérence d'échelle (Notice/Science) — l'équipement de l'Entrepôt 4 reste artisanal, incompatible avec la sophistication de certaines combinaisons (Surf du Sablaireau). Quelque chose de plus grand, ailleurs, produit ce que l'Entrepôt 4 ne fait que stocker et tester.", "notes": "RAPPEL MJ : l'Acte 2 ne vise pas a localiser le laboratoire mobile (reserve a l'Acte 3) mais a faire grandir la comprehension du reseau — ampleur du trafic, clients organises, origine des Pokemon, pression d'une echeance commerciale imminente."}, {"id": "s2-9", "histoire": "Le Chef de poste Brask, un Placeur de passage, ou la Garde Selma (si la voie sociale a été privilégiée) peut être retourné par chantage ou négociation.\n\n« Le Labo Alpha-9 ? Je sais juste que c'est mobile. J'ai jamais su où il était installé, et je veux pas savoir — les gens qui posent trop de questions sur Alpha-9 finissent par disparaître. [...] Trop d'allers-retours de camions vers l'extérieur pour que ce soit autrement. »\n\n« Et là, c'est pas le moment de traîner. Il y a une grosse commande en cours — la plus grosse depuis longtemps. Tout le monde au-dessus de moi est sur les nerfs à cause de ça. »", "notes": "Il n'est pas assez haut place dans la hierarchie du Conclave pour tout savoir — rester credible sur les limites de ce qu'il sait.\n\n[A AFFINER] Fiche PNJ complete + statblock pour le Placeur retourne."}, {"id": "s2-10", "histoire": "Avant de quitter l'Entrepôt 4, les PJ peuvent recouper les notes scientifiques (Zone C) avec les preuves biologiques de l'Acte 1 (poils, sang séché, fragments de capsule). Le recoupement confirme : la capsule prévue pour leur partenaire enlevé n'a jamais été testée sur sa lignée. Taux d'échec statistique supérieur à 60% pour une première utilisation sur une nouvelle espèce.", "notes": "Aucun PNJ ne cherche a rassurer les PJ sur ce point — la verite brute doit peser sur la table."}]}, {"id": "acte3", "title": "Acte 3 — Le Laboratoire Mobile Alpha-9", "scenes": [{"id": "s3-8", "histoire": "La localisation d'Alpha-9 est rapide une fois la piste de l'Acte 2 en main : peu de bâtiments industriels désaffectés assez grands à Safrania, recoupement avec les trajets de livraison évoqués par le Placeur retourné — un ancien atelier de conditionnement agricole à la sortie de la ville, volets clos, cour envahie d'herbes.\n\nLe bâtiment est modeste — écho direct à l'incohérence d'échelle de la Scène 2.8. La sécurité, elle, est sérieuse : un seul garde posté, mais positionné avec soin, sans angle mort évident.", "notes": "Pas de mystere prolonge ici : le scenario privilegie la tension de l'assaut plutot que la difficulte de la traque."}, {"id": "s3-9", "histoire": "Un unique garde surveille l'entrée — contraste volontaire avec l'effectif de l'Entrepôt 4 : Alpha-9 mise sur la discrétion plutôt que la force brute.", "notes": "Mis en echec facilement quelle que soit l'approche (discretion, negociation rapide, affrontement bref) — ne pas faire durer cette confrontation, elle ne sert qu'a signaler que l'essentiel du danger est a l'interieur."}, {"id": "s3-10", "histoire": "À l'intérieur, seulement deux personnes : le Chimiste en Chef et le Chimiste « fou » de l'appartement (Acte 1) — deux individus distincts, le second ayant rejoint Alpha-9 pour honorer le retard qu'il craignait (cf. sa note en Scène 1.2). L'endroit est étonnamment calme avant l'irruption des PJ.\n\nLe laboratoire est rempli de documents — « Alpha-9 » désigne non pas seulement ce site, mais un programme plus large dont ce laboratoire n'est qu'une antenne mobile.\n\nINDICE CENTRAL — LA COMMANDE DE CRAMOISI ILE : un bon de commande détaillé demande plus de dix Pokémon modifiés, livrés avant une date précise, destinés à un tournoi de combat à Cramoisi Île. Exigences de « diversité tactique » — le genre de combinaisons déjà aperçues à l'Entrepôt 4.", "notes": "Cette commande explique la pression ressentie depuis l'Acte 2 et donne un objectif geographique concret pour la suite de la campagne."}, {"id": "s3-11", "histoire": "Au centre, une table de contention. Le Pokémon déjà étendu, anesthésié, n'est PAS le partenaire enlevé — c'est un spécimen sauvage, capturé exprès pour le prochain essai, victime anonyme. Le partenaire des PJ se trouve dans une cage adjacente, encore conscient, en attente de son propre tour.", "notes": "Dilemme immediat avant meme de songer a leur propre partenaire : un compte a rebours mecanique (minuteur visible ou annonce en rounds) avant l'injection automatique sur ce premier specimen. Sauver ce Pokemon inconnu ne fait gagner aux PJ aucune recompense tangible — seulement la certitude que, sans intervention, il subira ce qui menace leur propre partenaire l'instant d'apres."}, {"id": "s3-12", "histoire": "Le Chimiste en Chef : calme, méthodique, parle peu pendant le combat. Aucune panique même acculé.\n\n« Vous arrivez à un mauvais moment. Mais bon — un round de retard supplémentaire pour mon spécimen le plus prometteur, j'ai vu pire. »\n\nPartenaire : Azumarill (combinaison stabilisée) — Para-Spore et Choc Mental forcés hors typage. Cherche à immobiliser plutot qu'infliger de gros degats, pour laisser le temps filer jusqu'à l'injection.", "notes": "Fiches PNJ/Pokemon completes : Chimiste en Chef, Azumarill (voir mj.html PNJ + Pokedex Mutation)."}, {"id": "s3-13", "histoire": "Foulques Ardannes « le Fou » : retrouvé à bout mais pas diminué. Se bat avec l'énergie du désespoir.\n\n« Vous ne comprenez pas — si je ne livre pas ce soir, c'est moi qui finis dans le four. Alors non, je ne vais pas vous laisser passer. »\n\nPartenaire : Cocotine (spécimen à haut risque) — a appris Ultim-Atome par capsule forcée. Doit réussir un jet d'Esprit pour se concentrer (round vulnérable, Parade -2), puis l'attaque part automatiquement (Force+3d6, ligne droite, touche alliés compris si mal visée).", "notes": "STRUCTURE DU COMBAT — RAPPEL MJ : le combat est inevitable, aucune approche purement sociale ou furtive ne permet de l'eviter. L'enjeu n'est pas de gagner a tout prix mais de gerer la double contrainte combat + minuteur — ne pas neutraliser au moins partiellement l'Azumarill (Para-Spore) ou anticiper un Ultim-Atome mal vise risque de couter des PJ avant d'atteindre le Pokemon anesthesie.\n\nFiches completes : Foulques Ardannes, Cocotine (voir mj.html PNJ + Pokedex Mutation)."}, {"id": "s3-14", "histoire": "LA TABLE DE CONTENTION — reprend la mecanique deja etablie :\n• Course contre la seringue — neutraliser les deux Chimistes ou interrompre le minuteur avant l'injection.\n• Sabotage technique — un PJ competent (Reparation, Science) desactive le systeme ou corrompt la capsule, idealement pendant qu'un coequipier occupe les adversaires.\n• Echec ou arrivee trop tardive — la capsule est injectee. Jet de Vigueur (Resistance) dramatique pour le partenaire.", "notes": "ISSUES DU JET DE VIGUEUR [BROUILLON - A AFFINER] :\nSucces critique : survie sans sequelle majeure (reserver a un jet exceptionnel).\nSucces simple : survie avec sequelle durable (douleur chronique, trait modifie, vulnerabilite accrue — la cicatrice reste sur la fiche).\nEchec : mort du partenaire — possibilite pleinement assumee par le scenario.\n\nTable de resultats mecanique chiffree a definir selon le systeme exact utilise a table."}, {"id": "s3-15", "histoire": "Le Chimiste en Chef, vaincu ou capturé, ne montre aucun remords théâtral — seulement une frustration tactique. Peut lâcher, par dépit professionnel, la confirmation explicite de la commande de Cramoisi Île si les PJ ne l'ont pas encore trouvée.\n\nLe Chimiste « fou » ne se rend pas dans les mêmes conditions : soit fuite désespérée (sort futur ouvert), soit effondrement littéral, vidé par la tension accumulée — instant d'humanité inattendu sans excuser ses actes.", "notes": "[A AFFINER] Decider du sort de Foulques Ardannes apres l'Acte 3 — fuite, capture, ou effondrement definitif — et si ce fil reste ouvert pour une suite."}]}], "conclusion": {"histoire": "Si le partenaire survit (indemne ou avec séquelle) : scène de retrouvailles à jouer lentement, sans précipitation — le silence et les gestes comptent plus que les mots.\n\nSi le partenaire meurt : ne pas enchaîner immédiatement sur la suite logistique. Laisser un temps mort narratif. Le Syndicat continue d'exister malgré la victoire tactique des PJ — il y a eu d'autres « 0729 » avant, il y en aura d'autres après si le Conclave n'est pas démantelé.\n\nDans tous les cas : le Syndicat de la Mue n'est pas détruit, seulement amputé d'une cellule. Le Conclave reste une menace en arrière-plan. La commande de plus de dix Pokémon modifiés pour le tournoi de Cramoisi Île reste, sauf intervention explicite des PJ, toujours d'actualité — un autre site peut continuer à l'honorer.", "notes": "Cette commande de Cramoisi Ile est le pont narratif vers une suite de campagne possible."}, "created": 1750550000000, "status": "brouillon"};
 
-fetch(FB + '/scenarios/' + SCENARIO_ID + '.json', {
-  method: 'PUT',
-  headers: {'Content-Type':'application/json'},
-  body: JSON.stringify(data)
-})
-.then(function(r) {
-  if (!r.ok) throw new Error('HTTP ' + r.status);
-  document.getElementById('status').innerHTML =
-    'Import reussi !<br><a href="scenario-editor.html?id=' + SCENARIO_ID + '">Ouvrir l\'editeur</a>';
-})
-.catch(function(err) {
-  document.getElementById('status').textContent = 'Erreur : ' + err.message + ' (authentification MJ requise ?)';
-});
+function doImport() {
+  document.getElementById('status').textContent = 'Import en cours...';
+  var token = sessionStorage.getItem('mj_id_token');
+  fetch(FB + '/scenarios/' + SCENARIO_ID + '.json' + (token ? '?auth=' + token : ''), {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(data)
+  })
+  .then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    document.getElementById('status').innerHTML =
+      'Import reussi !<br><a href="scenario-editor.html?id=' + SCENARIO_ID + '">Ouvrir l\'editeur</a>';
+  })
+  .catch(function(err) {
+    document.getElementById('status').textContent = 'Erreur : ' + err.message;
+  });
+}
+
+var _origLogin = mjAuthLogin;
+mjAuthLogin = function() {
+  var email = document.getElementById('mj-auth-email').value.trim();
+  var pass  = document.getElementById('mj-auth-pass').value;
+  var btn   = document.getElementById('mj-auth-btn');
+  var errEl = document.getElementById('mj-auth-error');
+  errEl.textContent = '';
+  if (!email || !pass) { errEl.textContent = 'Email et mot de passe requis.'; return; }
+  btn.disabled = true;
+  btn.textContent = 'Connexion...';
+
+  fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + MJ_FB_API_KEY, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ email: email, password: pass, returnSecureToken: true })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.idToken) {
+      sessionStorage.setItem('mj_id_token', d.idToken);
+      document.getElementById('mj-auth-overlay').classList.add('hidden');
+      doImport();
+    } else {
+      errEl.textContent = 'Identifiants incorrects.';
+      btn.disabled = false;
+      btn.textContent = 'Se connecter';
+    }
+  })
+  .catch(function() {
+    errEl.textContent = 'Erreur de connexion.';
+    btn.disabled = false;
+    btn.textContent = 'Se connecter';
+  });
+};
 </script>
 </body>
 </html>
