@@ -1049,6 +1049,8 @@
   .mj-auth-btn:hover { background:#c8922a44; }
   .mj-auth-btn:disabled { opacity:.5; cursor:default; }
   .mj-auth-error { font-size:11px; color:#e57373; margin-top:10px; min-height:14px; }
+
+  .tag-mutation { background: #4a1a3a; color: #e879c4; }
 </style>
 </head>
 <body>
@@ -1657,6 +1659,113 @@
         </div>
       </div>
 </div>
+<div class="pnj-scenario-acc" id="scn-btn-safrania" onclick="toggleScenario('safrania')"><span class="pnj-scenario-num">Scénario</span><span class="pnj-scenario-name">Le Marché Noir de Safrania</span><span class="chapter-chevron">▶</span></div>
+<div class="pnj-scenario-body" id="scn-body-safrania">
+      <div class="section-title" style="margin-bottom:12px">Allié — Joker</div>
+      <div class="pnj-card" id="pnj-jenny">
+        <div class="pnj-header" onclick="togglePnj('pnj-jenny')">
+          <div><div class="pnj-name">Officier Jenny <span class="tag tag-edge">Joker allié</span></div><div class="pnj-role">Responsable du poste de police du quartier industriel de Safrania</div></div>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d6</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>6</span></div><div class="stat-pill">Bennies <span>2</span></div>
+          </div>
+          <div class="stat-block" style="margin-bottom:12px">
+            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Tir</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Investigation</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Notice</span><span class="stat-val">d8</span></div>
+          </div>
+          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Du sang-froid · Lien étroit avec son partenaire (Pokémon de patrouille, jamais en service offensif)</div></div>
+          <div class="hindrance-block"><div class="block-name">Handicaps</div><div class="block-desc">Mineur : Bureaucratie (doit justifier chaque action illégale même justifiée par l'urgence)</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Pragmatique, débordée, méfiante envers les amateurs mais reconnaît vite la compétence. Partenaire : Lévéinard ou Arcanin (au choix du MJ), dressé pour le maintien de l'ordre. PNJ récurrent potentiel pour la suite de la campagne.</em></p>
+        </div>
+      </div>
+      <div class="section-title" style="margin-bottom:12px;margin-top:16px">Syndicat de la Mue</div>
+      <div class="pnj-card" id="pnj-ortiz">
+        <div class="pnj-header" onclick="togglePnj('pnj-ortiz')">
+          <div><div class="pnj-name">Garde Ortiz <span class="tag tag-mutation">Syndicat de la Mue</span></div><div class="pnj-role">Garde de l'Entrepôt 4 — ancien videur de combats clandestins</div></div>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d6</span></div><div class="stat-pill">Force <span>d8</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d8</span></div><div class="stat-pill">Parade <span>6</span></div><div class="stat-pill">Robustesse <span>6</span></div>
+          </div>
+          <div class="stat-block" style="margin-bottom:12px">
+            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Tir</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Notice</span><span class="stat-val">d6</span></div>
+          </div>
+          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Sang-froid · Costaud</div></div>
+          <div class="hindrance-block"><div class="block-name">Handicaps</div><div class="block-desc">Mineur : Vengeur (n'oublie jamais une humiliation, même tactique)</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Fume sans arrêt, parle peu, observe beaucoup. Équipement : matraque télescopique (Force+1d4), gilet pare-coups (Armure +2 torse). Partenaire : Nidoking (combinaison stabilisée, Lance-Flammes forcé).</em></p>
+        </div>
+      </div>
+      <div class="pnj-card" id="pnj-selma">
+        <div class="pnj-header" onclick="togglePnj('pnj-selma')">
+          <div><div class="pnj-name">Garde Selma <span class="tag tag-mutation">Syndicat de la Mue</span></div><div class="pnj-role">Garde de l'Entrepôt 4 — endettée envers le Conclave</div></div>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d8</span></div><div class="stat-pill">Ruse <span>d6</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Trempe <span>d6</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>5</span></div>
+          </div>
+          <div class="stat-block" style="margin-bottom:12px">
+            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Tir</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Discrétion</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d4</span></div>
+          </div>
+          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Réflexes de combat</div></div>
+          <div class="hindrance-block"><div class="block-name">Handicaps</div><div class="block-desc">Mineur : Loyal (envers ses dettes, pas envers le Syndicat) · Mineur fragile : Code moral</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Plus jeune, visiblement mal à l'aise avec ce qu'elle voit au quotidien. Faille exploitable par la voie sociale (Scène 2.9). Équipement : pistolet tranquillisant (2d4), radio de liaison. Partenaire : Dratatin &laquo; Draco &raquo; (réussite mineure).</em></p>
+        </div>
+      </div>
+      <div class="pnj-card" id="pnj-brask">
+        <div class="pnj-header" onclick="togglePnj('pnj-brask')">
+          <div><div class="pnj-name">Chef de poste Brask <span class="tag tag-mutation">Syndicat de la Mue</span></div><div class="pnj-role">Responsable de l'Entrepôt 4 — rapporte aux Placeurs</div></div>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d8</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>6</span></div>
+          </div>
+          <div class="stat-block" style="margin-bottom:12px">
+            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d4</span></div><div class="stat-row"><span class="stat-name">Tir</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Affaires</span><span class="stat-val">d8</span></div>
+          </div>
+          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Calculateur · Filou</div></div>
+          <div class="hindrance-block"><div class="block-name">Handicaps</div><div class="block-desc">Mineur : Cupide · Majeur : Lâche (fuit ou négocie dès que le combat tourne mal)</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Pragmatique et froid, n'engage jamais le combat lui-même en premier recours. Équipement : pistolet de poing (2d6), registre de commandes (infos utiles si récupéré). Partenaire : Sablaireau (combinaison rare, Surf forcé hors typage).</em></p>
+        </div>
+      </div>
+      <div class="pnj-card" id="pnj-chimiste-chef">
+        <div class="pnj-header" onclick="togglePnj('pnj-chimiste-chef')">
+          <div><div class="pnj-name">Chimiste en Chef <span class="tag tag-mutation">Syndicat de la Mue</span></div><div class="pnj-role">Optimisateur du Laboratoire Mobile Alpha-9 — ancien dresseur de combats clandestins</div></div>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d8</span></div><div class="stat-pill">Ruse <span>d10</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d6</span></div><div class="stat-pill">Parade <span>4</span></div><div class="stat-pill">Robustesse <span>6</span></div>
+          </div>
+          <div class="stat-block" style="margin-bottom:12px">
+            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Tir</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Connaissance Biochimie</span><span class="stat-val">d10</span></div><div class="stat-row"><span class="stat-name">Notice</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Persuasion</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d8</span></div>
+          </div>
+          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Sang-froid · Féroce</div></div>
+          <div class="hindrance-block"><div class="block-name">Handicaps</div><div class="block-desc">Mineur : Arrogant · Mineur : Sans pitie</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Calme, méthodique, parle peu pendant le combat — aucune panique même acculé. Équipement : pistolet tranquillisant (2d4, létal sur dose concentrée), trousse de capsules de secours. Partenaire : Azumarill (combinaison stabilisée, attaques paralysantes forcées).</em></p>
+        </div>
+      </div>
+      <div class="pnj-card" id="pnj-foulques">
+        <div class="pnj-header" onclick="togglePnj('pnj-foulques')">
+          <div><div class="pnj-name">Foulques Ardannes &laquo; le Fou &raquo; <span class="tag tag-mutation">Syndicat de la Mue</span></div><div class="pnj-role">Chimiste en rupture — retrouvé au Laboratoire Mobile Alpha-9</div></div>
+          <span class="chapter-chevron">▶</span>
+        </div>
+        <div class="pnj-body">
+          <div class="stat-inline">
+            <div class="stat-pill">Agilité <span>d6</span></div><div class="stat-pill">Ruse <span>d8</span></div><div class="stat-pill">Force <span>d6</span></div><div class="stat-pill">Trempe <span>d8</span></div><div class="stat-pill">Vigueur <span>d8</span></div><div class="stat-pill">Parade <span>5</span></div><div class="stat-pill">Robustesse <span>6</span></div>
+          </div>
+          <div class="stat-block" style="margin-bottom:12px">
+            <div class="stat-row"><span class="stat-name">Combat</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Connaissance Biochimie</span><span class="stat-val">d8</span></div><div class="stat-row"><span class="stat-name">Réparation</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Dressage</span><span class="stat-val">d6</span></div><div class="stat-row"><span class="stat-name">Intimidation</span><span class="stat-val">d6</span></div>
+          </div>
+          <div class="edge-block"><div class="block-name">Atouts</div><div class="block-desc">Increvable</div></div>
+          <div class="hindrance-block"><div class="block-name">Handicaps</div><div class="block-desc">Majeur : Acculé (agit de façon imprévisible et risquée sous pression) · Mineur : Mauvaise réputation</div></div>
+          <p style="font-size:12px;color:var(--muted);margin-top:8px"><em>Homme à bout, qui n'a plus dormi correctement depuis des semaines. Se bat avec l'énergie du désespoir. Peut tenter un sabotage du système d'injection si la situation tourne mal pour lui. Partenaire : Cocotine (spécimen à haut risque, Ultim-Atome forcé et instable).</em></p>
+        </div>
+      </div>
+    </div>
 <div class="pnj-scenario-acc open" id="scn-btn-scn2" onclick="toggleScenario('scn2')"><span class="pnj-scenario-num">Sc&eacute;nario 02</span><span class="pnj-scenario-name">Le Grand Tournoi de Carmin sur Mer</span><span class="chapter-chevron">&#9654;</span></div>
 <div class="pnj-scenario-body open" id="scn-body-scn2">
       <div class="section-title" style="margin-bottom:12px">Antagonistes</div>
